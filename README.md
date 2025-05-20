@@ -1,4 +1,4 @@
-1. How to use commitlint:
+# 1. How to use commitlint:
 
     **`chore`**: Changes that don't modify source code or tests but relate to the build process, tooling, or other maintenance tasks
 
