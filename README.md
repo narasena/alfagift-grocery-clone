@@ -1,5 +1,7 @@
 # 1. How to use commitlint:
 
+Commit message type:
+
 **`chore`**: Changes that don't modify source code or tests but relate to the build process, tooling, or other maintenance tasks
 
 **`feat`**: New features
