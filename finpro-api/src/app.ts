@@ -42,19 +42,17 @@ export default class App {
     });
 
     // Error Handler
-    this.app.use(
-      (err: Error, req: Request, res: Response, next: NextFunction) => {
-        if (req.path.includes('/api/')) {
-          console.error('Error : ', err.stack);
-          res.status(500).json({
-            success: false,
-            message: 'Internal server error. Please try again later!',
-          });
-        } else {
-          next();
-        }
+    this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+      if (req.path.includes('/api/')) {
+        console.error('Error : ', err.stack);
+        res.status(500).json({
+          success: false,
+          message: 'Internal server error. Please try again later!',
+        });
+      } else {
+        next();
       }
-    );
+    });
   }
 
   private routes(): void {
@@ -68,8 +66,15 @@ export default class App {
   }
 
   public start(): void {
-    this.app.listen(PORT, () => {
-      console.log(`  ➜ [API] Local:   http://localhost:${PORT}/`);
-    });
+    if (process.env.NODE_ENV !== 'production') {
+      this.app.listen(PORT, () => {
+        console.log(`  ➜ [API] Local:   http://localhost:${PORT}/`);
+      });
+    }
+  }
+
+  // Add this getter method
+  public getApp(): Express {
+    return this.app;
   }
 }
