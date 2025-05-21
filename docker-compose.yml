@@ -4,9 +4,9 @@ services:
   api:
     build: ./finpro-api
     ports:
-      - "8000:8000"
+      - "8001:8000"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
     volumes:
       - ./finpro-api:/app
       - /app/node_modules
@@ -15,9 +15,9 @@ services:
   web:
     build: ./finpro-web
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
     volumes:
       - ./finpro-web:/app
       - /app/node_modules
