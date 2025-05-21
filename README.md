@@ -289,3 +289,54 @@ git branch -d <name>-<feature-name>
 # Delete remote feature branch
 git push origin --delete <name>-<feature-name>
 ```
+# 4. Run Docker for This Project
+### 4.1 Install Docker Desktop
+    * Download from [Docker's official website](https://www.docker.com/products/docker-desktop/)
+    * Follow the installation instruction
+### 4.2 Start Docker Desktop:
+    * After installation, launch Docker Desktop
+    * Wait for it to start (you'll see the Docker icon in your system tray)
+### 4.3 Run Docker Setup:
+    * Open a command prompt or PowerShell or Docker built-in terminal
+    * Navigate to the project root directory:
+    ```
+    cd ...\...\finpro-grocery
+    ```
+    * Run the following command to build and start your containers
+    ```
+    docker-compose up -d --build
+    ```
+### 4.4 Check if containers are running:
+    ```
+    docker ps
+    ```
+    * This will show you the running containers.
+    * Or check in containers tab on the sidebar and check whether the containers are running
+    * Click on the name will show the details
+### 4.5 How to access the application
+    * API: http://localhost:8001
+    * Web: http://localhost:3001
+    * Using 3001 and 8001 to avoid conflicting port if you wish still to run on vscode terminal which is still 3000 and 8000
+### 4.6 Stop the containers when you're done
+    ```
+    docker-compose down
+    ```
+### 4.7 When to rebuild containers
+    1. **For most code changes**: You don't need to rebuild the container. The volume mount creates a link between your local code and the container, so changes to your source files are immediately available inside the container.
+
+    2. 
+    Using
+    ```
+    docker-compose up -d --build
+    ```
+    only when,
+        * You modify Dockerfile itself,
+        * Add/install new dependencies (package) that change package.json
+        * Change configuration files that are read only at startup
+    
+    3. If you're not seeing your changes reflected, you might need to restart the service without rebuilding
+    ```
+    docker-compose restart web
+    ```
+
+
