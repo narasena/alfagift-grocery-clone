@@ -59,7 +59,7 @@ export default class App {
     const sampleRouter = new SampleRouter();
 
     this.app.get('/api', (req: Request, res: Response) => {
-      res.send(`Hello, Purwadhika Student API!`);
+      res.send(`Hello, This is FINPRO-JCWD3202 API!`);
     });
 
     this.app.use('/api/samples', sampleRouter.getRouter());
