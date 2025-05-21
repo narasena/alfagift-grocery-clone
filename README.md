@@ -94,6 +94,26 @@ finpro-api/
 ```
 
 # 3. Git Workflows
+## 3.0 Clone the Repository
+Navigate to your target directory, then:
+```
+git clone https://github.com/cursemaker/finpro-grocery.git
+```
+Navigate to the project directory
+```
+cd finpro-grocery
+```
+Install dependencies for both API and Web:
+```
+cd finpro-api
+npm i
+#if done
+cd ../finpro-web
+npm install
+```
+
+Create .env.development in API and .env in Web
+
 ## 3.1 Branch Naming Convention
 Always name your branch following this pattern:
 ```
@@ -299,17 +319,11 @@ git push origin --delete <name>-<feature-name>
 ### 4.3 Run Docker Setup:
     * Open a command prompt or PowerShell or Docker built-in terminal
     * Navigate to the project root directory:
-    ```
-    cd ...\...\finpro-grocery
-    ```
+        cd ...\...\finpro-grocery
     * Run the following command to build and start your containers
-    ```
-    docker-compose up -d --build
-    ```
+        docker-compose up -d --build
 ### 4.4 Check if containers are running:
-    ```
-    docker ps
-    ```
+        docker ps
     * This will show you the running containers.
     * Or check in containers tab on the sidebar and check whether the containers are running
     * Click on the name will show the details
@@ -318,25 +332,19 @@ git push origin --delete <name>-<feature-name>
     * Web: http://localhost:3001
     * Using 3001 and 8001 to avoid conflicting port if you wish still to run on vscode terminal which is still 3000 and 8000
 ### 4.6 Stop the containers when you're done
-    ```
     docker-compose down
-    ```
 ### 4.7 When to rebuild containers
     1. **For most code changes**: You don't need to rebuild the container. The volume mount creates a link between your local code and the container, so changes to your source files are immediately available inside the container.
 
     2. 
     Using
-    ```
-    docker-compose up -d --build
-    ```
+        docker-compose up -d --build
     only when,
         * You modify Dockerfile itself,
         * Add/install new dependencies (package) that change package.json
         * Change configuration files that are read only at startup
     
     3. If you're not seeing your changes reflected, you might need to restart the service without rebuilding
-    ```
-    docker-compose restart web
-    ```
+        docker-compose restart web
 
 
