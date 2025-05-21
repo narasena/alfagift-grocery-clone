@@ -1,10 +1,8 @@
 import App from './app';
 
-const main = () => {
-  const app = new App();
-  app.start();
-  app.getApp();
-};
+const app = new App();
+app.start();
 
-export default main();
+// Export the Express app for Vercel
+export default app.getApp();
 
