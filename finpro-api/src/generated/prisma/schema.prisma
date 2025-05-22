@@ -10,16 +10,388 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-model Sample {
-  id        Int      @id @default(autoincrement())
-  name      String
-  code      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model User {
+  id                 String    @id @default(uuid())
+  firstName          String
+  lastName           String?
+  email              String    @unique
+  password           String
+  phoneNumber        String?   @unique
+  gender             String?
+  dateOfBirth        String?
+  isEmailVerified    Boolean   @default(false)
+  passwordResetCount Int       @default(0)
+  emailChangeCount   Int       @default(0)
+  avatarImgUrl       String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  deletedAt          DateTime?
 
-  @@map("samples") // if you want to use snake_case format
+  userAddress UserAddress[]
+  cart        Cart?
+  orders      Order[]
+
+  @@map("users")
+}
+
+enum Gender {
+  Male
+  Female
+}
+
+model UserAddress {
+  id            String    @id @default(cuid())
+  userId        String
+  address       String
+  subDistrict   String
+  district      String
+  city          String
+  province      String
+  postalCode    String
+  coordinates   String? //dipecah 2 lat dan long
+  isMainAddress Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  user   User    @relation(fields: [userId], references: [id])
+  orders Order[]
+
+  @@map("user_addresses")
+}
+
+model Store {
+  id              String            @id @default(cuid())
+  name            String
+  address         String
+  subDistrict     String
+  district        String
+  city            String
+  province        String
+  postalCode      String
+  coordinates     String? //dipecah 2 lat dan long
+  phoneNumber     String?
+  email           String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  deletedAt       DateTime?
+  productStock    ProductStock[]
+  productDiscount ProductDiscount[]
+  admins          Admin[]
+  orders          Order[]
+
+  @@map("stores")
+}
+
+model Admin {
+  id                 String    @id @default(cuid())
+  firstName          String
+  lastName           String?
+  email              String    @unique
+  password           String
+  phoneNumber        String    @unique
+  role               AdminRole
+  isEmailVerified    Boolean   @default(false)
+  passwordResetCount Int       @default(0)
+  emailChangeCount   Int       @default(0)
+  avatarImgUrl       String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  deletedAt          DateTime?
+  storeId            String
+  store              Store     @relation(fields: [storeId], references: [id])
+  payments           Payment[]
+
+  @@map("admins")
+}
+
+enum AdminRole {
+  SuperAdmin
+  Admin
+}
+
+model Product {
+  id                   String             @id @default(cuid())
+  name                 String
+  slug                 String             @unique
+  description          String?
+  brandId              String?
+  price                Float
+  productSubCategoryId String
+  productSubCategory   ProductSubCategory @relation(fields: [productSubCategoryId], references: [id])
+  sku                  String?            @unique
+  barcode              String?            @unique
+  plu                  String? // Price Look-Up code for fresh produce
+  bpomId               String? // BPOM certification number for consumable products
+  weight               Float?
+  dimensions           String?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  deletedAt            DateTime?
+  productImage         ProductImage[]
+  productStock         ProductStock[]
+  productDiscount      ProductDiscount[]
+
+  @@map("products")
+}
+
+model ProductImage {
+  id          String    @id @default(cuid())
+  productId   String
+  imageUrl    String
+  isMainImage Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("product_images")
+}
+
+model ProductCategory {
+  id                 String               @id @default(cuid())
+  name               String
+  slug               String               @unique
+  description        String?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  deletedAt          DateTime?
+  productSubCategory ProductSubCategory[]
+
+  @@map("product_categories")
+}
+
+model ProductSubCategory {
+  id                String          @id @default(cuid())
+  name              String
+  slug              String          @unique
+  description       String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  deletedAt         DateTime?
+  productCategoryId String
+  productCategory   ProductCategory @relation(fields: [productCategoryId], references: [id])
+  product           Product[]
+
+  @@map("product_sub_categories")
+}
+
+model ProductStock {
+  productId    String
+  storeId      String
+  product      Product               @relation(fields: [productId], references: [id])
+  store        Store                 @relation(fields: [storeId], references: [id])
+  stock        Int
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  deletedAt    DateTime?
+  stockHistory ProductStockHistory[]
+  cartItem     CartItem[]
+  orderItem    OrderItem[]
+
+  @@id([productId, storeId])
+  @@map("product_stocks")
+}
+
+model ProductStockHistory {
+  id           String            @id @default(cuid())
+  productId    String
+  storeId      String
+  productStock ProductStock      @relation(fields: [productId, storeId], references: [productId, storeId])
+  quantity     Int
+  type         StockMovementType
+  reference    String?
+  notes        String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  deletedAt    DateTime?
+
+  @@map("product_stock_histories")
+}
+
+enum StockMovementType {
+  STORE_IN // Incoming stock to the store (e.g. from supplier, or main warehouse)
+  STORE_OUT // Outgoing stock from the store (e.g. damaged or expired products)
+  SALE // Sale of products to customers 
+  ADJUSTMENT // Manual adjustment of stock (e.g. correction of stock count)
+}
+
+model ProductDiscount {
+  id               String       @id @default(cuid())
+  name             String
+  description      String?
+  discountType     DiscountType
+  discountValue    Float
+  minPurchaseValue Float?
+  maxDiscountValue Float?
+  startDate        DateTime
+  endDate          DateTime
+  isActive         Boolean      @default(true)
+  isGlobalProduct  Boolean      @default(false)
+  productId        String
+  storeId          String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  deletedAt        DateTime?
+
+  product   Product     @relation(fields: [productId], references: [id])
+  store     Store?      @relation(fields: [storeId], references: [id])
+  orderItem OrderItem[]
+
+  @@map("product_discounts")
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+  BUY1_GET1
+  MIN_PURCHASE
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  cartItems CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        String    @id @default(cuid())
+  cartId    String
+  productId String
+  storeId   String
+  quantity  Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  cart         Cart         @relation(fields: [cartId], references: [id])
+  productStock ProductStock @relation(fields: [productId, storeId], references: [productId, storeId])
+
+  @@map("cart_items")
+}
+
+model Order {
+  id                String    @id @default(cuid())
+  userId            String
+  storeId           String
+  totalAmount       Float
+  shippingAddressId String
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+
+  user            User           @relation(fields: [userId], references: [id])
+  store           Store          @relation(fields: [storeId], references: [id])
+  shippingAddress UserAddress    @relation(fields: [shippingAddressId], references: [id])
+  orderItems      OrderItem[]
+  orderHistories  OrderHistory[]
+  payment         Payment?
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id            String    @id @default(cuid())
+  orderId       String
+  productId     String
+  storeId       String
+  quantity      Int
+  originalPrice Float
+  finalPrice    Float
+  discountId    String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  order           Order            @relation(fields: [orderId], references: [id])
+  productStock    ProductStock     @relation(fields: [productId, storeId], references: [productId, storeId])
+  productDiscount ProductDiscount? @relation(fields: [discountId], references: [id])
+
+  @@map("order_items")
+}
+
+model OrderHistory {
+  id        String      @id @default(cuid())
+  orderId   String
+  status    OrderStatus
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  deletedAt DateTime?
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@map("order_histories")
+}
+
+enum OrderStatus {
+  WAITING_FOR_PAYMENT
+  WAITING_FOR_CONFIRMATION
+  PROCESSING
+  DELIVERING
+  CONFIRMED
+  CANCELED
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  orderId       String        @unique
+  paymentType   PaymentType
+  paymentStatus PaymentStatus @default(PENDING)
+  paymentMethod String
+  paymentAmount Float
+  paymentDate   DateTime
+  isVerified    Boolean       @default(false)
+  verifiedBy    String?
+  verifiedAt    DateTime?
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deletedAt     DateTime?
+
+  admin        Admin?         @relation(fields: [verifiedBy], references: [id])
+  order        Order          @relation(fields: [orderId], references: [id])
+  paymentProof PaymentProof[]
+
+  @@map("payments")
+}
+
+enum PaymentType {
+  BANK_TRANSFER
+  PAYMENT_GATEWAY
+}
+
+enum PaymentStatus {
+  PENDING // Waiting for payment
+  SUCCESS // Payment confirmed  or successful
+  FAILED // Payment failed (fraudulent or declined)
+}
+
+model PaymentProof {
+  id            String    @id @default(cuid())
+  transactionId String
+  imageUrl      String
+  status        String
+  verifiedBy    String?
+  verifiedAt    DateTime?
+  notes         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime?
+
+  payment Payment @relation(fields: [transactionId], references: [id])
+
+  @@map("payment_proofs")
 }
