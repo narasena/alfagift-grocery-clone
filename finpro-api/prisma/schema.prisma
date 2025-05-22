@@ -124,7 +124,7 @@ model Product {
   description       String?
   brandId           String?
   price             Float
-  productSubCategoryId String
+  productSubCategoryId Int
   productSubCategory ProductSubCategory @relation(fields: [productSubCategoryId], references: [id])
   sku               String?   @unique
   barcode           String?   @unique
@@ -157,7 +157,7 @@ model ProductImage {
 }
 
 model ProductCategory {
-  id                String   @id @default(cuid())
+  id                Int       @id @default(autoincrement())
   name              String
   slug              String   @unique
   description       String?
@@ -170,14 +170,14 @@ model ProductCategory {
 }
 
 model ProductSubCategory {
-  id                String   @id @default(cuid())
+  id                Int   @id @default(autoincrement())
   name              String
   slug              String   @unique
   description       String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   deletedAt         DateTime?
-  productCategoryId String
+  productCategoryId Int
   productCategory   ProductCategory @relation(fields: [productCategoryId], references: [id])
   product           Product[]
 
