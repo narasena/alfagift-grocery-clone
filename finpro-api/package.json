@@ -14,7 +14,7 @@
     "build": "tsc && mkdir -p api && cp -r dist/src/* api/",
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate:dev": "dotenv -e .env.development -- npx prisma migrate dev",
+    "migrate:dev": "dotenv -e .env.development -- npx prisma migrate dev --skip-generate",
     "prisma:studio": "dotenv -e .env.development -- npx prisma studio",
     "prisma:generate": "dotenv -e .env.development -- npx prisma generate",
     "prisma:format": "dotenv -e .env.development -- npx prisma format",
