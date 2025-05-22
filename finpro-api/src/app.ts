@@ -68,7 +68,7 @@ export default class App {
   public start(): void {
     if (process.env.NODE_ENV !== 'production') {
       this.app.listen(PORT, () => {
-        console.log(`  ➜ [API] Local:   http://localhost:${PORT}/`);
+        console.log(`  🖥️ [API] Local:   http://localhost:${PORT}/`);
       });
     }
   }
