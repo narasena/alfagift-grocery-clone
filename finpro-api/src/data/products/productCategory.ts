@@ -1,4 +1,4 @@
-const productCategories = {
+export const productCategories = {
   'Kebutuhan Dapur': [
     'Perlengkapan Dapur & Ruang Makan',
     'Bahan Masakan',
