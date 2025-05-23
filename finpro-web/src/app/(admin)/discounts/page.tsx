@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 
-export default function AdminDashboardPage () {
+export default function AdminDiscountPage () {
   return (
     <div>
       
