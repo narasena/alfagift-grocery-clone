@@ -4274,7 +4274,8 @@ export namespace Prisma {
     city: string | null
     province: string | null
     postalCode: string | null
-    coordinates: string | null
+    latitude: string | null
+    longitude: string | null
     isMainAddress: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4290,7 +4291,8 @@ export namespace Prisma {
     city: string | null
     province: string | null
     postalCode: string | null
-    coordinates: string | null
+    latitude: string | null
+    longitude: string | null
     isMainAddress: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -4306,7 +4308,8 @@ export namespace Prisma {
     city: number
     province: number
     postalCode: number
-    coordinates: number
+    latitude: number
+    longitude: number
     isMainAddress: number
     createdAt: number
     updatedAt: number
@@ -4324,7 +4327,8 @@ export namespace Prisma {
     city?: true
     province?: true
     postalCode?: true
-    coordinates?: true
+    latitude?: true
+    longitude?: true
     isMainAddress?: true
     createdAt?: true
     updatedAt?: true
@@ -4340,7 +4344,8 @@ export namespace Prisma {
     city?: true
     province?: true
     postalCode?: true
-    coordinates?: true
+    latitude?: true
+    longitude?: true
     isMainAddress?: true
     createdAt?: true
     updatedAt?: true
@@ -4356,7 +4361,8 @@ export namespace Prisma {
     city?: true
     province?: true
     postalCode?: true
-    coordinates?: true
+    latitude?: true
+    longitude?: true
     isMainAddress?: true
     createdAt?: true
     updatedAt?: true
@@ -4445,7 +4451,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates: string | null
+    latitude: string
+    longitude: string
     isMainAddress: boolean
     createdAt: Date
     updatedAt: Date
@@ -4478,7 +4485,8 @@ export namespace Prisma {
     city?: boolean
     province?: boolean
     postalCode?: boolean
-    coordinates?: boolean
+    latitude?: boolean
+    longitude?: boolean
     isMainAddress?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4497,7 +4505,8 @@ export namespace Prisma {
     city?: boolean
     province?: boolean
     postalCode?: boolean
-    coordinates?: boolean
+    latitude?: boolean
+    longitude?: boolean
     isMainAddress?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4514,7 +4523,8 @@ export namespace Prisma {
     city?: boolean
     province?: boolean
     postalCode?: boolean
-    coordinates?: boolean
+    latitude?: boolean
+    longitude?: boolean
     isMainAddress?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4531,14 +4541,15 @@ export namespace Prisma {
     city?: boolean
     province?: boolean
     postalCode?: boolean
-    coordinates?: boolean
+    latitude?: boolean
+    longitude?: boolean
     isMainAddress?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
   }
 
-  export type UserAddressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "address" | "subDistrict" | "district" | "city" | "province" | "postalCode" | "coordinates" | "isMainAddress" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["userAddress"]>
+  export type UserAddressOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "address" | "subDistrict" | "district" | "city" | "province" | "postalCode" | "latitude" | "longitude" | "isMainAddress" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["userAddress"]>
   export type UserAddressInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     orders?: boolean | UserAddress$ordersArgs<ExtArgs>
@@ -4566,7 +4577,8 @@ export namespace Prisma {
       city: string
       province: string
       postalCode: string
-      coordinates: string | null
+      latitude: string
+      longitude: string
       isMainAddress: boolean
       createdAt: Date
       updatedAt: Date
@@ -5004,7 +5016,8 @@ export namespace Prisma {
     readonly city: FieldRef<"UserAddress", 'String'>
     readonly province: FieldRef<"UserAddress", 'String'>
     readonly postalCode: FieldRef<"UserAddress", 'String'>
-    readonly coordinates: FieldRef<"UserAddress", 'String'>
+    readonly latitude: FieldRef<"UserAddress", 'String'>
+    readonly longitude: FieldRef<"UserAddress", 'String'>
     readonly isMainAddress: FieldRef<"UserAddress", 'Boolean'>
     readonly createdAt: FieldRef<"UserAddress", 'DateTime'>
     readonly updatedAt: FieldRef<"UserAddress", 'DateTime'>
@@ -5466,7 +5479,8 @@ export namespace Prisma {
     city: string | null
     province: string | null
     postalCode: string | null
-    coordinates: string | null
+    latitude: string | null
+    longitude: string | null
     phoneNumber: string | null
     email: string | null
     createdAt: Date | null
@@ -5483,7 +5497,8 @@ export namespace Prisma {
     city: string | null
     province: string | null
     postalCode: string | null
-    coordinates: string | null
+    latitude: string | null
+    longitude: string | null
     phoneNumber: string | null
     email: string | null
     createdAt: Date | null
@@ -5500,7 +5515,8 @@ export namespace Prisma {
     city: number
     province: number
     postalCode: number
-    coordinates: number
+    latitude: number
+    longitude: number
     phoneNumber: number
     email: number
     createdAt: number
@@ -5519,7 +5535,8 @@ export namespace Prisma {
     city?: true
     province?: true
     postalCode?: true
-    coordinates?: true
+    latitude?: true
+    longitude?: true
     phoneNumber?: true
     email?: true
     createdAt?: true
@@ -5536,7 +5553,8 @@ export namespace Prisma {
     city?: true
     province?: true
     postalCode?: true
-    coordinates?: true
+    latitude?: true
+    longitude?: true
     phoneNumber?: true
     email?: true
     createdAt?: true
@@ -5553,7 +5571,8 @@ export namespace Prisma {
     city?: true
     province?: true
     postalCode?: true
-    coordinates?: true
+    latitude?: true
+    longitude?: true
     phoneNumber?: true
     email?: true
     createdAt?: true
@@ -5643,7 +5662,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates: string | null
+    latitude: string
+    longitude: string
     phoneNumber: string | null
     email: string | null
     createdAt: Date
@@ -5677,7 +5697,8 @@ export namespace Prisma {
     city?: boolean
     province?: boolean
     postalCode?: boolean
-    coordinates?: boolean
+    latitude?: boolean
+    longitude?: boolean
     phoneNumber?: boolean
     email?: boolean
     createdAt?: boolean
@@ -5699,7 +5720,8 @@ export namespace Prisma {
     city?: boolean
     province?: boolean
     postalCode?: boolean
-    coordinates?: boolean
+    latitude?: boolean
+    longitude?: boolean
     phoneNumber?: boolean
     email?: boolean
     createdAt?: boolean
@@ -5716,7 +5738,8 @@ export namespace Prisma {
     city?: boolean
     province?: boolean
     postalCode?: boolean
-    coordinates?: boolean
+    latitude?: boolean
+    longitude?: boolean
     phoneNumber?: boolean
     email?: boolean
     createdAt?: boolean
@@ -5733,7 +5756,8 @@ export namespace Prisma {
     city?: boolean
     province?: boolean
     postalCode?: boolean
-    coordinates?: boolean
+    latitude?: boolean
+    longitude?: boolean
     phoneNumber?: boolean
     email?: boolean
     createdAt?: boolean
@@ -5741,7 +5765,7 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type StoreOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "address" | "subDistrict" | "district" | "city" | "province" | "postalCode" | "coordinates" | "phoneNumber" | "email" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["store"]>
+  export type StoreOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "address" | "subDistrict" | "district" | "city" | "province" | "postalCode" | "latitude" | "longitude" | "phoneNumber" | "email" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["store"]>
   export type StoreInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     productStock?: boolean | Store$productStockArgs<ExtArgs>
     productDiscount?: boolean | Store$productDiscountArgs<ExtArgs>
@@ -5769,7 +5793,8 @@ export namespace Prisma {
       city: string
       province: string
       postalCode: string
-      coordinates: string | null
+      latitude: string
+      longitude: string
       phoneNumber: string | null
       email: string | null
       createdAt: Date
@@ -6210,7 +6235,8 @@ export namespace Prisma {
     readonly city: FieldRef<"Store", 'String'>
     readonly province: FieldRef<"Store", 'String'>
     readonly postalCode: FieldRef<"Store", 'String'>
-    readonly coordinates: FieldRef<"Store", 'String'>
+    readonly latitude: FieldRef<"Store", 'String'>
+    readonly longitude: FieldRef<"Store", 'String'>
     readonly phoneNumber: FieldRef<"Store", 'String'>
     readonly email: FieldRef<"Store", 'String'>
     readonly createdAt: FieldRef<"Store", 'DateTime'>
@@ -7988,11 +8014,13 @@ export namespace Prisma {
 
   export type ProductAvgAggregateOutputType = {
     price: number | null
+    productSubCategoryId: number | null
     weight: number | null
   }
 
   export type ProductSumAggregateOutputType = {
     price: number | null
+    productSubCategoryId: number | null
     weight: number | null
   }
 
@@ -8003,7 +8031,7 @@ export namespace Prisma {
     description: string | null
     brandId: string | null
     price: number | null
-    productSubCategoryId: string | null
+    productSubCategoryId: number | null
     sku: string | null
     barcode: string | null
     plu: string | null
@@ -8022,7 +8050,7 @@ export namespace Prisma {
     description: string | null
     brandId: string | null
     price: number | null
-    productSubCategoryId: string | null
+    productSubCategoryId: number | null
     sku: string | null
     barcode: string | null
     plu: string | null
@@ -8057,11 +8085,13 @@ export namespace Prisma {
 
   export type ProductAvgAggregateInputType = {
     price?: true
+    productSubCategoryId?: true
     weight?: true
   }
 
   export type ProductSumAggregateInputType = {
     price?: true
+    productSubCategoryId?: true
     weight?: true
   }
 
@@ -8216,7 +8246,7 @@ export namespace Prisma {
     description: string | null
     brandId: string | null
     price: number
-    productSubCategoryId: string
+    productSubCategoryId: number
     sku: string | null
     barcode: string | null
     plu: string | null
@@ -8360,7 +8390,7 @@ export namespace Prisma {
       description: string | null
       brandId: string | null
       price: number
-      productSubCategoryId: string
+      productSubCategoryId: number
       sku: string | null
       barcode: string | null
       plu: string | null
@@ -8803,7 +8833,7 @@ export namespace Prisma {
     readonly description: FieldRef<"Product", 'String'>
     readonly brandId: FieldRef<"Product", 'String'>
     readonly price: FieldRef<"Product", 'Float'>
-    readonly productSubCategoryId: FieldRef<"Product", 'String'>
+    readonly productSubCategoryId: FieldRef<"Product", 'Int'>
     readonly sku: FieldRef<"Product", 'String'>
     readonly barcode: FieldRef<"Product", 'String'>
     readonly plu: FieldRef<"Product", 'String'>
@@ -10389,12 +10419,22 @@ export namespace Prisma {
 
   export type AggregateProductCategory = {
     _count: ProductCategoryCountAggregateOutputType | null
+    _avg: ProductCategoryAvgAggregateOutputType | null
+    _sum: ProductCategorySumAggregateOutputType | null
     _min: ProductCategoryMinAggregateOutputType | null
     _max: ProductCategoryMaxAggregateOutputType | null
   }
 
+  export type ProductCategoryAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type ProductCategorySumAggregateOutputType = {
+    id: number | null
+  }
+
   export type ProductCategoryMinAggregateOutputType = {
-    id: string | null
+    id: number | null
     name: string | null
     slug: string | null
     description: string | null
@@ -10404,7 +10444,7 @@ export namespace Prisma {
   }
 
   export type ProductCategoryMaxAggregateOutputType = {
-    id: string | null
+    id: number | null
     name: string | null
     slug: string | null
     description: string | null
@@ -10424,6 +10464,14 @@ export namespace Prisma {
     _all: number
   }
 
+
+  export type ProductCategoryAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type ProductCategorySumAggregateInputType = {
+    id?: true
+  }
 
   export type ProductCategoryMinAggregateInputType = {
     id?: true
@@ -10494,6 +10542,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ProductCategoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProductCategorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ProductCategoryMinAggregateInputType
@@ -10524,12 +10584,14 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ProductCategoryCountAggregateInputType | true
+    _avg?: ProductCategoryAvgAggregateInputType
+    _sum?: ProductCategorySumAggregateInputType
     _min?: ProductCategoryMinAggregateInputType
     _max?: ProductCategoryMaxAggregateInputType
   }
 
   export type ProductCategoryGroupByOutputType = {
-    id: string
+    id: number
     name: string
     slug: string
     description: string | null
@@ -10537,6 +10599,8 @@ export namespace Prisma {
     updatedAt: Date
     deletedAt: Date | null
     _count: ProductCategoryCountAggregateOutputType | null
+    _avg: ProductCategoryAvgAggregateOutputType | null
+    _sum: ProductCategorySumAggregateOutputType | null
     _min: ProductCategoryMinAggregateOutputType | null
     _max: ProductCategoryMaxAggregateOutputType | null
   }
@@ -10611,7 +10675,7 @@ export namespace Prisma {
       productSubCategory: Prisma.$ProductSubCategoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: string
+      id: number
       name: string
       slug: string
       description: string | null
@@ -11042,7 +11106,7 @@ export namespace Prisma {
    * Fields of the ProductCategory model
    */
   interface ProductCategoryFieldRefs {
-    readonly id: FieldRef<"ProductCategory", 'String'>
+    readonly id: FieldRef<"ProductCategory", 'Int'>
     readonly name: FieldRef<"ProductCategory", 'String'>
     readonly slug: FieldRef<"ProductCategory", 'String'>
     readonly description: FieldRef<"ProductCategory", 'String'>
@@ -11485,30 +11549,42 @@ export namespace Prisma {
 
   export type AggregateProductSubCategory = {
     _count: ProductSubCategoryCountAggregateOutputType | null
+    _avg: ProductSubCategoryAvgAggregateOutputType | null
+    _sum: ProductSubCategorySumAggregateOutputType | null
     _min: ProductSubCategoryMinAggregateOutputType | null
     _max: ProductSubCategoryMaxAggregateOutputType | null
   }
 
+  export type ProductSubCategoryAvgAggregateOutputType = {
+    id: number | null
+    productCategoryId: number | null
+  }
+
+  export type ProductSubCategorySumAggregateOutputType = {
+    id: number | null
+    productCategoryId: number | null
+  }
+
   export type ProductSubCategoryMinAggregateOutputType = {
-    id: string | null
+    id: number | null
     name: string | null
     slug: string | null
     description: string | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
-    productCategoryId: string | null
+    productCategoryId: number | null
   }
 
   export type ProductSubCategoryMaxAggregateOutputType = {
-    id: string | null
+    id: number | null
     name: string | null
     slug: string | null
     description: string | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
-    productCategoryId: string | null
+    productCategoryId: number | null
   }
 
   export type ProductSubCategoryCountAggregateOutputType = {
@@ -11523,6 +11599,16 @@ export namespace Prisma {
     _all: number
   }
 
+
+  export type ProductSubCategoryAvgAggregateInputType = {
+    id?: true
+    productCategoryId?: true
+  }
+
+  export type ProductSubCategorySumAggregateInputType = {
+    id?: true
+    productCategoryId?: true
+  }
 
   export type ProductSubCategoryMinAggregateInputType = {
     id?: true
@@ -11596,6 +11682,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: ProductSubCategoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProductSubCategorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: ProductSubCategoryMinAggregateInputType
@@ -11626,20 +11724,24 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: ProductSubCategoryCountAggregateInputType | true
+    _avg?: ProductSubCategoryAvgAggregateInputType
+    _sum?: ProductSubCategorySumAggregateInputType
     _min?: ProductSubCategoryMinAggregateInputType
     _max?: ProductSubCategoryMaxAggregateInputType
   }
 
   export type ProductSubCategoryGroupByOutputType = {
-    id: string
+    id: number
     name: string
     slug: string
     description: string | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
-    productCategoryId: string
+    productCategoryId: number
     _count: ProductSubCategoryCountAggregateOutputType | null
+    _avg: ProductSubCategoryAvgAggregateOutputType | null
+    _sum: ProductSubCategorySumAggregateOutputType | null
     _min: ProductSubCategoryMinAggregateOutputType | null
     _max: ProductSubCategoryMaxAggregateOutputType | null
   }
@@ -11727,14 +11829,14 @@ export namespace Prisma {
       product: Prisma.$ProductPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: string
+      id: number
       name: string
       slug: string
       description: string | null
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
-      productCategoryId: string
+      productCategoryId: number
     }, ExtArgs["result"]["productSubCategory"]>
     composites: {}
   }
@@ -12160,14 +12262,14 @@ export namespace Prisma {
    * Fields of the ProductSubCategory model
    */
   interface ProductSubCategoryFieldRefs {
-    readonly id: FieldRef<"ProductSubCategory", 'String'>
+    readonly id: FieldRef<"ProductSubCategory", 'Int'>
     readonly name: FieldRef<"ProductSubCategory", 'String'>
     readonly slug: FieldRef<"ProductSubCategory", 'String'>
     readonly description: FieldRef<"ProductSubCategory", 'String'>
     readonly createdAt: FieldRef<"ProductSubCategory", 'DateTime'>
     readonly updatedAt: FieldRef<"ProductSubCategory", 'DateTime'>
     readonly deletedAt: FieldRef<"ProductSubCategory", 'DateTime'>
-    readonly productCategoryId: FieldRef<"ProductSubCategory", 'String'>
+    readonly productCategoryId: FieldRef<"ProductSubCategory", 'Int'>
   }
     
 
@@ -24434,7 +24536,8 @@ export namespace Prisma {
     city: 'city',
     province: 'province',
     postalCode: 'postalCode',
-    coordinates: 'coordinates',
+    latitude: 'latitude',
+    longitude: 'longitude',
     isMainAddress: 'isMainAddress',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -24453,7 +24556,8 @@ export namespace Prisma {
     city: 'city',
     province: 'province',
     postalCode: 'postalCode',
-    coordinates: 'coordinates',
+    latitude: 'latitude',
+    longitude: 'longitude',
     phoneNumber: 'phoneNumber',
     email: 'email',
     createdAt: 'createdAt',
@@ -25005,7 +25109,8 @@ export namespace Prisma {
     city?: StringFilter<"UserAddress"> | string
     province?: StringFilter<"UserAddress"> | string
     postalCode?: StringFilter<"UserAddress"> | string
-    coordinates?: StringNullableFilter<"UserAddress"> | string | null
+    latitude?: StringFilter<"UserAddress"> | string
+    longitude?: StringFilter<"UserAddress"> | string
     isMainAddress?: BoolFilter<"UserAddress"> | boolean
     createdAt?: DateTimeFilter<"UserAddress"> | Date | string
     updatedAt?: DateTimeFilter<"UserAddress"> | Date | string
@@ -25023,7 +25128,8 @@ export namespace Prisma {
     city?: SortOrder
     province?: SortOrder
     postalCode?: SortOrder
-    coordinates?: SortOrderInput | SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     isMainAddress?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -25044,7 +25150,8 @@ export namespace Prisma {
     city?: StringFilter<"UserAddress"> | string
     province?: StringFilter<"UserAddress"> | string
     postalCode?: StringFilter<"UserAddress"> | string
-    coordinates?: StringNullableFilter<"UserAddress"> | string | null
+    latitude?: StringFilter<"UserAddress"> | string
+    longitude?: StringFilter<"UserAddress"> | string
     isMainAddress?: BoolFilter<"UserAddress"> | boolean
     createdAt?: DateTimeFilter<"UserAddress"> | Date | string
     updatedAt?: DateTimeFilter<"UserAddress"> | Date | string
@@ -25062,7 +25169,8 @@ export namespace Prisma {
     city?: SortOrder
     province?: SortOrder
     postalCode?: SortOrder
-    coordinates?: SortOrderInput | SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     isMainAddress?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -25084,7 +25192,8 @@ export namespace Prisma {
     city?: StringWithAggregatesFilter<"UserAddress"> | string
     province?: StringWithAggregatesFilter<"UserAddress"> | string
     postalCode?: StringWithAggregatesFilter<"UserAddress"> | string
-    coordinates?: StringNullableWithAggregatesFilter<"UserAddress"> | string | null
+    latitude?: StringWithAggregatesFilter<"UserAddress"> | string
+    longitude?: StringWithAggregatesFilter<"UserAddress"> | string
     isMainAddress?: BoolWithAggregatesFilter<"UserAddress"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"UserAddress"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"UserAddress"> | Date | string
@@ -25103,7 +25212,8 @@ export namespace Prisma {
     city?: StringFilter<"Store"> | string
     province?: StringFilter<"Store"> | string
     postalCode?: StringFilter<"Store"> | string
-    coordinates?: StringNullableFilter<"Store"> | string | null
+    latitude?: StringFilter<"Store"> | string
+    longitude?: StringFilter<"Store"> | string
     phoneNumber?: StringNullableFilter<"Store"> | string | null
     email?: StringNullableFilter<"Store"> | string | null
     createdAt?: DateTimeFilter<"Store"> | Date | string
@@ -25124,7 +25234,8 @@ export namespace Prisma {
     city?: SortOrder
     province?: SortOrder
     postalCode?: SortOrder
-    coordinates?: SortOrderInput | SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     phoneNumber?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -25148,7 +25259,8 @@ export namespace Prisma {
     city?: StringFilter<"Store"> | string
     province?: StringFilter<"Store"> | string
     postalCode?: StringFilter<"Store"> | string
-    coordinates?: StringNullableFilter<"Store"> | string | null
+    latitude?: StringFilter<"Store"> | string
+    longitude?: StringFilter<"Store"> | string
     phoneNumber?: StringNullableFilter<"Store"> | string | null
     email?: StringNullableFilter<"Store"> | string | null
     createdAt?: DateTimeFilter<"Store"> | Date | string
@@ -25169,7 +25281,8 @@ export namespace Prisma {
     city?: SortOrder
     province?: SortOrder
     postalCode?: SortOrder
-    coordinates?: SortOrderInput | SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     phoneNumber?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -25192,7 +25305,8 @@ export namespace Prisma {
     city?: StringWithAggregatesFilter<"Store"> | string
     province?: StringWithAggregatesFilter<"Store"> | string
     postalCode?: StringWithAggregatesFilter<"Store"> | string
-    coordinates?: StringNullableWithAggregatesFilter<"Store"> | string | null
+    latitude?: StringWithAggregatesFilter<"Store"> | string
+    longitude?: StringWithAggregatesFilter<"Store"> | string
     phoneNumber?: StringNullableWithAggregatesFilter<"Store"> | string | null
     email?: StringNullableWithAggregatesFilter<"Store"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Store"> | Date | string
@@ -25320,7 +25434,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Product"> | string | null
     brandId?: StringNullableFilter<"Product"> | string | null
     price?: FloatFilter<"Product"> | number
-    productSubCategoryId?: StringFilter<"Product"> | string
+    productSubCategoryId?: IntFilter<"Product"> | number
     sku?: StringNullableFilter<"Product"> | string | null
     barcode?: StringNullableFilter<"Product"> | string | null
     plu?: StringNullableFilter<"Product"> | string | null
@@ -25371,7 +25485,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Product"> | string | null
     brandId?: StringNullableFilter<"Product"> | string | null
     price?: FloatFilter<"Product"> | number
-    productSubCategoryId?: StringFilter<"Product"> | string
+    productSubCategoryId?: IntFilter<"Product"> | number
     plu?: StringNullableFilter<"Product"> | string | null
     bpomId?: StringNullableFilter<"Product"> | string | null
     weight?: FloatNullableFilter<"Product"> | number | null
@@ -25419,7 +25533,7 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<"Product"> | string | null
     brandId?: StringNullableWithAggregatesFilter<"Product"> | string | null
     price?: FloatWithAggregatesFilter<"Product"> | number
-    productSubCategoryId?: StringWithAggregatesFilter<"Product"> | string
+    productSubCategoryId?: IntWithAggregatesFilter<"Product"> | number
     sku?: StringNullableWithAggregatesFilter<"Product"> | string | null
     barcode?: StringNullableWithAggregatesFilter<"Product"> | string | null
     plu?: StringNullableWithAggregatesFilter<"Product"> | string | null
@@ -25500,7 +25614,7 @@ export namespace Prisma {
     AND?: ProductCategoryWhereInput | ProductCategoryWhereInput[]
     OR?: ProductCategoryWhereInput[]
     NOT?: ProductCategoryWhereInput | ProductCategoryWhereInput[]
-    id?: StringFilter<"ProductCategory"> | string
+    id?: IntFilter<"ProductCategory"> | number
     name?: StringFilter<"ProductCategory"> | string
     slug?: StringFilter<"ProductCategory"> | string
     description?: StringNullableFilter<"ProductCategory"> | string | null
@@ -25522,7 +25636,7 @@ export namespace Prisma {
   }
 
   export type ProductCategoryWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
+    id?: number
     slug?: string
     AND?: ProductCategoryWhereInput | ProductCategoryWhereInput[]
     OR?: ProductCategoryWhereInput[]
@@ -25544,15 +25658,17 @@ export namespace Prisma {
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
     _count?: ProductCategoryCountOrderByAggregateInput
+    _avg?: ProductCategoryAvgOrderByAggregateInput
     _max?: ProductCategoryMaxOrderByAggregateInput
     _min?: ProductCategoryMinOrderByAggregateInput
+    _sum?: ProductCategorySumOrderByAggregateInput
   }
 
   export type ProductCategoryScalarWhereWithAggregatesInput = {
     AND?: ProductCategoryScalarWhereWithAggregatesInput | ProductCategoryScalarWhereWithAggregatesInput[]
     OR?: ProductCategoryScalarWhereWithAggregatesInput[]
     NOT?: ProductCategoryScalarWhereWithAggregatesInput | ProductCategoryScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"ProductCategory"> | string
+    id?: IntWithAggregatesFilter<"ProductCategory"> | number
     name?: StringWithAggregatesFilter<"ProductCategory"> | string
     slug?: StringWithAggregatesFilter<"ProductCategory"> | string
     description?: StringNullableWithAggregatesFilter<"ProductCategory"> | string | null
@@ -25565,14 +25681,14 @@ export namespace Prisma {
     AND?: ProductSubCategoryWhereInput | ProductSubCategoryWhereInput[]
     OR?: ProductSubCategoryWhereInput[]
     NOT?: ProductSubCategoryWhereInput | ProductSubCategoryWhereInput[]
-    id?: StringFilter<"ProductSubCategory"> | string
+    id?: IntFilter<"ProductSubCategory"> | number
     name?: StringFilter<"ProductSubCategory"> | string
     slug?: StringFilter<"ProductSubCategory"> | string
     description?: StringNullableFilter<"ProductSubCategory"> | string | null
     createdAt?: DateTimeFilter<"ProductSubCategory"> | Date | string
     updatedAt?: DateTimeFilter<"ProductSubCategory"> | Date | string
     deletedAt?: DateTimeNullableFilter<"ProductSubCategory"> | Date | string | null
-    productCategoryId?: StringFilter<"ProductSubCategory"> | string
+    productCategoryId?: IntFilter<"ProductSubCategory"> | number
     productCategory?: XOR<ProductCategoryScalarRelationFilter, ProductCategoryWhereInput>
     product?: ProductListRelationFilter
   }
@@ -25591,7 +25707,7 @@ export namespace Prisma {
   }
 
   export type ProductSubCategoryWhereUniqueInput = Prisma.AtLeast<{
-    id?: string
+    id?: number
     slug?: string
     AND?: ProductSubCategoryWhereInput | ProductSubCategoryWhereInput[]
     OR?: ProductSubCategoryWhereInput[]
@@ -25601,7 +25717,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"ProductSubCategory"> | Date | string
     updatedAt?: DateTimeFilter<"ProductSubCategory"> | Date | string
     deletedAt?: DateTimeNullableFilter<"ProductSubCategory"> | Date | string | null
-    productCategoryId?: StringFilter<"ProductSubCategory"> | string
+    productCategoryId?: IntFilter<"ProductSubCategory"> | number
     productCategory?: XOR<ProductCategoryScalarRelationFilter, ProductCategoryWhereInput>
     product?: ProductListRelationFilter
   }, "id" | "slug">
@@ -25616,22 +25732,24 @@ export namespace Prisma {
     deletedAt?: SortOrderInput | SortOrder
     productCategoryId?: SortOrder
     _count?: ProductSubCategoryCountOrderByAggregateInput
+    _avg?: ProductSubCategoryAvgOrderByAggregateInput
     _max?: ProductSubCategoryMaxOrderByAggregateInput
     _min?: ProductSubCategoryMinOrderByAggregateInput
+    _sum?: ProductSubCategorySumOrderByAggregateInput
   }
 
   export type ProductSubCategoryScalarWhereWithAggregatesInput = {
     AND?: ProductSubCategoryScalarWhereWithAggregatesInput | ProductSubCategoryScalarWhereWithAggregatesInput[]
     OR?: ProductSubCategoryScalarWhereWithAggregatesInput[]
     NOT?: ProductSubCategoryScalarWhereWithAggregatesInput | ProductSubCategoryScalarWhereWithAggregatesInput[]
-    id?: StringWithAggregatesFilter<"ProductSubCategory"> | string
+    id?: IntWithAggregatesFilter<"ProductSubCategory"> | number
     name?: StringWithAggregatesFilter<"ProductSubCategory"> | string
     slug?: StringWithAggregatesFilter<"ProductSubCategory"> | string
     description?: StringNullableWithAggregatesFilter<"ProductSubCategory"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ProductSubCategory"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ProductSubCategory"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"ProductSubCategory"> | Date | string | null
-    productCategoryId?: StringWithAggregatesFilter<"ProductSubCategory"> | string
+    productCategoryId?: IntWithAggregatesFilter<"ProductSubCategory"> | number
   }
 
   export type ProductStockWhereInput = {
@@ -26616,7 +26734,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     isMainAddress?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26634,7 +26753,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     isMainAddress?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26650,7 +26770,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     isMainAddress?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26668,7 +26789,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     isMainAddress?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26685,7 +26807,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     isMainAddress?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -26700,7 +26823,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     isMainAddress?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26716,7 +26840,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     isMainAddress?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26732,7 +26857,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     phoneNumber?: string | null
     email?: string | null
     createdAt?: Date | string
@@ -26753,7 +26879,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     phoneNumber?: string | null
     email?: string | null
     createdAt?: Date | string
@@ -26774,7 +26901,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26795,7 +26923,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26816,7 +26945,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     phoneNumber?: string | null
     email?: string | null
     createdAt?: Date | string
@@ -26833,7 +26963,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26850,7 +26981,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -27016,7 +27148,7 @@ export namespace Prisma {
     description?: string | null
     brandId?: string | null
     price: number
-    productSubCategoryId: string
+    productSubCategoryId: number
     sku?: string | null
     barcode?: string | null
     plu?: string | null
@@ -27060,7 +27192,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     brandId?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
-    productSubCategoryId?: StringFieldUpdateOperationsInput | string
+    productSubCategoryId?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
     plu?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27082,7 +27214,7 @@ export namespace Prisma {
     description?: string | null
     brandId?: string | null
     price: number
-    productSubCategoryId: string
+    productSubCategoryId: number
     sku?: string | null
     barcode?: string | null
     plu?: string | null
@@ -27119,7 +27251,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     brandId?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
-    productSubCategoryId?: StringFieldUpdateOperationsInput | string
+    productSubCategoryId?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
     plu?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27201,7 +27333,6 @@ export namespace Prisma {
   }
 
   export type ProductCategoryCreateInput = {
-    id?: string
     name: string
     slug: string
     description?: string | null
@@ -27212,7 +27343,7 @@ export namespace Prisma {
   }
 
   export type ProductCategoryUncheckedCreateInput = {
-    id?: string
+    id?: number
     name: string
     slug: string
     description?: string | null
@@ -27223,7 +27354,6 @@ export namespace Prisma {
   }
 
   export type ProductCategoryUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27234,7 +27364,7 @@ export namespace Prisma {
   }
 
   export type ProductCategoryUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27245,7 +27375,7 @@ export namespace Prisma {
   }
 
   export type ProductCategoryCreateManyInput = {
-    id?: string
+    id?: number
     name: string
     slug: string
     description?: string | null
@@ -27255,7 +27385,6 @@ export namespace Prisma {
   }
 
   export type ProductCategoryUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27265,7 +27394,7 @@ export namespace Prisma {
   }
 
   export type ProductCategoryUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27275,7 +27404,6 @@ export namespace Prisma {
   }
 
   export type ProductSubCategoryCreateInput = {
-    id?: string
     name: string
     slug: string
     description?: string | null
@@ -27287,19 +27415,18 @@ export namespace Prisma {
   }
 
   export type ProductSubCategoryUncheckedCreateInput = {
-    id?: string
+    id?: number
     name: string
     slug: string
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    productCategoryId: string
+    productCategoryId: number
     product?: ProductUncheckedCreateNestedManyWithoutProductSubCategoryInput
   }
 
   export type ProductSubCategoryUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27311,30 +27438,29 @@ export namespace Prisma {
   }
 
   export type ProductSubCategoryUncheckedUpdateInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    productCategoryId?: StringFieldUpdateOperationsInput | string
+    productCategoryId?: IntFieldUpdateOperationsInput | number
     product?: ProductUncheckedUpdateManyWithoutProductSubCategoryNestedInput
   }
 
   export type ProductSubCategoryCreateManyInput = {
-    id?: string
+    id?: number
     name: string
     slug: string
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    productCategoryId: string
+    productCategoryId: number
   }
 
   export type ProductSubCategoryUpdateManyMutationInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -27344,14 +27470,14 @@ export namespace Prisma {
   }
 
   export type ProductSubCategoryUncheckedUpdateManyInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    productCategoryId?: StringFieldUpdateOperationsInput | string
+    productCategoryId?: IntFieldUpdateOperationsInput | number
   }
 
   export type ProductStockCreateInput = {
@@ -28495,7 +28621,8 @@ export namespace Prisma {
     city?: SortOrder
     province?: SortOrder
     postalCode?: SortOrder
-    coordinates?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     isMainAddress?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -28511,7 +28638,8 @@ export namespace Prisma {
     city?: SortOrder
     province?: SortOrder
     postalCode?: SortOrder
-    coordinates?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     isMainAddress?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -28527,7 +28655,8 @@ export namespace Prisma {
     city?: SortOrder
     province?: SortOrder
     postalCode?: SortOrder
-    coordinates?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     isMainAddress?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -28573,7 +28702,8 @@ export namespace Prisma {
     city?: SortOrder
     province?: SortOrder
     postalCode?: SortOrder
-    coordinates?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     phoneNumber?: SortOrder
     email?: SortOrder
     createdAt?: SortOrder
@@ -28590,7 +28720,8 @@ export namespace Prisma {
     city?: SortOrder
     province?: SortOrder
     postalCode?: SortOrder
-    coordinates?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     phoneNumber?: SortOrder
     email?: SortOrder
     createdAt?: SortOrder
@@ -28607,7 +28738,8 @@ export namespace Prisma {
     city?: SortOrder
     province?: SortOrder
     postalCode?: SortOrder
-    coordinates?: SortOrder
+    latitude?: SortOrder
+    longitude?: SortOrder
     phoneNumber?: SortOrder
     email?: SortOrder
     createdAt?: SortOrder
@@ -28769,6 +28901,7 @@ export namespace Prisma {
 
   export type ProductAvgOrderByAggregateInput = {
     price?: SortOrder
+    productSubCategoryId?: SortOrder
     weight?: SortOrder
   }
 
@@ -28812,6 +28945,7 @@ export namespace Prisma {
 
   export type ProductSumOrderByAggregateInput = {
     price?: SortOrder
+    productSubCategoryId?: SortOrder
     weight?: SortOrder
   }
 
@@ -28902,6 +29036,10 @@ export namespace Prisma {
     deletedAt?: SortOrder
   }
 
+  export type ProductCategoryAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
   export type ProductCategoryMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -28920,6 +29058,10 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+  }
+
+  export type ProductCategorySumOrderByAggregateInput = {
+    id?: SortOrder
   }
 
   export type ProductCategoryScalarRelationFilter = {
@@ -28948,6 +29090,11 @@ export namespace Prisma {
     productCategoryId?: SortOrder
   }
 
+  export type ProductSubCategoryAvgOrderByAggregateInput = {
+    id?: SortOrder
+    productCategoryId?: SortOrder
+  }
+
   export type ProductSubCategoryMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -28967,6 +29114,11 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
+    productCategoryId?: SortOrder
+  }
+
+  export type ProductSubCategorySumOrderByAggregateInput = {
+    id?: SortOrder
     productCategoryId?: SortOrder
   }
 
@@ -31260,7 +31412,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     isMainAddress?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31276,7 +31429,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     isMainAddress?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -31379,7 +31533,8 @@ export namespace Prisma {
     city?: StringFilter<"UserAddress"> | string
     province?: StringFilter<"UserAddress"> | string
     postalCode?: StringFilter<"UserAddress"> | string
-    coordinates?: StringNullableFilter<"UserAddress"> | string | null
+    latitude?: StringFilter<"UserAddress"> | string
+    longitude?: StringFilter<"UserAddress"> | string
     isMainAddress?: BoolFilter<"UserAddress"> | boolean
     createdAt?: DateTimeFilter<"UserAddress"> | Date | string
     updatedAt?: DateTimeFilter<"UserAddress"> | Date | string
@@ -31881,7 +32036,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     phoneNumber?: string | null
     email?: string | null
     createdAt?: Date | string
@@ -31901,7 +32057,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     phoneNumber?: string | null
     email?: string | null
     createdAt?: Date | string
@@ -31981,7 +32138,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32001,7 +32159,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32049,7 +32208,6 @@ export namespace Prisma {
   }
 
   export type ProductSubCategoryCreateWithoutProductInput = {
-    id?: string
     name: string
     slug: string
     description?: string | null
@@ -32060,14 +32218,14 @@ export namespace Prisma {
   }
 
   export type ProductSubCategoryUncheckedCreateWithoutProductInput = {
-    id?: string
+    id?: number
     name: string
     slug: string
     description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
-    productCategoryId: string
+    productCategoryId: number
   }
 
   export type ProductSubCategoryCreateOrConnectWithoutProductInput = {
@@ -32195,7 +32353,6 @@ export namespace Prisma {
   }
 
   export type ProductSubCategoryUpdateWithoutProductInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32206,14 +32363,14 @@ export namespace Prisma {
   }
 
   export type ProductSubCategoryUncheckedUpdateWithoutProductInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    productCategoryId?: StringFieldUpdateOperationsInput | string
+    productCategoryId?: IntFieldUpdateOperationsInput | number
   }
 
   export type ProductImageUpsertWithWhereUniqueWithoutProductInput = {
@@ -32305,7 +32462,7 @@ export namespace Prisma {
     description?: string | null
     brandId?: string | null
     price: number
-    productSubCategoryId: string
+    productSubCategoryId: number
     sku?: string | null
     barcode?: string | null
     plu?: string | null
@@ -32363,7 +32520,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     brandId?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
-    productSubCategoryId?: StringFieldUpdateOperationsInput | string
+    productSubCategoryId?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
     plu?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32378,7 +32535,6 @@ export namespace Prisma {
   }
 
   export type ProductSubCategoryCreateWithoutProductCategoryInput = {
-    id?: string
     name: string
     slug: string
     description?: string | null
@@ -32389,7 +32545,7 @@ export namespace Prisma {
   }
 
   export type ProductSubCategoryUncheckedCreateWithoutProductCategoryInput = {
-    id?: string
+    id?: number
     name: string
     slug: string
     description?: string | null
@@ -32429,18 +32585,17 @@ export namespace Prisma {
     AND?: ProductSubCategoryScalarWhereInput | ProductSubCategoryScalarWhereInput[]
     OR?: ProductSubCategoryScalarWhereInput[]
     NOT?: ProductSubCategoryScalarWhereInput | ProductSubCategoryScalarWhereInput[]
-    id?: StringFilter<"ProductSubCategory"> | string
+    id?: IntFilter<"ProductSubCategory"> | number
     name?: StringFilter<"ProductSubCategory"> | string
     slug?: StringFilter<"ProductSubCategory"> | string
     description?: StringNullableFilter<"ProductSubCategory"> | string | null
     createdAt?: DateTimeFilter<"ProductSubCategory"> | Date | string
     updatedAt?: DateTimeFilter<"ProductSubCategory"> | Date | string
     deletedAt?: DateTimeNullableFilter<"ProductSubCategory"> | Date | string | null
-    productCategoryId?: StringFilter<"ProductSubCategory"> | string
+    productCategoryId?: IntFilter<"ProductSubCategory"> | number
   }
 
   export type ProductCategoryCreateWithoutProductSubCategoryInput = {
-    id?: string
     name: string
     slug: string
     description?: string | null
@@ -32450,7 +32605,7 @@ export namespace Prisma {
   }
 
   export type ProductCategoryUncheckedCreateWithoutProductSubCategoryInput = {
-    id?: string
+    id?: number
     name: string
     slug: string
     description?: string | null
@@ -32528,7 +32683,6 @@ export namespace Prisma {
   }
 
   export type ProductCategoryUpdateWithoutProductSubCategoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32538,7 +32692,7 @@ export namespace Prisma {
   }
 
   export type ProductCategoryUncheckedUpdateWithoutProductSubCategoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32573,7 +32727,7 @@ export namespace Prisma {
     description?: StringNullableFilter<"Product"> | string | null
     brandId?: StringNullableFilter<"Product"> | string | null
     price?: FloatFilter<"Product"> | number
-    productSubCategoryId?: StringFilter<"Product"> | string
+    productSubCategoryId?: IntFilter<"Product"> | number
     sku?: StringNullableFilter<"Product"> | string | null
     barcode?: StringNullableFilter<"Product"> | string | null
     plu?: StringNullableFilter<"Product"> | string | null
@@ -32613,7 +32767,7 @@ export namespace Prisma {
     description?: string | null
     brandId?: string | null
     price: number
-    productSubCategoryId: string
+    productSubCategoryId: number
     sku?: string | null
     barcode?: string | null
     plu?: string | null
@@ -32641,7 +32795,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     phoneNumber?: string | null
     email?: string | null
     createdAt?: Date | string
@@ -32661,7 +32816,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     phoneNumber?: string | null
     email?: string | null
     createdAt?: Date | string
@@ -32810,7 +32966,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     brandId?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
-    productSubCategoryId?: StringFieldUpdateOperationsInput | string
+    productSubCategoryId?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
     plu?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32844,7 +33000,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -32864,7 +33021,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33058,7 +33216,7 @@ export namespace Prisma {
     description?: string | null
     brandId?: string | null
     price: number
-    productSubCategoryId: string
+    productSubCategoryId: number
     sku?: string | null
     barcode?: string | null
     plu?: string | null
@@ -33086,7 +33244,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     phoneNumber?: string | null
     email?: string | null
     createdAt?: Date | string
@@ -33106,7 +33265,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     phoneNumber?: string | null
     email?: string | null
     createdAt?: Date | string
@@ -33196,7 +33356,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     brandId?: NullableStringFieldUpdateOperationsInput | string | null
     price?: FloatFieldUpdateOperationsInput | number
-    productSubCategoryId?: StringFieldUpdateOperationsInput | string
+    productSubCategoryId?: IntFieldUpdateOperationsInput | number
     sku?: NullableStringFieldUpdateOperationsInput | string | null
     barcode?: NullableStringFieldUpdateOperationsInput | string | null
     plu?: NullableStringFieldUpdateOperationsInput | string | null
@@ -33230,7 +33390,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33250,7 +33411,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33580,7 +33742,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     phoneNumber?: string | null
     email?: string | null
     createdAt?: Date | string
@@ -33600,7 +33763,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     phoneNumber?: string | null
     email?: string | null
     createdAt?: Date | string
@@ -33624,7 +33788,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     isMainAddress?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33641,7 +33806,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     isMainAddress?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33824,7 +33990,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33844,7 +34011,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     phoneNumber?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33874,7 +34042,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     isMainAddress?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -33891,7 +34060,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     isMainAddress?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34589,7 +34759,8 @@ export namespace Prisma {
     city: string
     province: string
     postalCode: string
-    coordinates?: string | null
+    latitude: string
+    longitude: string
     isMainAddress?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -34614,7 +34785,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     isMainAddress?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34630,7 +34802,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     isMainAddress?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -34646,7 +34819,8 @@ export namespace Prisma {
     city?: StringFieldUpdateOperationsInput | string
     province?: StringFieldUpdateOperationsInput | string
     postalCode?: StringFieldUpdateOperationsInput | string
-    coordinates?: NullableStringFieldUpdateOperationsInput | string | null
+    latitude?: StringFieldUpdateOperationsInput | string
+    longitude?: StringFieldUpdateOperationsInput | string
     isMainAddress?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -35178,7 +35352,7 @@ export namespace Prisma {
   }
 
   export type ProductSubCategoryCreateManyProductCategoryInput = {
-    id?: string
+    id?: number
     name: string
     slug: string
     description?: string | null
@@ -35188,7 +35362,6 @@ export namespace Prisma {
   }
 
   export type ProductSubCategoryUpdateWithoutProductCategoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35199,7 +35372,7 @@ export namespace Prisma {
   }
 
   export type ProductSubCategoryUncheckedUpdateWithoutProductCategoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
@@ -35210,7 +35383,7 @@ export namespace Prisma {
   }
 
   export type ProductSubCategoryUncheckedUpdateManyWithoutProductCategoryInput = {
-    id?: StringFieldUpdateOperationsInput | string
+    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
