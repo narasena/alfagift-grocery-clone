@@ -138,6 +138,7 @@ model Product {
   productImage         ProductImage[]
   productStock         ProductStock[]
   productDiscount      ProductDiscount[]
+  productBrand         ProductBrand?      @relation(fields: [brandId], references: [id])
 
   @@map("products")
 }
@@ -154,6 +155,19 @@ model ProductImage {
   product Product @relation(fields: [productId], references: [id])
 
   @@map("product_images")
+}
+
+model ProductBrand {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  products    Product[]
+
+  @@map("product_brands")
 }
 
 model ProductCategory {
