@@ -19,10 +19,10 @@
     "prisma:generate": "dotenv -e .env.development -- npx prisma generate",
     "prisma:format": "dotenv -e .env.development -- npx prisma format",
     "prisma:push": "dotenv -e .env.development -- npx prisma db push",
-    "prisma:seed": "dotenv -e .env.development -- ts-node --project prisma/tsconfig.json prisma/seed.ts"
+    "prisma:seed": "dotenv -e .env.development -- npx prisma db seed"
   },
   "prisma": {
-    "seed": "ts-node --project prisma/tsconfig.json prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
