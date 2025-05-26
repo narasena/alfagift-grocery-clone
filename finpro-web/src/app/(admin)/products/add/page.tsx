@@ -18,7 +18,7 @@ type TProductFormValues = {
   name: string;
   price: number;
   productCategorySubId: number;
-  brandId?: number;
+  brandId?: string;
   description?: string;
   sku?: string;
   barcode?: string;
@@ -60,7 +60,7 @@ export default function AddProductPage() {
             name: '',
             price: 0,
             productCategorySubId: 0,
-            brandId: 0,
+            brandId: '',
             description: '',
             sku: '',
             barcode: '',
