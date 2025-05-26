@@ -3,6 +3,9 @@ import * as React from 'react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import apiInstance from '@/services/apiInstance';
 import { IProductCategory, IProductSubCategory } from '@/types/product.category/product.subcategory.type';
+import { addProductSchemas } from '@/features/schemas/addProductSchemas';
+import * as Yup from 'yup';
+
 
 type TAddProductField = {
   name: string;
@@ -12,7 +15,7 @@ type TAddProductField = {
 };
 
 type TProductFormValues = {
-  name: string
+  name: string;
   price: number;
   productCategorySubId: number;
   brandId?: number;
@@ -20,8 +23,8 @@ type TProductFormValues = {
   sku?: string;
   barcode?: string;
   weight?: number;
-  dimensions?: string; 
-}
+  dimensions?: string;
+};
 export default function AddProductPage() {
   const [productCategories, setProductCategories] = React.useState<IProductCategory[]>([]);
   const [productSubCategories, setProductSubCategories] = React.useState<IProductSubCategory[]>([]);
@@ -52,23 +55,53 @@ export default function AddProductPage() {
   return (
     <div>
       <Formik
-        initialValues={{
-          name: '',
-          price: 0,
-          productCategorySubId: 0,
-          brandId: undefined,
-          description: '',
-          sku: '',
-          barcode: '',
-          weight: undefined,
-          dimensions: '',
-        } as TProductFormValues}
-        onSubmit={() => console.log('Form submitted')}>
+        initialValues={
+          {
+            name: '',
+            price: 0,
+            productCategorySubId: 0,
+            brandId: 0,
+            description: '',
+            sku: '',
+            barcode: '',
+            weight: 0,
+            dimensions: '',
+          } as TProductFormValues
+        }
+        validationSchema={addProductSchemas}
+        onSubmit={(values, { setSubmitting, setErrors, resetForm }) => {
+          console.log('Form Values:', values);
+          console.log('Is Valid:', addProductSchemas.isValidSync(values));
+
+          try {
+            // Manually validate with Yup
+            addProductSchemas.validateSync(values, { abortEarly: false });
+            console.log('Validation passed!');
+
+            // Continue with form submission
+            // apiInstance.post('/products', values)...
+
+            setSubmitting(false);
+          } catch (err:any) {
+            if (err instanceof Yup.ValidationError) {
+              console.log('Validation Errors:', err.errors);
+              // You can also set errors manually if needed
+              // const errorMessages = {};
+              // err.inner.forEach(e => { errorMessages[e.path] = e.message; });
+              // setErrors(errorMessages);
+            }
+            setSubmitting(false);
+          }
+        }}>
         <Form>
           <div>
             {addProductFields.map((field, index) => (
-              <div key={index} className='text-gray-700 px-2 w-full'>
-                <label htmlFor={field.name} className='block mb-2 text-2xl font-medium'>
+              <div
+                key={index}
+                className={
+                  'text-gray-700 px-2 w-full ' + (index > 4 ? 'grid grid-cols-[30%_1fr] gap-x-4 items-center my-2' : '')
+                }>
+                <label htmlFor={field.name} className='block mb-2 text-xl font-medium'>
                   {field.title}
                 </label>
                 {field.type === 'select' && field.options ? (
@@ -77,17 +110,18 @@ export default function AddProductPage() {
                     id={field.name}
                     as='select'
                     className='w-full bg-white border border-gray-300 rounded-md p-2'>
-                    {productCategories.map((category) => (
-                      <optgroup key={category.id} label={category.name}>
-                        {productSubCategories
-                          .filter((subCategory) => subCategory.productCategoryId === category.id)
-                          .map((subCategory) => (
-                            <option key={subCategory.id} value={subCategory.id}>
-                              {subCategory.name}
-                            </option>
-                          ))}
-                      </optgroup>
-                    ))}
+                    {field.name === 'productCategorySubId' &&
+                      productCategories.map((category) => (
+                        <optgroup key={category.id} label={category.name}>
+                          {productSubCategories
+                            .filter((subCategory) => subCategory.productCategoryId === category.id)
+                            .map((subCategory) => (
+                              <option key={subCategory.id} value={subCategory.id}>
+                                {subCategory.name}
+                              </option>
+                            ))}
+                        </optgroup>
+                      ))}
                   </Field>
                 ) : (
                   <Field
@@ -100,6 +134,13 @@ export default function AddProductPage() {
                 <ErrorMessage name={field.name} component='div' className='text-sm text-red-600' />
               </div>
             ))}
+          </div>
+          <div className='px-3 w-full'>
+            <button
+              type='submit'
+              className='w-full mt-4 px-4 py-2 bg-red-800 text-white font-semibold text-2xl rounded-md '>
+              Add Product
+            </button>
           </div>
         </Form>
       </Formik>
