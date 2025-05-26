@@ -4,7 +4,7 @@ import * as React from 'react';
 import { HiHome } from 'react-icons/hi';
 import { BiSolidReport } from 'react-icons/bi';
 import { AiFillProduct } from 'react-icons/ai';
-import { FaBoxes } from 'react-icons/fa';
+import { GrUserAdmin } from 'react-icons/gr';
 import { RiDiscountPercentFill } from 'react-icons/ri';
 import { usePathname } from 'next/navigation';
 
@@ -15,8 +15,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: 'Home', href: '/dashboard', icon: <HiHome /> },
     { name: 'Reports', href: '/reports', icon: <BiSolidReport /> },
     { name: 'Products', href: '/products', icon: <AiFillProduct /> },
-    { name: 'Inventories', href: '/inventories', icon: <FaBoxes /> },
     { name: 'Discounts', href: '/discounts', icon: <RiDiscountPercentFill /> },
+    { name: 'Admin', href: '/admin', icon: <GrUserAdmin />  },
   ];
   const pathName = usePathname();
   return (
