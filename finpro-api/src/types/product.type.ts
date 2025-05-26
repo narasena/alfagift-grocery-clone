@@ -5,6 +5,7 @@ export interface IProduct {
     description?: string;
     brandId?: string
     price: number;
+    productSubCategoryId?: number;
     sku?: string;
     barcode?: string;
     weight?: number;
