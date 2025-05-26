@@ -10,6 +10,7 @@ services:
     volumes:
       - ./finpro-api:/app
       - /app/node_modules
+      - ./finpro-api/.env.development:/app/.env.development
     restart: unless-stopped
 
   web:
