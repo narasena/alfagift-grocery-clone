@@ -69,7 +69,7 @@ export default function AddProductPage() {
           } as TProductFormValues
         }
         validationSchema={addProductSchemas}
-        onSubmit={(values, { setSubmitting, setErrors, resetForm }) => {
+        onSubmit={(values, { setSubmitting }) => {
           console.log('Form Values:', values);
           console.log('Is Valid:', addProductSchemas.isValidSync(values));
 
@@ -82,7 +82,7 @@ export default function AddProductPage() {
             // apiInstance.post('/products', values)...
 
             setSubmitting(false);
-          } catch (err:any) {
+          } catch (err) {
             if (err instanceof Yup.ValidationError) {
               console.log('Validation Errors:', err.errors);
               // You can also set errors manually if needed
@@ -147,3 +147,6 @@ export default function AddProductPage() {
     </div>
   );
 }
+
+// Prevent Next.js from trying to prerender this page during build
+export const dynamic = 'force-dynamic';
