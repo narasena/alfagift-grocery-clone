@@ -147,7 +147,8 @@ exports.Prisma.UserAddressScalarFieldEnum = {
   city: 'city',
   province: 'province',
   postalCode: 'postalCode',
-  coordinates: 'coordinates',
+  latitude: 'latitude',
+  longitude: 'longitude',
   isMainAddress: 'isMainAddress',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
@@ -163,7 +164,8 @@ exports.Prisma.StoreScalarFieldEnum = {
   city: 'city',
   province: 'province',
   postalCode: 'postalCode',
-  coordinates: 'coordinates',
+  latitude: 'latitude',
+  longitude: 'longitude',
   phoneNumber: 'phoneNumber',
   email: 'email',
   createdAt: 'createdAt',
@@ -213,6 +215,16 @@ exports.Prisma.ProductImageScalarFieldEnum = {
   productId: 'productId',
   imageUrl: 'imageUrl',
   isMainImage: 'isMainImage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.ProductBrandScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  slug: 'slug',
+  description: 'description',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -423,6 +435,7 @@ exports.Prisma.ModelName = {
   Admin: 'Admin',
   Product: 'Product',
   ProductImage: 'ProductImage',
+  ProductBrand: 'ProductBrand',
   ProductCategory: 'ProductCategory',
   ProductSubCategory: 'ProductSubCategory',
   ProductStock: 'ProductStock',
