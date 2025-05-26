@@ -9,6 +9,7 @@ export default function AddProductPage() {
     try {
       const response = await apiInstance.get('/product-category/subcategories')
       console.log(response.data)
+      setProductCategories(response.data)
     } catch (error) {
       console.error('Error fetching product categories:', error);
       
@@ -34,20 +35,20 @@ export default function AddProductPage() {
       >
         <Form>
           <div>
-            {/* {addProductFields.map((field, index) => (
+            {addProductFields.map((field, index) => (
               <div key={index}>
                 <label htmlFor={field.name}>{field.name}</label>
                 {field.type === 'select' ? (
                   <Field name={field.name} id={field.name} as='select'>
                     {field.options!.map((option, optionIndex) => (
-                      <option key={optionIndex} value={option.value}>{option.label}</option>
+                      <option key={optionIndex} value={option.}>{option.label}</option>
                     ))}
                   </Field>
                 ) : (
                   <Field type={field.type} name={field.name} id={field.name} />
                 )}
               </div>
-            ))} */}
+            ))}
           </div>
         </Form>
 
