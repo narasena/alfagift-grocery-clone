@@ -95,8 +95,10 @@ export default function AddProductPage() {
         }}>
         <Form>
           <div className='px-3 w-full'>
-            <label htmlFor='' className='block mb-2 text-xl font-medium'>Product Images:</label>
-            <div className='grid grid-cols-[repeat(1fr,3)] gap-3'>
+            <label htmlFor='' className='block mb-2 text-xl font-medium'>
+              Product Images:
+            </label>
+            <div className='grid grid-cols-3 gap-3'>
               {[...Array(3)].map((_, index) => (
                 <div className='size-26 border border-gray-400'></div>
               ))}
