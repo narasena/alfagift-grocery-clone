@@ -42,8 +42,6 @@ export class ProductController {
         }
       }
 
-      console.log(imagesUploaded)
-
       const slug = name.toLowerCase().replace(/\s+/g, '-');
 
       if (!name || !productSubCategoryId || !price ) {
