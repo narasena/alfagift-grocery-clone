@@ -25,11 +25,13 @@ type TProductFormValues = {
   barcode?: string;
   weight?: number;
   dimensions?: string;
+  images: TCloudinaryResult[];
 };
 
 type TCloudinaryResult = {
   public_id: string;
   secure_url: string;
+  isMainImage: boolean;
 };
 export default function AddProductPage() {
   const [productCategories, setProductCategories] = React.useState<IProductCategory[]>([]);
@@ -62,14 +64,22 @@ export default function AddProductPage() {
       const newImage = {
         public_id: result.info.public_id as string,
         secure_url: result.info.secure_url as string,
+        isMainImage: uploadedImages.length === 0
       };
       setUploadedImages((prevImages) => [...prevImages, newImage]);
-      toast.success(`Image${uploadedImages.length > 1 ? 's' : ''} uploaded successfully!`);
+      toast.success(`Image uploaded successfully!`);
     }
   };
   const handleImageClick = (imageUrl: string) => {
     setImageShowing(imageUrl);
   };
+  const handleSetAsMainImage = () => {
+    setUploadedImages(prevImages => prevImages.map(image =>
+      image.secure_url === imageShowing
+        ? { ...image, isMainImage: true }
+        : { ...image, isMainImage: false }
+    ))
+  }
 
   React.useEffect(() => {
     if(uploadedImages.length > 0) {
@@ -93,6 +103,7 @@ export default function AddProductPage() {
             barcode: '',
             weight: 0,
             dimensions: '',
+            images:[]
           } as TProductFormValues
         }
         validationSchema={addProductSchemas}

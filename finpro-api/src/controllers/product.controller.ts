@@ -11,7 +11,7 @@ interface ICloudinaryResponse {
 }
 
 export class ProductController {
-  async createProduct(req: Request, res: Response, next: NextFunction){
+  async createProduct(req: Request, res: Response, next: NextFunction) {
     try {
       const {
         name,
@@ -23,61 +23,44 @@ export class ProductController {
         barcode,
         weight,
         dimensions,
+        images
       } = req.body;
       
-      let files: Express.Multer.File[] | undefined
-      let imagesUploaded: string[] = []
-      if (req.files) {
-        files = Array.isArray(req.files) ? req.files : req.files['images']
-        
-        const uploadOptions = {
-          folder: `products/${productSubCategoryId}`
-        }
-
-        imagesUploaded = []
-        for (const image of files!) {
-          const result = await uploadImage(image.buffer, uploadOptions) as ICloudinaryResponse
-          if(result && result.secure_url){
-            imagesUploaded.push(result.secure_url)
-          }
-        }
-      }
-
       const slug = name.toLowerCase().replace(/\s+/g, '-');
 
-      if (!name || !productSubCategoryId || !price ) {
+      if (!name || !productSubCategoryId || !price || images.length === 0) {
         res.status(400).json({
           success: false,
-          message: 'Name, Price and Product Sub Category are required',
+          message: 'Name, Price,Product Sub Category, and Product Images are required',
         });
       }
 
-      // const product = await prisma.$transaction(async (tx) => {
-      //   const product = await tx.product.create({
-      //     data: {
-      //       name,
-      //       slug,
-      //       price,
-      //       productSubCategoryId,
-      //       brandId,
-      //       description,
-      //       sku,
-      //       barcode,
-      //       weight,
-      //       dimensions,
-      //     },
-      //   })
+      const newProduct = await prisma.$transaction(async (tx) => {
+        const product = await tx.product.create({
+          data: {
+            name,
+            slug,
+            price,
+            productSubCategoryId,
+            brandId,
+            description,
+            sku,
+            barcode,
+            weight,
+            dimensions,
+          },
+        })
           
-      //   const productId = await tx.product.findUnique({
-      //     where: {
-      //       slug
-      //     }
-      //   })
+        const productId = product.id;
 
-      //   const productImages = await tx.productImage.createMany({
-
-      //   })
-      // })
+        const productImages = await tx.productImage.createMany({
+          data: images.map((image: ICloudinaryResponse) => ({
+            productId,
+            imageUrl: image.secure_url,
+            isMainImage: image.isMainImage,
+          }))
+        })
+      })
 
       res.status(201).json({
         success: true,
