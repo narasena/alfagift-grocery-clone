@@ -5,7 +5,7 @@ import apiInstance from '@/services/apiInstance';
 import { IProductCategory, IProductSubCategory } from '@/types/product.category/product.subcategory.type';
 import { addProductSchemas } from '@/features/schemas/addProductSchemas';
 import * as Yup from 'yup';
-
+import { CldUploadWidget, CloudinaryUploadWidgetResults } from 'next-cloudinary';
 
 type TAddProductField = {
   name: string;
@@ -25,9 +25,15 @@ type TProductFormValues = {
   weight?: number;
   dimensions?: string;
 };
+
+type TCloudinaryResult = {
+  public_id: string;
+  secure_url: string;
+}
 export default function AddProductPage() {
   const [productCategories, setProductCategories] = React.useState<IProductCategory[]>([]);
   const [productSubCategories, setProductSubCategories] = React.useState<IProductSubCategory[]>([]);
+  const [uploadedImages, setUploadedImages] = React.useState<TCloudinaryResult[]>([]);
   const handleGetProductCategories = async () => {
     try {
       const categoryResponse = await apiInstance.get('/product-category');
@@ -49,114 +55,136 @@ export default function AddProductPage() {
     { name: 'weight', title: 'Weight', type: 'number' },
     { name: 'dimensions', title: 'Dimensions', type: 'text' }, // This should be populated with categories
   ];
-  React.useEffect(() => {
-    handleGetProductCategories();
-  }, []);
-  return (
-    <div>
-      <Formik
-        initialValues={
-          {
-            name: '',
-            price: 0,
-            productCategorySubId: 0,
-            brandId: '',
-            description: '',
-            sku: '',
-            barcode: '',
-            weight: 0,
-            dimensions: '',
-          } as TProductFormValues
-        }
-        validationSchema={addProductSchemas}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log('Form Values:', values);
-          console.log('Is Valid:', addProductSchemas.isValidSync(values));
+  const handleImageUpload = (result: CloudinaryUploadWidgetResults) => {
+    if (result.info && typeof result.info === 'object' && 'public_id' in result.info && 'secure_url' in result.info) {
+      const newImage = {
+        public_id: result.info.public_id as string,
+        secure_url: result.info.secure_url as string,
+      };
+      setUploadedImages((prevImages) => [...prevImages, newImage]);
+    };
+  }
 
-          try {
-            // Manually validate with Yup
-            addProductSchemas.validateSync(values, { abortEarly: false });
-            console.log('Validation passed!');
-
-            // Continue with form submission
-            // apiInstance.post('/products', values)...
-
-            setSubmitting(false);
-          } catch (err) {
-            if (err instanceof Yup.ValidationError) {
-              console.log('Validation Errors:', err.errors);
-              // You can also set errors manually if needed
-              // const errorMessages = {};
-              // err.inner.forEach(e => { errorMessages[e.path] = e.message; });
-              // setErrors(errorMessages);
-            }
-            setSubmitting(false);
+    React.useEffect(() => {
+      handleGetProductCategories();
+    }, []);
+    return (
+      <div>
+        <Formik
+          initialValues={
+            {
+              name: '',
+              price: 0,
+              productCategorySubId: 0,
+              brandId: '',
+              description: '',
+              sku: '',
+              barcode: '',
+              weight: 0,
+              dimensions: '',
+            } as TProductFormValues
           }
-        }}>
-        <Form>
-          <div className='px-3 w-full'>
-            <label htmlFor='' className='block mb-2 text-xl font-medium'>
-              Product Images:
-            </label>
-            <div className='grid grid-cols-3 gap-3'>
-              {[...Array(3)].map((_, index) => (
-                <div className='size-26 border border-gray-400'></div>
+          validationSchema={addProductSchemas}
+          onSubmit={(values, { setSubmitting }) => {
+            console.log('Form Values:', values);
+            console.log('Is Valid:', addProductSchemas.isValidSync(values));
+
+            try {
+              // Manually validate with Yup
+              addProductSchemas.validateSync(values, { abortEarly: false });
+              console.log('Validation passed!');
+
+              // Continue with form submission
+              // apiInstance.post('/products', values)...
+
+              setSubmitting(false);
+            } catch (err) {
+              if (err instanceof Yup.ValidationError) {
+                console.log('Validation Errors:', err.errors);
+                // You can also set errors manually if needed
+                // const errorMessages = {};
+                // err.inner.forEach(e => { errorMessages[e.path] = e.message; });
+                // setErrors(errorMessages);
+              }
+              setSubmitting(false);
+            }
+          }}>
+          <Form>
+            <div className='px-3 w-full flex flex-col justify-center items-center'>
+              <label htmlFor='' className='text-gray-700 w-full block mb-2 text-xl font-medium'>
+                Product Images:
+              </label>
+              <div className='size-72 border border-gray-400 rounded-md my-3'></div>
+              <div className='grid grid-cols-5 gap-2'>
+                {[...Array(5)].map((_, index) => (
+                  <div key={index} className='size-18 border border-gray-400'></div>
+                ))}
+              </div>
+              <CldUploadWidget
+                uploadPreset='products-image'
+                onSuccess={handleImageUpload}
+              >
+                {({ open }) => (
+                  <button
+                    type='button'
+                    className='mt-4 px-4 py-2 bg-red-800 text-white font-semibold text-xl rounded-md'
+                    onClick={() => open?.()}>
+                    Upload Images
+                  </button>
+                )}
+              </CldUploadWidget>
+            </div>
+            <div>
+              {addProductFields.map((field, index) => (
+                <div
+                  key={index}
+                  className={
+                    'text-gray-700 px-2 w-full ' + (index > 4 ? 'grid grid-cols-[30%_1fr] gap-x-4 items-center my-2' : '')
+                  }>
+                  <label htmlFor={field.name} className='block mb-2 text-xl font-medium'>
+                    {field.title}
+                  </label>
+                  {field.type === 'select' && field.options ? (
+                    <Field
+                      name={field.name}
+                      id={field.name}
+                      as='select'
+                      className='w-full bg-white border border-gray-300 rounded-md p-2'>
+                      {field.name === 'productCategorySubId' &&
+                        productCategories.map((category) => (
+                          <optgroup key={category.id} label={category.name}>
+                            {productSubCategories
+                              .filter((subCategory) => subCategory.productCategoryId === category.id)
+                              .map((subCategory) => (
+                                <option key={subCategory.id} value={subCategory.id}>
+                                  {subCategory.name}
+                                </option>
+                              ))}
+                          </optgroup>
+                        ))}
+                    </Field>
+                  ) : (
+                    <Field
+                      type={field.type}
+                      name={field.name}
+                      id={field.name}
+                      className='w-full bg-white border border-gray-300 rounded-md p-2'
+                    />
+                  )}
+                  <ErrorMessage name={field.name} component='div' className='text-sm text-red-600' />
+                </div>
               ))}
             </div>
-          </div>
-          <div>
-            {addProductFields.map((field, index) => (
-              <div
-                key={index}
-                className={
-                  'text-gray-700 px-2 w-full ' + (index > 4 ? 'grid grid-cols-[30%_1fr] gap-x-4 items-center my-2' : '')
-                }>
-                <label htmlFor={field.name} className='block mb-2 text-xl font-medium'>
-                  {field.title}
-                </label>
-                {field.type === 'select' && field.options ? (
-                  <Field
-                    name={field.name}
-                    id={field.name}
-                    as='select'
-                    className='w-full bg-white border border-gray-300 rounded-md p-2'>
-                    {field.name === 'productCategorySubId' &&
-                      productCategories.map((category) => (
-                        <optgroup key={category.id} label={category.name}>
-                          {productSubCategories
-                            .filter((subCategory) => subCategory.productCategoryId === category.id)
-                            .map((subCategory) => (
-                              <option key={subCategory.id} value={subCategory.id}>
-                                {subCategory.name}
-                              </option>
-                            ))}
-                        </optgroup>
-                      ))}
-                  </Field>
-                ) : (
-                  <Field
-                    type={field.type}
-                    name={field.name}
-                    id={field.name}
-                    className='w-full bg-white border border-gray-300 rounded-md p-2'
-                  />
-                )}
-                <ErrorMessage name={field.name} component='div' className='text-sm text-red-600' />
-              </div>
-            ))}
-          </div>
-          <div className='px-3 w-full'>
-            <button
-              type='submit'
-              className='w-full mt-4 px-4 py-2 bg-red-800 text-white font-semibold text-2xl rounded-md '>
-              Add Product
-            </button>
-          </div>
-        </Form>
-      </Formik>
-    </div>
-  );
-}
+            <div className='px-3 w-full'>
+              <button
+                type='submit'
+                className='w-full mt-4 px-4 py-2 bg-red-800 text-white font-semibold text-2xl rounded-md '>
+                Add Product
+              </button>
+            </div>
+          </Form>
+        </Formik>
+      </div>
+    );
+  }
 
-// Prevent Next.js from trying to prerender this page during build
-export const dynamic = 'force-dynamic';

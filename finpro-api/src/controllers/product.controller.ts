@@ -2,6 +2,7 @@ import { uploadImage } from '../lib/cloudinary';
 import { prisma } from '../prisma';
 import { IProduct } from '../types/product.type';
 import { NextFunction, Request, Response } from 'express';
+import {v2 as cloudinary} from 'cloudinary';
 
 interface ICloudinaryResponse {
   secure_url: string;
@@ -82,6 +83,22 @@ export class ProductController {
         success: true,
         message: 'Product created successfully',
         // product,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async handleSignedupload(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { paramsToSign } = req.body;
+      const signature = await cloudinary.utils.api_sign_request(
+        paramsToSign,
+        process.env.CLOUDINARY_API_SECRET as string
+      )
+      res.status(200).json({
+        success: true,
+        signature,
       });
     } catch (error) {
       next(error);
