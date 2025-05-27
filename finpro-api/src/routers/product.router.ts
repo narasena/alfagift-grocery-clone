@@ -14,7 +14,7 @@ export class ProductRouter {
 
   private initializeRoutes(): void {
     this.router.post('/create', uploader(['image/jpeg', 'image/png', 'image/jpg', 'image/webp']).fields([{ name: 'images', maxCount: 3 }]), this.productController.createProduct);
-    this.router.get('/signed-upload', this.productController.handleSignedupload)
+    this.router.post('/signed-upload', this.productController.handleSignedupload)
   }
 
   getRouter(): Router {
