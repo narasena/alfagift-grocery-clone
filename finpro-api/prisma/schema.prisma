@@ -53,7 +53,8 @@ model UserAddress {
   city              String
   province          String
   postalCode        String
-  coordinates       String? //dipecah 2 lat dan long
+  latitude          String
+  longitude         String   
   isMainAddress     Boolean @default(false)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -74,7 +75,8 @@ model Store {
   city              String
   province          String
   postalCode        String
-  coordinates       String?   //dipecah 2 lat dan long
+  latitude          String
+  longitude         String   
   phoneNumber       String?
   email             String?
   createdAt         DateTime @default(now())
@@ -122,7 +124,7 @@ model Product {
   description       String?
   brandId           String?
   price             Float
-  productSubCategoryId String
+  productSubCategoryId Int
   productSubCategory ProductSubCategory @relation(fields: [productSubCategoryId], references: [id])
   sku               String?   @unique
   barcode           String?   @unique
@@ -136,6 +138,7 @@ model Product {
   productImage      ProductImage[]
   productStock      ProductStock[]
   productDiscount   ProductDiscount[]
+  productBrand      ProductBrand? @relation(fields: [brandId], references: [id])
 
   @@map("products")
 }
@@ -154,8 +157,21 @@ model ProductImage {
   @@map("product_images")
 }
 
-model ProductCategory {
+model ProductBrand {
   id                String   @id @default(cuid())
+  name              String
+  slug              String   @unique
+  description       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  deletedAt         DateTime?
+  products          Product[]
+
+  @@map("product_brands")
+}
+
+model ProductCategory {
+  id                Int       @id @default(autoincrement())
   name              String
   slug              String   @unique
   description       String?
@@ -168,14 +184,14 @@ model ProductCategory {
 }
 
 model ProductSubCategory {
-  id                String   @id @default(cuid())
+  id                Int   @id @default(autoincrement())
   name              String
   slug              String   @unique
   description       String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   deletedAt         DateTime?
-  productCategoryId String
+  productCategoryId Int
   productCategory   ProductCategory @relation(fields: [productCategoryId], references: [id])
   product           Product[]
 
