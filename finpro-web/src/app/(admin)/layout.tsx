@@ -22,7 +22,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className='relative overflow-x-hidden w-full h-screen bg-white'>
       {children}
-      <div className='w-full h-20 bg-red-700 absolute bottom-0 left-0 z-20 flex items-center justify-between'>
+      <div className='w-full h-20 bg-red-700 sticky bottom-0 left-0 z-20 flex items-center justify-between'>
         {bottomNav.map((item, index) => (
           <div key={index} className={'w-1/5 h-full flex flex-col items-center justify-center '+ (pathName === item.href ? 'bg-red-500' : '')}>
             <Link href={item.href} className='text-white text-sm font-medium flex flex-col items-center justify-center'>
