@@ -7,6 +7,7 @@ import { addProductSchemas } from '@/features/schemas/addProductSchemas';
 import * as Yup from 'yup';
 import { CldImage, CldUploadWidget, CloudinaryUploadWidgetResults } from 'next-cloudinary';
 import { toast } from 'react-toastify';
+import { TbArrowBigLeftLinesFilled, TbArrowBigRightLinesFilled } from 'react-icons/tb';
 
 type TAddProductField = {
   name: string;
@@ -37,7 +38,7 @@ export default function AddProductPage() {
   const [productCategories, setProductCategories] = React.useState<IProductCategory[]>([]);
   const [productSubCategories, setProductSubCategories] = React.useState<IProductSubCategory[]>([]);
   const [uploadedImages, setUploadedImages] = React.useState<TCloudinaryResult[]>([]);
-  const [imageShowing, setImageShowing] = React.useState<TCloudinaryResult|null>(null);
+  const [imageShowing, setImageShowing] = React.useState<TCloudinaryResult | null>(null);
   const handleGetProductCategories = async () => {
     try {
       const categoryResponse = await apiInstance.get('/product-category');
@@ -64,15 +65,15 @@ export default function AddProductPage() {
       const newImage = {
         public_id: result.info.public_id as string,
         secure_url: result.info.secure_url as string,
-        isMainImage: false
+        isMainImage: false,
       };
       setUploadedImages((prevImages) => {
         if (prevImages.length === 0) {
           return [{ ...newImage, isMainImage: true }];
         }
-        return [...prevImages, newImage]
+        return [...prevImages, newImage];
       });
-      
+
       toast.success(`Image uploaded successfully!`);
     }
   };
@@ -80,24 +81,40 @@ export default function AddProductPage() {
     setImageShowing(image);
   };
   const handleSetAsMainImage = () => {
-    setUploadedImages(prevImages => prevImages.map(image =>
-      image.secure_url === imageShowing?.secure_url
-        ? { ...image, isMainImage: true }
-        : { ...image, isMainImage: false }
-    ))
-  }
+    setUploadedImages((prevImages) =>
+      prevImages.map((image) =>
+        image.secure_url === imageShowing?.secure_url
+          ? { ...image, isMainImage: true }
+          : { ...image, isMainImage: false }
+      )
+    );
+  };
+  const handleSwapImage = (index1: number, index2: number) => {
+    setUploadedImages((prevImages) => {
+      const newUpdloadedImages = [...prevImages];
+      const temp = newUpdloadedImages[index1];
+      newUpdloadedImages[index1] = newUpdloadedImages[index2];
+      newUpdloadedImages[index2] = temp;
+      if (index1 === 0 || index2 === 0) {
+        return newUpdloadedImages.map((img, indx) => ({
+          ...img,
+          isMainImage: indx === 0,
+        }));
+      }
+      return newUpdloadedImages;
+    });
+  };
 
   React.useEffect(() => {
-    if(uploadedImages.length > 0) {
+    if (uploadedImages.length > 0) {
       setImageShowing(uploadedImages[0]);
     }
     console.log('Uploaded Images:', uploadedImages);
-   }, [uploadedImages]);
+  }, [uploadedImages]);
   React.useEffect(() => {
     handleGetProductCategories();
   }, []);
 
-  
   return (
     <div>
       <Formik
@@ -126,16 +143,14 @@ export default function AddProductPage() {
             setSubmitting(false);
           } catch (err) {
             if (err instanceof Yup.ValidationError) {
-              console.log('Validation Errors:', err.errors);        
+              console.log('Validation Errors:', err.errors);
             }
             setSubmitting(false);
           }
         }}>
         <Form>
           <div className='px-3 w-full flex flex-col justify-center items-center'>
-            <label htmlFor='' className='text-gray-700 w-full block mb-2 text-xl font-medium'>
-              Product Images:
-            </label>
+            <label className='text-gray-700 w-full block mb-2 text-xl font-medium'>Product Images:</label>
             <div className='size-72 border border-gray-400 rounded-md my-3'>
               {imageShowing && (
                 <CldImage
@@ -149,7 +164,8 @@ export default function AddProductPage() {
             </div>
             <div className='flex justify-center'>
               {uploadedImages.length > 0 && imageShowing && imageShowing.isMainImage === false && (
-                <button className='my-4 px-4 py-2 bg-red-800 text-white font-semibold text-xl rounded-md'
+                <button
+                  className='my-4 px-4 py-2 bg-red-800 text-white font-semibold text-xl rounded-md'
                   onClick={handleSetAsMainImage}>
                   Set As Main Image
                 </button>
@@ -160,13 +176,45 @@ export default function AddProductPage() {
                 </button>
               )}
             </div>
-            <div className='grid grid-cols-5 gap-2'>
+            <div className='flex justify-center gap-2'>
               {uploadedImages.map((image, index) => (
-                <div
-                  key={index}
-                  className='size-18 border border-gray-400 overflow-hidden'
-                  onClick={() => handleImageClick(image)}>
-                  <CldImage width={72} height={72} src={image.secure_url} alt={`Uploaded Image ${index + 1}`} />
+                <div key={index} className='relative'>
+                  <div
+                    className='size-18 border border-gray-400 overflow-hidden'
+                    onClick={() => handleImageClick(image)}>
+                    <CldImage width={72} height={72} src={image.secure_url} alt={`Uploaded Image ${index + 1}`} />
+                    {index === 0 && (
+                      <div className='absolute top-0 left-0 bg-red-600 text-white text-xs px-1'>Main</div>
+                    )}
+                  </div>
+                  <div className='grid grid-cols-2 gap-1 mt-1'>
+                    <div className='col-start-1 flex-1'>
+                      {index > 0 && (
+                        <button
+                          type='button'
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSwapImage(index, index - 1);
+                          }}
+                          className='bg-gray-700 text-gray-200 w-full flex items-center justify-center text-2xl rounded-sm'>
+                          <TbArrowBigLeftLinesFilled />
+                        </button>
+                      )}
+                    </div>
+                    <div className='col-start-2 flex-1'>
+                      {index < uploadedImages.length - 1 && (
+                        <button
+                          type='button'
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSwapImage(index, index + 1);
+                          }}
+                          className='bg-gray-200 text-gray-700 w-full flex items-center justify-center text-2xl rounded-sm'>
+                          <TbArrowBigRightLinesFilled />
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
