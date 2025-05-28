@@ -81,13 +81,16 @@ export default function AddProductPage() {
     setImageShowing(image);
   };
   const handleSetAsMainImage = () => {
-    setUploadedImages((prevImages) =>
-      prevImages.map((image) =>
-        image.secure_url === imageShowing?.secure_url
-          ? { ...image, isMainImage: true }
-          : { ...image, isMainImage: false }
-      )
-    );
+    if (!imageShowing) return;
+    
+    setUploadedImages((prevImages) => {
+      const selectedIndex = prevImages.findIndex(img => img.secure_url === imageShowing?.secure_url)
+      if (selectedIndex === -1) return prevImages;
+      const newImages = [...prevImages];
+      const selectedImage = { ...newImages[selectedIndex], isMainImage: true }
+      newImages.splice(selectedIndex, 1)
+      return[selectedImage, ...newImages.map((img) => ({ ...img, isMainImage: false }))];
+    })
   };
   const handleSwapImage = (index1: number, index2: number) => {
     setUploadedImages((prevImages) => {
