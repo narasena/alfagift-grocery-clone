@@ -438,7 +438,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\One Drive\\OneDrive\\Purwadhika\\Course\\JCWD-3202\\Final Project\\finpro-api\\src\\generated\\prisma",
+      "value": "C:\\Users\\Dell\\OneDrive\\Documents\\JCWD 3202\\finpro\\finpro-grocery\\finpro-api\\src\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -452,7 +452,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "D:\\One Drive\\OneDrive\\Purwadhika\\Course\\JCWD-3202\\Final Project\\finpro-api\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\Dell\\OneDrive\\Documents\\JCWD 3202\\finpro\\finpro-grocery\\finpro-api\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
