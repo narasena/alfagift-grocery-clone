@@ -29,6 +29,7 @@ model User {
   passwordResetCount  Int              @default(0)
   emailChangeCount    Int              @default(0)
   avatarImgUrl        String?
+  cldPublicId         String? // Cloudinary public ID for the avatar image
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
   deletedAt           DateTime?
@@ -103,6 +104,7 @@ model Admin {
   passwordResetCount Int     @default(0)
   emailChangeCount   Int     @default(0)
   avatarImgUrl      String?
+  cldPublicId       String? // Cloudinary public ID for the avatar image
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   deletedAt         DateTime?
@@ -148,6 +150,7 @@ model ProductImage {
   id                String   @id @default(cuid())
   productId         String
   imageUrl          String
+  cldPublicId       String? // Cloudinary public ID for the image
   isMainImage       Boolean @default(false)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
@@ -163,6 +166,8 @@ model ProductBrand {
   name              String
   slug              String   @unique
   description       String?
+  logoUrl           String?
+  cldPublicId       String? // Cloudinary public ID for the logo image
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   deletedAt         DateTime?
@@ -402,6 +407,7 @@ model PaymentProof {
   id                String   @id @default(cuid())
   transactionId     String
   imageUrl          String
+  cldPublicId       String? // Cloudinary public ID for the image
   status            String
   verifiedBy         String?
   verifiedAt         DateTime?
