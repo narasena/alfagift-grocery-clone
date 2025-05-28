@@ -579,8 +579,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.8.2
-   * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
+   * Prisma Client JS version: 6.7.0
+   * Query Engine version: 3cff47a7f5d65c3ea74883f1d736e41d68ce91ed
    */
   export type PrismaVersion = {
     client: string
@@ -3123,6 +3123,7 @@ export namespace Prisma {
     passwordResetCount: number | null
     emailChangeCount: number | null
     avatarImgUrl: string | null
+    cldPublicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
@@ -3141,6 +3142,7 @@ export namespace Prisma {
     passwordResetCount: number | null
     emailChangeCount: number | null
     avatarImgUrl: string | null
+    cldPublicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
@@ -3159,6 +3161,7 @@ export namespace Prisma {
     passwordResetCount: number
     emailChangeCount: number
     avatarImgUrl: number
+    cldPublicId: number
     createdAt: number
     updatedAt: number
     deletedAt: number
@@ -3189,6 +3192,7 @@ export namespace Prisma {
     passwordResetCount?: true
     emailChangeCount?: true
     avatarImgUrl?: true
+    cldPublicId?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -3207,6 +3211,7 @@ export namespace Prisma {
     passwordResetCount?: true
     emailChangeCount?: true
     avatarImgUrl?: true
+    cldPublicId?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -3225,6 +3230,7 @@ export namespace Prisma {
     passwordResetCount?: true
     emailChangeCount?: true
     avatarImgUrl?: true
+    cldPublicId?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -3330,6 +3336,7 @@ export namespace Prisma {
     passwordResetCount: number
     emailChangeCount: number
     avatarImgUrl: string | null
+    cldPublicId: string | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -3367,6 +3374,7 @@ export namespace Prisma {
     passwordResetCount?: boolean
     emailChangeCount?: boolean
     avatarImgUrl?: boolean
+    cldPublicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
@@ -3389,6 +3397,7 @@ export namespace Prisma {
     passwordResetCount?: boolean
     emailChangeCount?: boolean
     avatarImgUrl?: boolean
+    cldPublicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
@@ -3407,6 +3416,7 @@ export namespace Prisma {
     passwordResetCount?: boolean
     emailChangeCount?: boolean
     avatarImgUrl?: boolean
+    cldPublicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
@@ -3425,12 +3435,13 @@ export namespace Prisma {
     passwordResetCount?: boolean
     emailChangeCount?: boolean
     avatarImgUrl?: boolean
+    cldPublicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "password" | "phoneNumber" | "gender" | "dateOfBirth" | "isEmailVerified" | "passwordResetCount" | "emailChangeCount" | "avatarImgUrl" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "password" | "phoneNumber" | "gender" | "dateOfBirth" | "isEmailVerified" | "passwordResetCount" | "emailChangeCount" | "avatarImgUrl" | "cldPublicId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     userAddress?: boolean | User$userAddressArgs<ExtArgs>
     cart?: boolean | User$cartArgs<ExtArgs>
@@ -3460,6 +3471,7 @@ export namespace Prisma {
       passwordResetCount: number
       emailChangeCount: number
       avatarImgUrl: string | null
+      cldPublicId: string | null
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
@@ -3901,6 +3913,7 @@ export namespace Prisma {
     readonly passwordResetCount: FieldRef<"User", 'Int'>
     readonly emailChangeCount: FieldRef<"User", 'Int'>
     readonly avatarImgUrl: FieldRef<"User", 'String'>
+    readonly cldPublicId: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
     readonly deletedAt: FieldRef<"User", 'DateTime'>
@@ -6900,6 +6913,7 @@ export namespace Prisma {
     passwordResetCount: number | null
     emailChangeCount: number | null
     avatarImgUrl: string | null
+    cldPublicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
@@ -6918,6 +6932,7 @@ export namespace Prisma {
     passwordResetCount: number | null
     emailChangeCount: number | null
     avatarImgUrl: string | null
+    cldPublicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
@@ -6936,6 +6951,7 @@ export namespace Prisma {
     passwordResetCount: number
     emailChangeCount: number
     avatarImgUrl: number
+    cldPublicId: number
     createdAt: number
     updatedAt: number
     deletedAt: number
@@ -6966,6 +6982,7 @@ export namespace Prisma {
     passwordResetCount?: true
     emailChangeCount?: true
     avatarImgUrl?: true
+    cldPublicId?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -6984,6 +7001,7 @@ export namespace Prisma {
     passwordResetCount?: true
     emailChangeCount?: true
     avatarImgUrl?: true
+    cldPublicId?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -7002,6 +7020,7 @@ export namespace Prisma {
     passwordResetCount?: true
     emailChangeCount?: true
     avatarImgUrl?: true
+    cldPublicId?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -7107,6 +7126,7 @@ export namespace Prisma {
     passwordResetCount: number
     emailChangeCount: number
     avatarImgUrl: string | null
+    cldPublicId: string | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -7144,6 +7164,7 @@ export namespace Prisma {
     passwordResetCount?: boolean
     emailChangeCount?: boolean
     avatarImgUrl?: boolean
+    cldPublicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
@@ -7165,6 +7186,7 @@ export namespace Prisma {
     passwordResetCount?: boolean
     emailChangeCount?: boolean
     avatarImgUrl?: boolean
+    cldPublicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
@@ -7184,6 +7206,7 @@ export namespace Prisma {
     passwordResetCount?: boolean
     emailChangeCount?: boolean
     avatarImgUrl?: boolean
+    cldPublicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
@@ -7203,13 +7226,14 @@ export namespace Prisma {
     passwordResetCount?: boolean
     emailChangeCount?: boolean
     avatarImgUrl?: boolean
+    cldPublicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
     storeId?: boolean
   }
 
-  export type AdminOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "password" | "phoneNumber" | "role" | "isEmailVerified" | "passwordResetCount" | "emailChangeCount" | "avatarImgUrl" | "createdAt" | "updatedAt" | "deletedAt" | "storeId", ExtArgs["result"]["admin"]>
+  export type AdminOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "firstName" | "lastName" | "email" | "password" | "phoneNumber" | "role" | "isEmailVerified" | "passwordResetCount" | "emailChangeCount" | "avatarImgUrl" | "cldPublicId" | "createdAt" | "updatedAt" | "deletedAt" | "storeId", ExtArgs["result"]["admin"]>
   export type AdminInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     store?: boolean | StoreDefaultArgs<ExtArgs>
     payments?: boolean | Admin$paymentsArgs<ExtArgs>
@@ -7240,6 +7264,7 @@ export namespace Prisma {
       passwordResetCount: number
       emailChangeCount: number
       avatarImgUrl: string | null
+      cldPublicId: string | null
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
@@ -7680,6 +7705,7 @@ export namespace Prisma {
     readonly passwordResetCount: FieldRef<"Admin", 'Int'>
     readonly emailChangeCount: FieldRef<"Admin", 'Int'>
     readonly avatarImgUrl: FieldRef<"Admin", 'String'>
+    readonly cldPublicId: FieldRef<"Admin", 'String'>
     readonly createdAt: FieldRef<"Admin", 'DateTime'>
     readonly updatedAt: FieldRef<"Admin", 'DateTime'>
     readonly deletedAt: FieldRef<"Admin", 'DateTime'>
@@ -9492,6 +9518,7 @@ export namespace Prisma {
     id: string | null
     productId: string | null
     imageUrl: string | null
+    cldPublicId: string | null
     isMainImage: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -9502,6 +9529,7 @@ export namespace Prisma {
     id: string | null
     productId: string | null
     imageUrl: string | null
+    cldPublicId: string | null
     isMainImage: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -9512,6 +9540,7 @@ export namespace Prisma {
     id: number
     productId: number
     imageUrl: number
+    cldPublicId: number
     isMainImage: number
     createdAt: number
     updatedAt: number
@@ -9524,6 +9553,7 @@ export namespace Prisma {
     id?: true
     productId?: true
     imageUrl?: true
+    cldPublicId?: true
     isMainImage?: true
     createdAt?: true
     updatedAt?: true
@@ -9534,6 +9564,7 @@ export namespace Prisma {
     id?: true
     productId?: true
     imageUrl?: true
+    cldPublicId?: true
     isMainImage?: true
     createdAt?: true
     updatedAt?: true
@@ -9544,6 +9575,7 @@ export namespace Prisma {
     id?: true
     productId?: true
     imageUrl?: true
+    cldPublicId?: true
     isMainImage?: true
     createdAt?: true
     updatedAt?: true
@@ -9627,6 +9659,7 @@ export namespace Prisma {
     id: string
     productId: string
     imageUrl: string
+    cldPublicId: string | null
     isMainImage: boolean
     createdAt: Date
     updatedAt: Date
@@ -9654,6 +9687,7 @@ export namespace Prisma {
     id?: boolean
     productId?: boolean
     imageUrl?: boolean
+    cldPublicId?: boolean
     isMainImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -9665,6 +9699,7 @@ export namespace Prisma {
     id?: boolean
     productId?: boolean
     imageUrl?: boolean
+    cldPublicId?: boolean
     isMainImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -9676,6 +9711,7 @@ export namespace Prisma {
     id?: boolean
     productId?: boolean
     imageUrl?: boolean
+    cldPublicId?: boolean
     isMainImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -9687,13 +9723,14 @@ export namespace Prisma {
     id?: boolean
     productId?: boolean
     imageUrl?: boolean
+    cldPublicId?: boolean
     isMainImage?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
   }
 
-  export type ProductImageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "imageUrl" | "isMainImage" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["productImage"]>
+  export type ProductImageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "productId" | "imageUrl" | "cldPublicId" | "isMainImage" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["productImage"]>
   export type ProductImageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     product?: boolean | ProductDefaultArgs<ExtArgs>
   }
@@ -9713,6 +9750,7 @@ export namespace Prisma {
       id: string
       productId: string
       imageUrl: string
+      cldPublicId: string | null
       isMainImage: boolean
       createdAt: Date
       updatedAt: Date
@@ -10144,6 +10182,7 @@ export namespace Prisma {
     readonly id: FieldRef<"ProductImage", 'String'>
     readonly productId: FieldRef<"ProductImage", 'String'>
     readonly imageUrl: FieldRef<"ProductImage", 'String'>
+    readonly cldPublicId: FieldRef<"ProductImage", 'String'>
     readonly isMainImage: FieldRef<"ProductImage", 'Boolean'>
     readonly createdAt: FieldRef<"ProductImage", 'DateTime'>
     readonly updatedAt: FieldRef<"ProductImage", 'DateTime'>
@@ -10577,6 +10616,8 @@ export namespace Prisma {
     name: string | null
     slug: string | null
     description: string | null
+    logoUrl: string | null
+    cldPublicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
@@ -10587,6 +10628,8 @@ export namespace Prisma {
     name: string | null
     slug: string | null
     description: string | null
+    logoUrl: string | null
+    cldPublicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
     deletedAt: Date | null
@@ -10597,6 +10640,8 @@ export namespace Prisma {
     name: number
     slug: number
     description: number
+    logoUrl: number
+    cldPublicId: number
     createdAt: number
     updatedAt: number
     deletedAt: number
@@ -10609,6 +10654,8 @@ export namespace Prisma {
     name?: true
     slug?: true
     description?: true
+    logoUrl?: true
+    cldPublicId?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -10619,6 +10666,8 @@ export namespace Prisma {
     name?: true
     slug?: true
     description?: true
+    logoUrl?: true
+    cldPublicId?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -10629,6 +10678,8 @@ export namespace Prisma {
     name?: true
     slug?: true
     description?: true
+    logoUrl?: true
+    cldPublicId?: true
     createdAt?: true
     updatedAt?: true
     deletedAt?: true
@@ -10712,6 +10763,8 @@ export namespace Prisma {
     name: string
     slug: string
     description: string | null
+    logoUrl: string | null
+    cldPublicId: string | null
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -10739,6 +10792,8 @@ export namespace Prisma {
     name?: boolean
     slug?: boolean
     description?: boolean
+    logoUrl?: boolean
+    cldPublicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
@@ -10751,6 +10806,8 @@ export namespace Prisma {
     name?: boolean
     slug?: boolean
     description?: boolean
+    logoUrl?: boolean
+    cldPublicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
@@ -10761,6 +10818,8 @@ export namespace Prisma {
     name?: boolean
     slug?: boolean
     description?: boolean
+    logoUrl?: boolean
+    cldPublicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
@@ -10771,12 +10830,14 @@ export namespace Prisma {
     name?: boolean
     slug?: boolean
     description?: boolean
+    logoUrl?: boolean
+    cldPublicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     deletedAt?: boolean
   }
 
-  export type ProductBrandOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "description" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["productBrand"]>
+  export type ProductBrandOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "slug" | "description" | "logoUrl" | "cldPublicId" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["productBrand"]>
   export type ProductBrandInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     products?: boolean | ProductBrand$productsArgs<ExtArgs>
     _count?: boolean | ProductBrandCountOutputTypeDefaultArgs<ExtArgs>
@@ -10794,6 +10855,8 @@ export namespace Prisma {
       name: string
       slug: string
       description: string | null
+      logoUrl: string | null
+      cldPublicId: string | null
       createdAt: Date
       updatedAt: Date
       deletedAt: Date | null
@@ -11225,6 +11288,8 @@ export namespace Prisma {
     readonly name: FieldRef<"ProductBrand", 'String'>
     readonly slug: FieldRef<"ProductBrand", 'String'>
     readonly description: FieldRef<"ProductBrand", 'String'>
+    readonly logoUrl: FieldRef<"ProductBrand", 'String'>
+    readonly cldPublicId: FieldRef<"ProductBrand", 'String'>
     readonly createdAt: FieldRef<"ProductBrand", 'DateTime'>
     readonly updatedAt: FieldRef<"ProductBrand", 'DateTime'>
     readonly deletedAt: FieldRef<"ProductBrand", 'DateTime'>
@@ -24628,6 +24693,7 @@ export namespace Prisma {
     id: string | null
     transactionId: string | null
     imageUrl: string | null
+    cldPublicId: string | null
     status: string | null
     verifiedBy: string | null
     verifiedAt: Date | null
@@ -24641,6 +24707,7 @@ export namespace Prisma {
     id: string | null
     transactionId: string | null
     imageUrl: string | null
+    cldPublicId: string | null
     status: string | null
     verifiedBy: string | null
     verifiedAt: Date | null
@@ -24654,6 +24721,7 @@ export namespace Prisma {
     id: number
     transactionId: number
     imageUrl: number
+    cldPublicId: number
     status: number
     verifiedBy: number
     verifiedAt: number
@@ -24669,6 +24737,7 @@ export namespace Prisma {
     id?: true
     transactionId?: true
     imageUrl?: true
+    cldPublicId?: true
     status?: true
     verifiedBy?: true
     verifiedAt?: true
@@ -24682,6 +24751,7 @@ export namespace Prisma {
     id?: true
     transactionId?: true
     imageUrl?: true
+    cldPublicId?: true
     status?: true
     verifiedBy?: true
     verifiedAt?: true
@@ -24695,6 +24765,7 @@ export namespace Prisma {
     id?: true
     transactionId?: true
     imageUrl?: true
+    cldPublicId?: true
     status?: true
     verifiedBy?: true
     verifiedAt?: true
@@ -24781,6 +24852,7 @@ export namespace Prisma {
     id: string
     transactionId: string
     imageUrl: string
+    cldPublicId: string | null
     status: string
     verifiedBy: string | null
     verifiedAt: Date | null
@@ -24811,6 +24883,7 @@ export namespace Prisma {
     id?: boolean
     transactionId?: boolean
     imageUrl?: boolean
+    cldPublicId?: boolean
     status?: boolean
     verifiedBy?: boolean
     verifiedAt?: boolean
@@ -24825,6 +24898,7 @@ export namespace Prisma {
     id?: boolean
     transactionId?: boolean
     imageUrl?: boolean
+    cldPublicId?: boolean
     status?: boolean
     verifiedBy?: boolean
     verifiedAt?: boolean
@@ -24839,6 +24913,7 @@ export namespace Prisma {
     id?: boolean
     transactionId?: boolean
     imageUrl?: boolean
+    cldPublicId?: boolean
     status?: boolean
     verifiedBy?: boolean
     verifiedAt?: boolean
@@ -24853,6 +24928,7 @@ export namespace Prisma {
     id?: boolean
     transactionId?: boolean
     imageUrl?: boolean
+    cldPublicId?: boolean
     status?: boolean
     verifiedBy?: boolean
     verifiedAt?: boolean
@@ -24862,7 +24938,7 @@ export namespace Prisma {
     deletedAt?: boolean
   }
 
-  export type PaymentProofOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "transactionId" | "imageUrl" | "status" | "verifiedBy" | "verifiedAt" | "notes" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["paymentProof"]>
+  export type PaymentProofOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "transactionId" | "imageUrl" | "cldPublicId" | "status" | "verifiedBy" | "verifiedAt" | "notes" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["paymentProof"]>
   export type PaymentProofInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     payment?: boolean | PaymentDefaultArgs<ExtArgs>
   }
@@ -24882,6 +24958,7 @@ export namespace Prisma {
       id: string
       transactionId: string
       imageUrl: string
+      cldPublicId: string | null
       status: string
       verifiedBy: string | null
       verifiedAt: Date | null
@@ -25316,6 +25393,7 @@ export namespace Prisma {
     readonly id: FieldRef<"PaymentProof", 'String'>
     readonly transactionId: FieldRef<"PaymentProof", 'String'>
     readonly imageUrl: FieldRef<"PaymentProof", 'String'>
+    readonly cldPublicId: FieldRef<"PaymentProof", 'String'>
     readonly status: FieldRef<"PaymentProof", 'String'>
     readonly verifiedBy: FieldRef<"PaymentProof", 'String'>
     readonly verifiedAt: FieldRef<"PaymentProof", 'DateTime'>
@@ -25764,6 +25842,7 @@ export namespace Prisma {
     passwordResetCount: 'passwordResetCount',
     emailChangeCount: 'emailChangeCount',
     avatarImgUrl: 'avatarImgUrl',
+    cldPublicId: 'cldPublicId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     deletedAt: 'deletedAt'
@@ -25825,6 +25904,7 @@ export namespace Prisma {
     passwordResetCount: 'passwordResetCount',
     emailChangeCount: 'emailChangeCount',
     avatarImgUrl: 'avatarImgUrl',
+    cldPublicId: 'cldPublicId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     deletedAt: 'deletedAt',
@@ -25860,6 +25940,7 @@ export namespace Prisma {
     id: 'id',
     productId: 'productId',
     imageUrl: 'imageUrl',
+    cldPublicId: 'cldPublicId',
     isMainImage: 'isMainImage',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
@@ -25874,6 +25955,8 @@ export namespace Prisma {
     name: 'name',
     slug: 'slug',
     description: 'description',
+    logoUrl: 'logoUrl',
+    cldPublicId: 'cldPublicId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     deletedAt: 'deletedAt'
@@ -26051,6 +26134,7 @@ export namespace Prisma {
     id: 'id',
     transactionId: 'transactionId',
     imageUrl: 'imageUrl',
+    cldPublicId: 'cldPublicId',
     status: 'status',
     verifiedBy: 'verifiedBy',
     verifiedAt: 'verifiedAt',
@@ -26258,6 +26342,7 @@ export namespace Prisma {
     passwordResetCount?: IntFilter<"User"> | number
     emailChangeCount?: IntFilter<"User"> | number
     avatarImgUrl?: StringNullableFilter<"User"> | string | null
+    cldPublicId?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
@@ -26279,6 +26364,7 @@ export namespace Prisma {
     passwordResetCount?: SortOrder
     emailChangeCount?: SortOrder
     avatarImgUrl?: SortOrderInput | SortOrder
+    cldPublicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -26303,6 +26389,7 @@ export namespace Prisma {
     passwordResetCount?: IntFilter<"User"> | number
     emailChangeCount?: IntFilter<"User"> | number
     avatarImgUrl?: StringNullableFilter<"User"> | string | null
+    cldPublicId?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     deletedAt?: DateTimeNullableFilter<"User"> | Date | string | null
@@ -26324,6 +26411,7 @@ export namespace Prisma {
     passwordResetCount?: SortOrder
     emailChangeCount?: SortOrder
     avatarImgUrl?: SortOrderInput | SortOrder
+    cldPublicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -26350,6 +26438,7 @@ export namespace Prisma {
     passwordResetCount?: IntWithAggregatesFilter<"User"> | number
     emailChangeCount?: IntWithAggregatesFilter<"User"> | number
     avatarImgUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
+    cldPublicId?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
@@ -26587,6 +26676,7 @@ export namespace Prisma {
     passwordResetCount?: IntFilter<"Admin"> | number
     emailChangeCount?: IntFilter<"Admin"> | number
     avatarImgUrl?: StringNullableFilter<"Admin"> | string | null
+    cldPublicId?: StringNullableFilter<"Admin"> | string | null
     createdAt?: DateTimeFilter<"Admin"> | Date | string
     updatedAt?: DateTimeFilter<"Admin"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Admin"> | Date | string | null
@@ -26607,6 +26697,7 @@ export namespace Prisma {
     passwordResetCount?: SortOrder
     emailChangeCount?: SortOrder
     avatarImgUrl?: SortOrderInput | SortOrder
+    cldPublicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -26630,6 +26721,7 @@ export namespace Prisma {
     passwordResetCount?: IntFilter<"Admin"> | number
     emailChangeCount?: IntFilter<"Admin"> | number
     avatarImgUrl?: StringNullableFilter<"Admin"> | string | null
+    cldPublicId?: StringNullableFilter<"Admin"> | string | null
     createdAt?: DateTimeFilter<"Admin"> | Date | string
     updatedAt?: DateTimeFilter<"Admin"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Admin"> | Date | string | null
@@ -26650,6 +26742,7 @@ export namespace Prisma {
     passwordResetCount?: SortOrder
     emailChangeCount?: SortOrder
     avatarImgUrl?: SortOrderInput | SortOrder
+    cldPublicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -26676,6 +26769,7 @@ export namespace Prisma {
     passwordResetCount?: IntWithAggregatesFilter<"Admin"> | number
     emailChangeCount?: IntWithAggregatesFilter<"Admin"> | number
     avatarImgUrl?: StringNullableWithAggregatesFilter<"Admin"> | string | null
+    cldPublicId?: StringNullableWithAggregatesFilter<"Admin"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Admin"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Admin"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"Admin"> | Date | string | null
@@ -26813,6 +26907,7 @@ export namespace Prisma {
     id?: StringFilter<"ProductImage"> | string
     productId?: StringFilter<"ProductImage"> | string
     imageUrl?: StringFilter<"ProductImage"> | string
+    cldPublicId?: StringNullableFilter<"ProductImage"> | string | null
     isMainImage?: BoolFilter<"ProductImage"> | boolean
     createdAt?: DateTimeFilter<"ProductImage"> | Date | string
     updatedAt?: DateTimeFilter<"ProductImage"> | Date | string
@@ -26824,6 +26919,7 @@ export namespace Prisma {
     id?: SortOrder
     productId?: SortOrder
     imageUrl?: SortOrder
+    cldPublicId?: SortOrderInput | SortOrder
     isMainImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -26838,6 +26934,7 @@ export namespace Prisma {
     NOT?: ProductImageWhereInput | ProductImageWhereInput[]
     productId?: StringFilter<"ProductImage"> | string
     imageUrl?: StringFilter<"ProductImage"> | string
+    cldPublicId?: StringNullableFilter<"ProductImage"> | string | null
     isMainImage?: BoolFilter<"ProductImage"> | boolean
     createdAt?: DateTimeFilter<"ProductImage"> | Date | string
     updatedAt?: DateTimeFilter<"ProductImage"> | Date | string
@@ -26849,6 +26946,7 @@ export namespace Prisma {
     id?: SortOrder
     productId?: SortOrder
     imageUrl?: SortOrder
+    cldPublicId?: SortOrderInput | SortOrder
     isMainImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -26865,6 +26963,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"ProductImage"> | string
     productId?: StringWithAggregatesFilter<"ProductImage"> | string
     imageUrl?: StringWithAggregatesFilter<"ProductImage"> | string
+    cldPublicId?: StringNullableWithAggregatesFilter<"ProductImage"> | string | null
     isMainImage?: BoolWithAggregatesFilter<"ProductImage"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"ProductImage"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ProductImage"> | Date | string
@@ -26879,6 +26978,8 @@ export namespace Prisma {
     name?: StringFilter<"ProductBrand"> | string
     slug?: StringFilter<"ProductBrand"> | string
     description?: StringNullableFilter<"ProductBrand"> | string | null
+    logoUrl?: StringNullableFilter<"ProductBrand"> | string | null
+    cldPublicId?: StringNullableFilter<"ProductBrand"> | string | null
     createdAt?: DateTimeFilter<"ProductBrand"> | Date | string
     updatedAt?: DateTimeFilter<"ProductBrand"> | Date | string
     deletedAt?: DateTimeNullableFilter<"ProductBrand"> | Date | string | null
@@ -26890,6 +26991,8 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     description?: SortOrderInput | SortOrder
+    logoUrl?: SortOrderInput | SortOrder
+    cldPublicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -26904,6 +27007,8 @@ export namespace Prisma {
     NOT?: ProductBrandWhereInput | ProductBrandWhereInput[]
     name?: StringFilter<"ProductBrand"> | string
     description?: StringNullableFilter<"ProductBrand"> | string | null
+    logoUrl?: StringNullableFilter<"ProductBrand"> | string | null
+    cldPublicId?: StringNullableFilter<"ProductBrand"> | string | null
     createdAt?: DateTimeFilter<"ProductBrand"> | Date | string
     updatedAt?: DateTimeFilter<"ProductBrand"> | Date | string
     deletedAt?: DateTimeNullableFilter<"ProductBrand"> | Date | string | null
@@ -26915,6 +27020,8 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     description?: SortOrderInput | SortOrder
+    logoUrl?: SortOrderInput | SortOrder
+    cldPublicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrderInput | SortOrder
@@ -26931,6 +27038,8 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"ProductBrand"> | string
     slug?: StringWithAggregatesFilter<"ProductBrand"> | string
     description?: StringNullableWithAggregatesFilter<"ProductBrand"> | string | null
+    logoUrl?: StringNullableWithAggregatesFilter<"ProductBrand"> | string | null
+    cldPublicId?: StringNullableWithAggregatesFilter<"ProductBrand"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"ProductBrand"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"ProductBrand"> | Date | string
     deletedAt?: DateTimeNullableWithAggregatesFilter<"ProductBrand"> | Date | string | null
@@ -27841,6 +27950,7 @@ export namespace Prisma {
     id?: StringFilter<"PaymentProof"> | string
     transactionId?: StringFilter<"PaymentProof"> | string
     imageUrl?: StringFilter<"PaymentProof"> | string
+    cldPublicId?: StringNullableFilter<"PaymentProof"> | string | null
     status?: StringFilter<"PaymentProof"> | string
     verifiedBy?: StringNullableFilter<"PaymentProof"> | string | null
     verifiedAt?: DateTimeNullableFilter<"PaymentProof"> | Date | string | null
@@ -27855,6 +27965,7 @@ export namespace Prisma {
     id?: SortOrder
     transactionId?: SortOrder
     imageUrl?: SortOrder
+    cldPublicId?: SortOrderInput | SortOrder
     status?: SortOrder
     verifiedBy?: SortOrderInput | SortOrder
     verifiedAt?: SortOrderInput | SortOrder
@@ -27872,6 +27983,7 @@ export namespace Prisma {
     NOT?: PaymentProofWhereInput | PaymentProofWhereInput[]
     transactionId?: StringFilter<"PaymentProof"> | string
     imageUrl?: StringFilter<"PaymentProof"> | string
+    cldPublicId?: StringNullableFilter<"PaymentProof"> | string | null
     status?: StringFilter<"PaymentProof"> | string
     verifiedBy?: StringNullableFilter<"PaymentProof"> | string | null
     verifiedAt?: DateTimeNullableFilter<"PaymentProof"> | Date | string | null
@@ -27886,6 +27998,7 @@ export namespace Prisma {
     id?: SortOrder
     transactionId?: SortOrder
     imageUrl?: SortOrder
+    cldPublicId?: SortOrderInput | SortOrder
     status?: SortOrder
     verifiedBy?: SortOrderInput | SortOrder
     verifiedAt?: SortOrderInput | SortOrder
@@ -27905,6 +28018,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"PaymentProof"> | string
     transactionId?: StringWithAggregatesFilter<"PaymentProof"> | string
     imageUrl?: StringWithAggregatesFilter<"PaymentProof"> | string
+    cldPublicId?: StringNullableWithAggregatesFilter<"PaymentProof"> | string | null
     status?: StringWithAggregatesFilter<"PaymentProof"> | string
     verifiedBy?: StringNullableWithAggregatesFilter<"PaymentProof"> | string | null
     verifiedAt?: DateTimeNullableWithAggregatesFilter<"PaymentProof"> | Date | string | null
@@ -27927,6 +28041,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -27948,6 +28063,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -27969,6 +28085,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -27990,6 +28107,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28011,6 +28129,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -28029,6 +28148,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28047,6 +28167,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28328,6 +28449,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -28347,6 +28469,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -28366,6 +28489,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28385,6 +28509,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28404,6 +28529,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -28422,6 +28548,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28439,6 +28566,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28591,6 +28719,7 @@ export namespace Prisma {
   export type ProductImageCreateInput = {
     id?: string
     imageUrl: string
+    cldPublicId?: string | null
     isMainImage?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28602,6 +28731,7 @@ export namespace Prisma {
     id?: string
     productId: string
     imageUrl: string
+    cldPublicId?: string | null
     isMainImage?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28611,6 +28741,7 @@ export namespace Prisma {
   export type ProductImageUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     isMainImage?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28622,6 +28753,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     isMainImage?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28632,6 +28764,7 @@ export namespace Prisma {
     id?: string
     productId: string
     imageUrl: string
+    cldPublicId?: string | null
     isMainImage?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -28641,6 +28774,7 @@ export namespace Prisma {
   export type ProductImageUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     isMainImage?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28651,6 +28785,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     productId?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     isMainImage?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28662,6 +28797,8 @@ export namespace Prisma {
     name: string
     slug: string
     description?: string | null
+    logoUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -28673,6 +28810,8 @@ export namespace Prisma {
     name: string
     slug: string
     description?: string | null
+    logoUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -28684,6 +28823,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28695,6 +28836,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28706,6 +28849,8 @@ export namespace Prisma {
     name: string
     slug: string
     description?: string | null
+    logoUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -28716,6 +28861,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -28726,6 +28873,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29669,6 +29818,7 @@ export namespace Prisma {
   export type PaymentProofCreateInput = {
     id?: string
     imageUrl: string
+    cldPublicId?: string | null
     status: string
     verifiedBy?: string | null
     verifiedAt?: Date | string | null
@@ -29683,6 +29833,7 @@ export namespace Prisma {
     id?: string
     transactionId: string
     imageUrl: string
+    cldPublicId?: string | null
     status: string
     verifiedBy?: string | null
     verifiedAt?: Date | string | null
@@ -29695,6 +29846,7 @@ export namespace Prisma {
   export type PaymentProofUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     verifiedBy?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29709,6 +29861,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     verifiedBy?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29722,6 +29875,7 @@ export namespace Prisma {
     id?: string
     transactionId: string
     imageUrl: string
+    cldPublicId?: string | null
     status: string
     verifiedBy?: string | null
     verifiedAt?: Date | string | null
@@ -29734,6 +29888,7 @@ export namespace Prisma {
   export type PaymentProofUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     verifiedBy?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29747,6 +29902,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     transactionId?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     verifiedBy?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -29867,6 +30023,7 @@ export namespace Prisma {
     passwordResetCount?: SortOrder
     emailChangeCount?: SortOrder
     avatarImgUrl?: SortOrder
+    cldPublicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -29890,6 +30047,7 @@ export namespace Prisma {
     passwordResetCount?: SortOrder
     emailChangeCount?: SortOrder
     avatarImgUrl?: SortOrder
+    cldPublicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -29908,6 +30066,7 @@ export namespace Prisma {
     passwordResetCount?: SortOrder
     emailChangeCount?: SortOrder
     avatarImgUrl?: SortOrder
+    cldPublicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -30180,6 +30339,7 @@ export namespace Prisma {
     passwordResetCount?: SortOrder
     emailChangeCount?: SortOrder
     avatarImgUrl?: SortOrder
+    cldPublicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -30203,6 +30363,7 @@ export namespace Prisma {
     passwordResetCount?: SortOrder
     emailChangeCount?: SortOrder
     avatarImgUrl?: SortOrder
+    cldPublicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -30221,6 +30382,7 @@ export namespace Prisma {
     passwordResetCount?: SortOrder
     emailChangeCount?: SortOrder
     avatarImgUrl?: SortOrder
+    cldPublicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -30394,6 +30556,7 @@ export namespace Prisma {
     id?: SortOrder
     productId?: SortOrder
     imageUrl?: SortOrder
+    cldPublicId?: SortOrder
     isMainImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -30404,6 +30567,7 @@ export namespace Prisma {
     id?: SortOrder
     productId?: SortOrder
     imageUrl?: SortOrder
+    cldPublicId?: SortOrder
     isMainImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -30414,6 +30578,7 @@ export namespace Prisma {
     id?: SortOrder
     productId?: SortOrder
     imageUrl?: SortOrder
+    cldPublicId?: SortOrder
     isMainImage?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -30435,6 +30600,8 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     description?: SortOrder
+    logoUrl?: SortOrder
+    cldPublicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -30445,6 +30612,8 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     description?: SortOrder
+    logoUrl?: SortOrder
+    cldPublicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -30455,6 +30624,8 @@ export namespace Prisma {
     name?: SortOrder
     slug?: SortOrder
     description?: SortOrder
+    logoUrl?: SortOrder
+    cldPublicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     deletedAt?: SortOrder
@@ -31142,6 +31313,7 @@ export namespace Prisma {
     id?: SortOrder
     transactionId?: SortOrder
     imageUrl?: SortOrder
+    cldPublicId?: SortOrder
     status?: SortOrder
     verifiedBy?: SortOrder
     verifiedAt?: SortOrder
@@ -31155,6 +31327,7 @@ export namespace Prisma {
     id?: SortOrder
     transactionId?: SortOrder
     imageUrl?: SortOrder
+    cldPublicId?: SortOrder
     status?: SortOrder
     verifiedBy?: SortOrder
     verifiedAt?: SortOrder
@@ -31168,6 +31341,7 @@ export namespace Prisma {
     id?: SortOrder
     transactionId?: SortOrder
     imageUrl?: SortOrder
+    cldPublicId?: SortOrder
     status?: SortOrder
     verifiedBy?: SortOrder
     verifiedAt?: SortOrder
@@ -33103,6 +33277,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -33123,6 +33298,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -33195,6 +33371,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33215,6 +33392,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33330,6 +33508,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -33348,6 +33527,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -33497,6 +33677,7 @@ export namespace Prisma {
     passwordResetCount?: IntFilter<"Admin"> | number
     emailChangeCount?: IntFilter<"Admin"> | number
     avatarImgUrl?: StringNullableFilter<"Admin"> | string | null
+    cldPublicId?: StringNullableFilter<"Admin"> | string | null
     createdAt?: DateTimeFilter<"Admin"> | Date | string
     updatedAt?: DateTimeFilter<"Admin"> | Date | string
     deletedAt?: DateTimeNullableFilter<"Admin"> | Date | string | null
@@ -33728,6 +33909,7 @@ export namespace Prisma {
   export type ProductImageCreateWithoutProductInput = {
     id?: string
     imageUrl: string
+    cldPublicId?: string | null
     isMainImage?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33737,6 +33919,7 @@ export namespace Prisma {
   export type ProductImageUncheckedCreateWithoutProductInput = {
     id?: string
     imageUrl: string
+    cldPublicId?: string | null
     isMainImage?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -33838,6 +34021,8 @@ export namespace Prisma {
     name: string
     slug: string
     description?: string | null
+    logoUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -33848,6 +34033,8 @@ export namespace Prisma {
     name: string
     slug: string
     description?: string | null
+    logoUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -33913,6 +34100,7 @@ export namespace Prisma {
     id?: StringFilter<"ProductImage"> | string
     productId?: StringFilter<"ProductImage"> | string
     imageUrl?: StringFilter<"ProductImage"> | string
+    cldPublicId?: StringNullableFilter<"ProductImage"> | string | null
     isMainImage?: BoolFilter<"ProductImage"> | boolean
     createdAt?: DateTimeFilter<"ProductImage"> | Date | string
     updatedAt?: DateTimeFilter<"ProductImage"> | Date | string
@@ -33967,6 +34155,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -33977,6 +34167,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35097,6 +35289,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -35117,6 +35310,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -35169,6 +35363,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35189,6 +35384,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35317,6 +35513,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -35337,6 +35534,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -35559,6 +35757,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -35579,6 +35778,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36073,6 +36273,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -36091,6 +36292,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -36136,6 +36338,7 @@ export namespace Prisma {
   export type PaymentProofCreateWithoutPaymentInput = {
     id?: string
     imageUrl: string
+    cldPublicId?: string | null
     status: string
     verifiedBy?: string | null
     verifiedAt?: Date | string | null
@@ -36148,6 +36351,7 @@ export namespace Prisma {
   export type PaymentProofUncheckedCreateWithoutPaymentInput = {
     id?: string
     imageUrl: string
+    cldPublicId?: string | null
     status: string
     verifiedBy?: string | null
     verifiedAt?: Date | string | null
@@ -36190,6 +36394,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36208,6 +36413,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36274,6 +36480,7 @@ export namespace Prisma {
     id?: StringFilter<"PaymentProof"> | string
     transactionId?: StringFilter<"PaymentProof"> | string
     imageUrl?: StringFilter<"PaymentProof"> | string
+    cldPublicId?: StringNullableFilter<"PaymentProof"> | string | null
     status?: StringFilter<"PaymentProof"> | string
     verifiedBy?: StringNullableFilter<"PaymentProof"> | string | null
     verifiedAt?: DateTimeNullableFilter<"PaymentProof"> | Date | string | null
@@ -36563,6 +36770,7 @@ export namespace Prisma {
     passwordResetCount?: number
     emailChangeCount?: number
     avatarImgUrl?: string | null
+    cldPublicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -36676,6 +36884,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36694,6 +36903,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36712,6 +36922,7 @@ export namespace Prisma {
     passwordResetCount?: IntFieldUpdateOperationsInput | number
     emailChangeCount?: IntFieldUpdateOperationsInput | number
     avatarImgUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -36822,6 +37033,7 @@ export namespace Prisma {
   export type ProductImageCreateManyProductInput = {
     id?: string
     imageUrl: string
+    cldPublicId?: string | null
     isMainImage?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -36857,6 +37069,7 @@ export namespace Prisma {
   export type ProductImageUpdateWithoutProductInput = {
     id?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     isMainImage?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36866,6 +37079,7 @@ export namespace Prisma {
   export type ProductImageUncheckedUpdateWithoutProductInput = {
     id?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     isMainImage?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36875,6 +37089,7 @@ export namespace Prisma {
   export type ProductImageUncheckedUpdateManyWithoutProductInput = {
     id?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     isMainImage?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -37468,6 +37683,7 @@ export namespace Prisma {
   export type PaymentProofCreateManyPaymentInput = {
     id?: string
     imageUrl: string
+    cldPublicId?: string | null
     status: string
     verifiedBy?: string | null
     verifiedAt?: Date | string | null
@@ -37480,6 +37696,7 @@ export namespace Prisma {
   export type PaymentProofUpdateWithoutPaymentInput = {
     id?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     verifiedBy?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37492,6 +37709,7 @@ export namespace Prisma {
   export type PaymentProofUncheckedUpdateWithoutPaymentInput = {
     id?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     verifiedBy?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -37504,6 +37722,7 @@ export namespace Prisma {
   export type PaymentProofUncheckedUpdateManyWithoutPaymentInput = {
     id?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    cldPublicId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
     verifiedBy?: NullableStringFieldUpdateOperationsInput | string | null
     verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
