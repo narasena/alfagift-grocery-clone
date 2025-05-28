@@ -3,11 +3,6 @@ import { IProduct } from '../types/product.type';
 import { NextFunction, Request, Response } from 'express';
 import {v2 as cloudinary} from 'cloudinary';
 
-interface ICloudinaryResponse {
-  secure_url: string;
-  public_id: string;
-  [key: string]: any;
-}
 
 export class ProductController {
   async createProduct(req: Request, res: Response, next: NextFunction) {
@@ -30,7 +25,7 @@ export class ProductController {
       if (!name || !productSubCategoryId || !price || images.length === 0) {
         res.status(400).json({
           success: false,
-          message: 'Name, Price,Product Sub Category, and Product Images are required',
+          message: 'Name, Price, Product Sub Category, and Product Images are required',
         });
       }
 
@@ -53,7 +48,7 @@ export class ProductController {
         const productId = product.id;
 
         const productImages = await tx.productImage.createMany({
-          data: images.map((image: ICloudinaryResponse) => ({
+          data: images.map((image) => ({
             productId,
             imageUrl: image.secure_url,
             isMainImage: image.isMainImage,

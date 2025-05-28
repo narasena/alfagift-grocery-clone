@@ -2,43 +2,19 @@
 import * as React from 'react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import apiInstance from '@/services/apiInstance';
-import { IProductCategory, IProductSubCategory } from '@/types/product.category/product.subcategory.type';
+import { IProductCategory, IProductSubCategory } from '@/types/products/product.subcategory.type';
 import { addProductSchemas } from '@/features/schemas/addProductSchemas';
 import * as Yup from 'yup';
 import { CldImage, CldUploadWidget, CloudinaryUploadWidgetResults } from 'next-cloudinary';
 import { toast } from 'react-toastify';
 import { TbArrowBigLeftLinesFilled, TbArrowBigRightLinesFilled } from 'react-icons/tb';
+import { IAddProductField, ICloudinaryResult, IProductFormValues } from '@/types/products/product.type';
 
-type TAddProductField = {
-  name: string;
-  title: string;
-  type: string;
-  options?: IProductSubCategory[];
-};
-
-type TProductFormValues = {
-  name: string;
-  price: number;
-  productCategorySubId: number;
-  brandId?: string;
-  description?: string;
-  sku?: string;
-  barcode?: string;
-  weight?: number;
-  dimensions?: string;
-  images: TCloudinaryResult[];
-};
-
-type TCloudinaryResult = {
-  public_id: string;
-  secure_url: string;
-  isMainImage: boolean;
-};
 export default function AddProductPage() {
   const [productCategories, setProductCategories] = React.useState<IProductCategory[]>([]);
   const [productSubCategories, setProductSubCategories] = React.useState<IProductSubCategory[]>([]);
-  const [uploadedImages, setUploadedImages] = React.useState<TCloudinaryResult[]>([]);
-  const [imageShowing, setImageShowing] = React.useState<TCloudinaryResult | null>(null);
+  const [uploadedImages, setUploadedImages] = React.useState<ICloudinaryResult[]>([]);
+  const [imageShowing, setImageShowing] = React.useState<ICloudinaryResult | null>(null);
   const handleGetProductCategories = async () => {
     try {
       const categoryResponse = await apiInstance.get('/product-category');
@@ -49,7 +25,7 @@ export default function AddProductPage() {
       console.error('Error fetching product categories:', error);
     }
   };
-  const addProductFields: TAddProductField[] = [
+  const addProductFields: IAddProductField[] = [
     { name: 'name', title: 'Product Name', type: 'text' },
     { name: 'price', title: 'Product Price', type: 'number' },
     { name: 'productCategorySubId', title: 'Product Sub Category', type: 'select', options: productSubCategories },
@@ -77,7 +53,7 @@ export default function AddProductPage() {
       toast.success(`Image uploaded successfully!`);
     }
   };
-  const handleImageClick = (image: TCloudinaryResult) => {
+  const handleImageClick = (image: ICloudinaryResult) => {
     setImageShowing(image);
   };
   const handleSetAsMainImage = () => {
@@ -133,13 +109,12 @@ export default function AddProductPage() {
             weight: 0,
             dimensions: '',
             images: [],
-          } as TProductFormValues
+          } as IProductFormValues
         }
         validationSchema={addProductSchemas}
         onSubmit={(values, { setSubmitting }) => {
           console.log('Form Values:', values);
           console.log('Is Valid:', addProductSchemas.isValidSync(values));
-
           try {
             addProductSchemas.validateSync(values, { abortEarly: false });
             console.log('Validation passed!');
