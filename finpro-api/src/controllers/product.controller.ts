@@ -1,4 +1,3 @@
-import { uploadImage } from '../lib/cloudinary';
 import { prisma } from '../prisma';
 import { IProduct } from '../types/product.type';
 import { NextFunction, Request, Response } from 'express';
