@@ -1,5 +1,5 @@
 export interface IProduct {
-    id: number;
+    id: string;
     name: string;
     slug: string;
     description?: string;
@@ -10,4 +10,12 @@ export interface IProduct {
     barcode?: string;
     weight?: number;
     dimensions?: string;
+}
+
+export interface IProductImage {
+    id: string
+    productId: string;
+    imageUrl: string;
+    cldPublicId?: string;
+    isMainImage: boolean;
 }
