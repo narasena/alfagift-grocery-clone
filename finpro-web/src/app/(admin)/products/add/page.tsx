@@ -37,7 +37,7 @@ export default function AddProductPage() {
   const [productCategories, setProductCategories] = React.useState<IProductCategory[]>([]);
   const [productSubCategories, setProductSubCategories] = React.useState<IProductSubCategory[]>([]);
   const [uploadedImages, setUploadedImages] = React.useState<TCloudinaryResult[]>([]);
-  const [imageShowing, setImageShowing] = React.useState<string>('');
+  const [imageShowing, setImageShowing] = React.useState<TCloudinaryResult|null>(null);
   const handleGetProductCategories = async () => {
     try {
       const categoryResponse = await apiInstance.get('/product-category');
@@ -64,18 +64,24 @@ export default function AddProductPage() {
       const newImage = {
         public_id: result.info.public_id as string,
         secure_url: result.info.secure_url as string,
-        isMainImage: uploadedImages.length === 0
+        isMainImage: false
       };
-      setUploadedImages((prevImages) => [...prevImages, newImage]);
+      setUploadedImages((prevImages) => {
+        if (prevImages.length === 0) {
+          return [{ ...newImage, isMainImage: true }];
+        }
+        return [...prevImages, newImage]
+      });
+      
       toast.success(`Image uploaded successfully!`);
     }
   };
-  const handleImageClick = (imageUrl: string) => {
-    setImageShowing(imageUrl);
+  const handleImageClick = (image: TCloudinaryResult) => {
+    setImageShowing(image);
   };
   const handleSetAsMainImage = () => {
     setUploadedImages(prevImages => prevImages.map(image =>
-      image.secure_url === imageShowing
+      image.secure_url === imageShowing?.secure_url
         ? { ...image, isMainImage: true }
         : { ...image, isMainImage: false }
     ))
@@ -83,12 +89,15 @@ export default function AddProductPage() {
 
   React.useEffect(() => {
     if(uploadedImages.length > 0) {
-      setImageShowing(uploadedImages[0].secure_url);
+      setImageShowing(uploadedImages[0]);
     }
+    console.log('Uploaded Images:', uploadedImages);
    }, [uploadedImages]);
   React.useEffect(() => {
     handleGetProductCategories();
   }, []);
+
+  
   return (
     <div>
       <Formik
@@ -103,7 +112,7 @@ export default function AddProductPage() {
             barcode: '',
             weight: 0,
             dimensions: '',
-            images:[]
+            images: [],
           } as TProductFormValues
         }
         validationSchema={addProductSchemas}
@@ -112,21 +121,12 @@ export default function AddProductPage() {
           console.log('Is Valid:', addProductSchemas.isValidSync(values));
 
           try {
-            // Manually validate with Yup
             addProductSchemas.validateSync(values, { abortEarly: false });
             console.log('Validation passed!');
-
-            // Continue with form submission
-            // apiInstance.post('/products', values)...
-
             setSubmitting(false);
           } catch (err) {
             if (err instanceof Yup.ValidationError) {
-              console.log('Validation Errors:', err.errors);
-              // You can also set errors manually if needed
-              // const errorMessages = {};
-              // err.inner.forEach(e => { errorMessages[e.path] = e.message; });
-              // setErrors(errorMessages);
+              console.log('Validation Errors:', err.errors);        
             }
             setSubmitting(false);
           }
@@ -141,10 +141,22 @@ export default function AddProductPage() {
                 <CldImage
                   width={288}
                   height={288}
-                  src={imageShowing}
+                  src={imageShowing.secure_url}
                   alt='Selected Product Image'
                   className='w-full h-full object-cover'
                 />
+              )}
+            </div>
+            <div className='flex justify-center'>
+              {uploadedImages.length > 0 && imageShowing && imageShowing.isMainImage === false && (
+                <button className='my-4 px-4 py-2 bg-red-800 text-white font-semibold text-xl rounded-md'>
+                  Set As Main Image
+                </button>
+              )}
+              {uploadedImages.length > 0 && imageShowing && imageShowing.isMainImage === true && (
+                <button className='my-4 px-4 py-2 bg-gray-700 text-white font-semibold text-xl rounded-md'>
+                  Main Image
+                </button>
               )}
             </div>
             <div className='grid grid-cols-5 gap-2'>
@@ -152,7 +164,7 @@ export default function AddProductPage() {
                 <div
                   key={index}
                   className='size-18 border border-gray-400 overflow-hidden'
-                  onClick={() => handleImageClick(image.secure_url)}>
+                  onClick={() => handleImageClick(image)}>
                   <CldImage width={72} height={72} src={image.secure_url} alt={`Uploaded Image ${index + 1}`} />
                 </div>
               ))}
