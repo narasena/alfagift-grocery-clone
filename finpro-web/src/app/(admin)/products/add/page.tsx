@@ -149,7 +149,8 @@ export default function AddProductPage() {
             </div>
             <div className='flex justify-center'>
               {uploadedImages.length > 0 && imageShowing && imageShowing.isMainImage === false && (
-                <button className='my-4 px-4 py-2 bg-red-800 text-white font-semibold text-xl rounded-md'>
+                <button className='my-4 px-4 py-2 bg-red-800 text-white font-semibold text-xl rounded-md'
+                  onClick={handleSetAsMainImage}>
                   Set As Main Image
                 </button>
               )}
