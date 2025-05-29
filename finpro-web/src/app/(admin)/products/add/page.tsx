@@ -28,7 +28,7 @@ export default function AddProductPage() {
   const addProductFields: IAddProductField[] = [
     { name: 'name', title: 'Product Name', type: 'text' },
     { name: 'price', title: 'Product Price', type: 'number' },
-    { name: 'productCategorySubId', title: 'Product Sub Category', type: 'select', options: productSubCategories },
+    { name: 'productSubCategoryId', title: 'Product Sub Category', type: 'select', options: productSubCategories },
     { name: 'brandId', title: 'Brand', type: 'select', options: [] },
     { name: 'description', title: 'Product Description', type: 'text' },
     { name: 'sku', title: 'SKU', type: 'text' },
@@ -83,15 +83,24 @@ export default function AddProductPage() {
       return newUpdloadedImages;
     });
   };
-  const handleCreateProduct = async (values: IProductFormValues) => {
+  const handleCreateProduct = async (values: IProductFormValues,resetForm: () => void) => {
     try {
       const createProductResponse = await apiInstance.post('/product/create', {
         ...values,
+        productSubCategoryId: Number(values.productSubCategoryId),
+        brandId: values.brandId || null,
+        description: values.description || null,
+        sku: values.sku || null,
+        barcode: values.barcode || null,
+        weight: Number(values.weight) || null,
+        dimensions: values.dimensions || null,
         images: uploadedImages
       })
       console.log('Create Product Response:', createProductResponse.data);
       toast.success('Product created successfully!');
       setUploadedImages([]);
+      setImageShowing(null);
+      resetForm();
     } catch (error) {
       console.error('Error creating product:', error);
       toast.error('Failed to create product. Please try again.');
@@ -127,13 +136,13 @@ export default function AddProductPage() {
           } as IProductFormValues
         }
         validationSchema={addProductSchemas}
-        onSubmit={(values, { setSubmitting }) => {
+        onSubmit={(values, { setSubmitting, resetForm }) => {
           console.log('Form Values:', values);
           console.log('Is Valid:', addProductSchemas.isValidSync(values));
           try {
             addProductSchemas.validateSync(values, { abortEarly: false });
             console.log('Validation passed!');
-            handleCreateProduct(values);
+            handleCreateProduct(values, resetForm);
             setSubmitting(false);
           } catch (err) {
             if (err instanceof Yup.ValidationError) {
@@ -247,18 +256,31 @@ export default function AddProductPage() {
                     id={field.name}
                     as='select'
                     className='w-full bg-white border border-gray-300 rounded-md p-2'>
-                    {field.name === 'productCategorySubId' &&
-                      productCategories.map((category) => (
-                        <optgroup key={category.id} label={category.name}>
-                          {productSubCategories
-                            .filter((subCategory) => subCategory.productCategoryId === category.id)
-                            .map((subCategory) => (
-                              <option key={subCategory.id} value={Number(subCategory.id)}>
-                                {subCategory.name}
-                              </option>
-                            ))}
-                        </optgroup>
-                      ))}
+                    {field.name === 'productSubCategoryId' ? (
+                      <>
+                        <option value={0}>Select Sub Category</option>
+                        {productCategories.map((category) => (
+                          <optgroup key={category.id} label={category.name}>
+                            {productSubCategories
+                              .filter((subCategory) => subCategory.productCategoryId === category.id)
+                              .map((subCategory) => (
+                                <option key={subCategory.id} value={Number(subCategory.id)}>
+                                  {subCategory.name}
+                                </option>
+                              ))}
+                          </optgroup>
+                        ))}
+                      </>
+                    ) : (
+                      <>
+                        <option value=''>Select Brand</option>
+                        {field.options?.map((option) => (
+                          <option key={option.id} value={option.id}>
+                            {option.name}
+                          </option>
+                        ))}
+                      </>
+                    )}
                   </Field>
                 ) : (
                   <Field
