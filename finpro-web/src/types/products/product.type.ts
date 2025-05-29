@@ -7,7 +7,8 @@ export interface IAddProductField {
   options?: IProductSubCategory[];
 };
 
-export interface IProductFormValues {
+export interface IProduct {
+  id: number;
   name: string;
   price: number;
   productSubCategoryId: number;
@@ -17,6 +18,11 @@ export interface IProductFormValues {
   barcode?: string;
   weight?: number;
   dimensions?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+}
+export interface IProductFormValues extends IProduct {
   images: ICloudinaryResult[];
 };
 
