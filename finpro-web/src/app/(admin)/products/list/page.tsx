@@ -7,35 +7,63 @@ import * as React from 'react';
 import { toast } from 'react-toastify';
 
 export default function AdminProductListViewPage() {
-    const [products, setProducts] = React.useState<IProductDetails[]>([]);
-    const handleGetProducts = async () => {
-        try {
-            const response = await apiInstance.get('/product/all')
-          setProducts(response.data.products);
-          console.log(`Products: `, response.data.products);
-            toast.success(response.data.message);
-        } catch (error) {
-            console.error(`Error fetching products: `, error);
-            toast.error(`Failed to fetch products. Please try again later.`);
-        }
-  }
+  const [products, setProducts] = React.useState<IProductDetails[]>([]);
+  const handleGetProducts = async () => {
+    try {
+      const response = await apiInstance.get('/product/all');
+      setProducts(response.data.products);
+      console.log(`Products: `, response.data.products);
+      toast.success(response.data.message);
+    } catch (error) {
+      console.error(`Error fetching products: `, error);
+      toast.error(`Failed to fetch products. Please try again later.`);
+    }
+  };
   const productsListTitle = [
     { key: 'image', title: 'Image' },
-    {key:'name', title:'Product Name'},
-    {key:'brand', title:'Brand'},
-    {key:'category', title:'Category'},
-    {key:'subCategory', title:'Sub Category'},
-    {key:'price', title:'Price'},
-    {key:'description', title:'Description'},
-    {key:'sku', title:'SKU'},
-    {key:'barcode', title:'Barcode'},
-    {key:'weight', title:'Weight'},
-    {key:'dimensions', title:'Dimensions'},
-    {key:'action', title:'Actions'}
-  ]
-    React.useEffect(() => {
-        handleGetProducts()
-    }, [])
+    { key: 'name', title: 'Product Name' },
+    { key: 'brand', title: 'Brand' },
+    { key: 'category', title: 'Category' },
+    { key: 'subCategory', title: 'Sub Category' },
+    { key: 'price', title: 'Price' },
+    { key: 'description', title: 'Description' },
+    { key: 'sku', title: 'SKU' },
+    { key: 'barcode', title: 'Barcode' },
+    { key: 'weight', title: 'Weight' },
+    { key: 'dimensions', title: 'Dimensions' },
+    { key: 'action', title: 'Actions' },
+  ];
+  const getProductCellValue = (product: IProductDetails, key: string) => {
+    switch (key) {
+      case 'image':
+        return (
+          <CldImage
+            src={product.productImage.find((image) => image.isMainImage === true)?.imageUrl ?? ''}
+            width={60}
+            height={60}
+            alt={product.name}
+          />
+        );
+      case 'brand':
+        return product.productBrand?.name || '-';
+      case 'category':
+        return product.productSubCategory.productCategory.name || '-';
+      case 'subCategory':
+        return product.productSubCategory.name || '-';
+      case 'action':
+        return (
+          <Link href={`/admin/products/edit/${product.id}`} className='font-medium text-blue-600 hover:underline'>
+            Edit
+          </Link>
+        );
+      default:
+        return (product[key as keyof IProductDetails] as string | number) || '-';
+    }
+  };
+
+  React.useEffect(() => {
+    handleGetProducts();
+  }, []);
   return (
     <div className='p-4 bg-red-200'>
       <div className='relative overflow-x-auto shadow-lg sm:rounded-lg'>
@@ -85,48 +113,11 @@ export default function AdminProductListViewPage() {
                     </label>
                   </div>
                 </td>
-                {productsListTitle.map((title, indx) => {
-                  const key = title.key
-                  if (key === 'image') {
-                    return (
-                      <td key={indx} className='px-4 py-2'>
-                        <CldImage src={product.productImage.find(image => image.isMainImage === true)?.imageUrl??''} width={60} height={60} alt=''/>
-                      </td>
-                    )
-                  } else if (key === 'brand') {
-                    return (
-                      <td key={indx} className='px-6 py-4'>
-                        {product.productBrand?.name}
-                      </td>
-                    )
-                  } else if (key === 'category') {
-                    return (
-                      <td key={indx} className='px-6 py-4'>
-                        {product.productSubCategory.productCategory.name}
-                      </td>
-                    );
-                  } else if (key === 'subCategory') {
-                    return (
-                      <td key={indx} className='px-6 py-4'>
-                        {product.productSubCategory.name}
-                      </td>
-                    );
-                  } else if (key === 'action') {
-                    return (
-                      <td key={indx} className='px-6 py-4'>
-                        <Link href={`/admin/products/edit/${product.id}`} className='font-medium text-blue-600 hover:underline'>
-                          Edit
-                        </Link>
-                      </td>
-                    );
-                  } else {
-                    return (
-                      <td key={indx} className='px-6 py-4'>
-                        {product[key as keyof IProductDetails] as string | number}
-                      </td>
-                    );
-                  }
-                })}
+                {productsListTitle.map((title, indx) => (
+                  <td key={indx} className='px-6 py-4'>
+                    {getProductCellValue(product, title.key)}
+                  </td>
+                ))}
               </tr>
             ))}
           </tbody>
