@@ -6,7 +6,7 @@ export default function AdminProductListViewPage() {
 
     const handleGetProducts = async () => {
         try {
-            
+            const response = 
         } catch (error) {
             console.error('Error fetching products:', error);
             toast.error('Failed to fetch products. Please try again later.');
