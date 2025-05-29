@@ -19,3 +19,9 @@ export interface IProductImage {
     cldPublicId?: string;
     isMainImage: boolean;
 }
+
+export interface ICloudinaryResult{
+    public_id: string;
+    secure_url: string;
+    isMainImage: boolean;
+}

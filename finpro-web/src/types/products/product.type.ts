@@ -10,7 +10,7 @@ export interface IAddProductField {
 export interface IProductFormValues {
   name: string;
   price: number;
-  productCategorySubId: number;
+  productSubCategoryId: number;
   brandId?: string;
   description?: string;
   sku?: string;

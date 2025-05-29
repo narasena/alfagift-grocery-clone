@@ -83,6 +83,21 @@ export default function AddProductPage() {
       return newUpdloadedImages;
     });
   };
+  const handleCreateProduct = async (values: IProductFormValues) => {
+    try {
+      const createProductResponse = await apiInstance.post('/product/create', {
+        ...values,
+        images: uploadedImages
+      })
+      console.log('Create Product Response:', createProductResponse.data);
+      toast.success('Product created successfully!');
+      setUploadedImages([]);
+    } catch (error) {
+      console.error('Error creating product:', error);
+      toast.error('Failed to create product. Please try again.');
+      
+    }
+  }
 
   React.useEffect(() => {
     if (uploadedImages.length > 0) {
@@ -101,7 +116,7 @@ export default function AddProductPage() {
           {
             name: '',
             price: 0,
-            productCategorySubId: 0,
+            productSubCategoryId: 0,
             brandId: '',
             description: '',
             sku: '',
@@ -118,6 +133,7 @@ export default function AddProductPage() {
           try {
             addProductSchemas.validateSync(values, { abortEarly: false });
             console.log('Validation passed!');
+            handleCreateProduct(values);
             setSubmitting(false);
           } catch (err) {
             if (err instanceof Yup.ValidationError) {
@@ -237,7 +253,7 @@ export default function AddProductPage() {
                           {productSubCategories
                             .filter((subCategory) => subCategory.productCategoryId === category.id)
                             .map((subCategory) => (
-                              <option key={subCategory.id} value={subCategory.id}>
+                              <option key={subCategory.id} value={Number(subCategory.id)}>
                                 {subCategory.name}
                               </option>
                             ))}

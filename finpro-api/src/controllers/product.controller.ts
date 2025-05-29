@@ -1,5 +1,5 @@
 import { prisma } from '../prisma';
-import { IProduct } from '../types/product.type';
+import { ICloudinaryResult, IProduct, IProductImage } from '../types/product.type';
 import { NextFunction, Request, Response } from 'express';
 import {v2 as cloudinary} from 'cloudinary';
 
@@ -48,18 +48,20 @@ export class ProductController {
         const productId = product.id;
 
         const productImages = await tx.productImage.createMany({
-          data: images.map((image) => ({
+          data: images.map((image: ICloudinaryResult) => ({
             productId,
             imageUrl: image.secure_url,
+            cldPublicId: image.public_id,
             isMainImage: image.isMainImage,
           }))
         })
+        return {product, productImages};
       })
 
       res.status(201).json({
         success: true,
         message: 'Product created successfully',
-        // product,
+        newProduct
       });
     } catch (error) {
       next(error);
