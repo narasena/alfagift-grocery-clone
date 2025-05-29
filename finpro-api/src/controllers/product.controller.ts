@@ -94,7 +94,11 @@ export class ProductController {
       const products = await prisma.product.findMany({
         include: {
           productImage: true,
-          productSubCategory: true,
+          productSubCategory: {
+            include: {
+              productCategory: true
+            }
+          },
           productBrand: true,
         }
       });
