@@ -2,7 +2,7 @@
 import * as React from 'react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import apiInstance from '@/services/apiInstance';
-import { IProductCategory, IProductSubCategory } from '@/types/products/product.subcategory.type';
+import { IProductCategory, IProductSubCategory } from '@/types/products/product.category.type';
 import { addProductSchemas } from '@/features/schemas/addProductSchemas';
 import * as Yup from 'yup';
 import { CldImage, CldUploadWidget, CloudinaryUploadWidgetResults } from 'next-cloudinary';
@@ -58,15 +58,15 @@ export default function AddProductPage() {
   };
   const handleSetAsMainImage = () => {
     if (!imageShowing) return;
-    
+
     setUploadedImages((prevImages) => {
-      const selectedIndex = prevImages.findIndex(img => img.secure_url === imageShowing?.secure_url)
+      const selectedIndex = prevImages.findIndex((img) => img.secure_url === imageShowing?.secure_url);
       if (selectedIndex === -1) return prevImages;
       const newImages = [...prevImages];
-      const selectedImage = { ...newImages[selectedIndex], isMainImage: true }
-      newImages.splice(selectedIndex, 1)
-      return[selectedImage, ...newImages.map((img) => ({ ...img, isMainImage: false }))];
-    })
+      const selectedImage = { ...newImages[selectedIndex], isMainImage: true };
+      newImages.splice(selectedIndex, 1);
+      return [selectedImage, ...newImages.map((img) => ({ ...img, isMainImage: false }))];
+    });
   };
   const handleSwapImage = (index1: number, index2: number) => {
     setUploadedImages((prevImages) => {
@@ -83,7 +83,7 @@ export default function AddProductPage() {
       return newUpdloadedImages;
     });
   };
-  const handleCreateProduct = async (values: IProductFormValues,resetForm: () => void) => {
+  const handleCreateProduct = async (values: Partial<IProductFormValues>, resetForm: () => void) => {
     try {
       const createProductResponse = await apiInstance.post('/product/create', {
         ...values,
@@ -94,8 +94,8 @@ export default function AddProductPage() {
         barcode: values.barcode || null,
         weight: Number(values.weight) || null,
         dimensions: values.dimensions || null,
-        images: uploadedImages
-      })
+        images: uploadedImages,
+      });
       console.log('Create Product Response:', createProductResponse.data);
       toast.success('Product created successfully!');
       setUploadedImages([]);
@@ -104,9 +104,8 @@ export default function AddProductPage() {
     } catch (error) {
       console.error('Error creating product:', error);
       toast.error('Failed to create product. Please try again.');
-      
     }
-  }
+  };
 
   React.useEffect(() => {
     if (uploadedImages.length > 0) {
@@ -133,7 +132,7 @@ export default function AddProductPage() {
             weight: 0,
             dimensions: '',
             images: [],
-          } as IProductFormValues
+          } as Partial<IProductFormValues>
         }
         validationSchema={addProductSchemas}
         onSubmit={(values, { setSubmitting, resetForm }) => {
