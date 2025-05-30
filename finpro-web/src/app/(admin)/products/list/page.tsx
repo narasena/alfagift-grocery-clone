@@ -45,11 +45,11 @@ export default function AdminProductListViewPage() {
           />
         );
       case 'brand':
-        return product.productBrand?.name || '-';
+        return product.productBrand?.name || '—';
       case 'category':
-        return product.productSubCategory.productCategory.name || '-';
+        return product.productSubCategory.productCategory.name || '—';
       case 'subCategory':
-        return product.productSubCategory.name || '-';
+        return product.productSubCategory.name || '—';
       case 'action':
         return (
           <Link href={`/admin/products/edit/${product.id}`} className='font-medium text-blue-600 hover:underline'>
@@ -57,7 +57,7 @@ export default function AdminProductListViewPage() {
           </Link>
         );
       default:
-        return (product[key as keyof IProductDetails] as string | number) || '-';
+        return (product[key as keyof IProductDetails] as string | number) || '—';
     }
   };
 
