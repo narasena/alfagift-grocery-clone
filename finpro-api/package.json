@@ -11,7 +11,8 @@
   },
   "scripts": {
     "dev": "nodemon",
-    "build": "tsc && mkdir -p api && cp -r dist/src/* api/",
+    "build": "prisma generate &&tsc && mkdir -p api && cp -r dist/src/* api/",
+    "vercel-bulid": "prisma generate && tsc",
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate:dev": "set PGOPTIONS='--statement_timeout=30000' && dotenv -e .env.development -- npx prisma migrate dev",
@@ -19,7 +20,8 @@
     "prisma:generate": "dotenv -e .env.development -- npx prisma generate",
     "prisma:format": "dotenv -e .env.development -- npx prisma format",
     "prisma:push": "dotenv -e .env.development -- npx prisma db push",
-    "prisma:seed": "dotenv -e .env.development -- npx prisma db seed"
+    "prisma:seed": "dotenv -e .env.development -- npx prisma db seed",
+    "postinstall": "prisma generate && tsc"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
@@ -30,6 +32,7 @@
   "dependencies": {
     "@prisma/client": "^6.7.0",
     "bcrypt": "^6.0.0",
+    "cloudinary": "^2.6.1",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
@@ -42,6 +45,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
+    "@types/multer": "^1.4.12",
     "@types/node": "^22.15.3",
     "@typescript-eslint/eslint-plugin": "^8.31.1",
     "@typescript-eslint/parser": "^8.31.1",
