@@ -1,6 +1,6 @@
 "use client";
 import apiInstance from "@/services/apiInstance";
-import { ICloudinaryResult, IProductDetails } from "@/types/products/product.type";
+import { IProductDetails } from "@/types/products/product.type";
 import { CldImage } from "next-cloudinary";
 import Link from "next/link";
 import { useParams } from "next/navigation";

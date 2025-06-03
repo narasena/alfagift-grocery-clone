@@ -1,4 +1,3 @@
-import { title } from "process";
 import * as React from "react";
 
 export default function AppsInfoComponent() {
