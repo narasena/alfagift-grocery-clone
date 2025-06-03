@@ -1,5 +1,5 @@
 
-import { ProductCategoryController } from '@/controllers/product.category.controller';
+import { ProductCategoryController } from '../controllers/product.category.controller';
 import { Router } from 'express';
 
 export class ProductCategoryRouter {

@@ -579,8 +579,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.7.0
-   * Query Engine version: 3cff47a7f5d65c3ea74883f1d736e41d68ce91ed
+   * Prisma Client JS version: 6.8.2
+   * Query Engine version: 2060c79ba17c6bb9f5823312b6f6b7f4a845738e
    */
   export type PrismaVersion = {
     client: string
@@ -28792,8 +28792,6 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-<<<<<<< HEAD
-=======
   export type ProductBrandCreateInput = {
     id?: string
     name: string
@@ -28882,9 +28880,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
->>>>>>> f5d5be710e2824cef02440623010cec6df05ac64
   export type ProductCategoryCreateInput = {
-    id?: string
     name: string
     slug: string
     description?: string | null
@@ -34278,8 +34274,97 @@ export namespace Prisma {
     productDiscount?: ProductDiscountUncheckedUpdateManyWithoutProductNestedInput
   }
 
-  export type ProductSubCategoryCreateWithoutProductCategoryInput = {
+  export type ProductCreateWithoutProductBrandInput = {
     id?: string
+    name: string
+    slug: string
+    description?: string | null
+    price: number
+    sku?: string | null
+    barcode?: string | null
+    plu?: string | null
+    bpomId?: string | null
+    weight?: number | null
+    dimensions?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    productSubCategory: ProductSubCategoryCreateNestedOneWithoutProductInput
+    productImage?: ProductImageCreateNestedManyWithoutProductInput
+    productStock?: ProductStockCreateNestedManyWithoutProductInput
+    productDiscount?: ProductDiscountCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductUncheckedCreateWithoutProductBrandInput = {
+    id?: string
+    name: string
+    slug: string
+    description?: string | null
+    price: number
+    productSubCategoryId: number
+    sku?: string | null
+    barcode?: string | null
+    plu?: string | null
+    bpomId?: string | null
+    weight?: number | null
+    dimensions?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+    productImage?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    productStock?: ProductStockUncheckedCreateNestedManyWithoutProductInput
+    productDiscount?: ProductDiscountUncheckedCreateNestedManyWithoutProductInput
+  }
+
+  export type ProductCreateOrConnectWithoutProductBrandInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutProductBrandInput, ProductUncheckedCreateWithoutProductBrandInput>
+  }
+
+  export type ProductCreateManyProductBrandInputEnvelope = {
+    data: ProductCreateManyProductBrandInput | ProductCreateManyProductBrandInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProductUpsertWithWhereUniqueWithoutProductBrandInput = {
+    where: ProductWhereUniqueInput
+    update: XOR<ProductUpdateWithoutProductBrandInput, ProductUncheckedUpdateWithoutProductBrandInput>
+    create: XOR<ProductCreateWithoutProductBrandInput, ProductUncheckedCreateWithoutProductBrandInput>
+  }
+
+  export type ProductUpdateWithWhereUniqueWithoutProductBrandInput = {
+    where: ProductWhereUniqueInput
+    data: XOR<ProductUpdateWithoutProductBrandInput, ProductUncheckedUpdateWithoutProductBrandInput>
+  }
+
+  export type ProductUpdateManyWithWhereWithoutProductBrandInput = {
+    where: ProductScalarWhereInput
+    data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutProductBrandInput>
+  }
+
+  export type ProductScalarWhereInput = {
+    AND?: ProductScalarWhereInput | ProductScalarWhereInput[]
+    OR?: ProductScalarWhereInput[]
+    NOT?: ProductScalarWhereInput | ProductScalarWhereInput[]
+    id?: StringFilter<"Product"> | string
+    name?: StringFilter<"Product"> | string
+    slug?: StringFilter<"Product"> | string
+    description?: StringNullableFilter<"Product"> | string | null
+    brandId?: StringNullableFilter<"Product"> | string | null
+    price?: FloatFilter<"Product"> | number
+    productSubCategoryId?: IntFilter<"Product"> | number
+    sku?: StringNullableFilter<"Product"> | string | null
+    barcode?: StringNullableFilter<"Product"> | string | null
+    plu?: StringNullableFilter<"Product"> | string | null
+    bpomId?: StringNullableFilter<"Product"> | string | null
+    weight?: FloatNullableFilter<"Product"> | number | null
+    dimensions?: StringNullableFilter<"Product"> | string | null
+    createdAt?: DateTimeFilter<"Product"> | Date | string
+    updatedAt?: DateTimeFilter<"Product"> | Date | string
+    deletedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
+  }
+
+  export type ProductSubCategoryCreateWithoutProductCategoryInput = {
     name: string
     slug: string
     description?: string | null
@@ -34460,28 +34545,6 @@ export namespace Prisma {
   export type ProductUpdateManyWithWhereWithoutProductSubCategoryInput = {
     where: ProductScalarWhereInput
     data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutProductSubCategoryInput>
-  }
-
-  export type ProductScalarWhereInput = {
-    AND?: ProductScalarWhereInput | ProductScalarWhereInput[]
-    OR?: ProductScalarWhereInput[]
-    NOT?: ProductScalarWhereInput | ProductScalarWhereInput[]
-    id?: StringFilter<"Product"> | string
-    name?: StringFilter<"Product"> | string
-    slug?: StringFilter<"Product"> | string
-    description?: StringNullableFilter<"Product"> | string | null
-    brandId?: StringNullableFilter<"Product"> | string | null
-    price?: FloatFilter<"Product"> | number
-    productSubCategoryId?: StringFilter<"Product"> | string
-    sku?: StringNullableFilter<"Product"> | string | null
-    barcode?: StringNullableFilter<"Product"> | string | null
-    plu?: StringNullableFilter<"Product"> | string | null
-    bpomId?: StringNullableFilter<"Product"> | string | null
-    weight?: FloatNullableFilter<"Product"> | number | null
-    dimensions?: StringNullableFilter<"Product"> | string | null
-    createdAt?: DateTimeFilter<"Product"> | Date | string
-    updatedAt?: DateTimeFilter<"Product"> | Date | string
-    deletedAt?: DateTimeNullableFilter<"Product"> | Date | string | null
   }
 
   export type ProductCreateWithoutProductStockInput = {
@@ -37119,7 +37182,7 @@ export namespace Prisma {
     deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type ProductSubCategoryCreateManyProductCategoryInput = {
+  export type ProductCreateManyProductBrandInput = {
     id?: string
     name: string
     slug: string
@@ -37137,8 +37200,77 @@ export namespace Prisma {
     deletedAt?: Date | string | null
   }
 
-  export type ProductSubCategoryUpdateWithoutProductCategoryInput = {
+  export type ProductUpdateWithoutProductBrandInput = {
     id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    plu?: NullableStringFieldUpdateOperationsInput | string | null
+    bpomId?: NullableStringFieldUpdateOperationsInput | string | null
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    productSubCategory?: ProductSubCategoryUpdateOneRequiredWithoutProductNestedInput
+    productImage?: ProductImageUpdateManyWithoutProductNestedInput
+    productStock?: ProductStockUpdateManyWithoutProductNestedInput
+    productDiscount?: ProductDiscountUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateWithoutProductBrandInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    productSubCategoryId?: IntFieldUpdateOperationsInput | number
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    plu?: NullableStringFieldUpdateOperationsInput | string | null
+    bpomId?: NullableStringFieldUpdateOperationsInput | string | null
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    productImage?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    productStock?: ProductStockUncheckedUpdateManyWithoutProductNestedInput
+    productDiscount?: ProductDiscountUncheckedUpdateManyWithoutProductNestedInput
+  }
+
+  export type ProductUncheckedUpdateManyWithoutProductBrandInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: FloatFieldUpdateOperationsInput | number
+    productSubCategoryId?: IntFieldUpdateOperationsInput | number
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    barcode?: NullableStringFieldUpdateOperationsInput | string | null
+    plu?: NullableStringFieldUpdateOperationsInput | string | null
+    bpomId?: NullableStringFieldUpdateOperationsInput | string | null
+    weight?: NullableFloatFieldUpdateOperationsInput | number | null
+    dimensions?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type ProductSubCategoryCreateManyProductCategoryInput = {
+    id?: number
+    name: string
+    slug: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    deletedAt?: Date | string | null
+  }
+
+  export type ProductSubCategoryUpdateWithoutProductCategoryInput = {
     name?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
