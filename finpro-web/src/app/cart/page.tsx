@@ -200,7 +200,7 @@ export default function CartPage() {
                     </div>
                   </div>
                 </div>
-                <button className="bg-red-700 text-white text-lg p-3 px-8 rounded-lg hover:bg-red-800 transition">
+                <button className="bg-red-700 text-white text-lg p-2 px-8 rounded-lg hover:bg-red-800 transition">
                   Checkout
                 </button>
               </div>

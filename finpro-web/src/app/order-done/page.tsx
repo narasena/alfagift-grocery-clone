@@ -7,6 +7,8 @@ import { useState } from "react";
 // use modal for view details
 // might need to use slug?
 
+// responsive belum
+
 export default function OrderDone() {
   const [isTransaksiOpen, setIsTransaksiOpen] = useState(false);
   const [isMyAccountOpen, setIsMyAccountOpen] = useState(false);
@@ -84,59 +86,34 @@ export default function OrderDone() {
               >
                 <span>Transaksi</span>
                 <svg
-                  className={`w-4 h-4 ml-2 transition-transform ${
-                    isTransaksiOpen ? "rotate-180" : ""
-                  }`}
+                  className={`w-4 h-4 ml-2 transition-transform ${isTransaksiOpen ? "rotate-180" : ""}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
 
               {isTransaksiOpen && (
                 <div className="mt-2 pl-4 space-y-2">
-                  <a
-                    href="#"
-                    className="block text-sm text-gray-600 hover:text-black"
-                  >
+                  <a href="#" className="block text-sm text-gray-600 hover:text-black">
                     Terbuat
                   </a>
-                  <a
-                    href="#"
-                    className="block text-sm text-gray-600 hover:text-black"
-                  >
+                  <a href="#" className="block text-sm text-gray-600 hover:text-black">
                     Menunggu Pembayaran
                   </a>
-                  <a
-                    href="#"
-                    className="block text-sm text-gray-600 hover:text-black"
-                  >
+                  <a href="#" className="block text-sm text-gray-600 hover:text-black">
                     Sedang Diproses
                   </a>
-                  <a
-                    href="#"
-                    className="block text-sm text-gray-600 hover:text-black"
-                  >
+                  <a href="#" className="block text-sm text-gray-600 hover:text-black">
                     Dikirim
                   </a>
-                  <a
-                    href="#"
-                    className="block text-sm text-gray-600 hover:text-black"
-                  >
+                  <a href="#" className="block text-sm text-gray-600 hover:text-black">
                     Selesai
                   </a>
-                  <a
-                    href="#"
-                    className="block text-sm text-gray-600 hover:text-black"
-                  >
+                  <a href="#" className="block text-sm text-gray-600 hover:text-black">
                     Batal
                   </a>
                 </div>
@@ -152,29 +129,19 @@ export default function OrderDone() {
               >
                 <span>My Account</span>
                 <svg
-                  className={`w-4 h-4 ml-2 transition-transform ${
-                    isMyAccountOpen ? "rotate-180" : ""
-                  }`}
+                  className={`w-4 h-4 ml-2 transition-transform ${isMyAccountOpen ? "rotate-180" : ""}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
 
               {isMyAccountOpen && (
                 <div className="mt-2 pl-4 space-y-2">
-                  <a
-                    href="#"
-                    className="block text-sm text-gray-600 hover:text-black"
-                  >
+                  <a href="#" className="block text-sm text-gray-600 hover:text-black">
                     Account Settings
                   </a>
                 </div>
@@ -186,14 +153,7 @@ export default function OrderDone() {
           <div className="bg-white border rounded-lg px-5 pt-3 md:col-span-5 border-gray-200">
             {/* Order Status Tabs */}
             <div className="flex flex-wrap gap-2">
-              {[
-                "Terbuat",
-                "Menunggu Pembayaran",
-                "Sedang Diproses",
-                "Dikirim",
-                "Selesai",
-                "Batal",
-              ].map((status) => {
+              {["Terbuat", "Menunggu Pembayaran", "Sedang Diproses", "Dikirim", "Selesai", "Batal"].map((status) => {
                 const isActive = status === "Selesai";
                 return (
                   <button
@@ -219,9 +179,7 @@ export default function OrderDone() {
                   <TbCalendarTime className="text-lg text-gray-400" />
                 </span>
                 {/* tgl dan hari order selesai */}
-                <span className="text-sm text-gray-400">
-                  11 Mei 2025 - 13:31 WIB
-                </span>
+                <span className="text-sm text-gray-400">11 Mei 2025 - 13:31 WIB</span>
                 <span className="badge bg-green-100 text-green-400 border-0 font-semibold px-4 py-2 rounded-xl">
                   Selesai
                 </span>
@@ -248,16 +206,11 @@ export default function OrderDone() {
               <div className=" text-right">
                 <button
                   className="bg-white text-red-600 border border-red-600 hover:bg-red-50 font-semibold px-4 py-2 rounded-lg"
-                  onClick={() =>
-                    document.getElementById("my_modal_1").showModal()
-                  }
+                  onClick={() => document.getElementById("my_modal_1").showModal()}
                 >
                   Lihat Detail
                 </button>
               </div>
-              {/* <p className="text-gray-600">
-                Detail pesanan akan ditampilkan di sini.
-              </p> */}
             </div>
           </div>
         </div>
