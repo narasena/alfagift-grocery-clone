@@ -118,7 +118,10 @@ export default function AddProductPage() {
   }, []);
 
   return (
-    <div>
+    <div className='text-black'>
+      <div>
+        <span className='text-2xl font-bold w-full px-4 py-3'>Add New Product</span>
+      </div>
       <Formik
         initialValues={
           {
