@@ -2,15 +2,21 @@
 import { IoTrashOutline } from "react-icons/io5";
 import { BsStopwatch } from "react-icons/bs";
 
+// mobile tambahin Kirim ke: Alamat
+// di atas line paling atas, di atas clear all button
+
 export default function CartPage() {
   return (
     <main className="min-h-screen bg-white flex flex-col items-center justify-between py-8">
-      <div className="w-full max-w-6xl px-5">
+      <div className="w-full max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Cart Items */}
           <div className="md:col-span-2 bg-white border rounded-lg p-6 shadow-sm">
-            <h1 className="text-2xl font-semibold text-gray-700 mb-5">Cart</h1>
-            <div className="w-full h-1 bg-gray-100" />
+            {/* Hide "Cart" heading on mobile */}
+            <h1 className="hidden md:block text-2xl font-semibold text-gray-700 mb-5">
+              Cart
+            </h1>
+            <div className="hidden md:block w-full h-1 bg-gray-100" />
 
             {/* Button clear all */}
             <button className="px-4 my-6 flex justify-between items-center bg-white text-blue-600 py-2 rounded-lg transition border-2">
@@ -34,8 +40,8 @@ export default function CartPage() {
                 </div>
 
                 {/* Right: Subtotal + Quantity controls */}
-                <div className="flex items-center space-x-4">
-                  {/* Quantity Controls */}
+                <div className="flex items-center justify-end md:justify-start space-x-2 md:space-x-4">
+                  {/* Quantity Controls - Now stays in line with price on mobile */}
                   <div className="flex items-center space-x-2">
                     <button className="w-8 h-8 border rounded text-lg text-gray-600 hover:bg-gray-100">
                       -
@@ -46,23 +52,25 @@ export default function CartPage() {
                     </button>
                   </div>
 
-                  {/* Subtotal */}
-                  <div className="text-black font-medium min-w-[80px] text-right">
-                    Rp {10000 * 2}
-                  </div>
+                  {/* Subtotal and Remove Button - Now in same line on mobile */}
+                  <div className="flex items-center space-x-2 md:space-x-4">
+                    {/* Subtotal */}
+                    <div className="text-black font-medium min-w-[80px] text-right">
+                      Rp {10000 * 2}
+                    </div>
 
-                  {/* Remove Button */}
-                  <button className="mx-2 flex justify-between items-center bg-white text-blue-600  transition ">
-                    <IoTrashOutline className="text-2xl" />
-                  </button>
+                    {/* Remove Button */}
+                    <button className="flex justify-between items-center bg-white text-blue-600 transition">
+                      <IoTrashOutline className="text-2xl" />
+                    </button>
+                  </div>
                 </div>
               </li>
-              {/* <li className="text-black">Item 2</li> */}
             </ul>
           </div>
 
-          {/* Order Summary */}
-          <div className="bg-white border rounded-lg p-6 shadow-sm">
+          {/* Order Summary - Hidden on mobile */}
+          <div className="hidden md:block bg-white border rounded-lg p-6 shadow-sm">
             <h2 className="text-xl font-semibold text-gray-700 mb-7">
               Order Summary
             </h2>
@@ -88,6 +96,19 @@ export default function CartPage() {
             <button className="w-full mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition">
               Checkout
             </button>
+          </div>
+
+          {/* Mobile Checkout Button - Only shows on mobile */}
+          <div className="md:hidden bg-white border-t fixed bottom-0 left-0 right-0 p-4 shadow-lg">
+            <div className="flex space-y-4 justify-between items-center">
+              <div className="flex justify-between items-center mb-2 text-black">
+                <span className="font-semibold">Total</span>
+                <span className="font-bold">Rp {10000 * 2}</span>
+              </div>
+              <button className=" bg-red-700 text-white p-3 px-8 rounded-lg hover:bg-red-800 transition">
+                Checkout
+              </button>
+            </div>
           </div>
         </div>
       </div>

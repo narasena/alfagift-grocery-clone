@@ -22,6 +22,54 @@ export default function OrderDone() {
   return (
     <main className="min-h-screen bg-white flex flex-col items-center justify-between py-8">
       <div className="w-full max-w-6xl px-5">
+        {/* Modal */}
+        {/* Open the modal using document.getElementById('ID').showModal() method */}
+
+        <dialog id="my_modal_1" className="modal">
+          <div className="modal-box bg-white rounded-lg p-6 text-black relative">
+            {/* Close (X) button in top-right corner */}
+            <form method="dialog">
+              <button
+                className="absolute right-4 top-4 text-gray-500 hover:text-red-500 text-xl font-bold"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </form>
+
+            {/* Centered title */}
+            <h3 className="font-bold text-xl text-center">Detail Transaksi</h3>
+            <hr className="border-t border-gray-200 my-4 -mx-6" />
+
+            <div className="text-black flex items-center space-x-3">
+              <RiEBike2Line className="text-4xl" />
+              <div className="flex items-center justify-between w-full">
+                <h1 className="font-semibold">Kirim ke Alamat</h1>
+                <span className="badge bg-green-100 text-green-400 border-0 font-semibold  rounded-xl">
+                  Pesanan Selesai
+                </span>
+              </div>
+            </div>
+            <div className="space-y-4 mt-5">
+              <div className="flex items-center justify-between text-sm">
+                <h1 className="text-gray-500">No. Pesanan</h1>
+                {/* No Pesanan di sini */}
+                <h1 className="text-red-600 font-bold">O-250519-AGBZZFX</h1>
+              </div>
+              <div className="flex items-center justify-between text-sm">
+                <h1 className="text-gray-500">Tanggal Pembelian</h1>
+                <h1 className="text-gray-800">11 Mei 2025 - 13:31 WIB</h1>
+              </div>
+            </div>
+
+            <hr className="border-t border-8 border-gray-100 mt-7 -mx-6" />
+
+            <div className="mt-5">
+              <h1 className="font-semibold">Detail Pesanan</h1>
+            </div>
+          </div>
+        </dialog>
+
         <div className="grid grid-cols-1 md:grid-cols-7 gap-5">
           {/* User Details */}
           <div className="md:col-span-2 bg-white border border-gray-200 rounded-lg p-6">
@@ -198,7 +246,12 @@ export default function OrderDone() {
               <hr className="border-t border-gray-200 my-4" />
 
               <div className=" text-right">
-                <button className="bg-white text-red-600 border border-red-600 hover:bg-red-50 font-semibold px-4 py-2 rounded-lg">
+                <button
+                  className="bg-white text-red-600 border border-red-600 hover:bg-red-50 font-semibold px-4 py-2 rounded-lg"
+                  onClick={() =>
+                    document.getElementById("my_modal_1").showModal()
+                  }
+                >
                   Lihat Detail
                 </button>
               </div>
