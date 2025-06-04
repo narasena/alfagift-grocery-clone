@@ -13,6 +13,7 @@ import AppsInfoComponent from "./components/AppsInformation";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { IProductImage } from "@/types/products/product.image.type";
 import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";
+import { getProductDetails } from "@/services/getProductDetails";
 
 export default function ProductSlugPage() {
   const params = useParams();
@@ -62,10 +63,9 @@ export default function ProductSlugPage() {
   }
   const handleGetProductDetails = async () => {
     try {
-      const response = await apiInstance.get("/product/" + params.slug);
-      console.log(response.data.product);
-      setProduct(response.data.product);
-      setImageShowing(response.data.product.productImage[0]);
+      const productData = await getProductDetails(params.slug as string);
+      setProduct(productData!);
+      setImageShowing(product?.productImage[0]!);
     } catch (error) {
       console.error("Error fetching product details:", error);
     }
