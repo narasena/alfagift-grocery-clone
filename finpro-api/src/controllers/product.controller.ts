@@ -2,6 +2,7 @@ import { prisma } from '../prisma';
 import { ICloudinaryResult, IProduct, IProductImage } from '../types/product.type';
 import { NextFunction, Request, Response } from 'express';
 import {v2 as cloudinary} from 'cloudinary';
+import { Prisma } from '@prisma/client';
 
 
 export class ProductController {
@@ -29,7 +30,7 @@ export class ProductController {
         });
       }
 
-      const newProduct = await prisma.$transaction(async (tx) => {
+      const newProduct = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         const product = await tx.product.create({
           data: {
             name,
@@ -106,6 +107,33 @@ export class ProductController {
         success: true,
         message: 'Products fetched successfully',
         products
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getProductById(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { slug } = req.params;
+      const product = await prisma.product.findUnique({
+        where: {
+          slug,
+        },
+        include: {
+          productImage: true,
+          productSubCategory: {
+            include: {
+              productCategory: true
+            }
+          },
+          productBrand: true,
+        }
+      });
+      res.status(200).json({
+        success: true,
+        message: 'Product fetched successfully',
+        product
       });
     } catch (error) {
       next(error);

@@ -12,6 +12,7 @@ export interface IAddProductField {
 export interface IProduct {
   id: number;
   name: string;
+  slug: string;
   price: number;
   productSubCategoryId: number;
   brandId?: string;
