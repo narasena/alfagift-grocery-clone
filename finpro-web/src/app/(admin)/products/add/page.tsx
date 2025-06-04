@@ -9,22 +9,13 @@ import { CldImage, CldUploadWidget, CloudinaryUploadWidgetResults } from 'next-c
 import { toast } from 'react-toastify';
 import { TbArrowBigLeftLinesFilled, TbArrowBigRightLinesFilled } from 'react-icons/tb';
 import { IAddProductField, ICloudinaryResult, IProductFormValues } from '@/types/products/product.type';
+import { useProductCategories } from '@/hooks/products/useProductCategories';
 
 export default function AddProductPage() {
-  const [productCategories, setProductCategories] = React.useState<IProductCategory[]>([]);
-  const [productSubCategories, setProductSubCategories] = React.useState<IProductSubCategory[]>([]);
+  const { productCategories, productSubCategories } = useProductCategories();
   const [uploadedImages, setUploadedImages] = React.useState<ICloudinaryResult[]>([]);
   const [imageShowing, setImageShowing] = React.useState<ICloudinaryResult | null>(null);
-  const handleGetProductCategories = async () => {
-    try {
-      const categoryResponse = await apiInstance.get('/product-category');
-      const subCategoryResponse = await apiInstance.get('/product-category/subcategories');
-      setProductCategories(categoryResponse.data.productCategories);
-      setProductSubCategories(subCategoryResponse.data.productSubCategories);
-    } catch (error) {
-      console.error('Error fetching product categories:', error);
-    }
-  };
+  
   const addProductFields: IAddProductField[] = [
     { name: 'name', title: 'Product Name', type: 'text' },
     { name: 'price', title: 'Product Price', type: 'number' },
@@ -113,9 +104,6 @@ export default function AddProductPage() {
     }
     console.log('Uploaded Images:', uploadedImages);
   }, [uploadedImages]);
-  React.useEffect(() => {
-    handleGetProductCategories();
-  }, []);
 
   return (
     <div className='text-black'>
