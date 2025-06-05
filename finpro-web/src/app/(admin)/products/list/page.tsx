@@ -1,6 +1,7 @@
 'use client';
-import apiInstance from '@/services/apiInstance';
+
 import { IProductDetails } from '@/types/products/product.type';
+import apiInstance from '@/utils/api/apiInstance';
 import { CldImage } from 'next-cloudinary';
 import Link from 'next/link';
 import * as React from 'react';
