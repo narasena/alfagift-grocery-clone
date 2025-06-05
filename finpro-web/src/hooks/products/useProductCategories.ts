@@ -1,4 +1,4 @@
-import apiInstance from "@/services/apiInstance";
+import apiInstance from "@/utils/api/apiInstance";
 import { IProductCategory, IProductSubCategory } from "@/types/products/product.category.type";
 import * as React from "react";
 

@@ -1,9 +1,10 @@
 
-import { getProductDetails } from '@/services/getProductDetails';
+
 import { IProductDetails } from '@/types/products/product.type';
 import { useParams } from 'next/navigation';
 import * as React from 'react'
 import { useProductImageShowing } from './useProductImageShowing';
+import { getProductDetails } from '@/features/user/slug pages/product/getProductDetails';
 
 export const useProductDetails = () => {
     const params = useParams()
