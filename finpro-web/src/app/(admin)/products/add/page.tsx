@@ -2,17 +2,19 @@
 import * as React from 'react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import apiInstance from '@/services/apiInstance';
-import { IProductCategory, IProductSubCategory } from '@/types/products/product.category.type';
 import { addProductSchemas } from '@/features/schemas/addProductSchemas';
 import * as Yup from 'yup';
 import { CldImage, CldUploadWidget, CloudinaryUploadWidgetResults } from 'next-cloudinary';
 import { toast } from 'react-toastify';
 import { TbArrowBigLeftLinesFilled, TbArrowBigRightLinesFilled } from 'react-icons/tb';
-import { IAddProductField, ICloudinaryResult, IProductFormValues } from '@/types/products/product.type';
+import { IAddProductField, IProductFormValues } from '@/types/products/product.type';
 import { useProductCategories } from '@/hooks/products/useProductCategories';
+import { useProductCategoriesTree } from '@/hooks/products/useProductCategoriesTree';
+import { ICloudinaryResult } from '@/types/products/product.image.type';
 
 export default function AddProductPage() {
   const { productCategories, productSubCategories } = useProductCategories();
+
   const [uploadedImages, setUploadedImages] = React.useState<ICloudinaryResult[]>([]);
   const [imageShowing, setImageShowing] = React.useState<ICloudinaryResult | null>(null);
   
