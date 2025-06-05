@@ -1,9 +1,6 @@
 "use client";
-import apiInstance from "@/services/apiInstance";
-import { IProductDetails } from "@/types/products/product.type";
 import { CldImage } from "next-cloudinary";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import * as React from "react";
 import { FaShippingFast } from "react-icons/fa";
 import { IoStorefrontOutline } from "react-icons/io5";
@@ -13,11 +10,11 @@ import AppsInfoComponent from "./components/AppsInformation";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { IProductImage } from "@/types/products/product.image.type";
 import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";
-import { getProductDetails } from "@/services/getProductDetails";
+import { useProductDetails } from "@/hooks/products/useProductDetails";
 
 export default function ProductSlugPage() {
-  const params = useParams();
-  const [product, setProduct] = React.useState<IProductDetails | null>(null);
+  const {product} = useProductDetails()
+  
   const [imageShowing, setImageShowing] = React.useState<IProductImage | null>(null);
   const [quantity, setQuantity] = React.useState<number>(1);
   const testDescription = {
@@ -61,18 +58,7 @@ export default function ProductSlugPage() {
         break;
     } 
   }
-  const handleGetProductDetails = async () => {
-    try {
-      const productData = await getProductDetails(params.slug as string);
-      setProduct(productData!);
-      setImageShowing(product?.productImage[0]!);
-    } catch (error) {
-      console.error("Error fetching product details:", error);
-    }
-  };
-  React.useEffect(() => {
-    handleGetProductDetails();
-  }, []);
+  
   return (
     <div className="lg:px-2 py-4 bg-white text-gray-600 max-w-[500px] lg:max-w-[1200px] mx-auto flex flex-col max-lg:overflow-x-hidden relative">
       {/* Breadcrumb */}
