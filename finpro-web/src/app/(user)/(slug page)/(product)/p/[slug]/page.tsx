@@ -1,9 +1,6 @@
 "use client";
-import apiInstance from "@/services/apiInstance";
-import { IProductDetails } from "@/types/products/product.type";
 import { CldImage } from "next-cloudinary";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import * as React from "react";
 import { FaShippingFast } from "react-icons/fa";
 import { IoStorefrontOutline } from "react-icons/io5";
@@ -11,14 +8,15 @@ import { MdDeliveryDining } from "react-icons/md";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import AppsInfoComponent from "./components/AppsInformation";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
-import { IProductImage } from "@/types/products/product.image.type";
 import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";
+import { useProductDetails } from "@/hooks/products/useProductDetails";
+import { useProductQuantity } from "@/hooks/products/useProductQuantity";
+import { useProductBreadcrumbs } from "@/hooks/products/useProductBreadcrumbs";
 
 export default function ProductSlugPage() {
-  const params = useParams();
-  const [product, setProduct] = React.useState<IProductDetails | null>(null);
-  const [imageShowing, setImageShowing] = React.useState<IProductImage | null>(null);
-  const [quantity, setQuantity] = React.useState<number>(1);
+  const { product, imageShowing, handleImageClick } = useProductDetails()
+  const { quantity, setQuantity, handleQuantityChange } = useProductQuantity()
+  const { breadcrumbLinks } = useProductBreadcrumbs()
   const testDescription = {
     list: [
       "Tabung gas mini isi ulang dari HI-COOK",
@@ -31,48 +29,9 @@ export default function ProductSlugPage() {
       "Kegiatan masak-memasak menjadi lancar sesuai harapan karena kompor selalu mendapat suplai gas yang mencukupi berkat HI-COOK Tabung Gas Mini",
     long: "merupakan tabung gas ukuran mini yang diciptakan khusus untuk memenuhi kebutuhan anda. Dapat untuk diaplikasikan pada kompor gas tipe mini atau alat-alat lainnya. Cocok untuk digunakan sebagai peralatan bekal memasak ketika aktivitas berkemah atau aktivitas di luar rumah lainnya. Mempunyai desain mini sehingga sangat praktis dibawa atau ditaruh dimanapun. HI-COOK Tabung Gas Mini sangat memenuhi kebutuhan anda.",
   };
-  const breadcrumbLinks = React.useMemo(() => {
-    return [
-      { label: "Home", href: "/" },
-      {
-        label: product?.productSubCategory.productCategory.name,
-        href: `/c/${product?.productSubCategory.productCategory.slug}`,
-      },
-      {
-        label: product?.productSubCategory.name,
-        href: `/c/${product?.productSubCategory.productCategory.slug}/${product?.productSubCategory.slug}`,
-      },
-      { label: product?.name, href: `#` },
-    ];
-  }, [product]);
-  const handleImageClick = (image: IProductImage) => {
-    setImageShowing(image);
-  };
-  const handleQuantityChange = (action: 'plus' | 'minus') => {
-    switch (action) {
-      case 'plus':
-        setQuantity(quantity + 1);
-        break;
-      case 'minus':
-        if (quantity > 1) {
-          setQuantity(quantity - 1);
-        }
-        break;
-    } 
-  }
-  const handleGetProductDetails = async () => {
-    try {
-      const response = await apiInstance.get("/product/" + params.slug);
-      console.log(response.data.product);
-      setProduct(response.data.product);
-      setImageShowing(response.data.product.productImage[0]);
-    } catch (error) {
-      console.error("Error fetching product details:", error);
-    }
-  };
-  React.useEffect(() => {
-    handleGetProductDetails();
-  }, []);
+  
+
+  
   return (
     <div className="lg:px-2 py-4 bg-white text-gray-600 max-w-[500px] lg:max-w-[1200px] mx-auto flex flex-col max-lg:overflow-x-hidden relative">
       {/* Breadcrumb */}
@@ -94,7 +53,7 @@ export default function ProductSlugPage() {
       <div className="lg:grid lg:grid-cols-[auto_1fr_auto] lg:w-full lg:my-10 lg:px-4 lg:[&>*]:px-2">
         {/* Product Images */}
         <div className="flex lg:flex-col justify-center mx-auto h-fit">
-          {imageShowing?.imageUrl ? (
+          {imageShowing && "imageUrl" in imageShowing ? (
             <CldImage width={400} height={400} src={imageShowing.imageUrl} alt={product?.name || "Product image"} />
           ) : (
             <div className="size-[400px] bg-gray-100 flex items-center justify-center">
@@ -106,7 +65,11 @@ export default function ProductSlugPage() {
               <div
                 key={index}
                 onClick={() => handleImageClick(image)}
-                className={imageShowing?.id === image.id ? "border-2 border-red-700 rounded-md overflow-hidden" : ""}
+                className={
+                  imageShowing && "id" in imageShowing && imageShowing.id === image.id
+                    ? "border-2 border-red-700 rounded-md overflow-hidden"
+                    : ""
+                }
               >
                 <CldImage width={60} height={60} src={image.imageUrl} alt={product?.name ?? ""} />
               </div>

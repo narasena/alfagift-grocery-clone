@@ -1,6 +1,6 @@
 import { IProductBrand } from './product.brand.type';
 import { IProductSubCategory } from './product.category.type';
-import { IProductImage } from './product.image.type';
+import { ICloudinaryResult, IProductImage } from './product.image.type';
 
 export interface IAddProductField {
   name: string;
@@ -29,11 +29,6 @@ export interface IProductFormValues extends IProduct {
   images: ICloudinaryResult[];
 }
 
-export interface ICloudinaryResult {
-  public_id: string;
-  secure_url: string;
-  isMainImage: boolean;
-}
 
 export interface IProductDetails extends IProduct {
   productImage: IProductImage[]
