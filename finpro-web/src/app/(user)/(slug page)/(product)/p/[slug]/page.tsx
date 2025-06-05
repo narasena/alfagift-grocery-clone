@@ -8,14 +8,14 @@ import { MdDeliveryDining } from "react-icons/md";
 import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import AppsInfoComponent from "./components/AppsInformation";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
-import { IProductImage } from "@/types/products/product.image.type";
 import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";
 import { useProductDetails } from "@/hooks/products/useProductDetails";
 
 export default function ProductSlugPage() {
-  const {product} = useProductDetails()
+  const { product, imageShowing, handleImageClick } = useProductDetails()
+  console.log(product);
+  console.log(imageShowing);
   
-  const [imageShowing, setImageShowing] = React.useState<IProductImage | null>(null);
   const [quantity, setQuantity] = React.useState<number>(1);
   const testDescription = {
     list: [
@@ -43,9 +43,6 @@ export default function ProductSlugPage() {
       { label: product?.name, href: `#` },
     ];
   }, [product]);
-  const handleImageClick = (image: IProductImage) => {
-    setImageShowing(image);
-  };
   const handleQuantityChange = (action: 'plus' | 'minus') => {
     switch (action) {
       case 'plus':
