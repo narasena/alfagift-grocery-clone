@@ -1,13 +1,16 @@
+import { useProductImageShowing } from '@/hooks/products/useProductImageShowing';
 import { ICloudinaryResult } from '@/types/products/product.image.type';
 import { IProductFormValues } from '@/types/products/product.type';
 import apiInstance from '@/utils/api/apiInstance';
 import { CloudinaryUploadWidgetResults } from 'next-cloudinary';
 import * as React from 'react';
 import { toast } from 'react-toastify';
+import { setAsMainImage, swapImages } from '@/utils/products/product.image.helpers';
 
 export const useProductImagesUpload = () => {
+
     const [uploadedImages, setUploadedImages] = React.useState<ICloudinaryResult[]>([]);
-    const [imageShowing, setImageShowing] = React.useState<ICloudinaryResult | null>(null);
+    const {imageShowing, setImageShowing, handleImageClick} = useProductImageShowing()
     const handleImageUpload = (result: CloudinaryUploadWidgetResults) => {
         if (result.info && typeof result.info === 'object' && 'public_id' in result.info && 'secure_url' in result.info) {
           const newImage = {
@@ -17,42 +20,23 @@ export const useProductImagesUpload = () => {
           };
           setUploadedImages((prevImages) => {
             if (prevImages.length === 0) {
-              return [{ ...newImage, isMainImage: true }];
+              return setAsMainImage([newImage], newImage);
             }
-            return [...prevImages, newImage];
+            return setAsMainImage([...prevImages, newImage], newImage); 
           });
     
           toast.success(`Image uploaded successfully!`);
         }
       };
-      const handleImageClick = (image: ICloudinaryResult) => {
-        setImageShowing(image);
-      };
       const handleSetAsMainImage = () => {
         if (!imageShowing) return;
-    
-        setUploadedImages((prevImages) => {
-          const selectedIndex = prevImages.findIndex((img) => img.secure_url === imageShowing?.secure_url);
-          if (selectedIndex === -1) return prevImages;
-          const newImages = [...prevImages];
-          const selectedImage = { ...newImages[selectedIndex], isMainImage: true };
-          newImages.splice(selectedIndex, 1);
-          return [selectedImage, ...newImages.map((img) => ({ ...img, isMainImage: false }))];
-        });
+        setUploadedImages((prevImages) => 
+          setAsMainImage(prevImages, imageShowing as ICloudinaryResult)
+        );
       };
       const handleSwapImage = (index1: number, index2: number) => {
         setUploadedImages((prevImages) => {
-          const newUpdloadedImages = [...prevImages];
-          const temp = newUpdloadedImages[index1];
-          newUpdloadedImages[index1] = newUpdloadedImages[index2];
-          newUpdloadedImages[index2] = temp;
-          if (index1 === 0 || index2 === 0) {
-            return newUpdloadedImages.map((img, indx) => ({
-              ...img,
-              isMainImage: indx === 0,
-            }));
-          }
-          return newUpdloadedImages;
+          return swapImages(prevImages, index1, index2);
         });
       };
       const handleCreateProduct = async (values: Partial<IProductFormValues>, resetForm: () => void) => {

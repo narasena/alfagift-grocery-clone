@@ -7,7 +7,7 @@ import { CldImage, CldUploadWidget } from "next-cloudinary";
 import { TbArrowBigLeftLinesFilled, TbArrowBigRightLinesFilled } from "react-icons/tb";
 import { IAddProductField, IProductFormValues } from "@/types/products/product.type";
 import { useProductCategories } from "@/hooks/products/useProductCategories";
-import { useProductImagesUpload } from "@/hooks/products/useProductImagesUpload";
+import { useProductImagesUpload } from "@/features/(admin)/products/add/hooks/useProductImagesUpload";
 
 
 export default function AddProductPage() {
