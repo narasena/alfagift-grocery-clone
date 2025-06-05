@@ -14,3 +14,5 @@ export interface ICloudinaryResult {
   secure_url: string;
   isMainImage: boolean;
 }
+
+export interface IProductImageModification extends Omit<Partial<IProductImage>, 'isMainImage'>, ICloudinaryResult {}
