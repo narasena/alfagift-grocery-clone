@@ -11,19 +11,21 @@ import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import AppsInfoComponent from "./components/AppsInformation";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";
-import { useProductDetails } from "@/hooks/products/useProductDetails";
-import { useProductQuantity } from "@/hooks/products/useProductQuantity";
-import { useProductBreadcrumbs } from "@/hooks/products/useProductBreadcrumbs";
+import { useProductDetails } from "@/features/(user)/p/hooks/useProductDetails";
+import { useProductQuantity } from "@/features/(user)/p/hooks/useProductQuantity";
+import { useProductBreadcrumbs } from "@/features/(user)/p/hooks/useProductBreadcrumbs";
 
 import { HiOutlineShoppingCart } from "react-icons/hi";
 
 import useCart from "@/features/(user)/p/hooks/useCart";
-import useGetProductDetails from "@/features/(user)/p/hooks/useGetProductDetails";
+// import useGetProductDetails from "@/features/(user)/p/hooks/useGetProductDetails";
 
 export default function ProductSlugPage() {
   const { product, imageShowing, handleImageClick } = useProductDetails();
   const { quantity, setQuantity, handleQuantityChange } = useProductQuantity();
   const { breadcrumbLinks } = useProductBreadcrumbs();
+
+  const { cart, handleAddToCart } = useCart();
   const testDescription = {
     list: [
       "Tabung gas mini isi ulang dari HI-COOK",
