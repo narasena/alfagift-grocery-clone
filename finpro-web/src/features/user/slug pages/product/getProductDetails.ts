@@ -1,5 +1,6 @@
 import { IProductDetails } from "@/types/products/product.type";
-import apiInstance from "../../utils/api/apiInstance";
+import apiInstance from "@/utils/api/apiInstance";
+
 
 export const getProductDetails = async (params: string) => {
   try {
