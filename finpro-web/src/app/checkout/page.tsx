@@ -14,11 +14,11 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Order Summary */}
           <div className="md:col-span-2 bg-white border rounded-lg p-6 shadow-sm">
-            <h1 className="text-2xl font-semibold text-gray-700 mb-5">Order Summary</h1>
+            <h1 className="text-2xl font-semibold text-gray-700 mb-5">Ringkasan Pesanan</h1>
 
             {/* Detail Penerima */}
             <div className="text-black">
-              <h1 className="font-semibold">Recipient Details</h1>
+              <h1 className="font-semibold">Detail Penerima</h1>
               <div className="w-full h-[2px] bg-gray-100 my-3" />
 
               {/* Recipient Info */}
@@ -43,7 +43,7 @@ export default function CheckoutPage() {
 
             {/* Delivery */}
             <div className="text-black">
-              <h1 className="font-semibold">Delivery</h1>
+              <h1 className="font-semibold">Pengiriman</h1>
               <div className="w-full h-[2px] bg-gray-100 my-3" />
 
               <div className="text-gray-500 space-y-1">
@@ -67,7 +67,7 @@ export default function CheckoutPage() {
               <div className="">
                 <BsStopwatch className="text-black" />
               </div>
-              Instant Delivery
+              Pengiriman Instan
             </div>
             <ul className="space-y-4">
               <li className="flex justify-between items-center border rounded p-4">
@@ -91,18 +91,18 @@ export default function CheckoutPage() {
 
           {/* Order Summary */}
           <div className="hidden md:block bg-white border rounded-lg p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-700 mb-7">Order Summary</h2>
+            <h2 className="text-xl font-semibold text-gray-700 mb-7">Ringkasan Pesanan</h2>
             <div className="space-y-4 text-black">
               <div className="flex justify-between">
                 <span>Subtotal</span>
                 <span>Rp 0</span>
               </div>
               <div className="flex justify-between">
-                <span>Discount</span>
+                <span>Diskon</span>
                 <span>Rp 0</span>
               </div>
               <div className="flex justify-between">
-                <span>Delivery Fee</span>
+                <span>Ongkos Kirim</span>
                 <span>Rp 0</span>
               </div>
             </div>
@@ -111,12 +111,12 @@ export default function CheckoutPage() {
             {/* Total */}
             <div className="text-black font-bold">
               <div className="flex justify-between">
-                <span>Total</span>
+                <span>Total Belanja</span>
                 <span>Rp 0</span>
               </div>
             </div>
             <button className="w-full mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition">
-              Choose Payment
+              Pilih Pembayaran
             </button>
           </div>
 
@@ -125,14 +125,18 @@ export default function CheckoutPage() {
             {/* Order Summary Dropdown (appears above when open) */}
             {isSummaryOpen && (
               <div className="fixed bottom-16 left-0 right-0 bg-white border-t p-6 max-h-[60vh] overflow-y-auto shadow-lg">
-                <h2 className="text-xl font-semibold text-gray-700 mb-7">Order Summary</h2>
+                <h2 className="text-xl font-semibold text-gray-700 mb-7">Ringkasan Pesanan</h2>
                 <div className="space-y-4 text-black">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
                     <span>Rp 0</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Discount</span>
+                    <span>Diskon</span>
+                    <span>Rp 0</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Ongkos Kirim</span>
                     <span>Rp 0</span>
                   </div>
                 </div>
@@ -141,7 +145,7 @@ export default function CheckoutPage() {
                 {/* Total */}
                 <div className="text-black font-bold">
                   <div className="flex justify-between">
-                    <span>Total</span>
+                    <span>Total Belanja</span>
                     <span>Rp 0</span>
                   </div>
                 </div>
@@ -168,7 +172,7 @@ export default function CheckoutPage() {
                   </div>
                 </div>
                 <button className="bg-red-700 text-white text-lg p-2 rounded-lg hover:bg-red-800 transition">
-                  Choose Payment
+                  Pilih Pembayaran
                 </button>
               </div>
             </div>

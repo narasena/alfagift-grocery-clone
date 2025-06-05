@@ -1,5 +1,5 @@
 "use client";
-import apiInstance from "@/services/apiInstance";
+import apiInstance from "@/utils/apiInstance";
 import { IProductDetails } from "@/types/products/product.type";
 import { CldImage } from "next-cloudinary";
 import Link from "next/link";
@@ -14,11 +14,20 @@ import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { IProductImage } from "@/types/products/product.image.type";
 import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";
 
+import { HiOutlineShoppingCart } from "react-icons/hi";
+
+import useCart from "@/features/(user)/p/hooks/useCart";
+import useGetProductDetails from "@/features/(user)/p/hooks/useGetProductDetails";
+
 export default function ProductSlugPage() {
   const params = useParams();
-  const [product, setProduct] = React.useState<IProductDetails | null>(null);
-  const [imageShowing, setImageShowing] = React.useState<IProductImage | null>(null);
+
   const [quantity, setQuantity] = React.useState<number>(1);
+
+  //hooks
+  const { cart, handleAddToCart } = useCart();
+  const { product, imageShowing, setImageShowing } = useGetProductDetails(params.slug as string);
+
   const testDescription = {
     list: [
       "Tabung gas mini isi ulang dari HI-COOK",
@@ -48,33 +57,92 @@ export default function ProductSlugPage() {
   const handleImageClick = (image: IProductImage) => {
     setImageShowing(image);
   };
-  const handleQuantityChange = (action: 'plus' | 'minus') => {
+  const handleQuantityChange = (action: "plus" | "minus") => {
     switch (action) {
-      case 'plus':
+      case "plus":
         setQuantity(quantity + 1);
         break;
-      case 'minus':
+      case "minus":
         if (quantity > 1) {
           setQuantity(quantity - 1);
         }
         break;
-    } 
-  }
-  const handleGetProductDetails = async () => {
-    try {
-      const response = await apiInstance.get("/product/" + params.slug);
-      console.log(response.data.product);
-      setProduct(response.data.product);
-      setImageShowing(response.data.product.productImage[0]);
-    } catch (error) {
-      console.error("Error fetching product details:", error);
     }
   };
-  React.useEffect(() => {
-    handleGetProductDetails();
-  }, []);
+  // const handleGetProductDetails = async () => {
+  //   try {
+  //     const response = await apiInstance.get("/product/" + params.slug);
+  //     console.log(response.data.product);
+  //     setProduct(response.data.product);
+  //     setImageShowing(response.data.product.productImage[0]);
+  //   } catch (error) {
+  //     console.error("Error fetching product details:", error);
+  //   }
+  // };
+  // React.useEffect(() => {
+  //   handleGetProductDetails();
+  // }, []);
   return (
     <div className="lg:px-2 py-4 bg-white text-gray-600 max-w-[500px] lg:max-w-[1200px] mx-auto flex flex-col max-lg:overflow-x-hidden relative">
+      <div className="text-black">
+        <button
+          onClick={() => document.getElementById("cart").showModal()}
+          className="fixed bottom-20 right-4 z-50 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 flex items-center gap-2"
+        >
+          <HiOutlineShoppingCart className="text-xl" />
+          <span className="text-sm font-medium">{cart.length}</span>
+        </button>
+      </div>
+      <dialog id="cart" className="modal">
+        <div className="modal-box bg-white">
+          <h2 className="text-lg font-bold mb-4">Keranjang</h2>
+          {cart.length === 0 ? (
+            <p className="text-gray-500">Keranjang masih kosong.</p>
+          ) : (
+            <div className="flex flex-col gap-4">
+              {cart.map((item) => (
+                <div key={item.id} className="border-b pb-2 flex justify-between items-center">
+                  <div>
+                    <h4 className="font-medium">{item.name}</h4>
+                    <p className="text-sm text-gray-500">
+                      {item.quantity} x{" "}
+                      {item.price.toLocaleString("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        minimumFractionDigits: 0,
+                      })}
+                    </p>
+                  </div>
+                  <div className="text-right font-semibold text-gray-800">
+                    {(item.price * item.quantity).toLocaleString("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                    })}
+                  </div>
+                </div>
+              ))}
+
+              {/* Total Price */}
+              <div className="pt-2 mt-2 border-t flex justify-between font-bold text-lg">
+                <span>Total</span>
+                <span>
+                  {cart
+                    .reduce((acc, item) => acc + item.price * item.quantity, 0)
+                    .toLocaleString("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                    })}
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
       {/* Breadcrumb */}
       <div className="hidden lg:flex lg:border lg:border-gray-100 items-center px-6 py-4 rounded-full w-full shadow-md my-2">
         {breadcrumbLinks.map((link, index) => (
@@ -208,7 +276,10 @@ export default function ProductSlugPage() {
                 </div>
               </div>
               <div className="flex-1">
-                <button className="w-full text-white font-medium text-lg py-2 rounded-md flex items-center justify-center bg-red-700 cursor-pointer active:ring-4 active:ring-blue-300">
+                <button
+                  onClick={() => handleAddToCart(product!)}
+                  className="w-full text-white font-medium text-lg py-2 rounded-md flex items-center justify-center bg-red-700 cursor-pointer active:ring-4 active:ring-blue-300"
+                >
                   {`+ Keranjang`}
                 </button>
               </div>

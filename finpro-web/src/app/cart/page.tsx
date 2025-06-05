@@ -18,7 +18,7 @@ export default function CartPage() {
       {/* Modal */}
       <dialog id="clear_all" className="modal">
         <div className="modal-box bg-white text-black rounded-lg w-fit">
-          <p className="text-center">All your items will be removed from the cart</p>
+          <p className="text-center">Produk pada keranjang Anda akan dihapus semua</p>
           <div className="modal-action flex justify-center gap-x-4">
             <form method="dialog">
               {/* Cancel button closes the modal */}
@@ -41,7 +41,7 @@ export default function CartPage() {
       </dialog>
       <dialog id="clear_item" className="modal">
         <div className="modal-box bg-white text-black rounded-lg w-fit">
-          <p className="text-center">Remove this item from the cart?</p>
+          <p className="text-center">Hapus produk ini dari keranjang?</p>
           <div className="modal-action flex justify-center gap-x-4">
             <form method="dialog">
               {/* Cancel button closes the modal */}
@@ -67,7 +67,7 @@ export default function CartPage() {
           {/* Cart Items */}
           <div className="md:col-span-2 bg-white border rounded-lg p-6 shadow-sm">
             {/* Hide "Cart" heading on mobile */}
-            <h1 className="hidden md:block text-2xl font-semibold text-gray-700 mb-5">Cart</h1>
+            <h1 className="hidden md:block text-2xl font-semibold text-gray-700 mb-5">Keranjang</h1>
             <div className="hidden md:block w-full h-1 bg-gray-100" />
             {/* Shipping Address (Mobile only) */}
             <div className="md:hidden mb-4 pb-4 border-b text-black flex items-center gap-2">
@@ -83,13 +83,13 @@ export default function CartPage() {
               <div className="pr-2">
                 <IoTrashOutline />
               </div>
-              Clear All
+              Hapus Semua
             </button>
             <div className="text-black flex items-center gap-2 mb-2">
               <div className="">
                 <BsStopwatch className="text-black" />
               </div>
-              Instant Delivery
+              Pengiriman Instan
             </div>
             <ul className="space-y-4">
               <li className="flex justify-between items-center border rounded p-4">
@@ -128,14 +128,14 @@ export default function CartPage() {
 
           {/* Order Summary - Hidden on mobile */}
           <div className="hidden md:block bg-white border rounded-lg p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-700 mb-7">Order Summary</h2>
+            <h2 className="text-xl font-semibold text-gray-700 mb-7">Ringkasan Pesanan</h2>
             <div className="space-y-4 text-black">
               <div className="flex justify-between">
                 <span>Subtotal</span>
                 <span>Rp 0</span>
               </div>
               <div className="flex justify-between">
-                <span>Discount</span>
+                <span>Diskon</span>
                 <span>Rp 0</span>
               </div>
             </div>
@@ -144,7 +144,7 @@ export default function CartPage() {
             {/* Total */}
             <div className="text-black font-bold">
               <div className="flex justify-between">
-                <span>Total</span>
+                <span>Total Belanja</span>
                 <span>Rp 0</span>
               </div>
             </div>
@@ -158,14 +158,14 @@ export default function CartPage() {
             {/* Order Summary Dropdown (appears above when open) */}
             {isSummaryOpen && (
               <div className="fixed bottom-16 left-0 right-0 bg-white border-t p-6 max-h-[60vh] overflow-y-auto shadow-lg">
-                <h2 className="text-xl font-semibold text-gray-700 mb-7">Order Summary</h2>
+                <h2 className="text-xl font-semibold text-gray-700 mb-7">Ringkasan Pesanan</h2>
                 <div className="space-y-4 text-black">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
                     <span>Rp 0</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Discount</span>
+                    <span>Diskon</span>
                     <span>Rp 0</span>
                   </div>
                 </div>
@@ -174,7 +174,7 @@ export default function CartPage() {
                 {/* Total */}
                 <div className="text-black font-bold">
                   <div className="flex justify-between">
-                    <span>Total</span>
+                    <span>Total Belanja</span>
                     <span>Rp 0</span>
                   </div>
                 </div>
@@ -195,7 +195,7 @@ export default function CartPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                     <div className="flex flex-col">
-                      <div className="text-black font-semibold">Total</div>
+                      <div className="text-black font-semibold"> Belanja</div>
                       <div className="font-bold text-black">Rp {10000 * 2}</div>
                     </div>
                   </div>
