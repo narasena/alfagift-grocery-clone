@@ -9,6 +9,7 @@ import { IAddProductField, IProductFormValues } from "@/types/products/product.t
 import { useProductCategories } from "@/hooks/products/useProductCategories";
 import { useProductImagesUpload } from "@/hooks/products/useProductImagesUpload";
 
+
 export default function AddProductPage() {
   const { productCategories, productSubCategories } = useProductCategories();
   const {
