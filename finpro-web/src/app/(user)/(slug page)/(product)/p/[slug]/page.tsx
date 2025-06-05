@@ -13,8 +13,6 @@ import { useProductDetails } from "@/hooks/products/useProductDetails";
 
 export default function ProductSlugPage() {
   const { product, imageShowing, handleImageClick } = useProductDetails()
-  console.log(product);
-  console.log(imageShowing);
   
   const [quantity, setQuantity] = React.useState<number>(1);
   const testDescription = {
