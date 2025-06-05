@@ -25,15 +25,7 @@ export interface IProduct {
   updatedAt: Date;
   deletedAt?: Date;
 }
-export interface IProductFormValues extends IProduct {
-  images: ICloudinaryResult[];
-}
 
-export interface ICloudinaryResult {
-  public_id: string;
-  secure_url: string;
-  isMainImage: boolean;
-}
 
 export interface IProductDetails extends IProduct {
   productImage: IProductImage[];

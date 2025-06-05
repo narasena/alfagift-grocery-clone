@@ -1,5 +1,5 @@
 "use client";
-import apiInstance from "@/utils/apiInstance";
+import apiInstance from "@/utils/api/apiInstance";
 import * as React from "react";
 
 export default function ApiTestPage() {
