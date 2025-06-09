@@ -5,9 +5,10 @@ import { addProductSchemas } from "@/features/schemas/addProductSchemas";
 import * as Yup from "yup";
 import { CldImage, CldUploadWidget } from "next-cloudinary";
 import { TbArrowBigLeftLinesFilled, TbArrowBigRightLinesFilled } from "react-icons/tb";
-import { IAddProductField, IProductFormValues } from "@/types/products/product.type";
+import { IProductFormValues } from "@/types/products/product.type";
 import { useProductCategories } from "@/hooks/products/useProductCategories";
-import { useProductImagesUpload } from "@/features/(admin)/products/add/hooks/useProductImagesUpload";
+import { useProductImagesUpload } from "@/features/admin/products/add/hooks/useProductImagesUpload";
+import { useCreateProduct } from "@/features/admin/products/add/hooks/useCreateProduct";
 
 
 export default function AddProductPage() {
@@ -18,21 +19,9 @@ export default function AddProductPage() {
     uploadedImages,
     handleSwapImage,
     handleSetAsMainImage,
-    handleImageUpload,
-    handleCreateProduct,
+    handleImageUpload
   } = useProductImagesUpload();
-
-  const addProductFields: IAddProductField[] = [
-    { name: "name", title: "Product Name", type: "text" },
-    { name: "price", title: "Product Price", type: "number" },
-    { name: "productSubCategoryId", title: "Product Sub Category", type: "select", options: productSubCategories },
-    { name: "brandId", title: "Brand", type: "select", options: [] },
-    { name: "description", title: "Product Description", type: "text" },
-    { name: "sku", title: "SKU", type: "text" },
-    { name: "barcode", title: "Barcode", type: "text" },
-    { name: "weight", title: "Weight", type: "number" },
-    { name: "dimensions", title: "Dimensions", type: "text" }, // This should be populated with categories
-  ];
+  const { addProductFields, handleCreateProduct } = useCreateProduct();
 
   return (
     <div className="text-black">

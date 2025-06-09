@@ -39,30 +39,7 @@ export const useProductImagesUpload = () => {
           return swapImages(prevImages, index1, index2);
         });
       };
-      const handleCreateProduct = async (values: Partial<IProductFormValues>, resetForm: () => void) => {
-        try {
-          const createProductResponse = await apiInstance.post('/product/create', {
-            ...values,
-            productSubCategoryId: Number(values.productSubCategoryId),
-            brandId: values.brandId || null,
-            description: values.description || null,
-            sku: values.sku || null,
-            barcode: values.barcode || null,
-            weight: Number(values.weight) || null,
-            dimensions: values.dimensions || null,
-            images: uploadedImages,
-          });
-          console.log('Create Product Response:', createProductResponse.data);
-          toast.success('Product created successfully!');
-          setUploadedImages([]);
-          setImageShowing(null);
-          resetForm();
-        } catch (error) {
-          console.error('Error creating product:', error);
-          toast.error('Failed to create product. Please try again.');
-        }
-      };
-    
+         
       React.useEffect(() => {
         if (uploadedImages.length > 0) {
           setImageShowing(uploadedImages[0]);
@@ -75,9 +52,9 @@ export const useProductImagesUpload = () => {
       imageShowing,
       handleImageClick,
       uploadedImages,
+      setUploadedImages,
       handleSwapImage,
       handleSetAsMainImage,
-      handleImageUpload,
-      handleCreateProduct,
+      handleImageUpload
     };
 }
