@@ -1,11 +1,39 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from "react-leaflet";
-import 'leaflet/dist/leaflet.css';
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMapEvents,
+  useMap,
+} from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 import L, { LatLng } from "leaflet";
-import { LeafletMouseEvent } from 'leaflet';
+import { LeafletMouseEvent } from "leaflet";
+import axios from "axios";
 
+interface ILocationResult {
+  lat: string;
+  lon: string;
+  display_name: string;
+  address: {
+    village: string;
+    sub_district: string;
+    city: string;
+    province: string;
+    postcode: string;
+    country: string;
+    suburb: string;
+    county: string;
+    state: string;
+    town: string;
+    municipality: string;
+    city_district: string;
+    neighbourhood: string;
+    residential: string;
+  };
+}
 
 interface LocationSelectorProps {
   setFieldValue: (fieldName: string, value: number | string) => void;
@@ -18,18 +46,24 @@ interface MapPickerProps {
 
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
-  iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+  iconRetinaUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+  iconUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+  shadowUrl:
+    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
-const LocationSelector = ({ setFieldValue, address }: LocationSelectorProps) => {
+const LocationSelector = ({
+  setFieldValue,
+  address,
+}: LocationSelectorProps) => {
   const [position, setPosition] = useState<LatLng | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const map = useMap();
 
   useEffect(() => {
-    if (address && address.trim() !== '') {
+    if (address && address.trim() !== "") {
       searchAddress(address);
     }
   }, [address]);
@@ -37,40 +71,32 @@ const LocationSelector = ({ setFieldValue, address }: LocationSelectorProps) => 
   const searchAddress = async (address: string) => {
     setIsSearching(true);
     try {
-      // ⚠️ WAJIB: Delay minimal 1 detik untuk menghindari rate limit
-      await new Promise(resolve => setTimeout(resolve, 1000));
-  
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`,
-        {
-          headers: {
-            // ⚠️ GANTI dengan info aplikasi Anda
-            'User-Agent': 'FinproGroceryApp/1.0 (jessechristianmambu.12@gmail.com)',
-          },
-        }
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay 1 detik (Nominatim rule)
+
+      const response = await axios.get(
+        `http://localhost:8000/api/geocode?q=${encodeURIComponent(address)}`
       );
-  
-      if (!response.ok) throw new Error("Gagal mencari alamat");
-  
-      const data = await response.json();
-      if (data.length === 0) throw new Error("Alamat tidak ditemukan");
-  
-      const { lat, lon, display_name, address: details } = data[0];
-      const newPosition = new LatLng(parseFloat(lat), parseFloat(lon));
-  
-      setPosition(newPosition);
-      setFieldValue("latitude", lat);
-      setFieldValue("longitude", lon);
-      map.flyTo(newPosition, 15);
-  
-      // Auto-fill alamat jika tersedia
-      setFieldValue("address", display_name || address);
+
+      console.log(response.data[0]);
+      const result: ILocationResult = response.data[0];
+      if (!result) throw new Error("Gagal mencari alamat");
+
+      setPosition(new LatLng(parseFloat(result.lat), parseFloat(result.lon)));
+      setFieldValue("latitude", parseFloat(result.lat));
+      setFieldValue("longitude", parseFloat(result.lon));
+      map.flyTo([parseFloat(result.lat), parseFloat(result.lon)], 15);
+
+      setFieldValue("address", result.display_name || address);
+      const details = result.address;
       if (details) {
-        setFieldValue("village", details.village || "");
-        setFieldValue("subDistrict", details.county || "");
-        setFieldValue("city", details.city || details.town || "");
-        setFieldValue("province", details.state || "");
-        setFieldValue("postcode", details.postcode || "");
+        setFieldValue("subDistrict", details.village || details.neighbourhood || details.residential || "");
+        setFieldValue("district", details.suburb || details.county || "");
+        setFieldValue(
+          "city",
+          details.city_district || details.town || details.municipality || ""
+        );
+        setFieldValue("province", details.state || details.city || "");
+        setFieldValue("postalCode", details.postcode || "");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -110,7 +136,7 @@ export default function MapPicker({ setFieldValue }: MapPickerProps) {
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 text-black">
       <div className="flex gap-2">
         <input
           type="text"
@@ -127,18 +153,17 @@ export default function MapPicker({ setFieldValue }: MapPickerProps) {
           Cari
         </button>
       </div>
-      
+
       <div className="h-64 w-full">
-        <MapContainer 
-          center={[-6.200000, 106.816666]} 
-          zoom={13} 
+        <MapContainer
+          center={[-6.2, 106.816666]}
+          zoom={13}
           className="h-full w-full"
         >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <LocationSelector 
-            setFieldValue={setFieldValue} 
+          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <LocationSelector
+            key={tempAddress}
+            setFieldValue={setFieldValue}
             address={tempAddress}
           />
         </MapContainer>

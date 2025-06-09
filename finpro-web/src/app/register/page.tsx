@@ -2,13 +2,34 @@
 
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
+import { registerValidationSchema } from "../features/register/schemas/registerValidationSchema";
+import instance from "../../utils/axiosinstance";
+import { toast } from "react-toastify";
 
-const MapPicker = dynamic(() => import('@/components/MapPicker'), {
+const MapPicker = dynamic(() => import("../../components/MapPicker"), {
   ssr: false,
 });
+
+interface IHandleRegisterUser {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber: string;
+  password: string;
+  gender: string;
+  dateOfBirth: string;
+  address: string;
+  subDistrict: string;
+  district: string;
+  city: string;
+  province: string;
+  postalCode: string;
+  latitude: string;
+  longitude: string;
+  isMainAddress: boolean;
+}
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -18,44 +39,73 @@ export default function RegisterPage() {
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
     password: "",
     gender: "",
-    birthDate: "",
+    dateOfBirth: "",
     address: "",
     village: "",
     subDistrict: "",
+    district: "",
     city: "",
     province: "",
-    postcode: "",
+    postalCode: "",
     latitude: "",
     longitude: "",
     isMainAddress: false,
   };
 
-  const validationSchema = Yup.object({
-    firstName: Yup.string().required("Nama depan wajib diisi"),
-    lastName: Yup.string().required("Nama belakang wajib diisi"),
-    email: Yup.string().email("Format email salah").required("Email wajib diisi"),
-    phone: Yup.string().required("Nomor handphone wajib diisi"),
-    password: Yup.string().min(6, "Password minimal 6 karakter").required("Password wajib diisi"),
-    gender: Yup.string().required("Gender wajib dipilih"),
-    birthDate: Yup.date().required("Tanggal lahir wajib diisi"),
-    address: Yup.string().when("showAddressForm", {
-      is: true,
-      then: (schema) => schema.required("Alamat lengkap wajib diisi"),
-    }),
-  });
+  const handleSubmit = async ({
+    firstName,
+    lastName,
+    email,
+    phoneNumber,
+    password,
+    gender,
+    dateOfBirth,
+    address,
+    subDistrict,
+    district,
+    city,
+    province,
+    postalCode,
+    latitude,
+    longitude,
+    isMainAddress,
+  }: IHandleRegisterUser) => {
+    try {
+      const response = await instance.post("/user/register", {
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        password,
+        gender,
+        dateOfBirth,
+        address,
+        subDistrict,
+        district,
+        city,
+        province,
+        postalCode,
+        latitude,
+        longitude,
+        isMainAddress,
+      });
 
-  const handleSubmit = (values: any) => {
-    console.log("Form data:", values);
+      toast.success(response.data.message);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <div className="flex flex-col min-h-screen">
       <div className="flex items-center justify-center bg-white px-4 sm:px-6">
         <div className="w-full max-w-md sm:max-w-lg border h-auto border-gray-400 rounded-lg p-5 sm:p-7">
-          <h2 className="text-center text-black text-lg sm:text-xl font-medium">Daftar</h2>
+          <h2 className="text-center text-black text-lg sm:text-xl font-medium">
+            Daftar
+          </h2>
           <p className="text-center text-gray-600 text-sm mt-2">
             Sudah punya akun Alfagift?{" "}
             <a href="#" className="text-blue-600 font-semibold">
@@ -65,7 +115,7 @@ export default function RegisterPage() {
 
           <Formik
             initialValues={initialValues}
-            validationSchema={validationSchema}
+            validationSchema={registerValidationSchema}
             onSubmit={handleSubmit}
           >
             {({ setFieldValue }) => (
@@ -74,16 +124,32 @@ export default function RegisterPage() {
                   <label className="text-sm font-semibold text-gray-700 block mb-1">
                     Nama Depan
                   </label>
-                  <Field name="firstName" placeholder="Nama depan Anda" className="w-full px-3 py-2 border border-gray-400 text-black rounded-md text-sm" />
-                  <ErrorMessage name="firstName" component="div" className="text-red-500 text-sm" />
+                  <Field
+                    name="firstName"
+                    placeholder="Nama depan Anda"
+                    className="w-full px-3 py-2 border border-gray-400 text-black rounded-md text-sm"
+                  />
+                  <ErrorMessage
+                    name="firstName"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
                 </div>
 
                 <div className="pt-2">
                   <label className="text-sm font-semibold text-gray-700 block mb-1">
                     Nama Belakang
                   </label>
-                  <Field name="lastName" placeholder="Nama belakang Anda" className="w-full px-3 py-2 border border-gray-400 text-black rounded-md text-sm" />
-                  <ErrorMessage name="lastName" component="div" className="text-red-500 text-sm" />
+                  <Field
+                    name="lastName"
+                    placeholder="Nama belakang Anda"
+                    className="w-full px-3 py-2 border border-gray-400 text-black rounded-md text-sm"
+                  />
+                  <ErrorMessage
+                    name="lastName"
+                    component="div"
+                    className="text-red-500 text-sm"
+                  />
                 </div>
 
                 <div className="pt-2">
@@ -108,12 +174,12 @@ export default function RegisterPage() {
                     No. Handphone
                   </label>
                   <Field
-                    name="phone"
+                    name="phoneNumber"
                     placeholder="Nomor handphone"
                     className="w-full px-3 py-2 border border-gray-400 text-black  rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-300"
                   />
                   <ErrorMessage
-                    name="phone"
+                    name="phoneNumber"
                     component="div"
                     className="text-red-500 text-sm"
                   />
@@ -176,11 +242,11 @@ export default function RegisterPage() {
                   </label>
                   <Field
                     type="date"
-                    name="birthDate"
+                    name="dateOfBirth"
                     className="w-full px-3 py-2 border border-gray-400 text-black  rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-300"
                   />
                   <ErrorMessage
-                    name="birthDate"
+                    name="dateOfBirth"
                     component="div"
                     className="text-red-500 text-sm"
                   />
@@ -188,33 +254,71 @@ export default function RegisterPage() {
 
                 {showAddressForm && (
                   <div className="mt-4 border-t pt-4">
-                    <h3 className="text-md font-medium text-gray-700">Alamat</h3>
+                    <h3 className="text-md font-medium text-gray-700">
+                      Alamat
+                    </h3>
 
                     <div className="pt-2">
                       <label className="text-sm font-semibold text-gray-700 block mb-1">
                         Alamat Lengkap
                       </label>
-                      <Field name="address" placeholder="Alamat lengkap" className="w-full px-3 py-2 border border-gray-400 text-black rounded-md text-sm" />
-                      <ErrorMessage name="address" component="div" className="text-red-500 text-sm" />
+                      <Field
+                        name="address"
+                        placeholder="Alamat lengkap"
+                        className="w-full px-3 py-2 border border-gray-400 text-black rounded-md text-sm"
+                      />
+                      <ErrorMessage
+                        name="address"
+                        component="div"
+                        className="text-red-500 text-sm"
+                      />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
-                      <Field name="village" placeholder="Kelurahan/Desa" className="px-3 py-2 border border-gray-400 text-black rounded-md text-sm" />
-                      <Field name="subDistrict" placeholder="Kecamatan" className="px-3 py-2 border border-gray-400 text-black rounded-md text-sm" />
+                      <Field
+                        name="subDistrict"
+                        placeholder="Kelurahan/Desa"
+                        className="px-3 py-2 border border-gray-400 text-black rounded-md text-sm"
+                      />
+                      <Field
+                        name="district"
+                        placeholder="Kecamatan"
+                        className="px-3 py-2 border border-gray-400 text-black rounded-md text-sm"
+                      />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
-                      <Field name="city" placeholder="Kota/Kabupaten" className="px-3 py-2 border border-gray-400 text-black rounded-md text-sm" />
-                      <Field name="province" placeholder="Provinsi" className="px-3 py-2 border border-gray-400 text-black rounded-md text-sm" />
+                      <Field
+                        name="city"
+                        placeholder="Kota/Kabupaten"
+                        className="px-3 py-2 border border-gray-400 text-black rounded-md text-sm"
+                      />
+                      <Field
+                        name="province"
+                        placeholder="Provinsi"
+                        className="px-3 py-2 border border-gray-400 text-black rounded-md text-sm"
+                      />
                     </div>
 
                     <div className="pt-2">
-                      <Field name="postcode" placeholder="Kode Pos" className="w-full px-3 py-2 border border-gray-400 text-black rounded-md text-sm" />
+                      <Field
+                        name="postalCode"
+                        placeholder="Kode Pos"
+                        className="w-full px-3 py-2 border border-gray-400 text-black rounded-md text-sm"
+                      />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
-                      <Field name="latitude" placeholder="Latitude (opsional)" className="px-3 py-2 border border-gray-400 text-black rounded-md text-sm" />
-                      <Field name="longitude" placeholder="Longitude (opsional)" className="px-3 py-2 border border-gray-400 text-black rounded-md text-sm" />
+                      <Field
+                        name="latitude"
+                        placeholder="Latitude (opsional)"
+                        className="px-3 py-2 border border-gray-400 text-black rounded-md text-sm"
+                      />
+                      <Field
+                        name="longitude"
+                        placeholder="Longitude (opsional)"
+                        className="px-3 py-2 border border-gray-400 text-black rounded-md text-sm"
+                      />
                     </div>
 
                     <div className="pt-2">
@@ -225,15 +329,25 @@ export default function RegisterPage() {
                     </div>
 
                     <div className="flex items-center gap-2 pt-2">
-                      <Field type="checkbox" name="isMainAddress" className="w-4 h-4 bg-white border border-gray-400 text-black rounded-sm accent-red-600" />
-                      <label htmlFor="isMainAddress" className="text-gray-600 text-sm">
+                      <Field
+                        type="checkbox"
+                        name="isMainAddress"
+                        className="w-4 h-4 bg-white border border-gray-400 text-black rounded-sm accent-red-600"
+                      />
+                      <label
+                        htmlFor="isMainAddress"
+                        className="text-gray-600 text-sm"
+                      >
                         Jadikan alamat utama
                       </label>
                     </div>
                   </div>
                 )}
 
-                <button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-md text-sm font-semibold transition mt-4">
+                <button
+                  type="submit"
+                  className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-md text-sm font-semibold transition mt-4"
+                >
                   Daftar
                 </button>
               </Form>
