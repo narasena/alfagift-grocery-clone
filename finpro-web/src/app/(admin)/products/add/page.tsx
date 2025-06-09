@@ -63,7 +63,12 @@ export default function AddProductPage() {
                       className="max-lg:size-18 lg:size-28 border border-gray-400 rounded-md relative !overflow-hidden"
                       onClick={() => handleImageClick(image)}
                     >
-                      <CldImage fill src={image.secure_url} alt={`Uploaded Image ${index + 1}`} className="object-cover"/>
+                      <CldImage
+                        fill
+                        src={image.secure_url}
+                        alt={`Uploaded Image ${index + 1}`}
+                        className="object-cover"
+                      />
                       {index === 0 && (
                         <div className="absolute top-0 left-0 bg-red-600 text-white text-xs px-1">Main</div>
                       )}
@@ -100,16 +105,18 @@ export default function AddProductPage() {
                     </div>
                   </div>
                 ))}
-                {<ProductImageUploadWidget uploadePreset="products-image" onSuccess={handleImageUpload} maxFiles={5} buttonText="Upload Images" type="thumbnails" uploadedImagesCount={uploadedImages.length} />}
+                {
+                  <ProductImageUploadWidget
+                    uploadePreset="products-image"
+                    onSuccess={handleImageUpload}
+                    maxFiles={5}
+                    buttonText="Upload Images"
+                    type="thumbnails"
+                    uploadedImagesCount={uploadedImages.length}
+                  />
+                }
               </div>
             </div>
-            <ProductImageUploadWidget
-              uploadePreset="products-image"
-              onSuccess={handleImageUpload}
-              maxFiles={5}
-              buttonText="Upload Images"
-              type="button"
-            />
           </div>
           <div className="lg:order-1">
             <Formik

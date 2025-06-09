@@ -38,7 +38,7 @@ export default function ProductImageUploadWidget(props: IProductImageUploadButto
             Array(5 - (props.uploadedImagesCount ?? 0))
               .fill(null)
               .map((_, indx) => (
-                <div key={indx} className="relative cursor-pointer">
+                <div key={indx} className="relative !cursor-pointer">
                   <button
                     type="button"
                     className="max-lg:size-18 lg:size-28 border border-gray-400 bg-gray-100 rounded-md centered overflow-hidden"
