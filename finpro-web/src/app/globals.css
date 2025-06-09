@@ -28,18 +28,24 @@ input[type=number] {
 /* Product Related Pages Stylings */
 @layer components {
   .c-border {
-    @apply border border-gray-500 rounded-lg px-6 py-4 my-3
+    @apply border border-gray-400 rounded-lg px-6 py-4 my-3
   }
   .c-border-mobile {
-    @apply max-lg:border max-lg:border-gray-500 max-lg:rounded-lg max-lg:px-6 max-lg:py-4 max-lg:my-2
+    @apply max-lg:border max-lg:border-gray-400 max-lg:rounded-lg max-lg:px-6 max-lg:py-4 max-lg:my-2
   }
   .c-border-web {
-    @apply lg:border lg:border-gray-500 lg:rounded-lg lg:shadow-md lg:px-6 lg:py-4 lg:my-4
+    @apply lg:border lg:border-gray-400 lg:rounded-lg lg:shadow-md lg:px-6 lg:py-4 lg:my-4
   }
   .page-title {
     @apply text-2xl font-bold w-full max-lg:px-4 max-lg:py-3
   }
   .page-subtitle {
     @apply text-gray-500 text-sm w-full
+  }
+}
+
+@layer utilities {
+  .centered {
+    @apply flex items-center justify-center
   }
 }
