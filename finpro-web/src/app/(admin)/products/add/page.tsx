@@ -9,6 +9,7 @@ import { IProductFormValues } from "@/types/products/product.type";
 import { useProductCategories } from "@/hooks/products/useProductCategories";
 import { useProductImagesUpload } from "@/features/admin/products/add/hooks/useProductImagesUpload";
 import { useCreateProduct } from "@/features/admin/products/add/hooks/useCreateProduct";
+import ProductImageUploadButton from "@/features/admin/products/components/ProductImageUploadButton";
 
 
 export default function AddProductPage() {
@@ -134,26 +135,12 @@ export default function AddProductPage() {
                 </div>
               ))}
             </div>
-            <CldUploadWidget
-              uploadPreset="products-image"
-              signatureEndpoint={`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/signed-upload`}
+            <ProductImageUploadButton
+              uploadePreset="products-image"
               onSuccess={handleImageUpload}
-              options={{
-                sources: ["local", "url", "camera"],
-                multiple: true,
-                maxFiles: 5,
-              }}
-            >
-              {({ open }) => (
-                <button
-                  type="button"
-                  className="mt-4 px-4 py-2 bg-red-800 text-white font-semibold text-xl rounded-md"
-                  onClick={() => open?.()}
-                >
-                  Upload Images
-                </button>
-              )}
-            </CldUploadWidget>
+              maxFiles={5}
+              buttonText="Upload Images"              
+            />
           </div>
           <div>
             {addProductFields.map((field, index) => (
