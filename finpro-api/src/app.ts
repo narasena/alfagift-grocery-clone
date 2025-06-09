@@ -10,6 +10,7 @@ import express, {
 import cors from 'cors';
 import { PORT } from './config';
 import { ProductCategoryRouter } from './routers/product.category.router';
+import { ProductRouter } from './routers/product.router';
 import authRouter from './routers/auth.router';
 import getMapRouter from './routers/getMap.router';
 
@@ -59,11 +60,13 @@ export default class App {
 
   private routes(): void {
     const productCategoryRouter = new ProductCategoryRouter();
+    const productRouter = new ProductRouter()
 
     this.app.get('/api', (req: Request, res: Response) => {
       res.send(`<h1>Hello, This is FINPRO-JCWD3202 API!</h1>`);
     });
 
+    this.app.use('/api/product', productRouter.getRouter());
     this.app.use('/api/product-category', productCategoryRouter.getRouter());
     this.app.use('/api/user', authRouter)
     this.app.use('/api', getMapRouter)

@@ -311,6 +311,7 @@ exports.Prisma.CartItemScalarFieldEnum = {
   productId: 'productId',
   storeId: 'storeId',
   quantity: 'quantity',
+  status: 'status',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -412,6 +413,12 @@ exports.DiscountType = exports.$Enums.DiscountType = {
   FIXED_AMOUNT: 'FIXED_AMOUNT',
   BUY1_GET1: 'BUY1_GET1',
   MIN_PURCHASE: 'MIN_PURCHASE'
+};
+
+exports.CartItemStatus = exports.$Enums.CartItemStatus = {
+  ACTIVE: 'ACTIVE',
+  ORDERED: 'ORDERED',
+  REMOVED: 'REMOVED'
 };
 
 exports.OrderStatus = exports.$Enums.OrderStatus = {
