@@ -10,7 +10,7 @@ export interface IAddProductField {
 }
 
 export interface IProduct {
-  id: number;
+  id: string;
   name: string;
   slug: string;
   price: number;
