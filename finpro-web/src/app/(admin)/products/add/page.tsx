@@ -10,59 +10,23 @@ import { useProductCategories } from "@/hooks/products/useProductCategories";
 import { useProductImagesUpload } from "@/features/admin/products/add/hooks/useProductImagesUpload";
 import { useCreateProduct } from "@/features/admin/products/add/hooks/useCreateProduct";
 import ProductImageUploadButton from "@/features/admin/products/components/ProductImageUploadButton";
-
+import ProductInputFields from "@/features/admin/products/components/ProductInputFields";
 
 export default function AddProductPage() {
   const { productCategories, productSubCategories } = useProductCategories();
-  const {
-    imageShowing,
-    handleImageClick,
-    uploadedImages,
-    handleSwapImage,
-    handleSetAsMainImage,
-    handleImageUpload
-  } = useProductImagesUpload();
+  const { imageShowing, handleImageClick, uploadedImages, handleSwapImage, handleSetAsMainImage, handleImageUpload } =
+    useProductImagesUpload();
   const { addProductFields, handleCreateProduct } = useCreateProduct();
 
   return (
-    <div className="text-black">
-      <div>
-        <span className="text-2xl font-bold w-full px-4 py-3">Add New Product</span>
-      </div>
-      <Formik
-        initialValues={
-          {
-            name: "",
-            price: 0,
-            productSubCategoryId: 0,
-            brandId: "",
-            description: "",
-            sku: "",
-            barcode: "",
-            weight: 0,
-            dimensions: "",
-            images: [],
-          } as Partial<IProductFormValues>
-        }
-        validationSchema={addProductSchemas}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
-          console.log("Form Values:", values);
-          console.log("Is Valid:", addProductSchemas.isValidSync(values));
-          try {
-            addProductSchemas.validateSync(values, { abortEarly: false });
-            console.log("Validation passed!");
-            handleCreateProduct(values, resetForm);
-            setSubmitting(false);
-          } catch (err) {
-            if (err instanceof Yup.ValidationError) {
-              console.log("Validation Errors:", err.errors);
-            }
-            setSubmitting(false);
-          }
-        }}
-      >
-        <Form>
-          <div className="px-3 w-full flex flex-col justify-center items-center">
+    <div className="bg-red-400">
+      <div className="lg:bg-white lg:max-w-[1200px] lg:mx-auto lg:px-10 lg:py-4 px-4">
+        <div className="c-border-web lg:w-full lg:px-6 lg:py-4">
+          <span className="page-title">Add New Product</span>
+          <p className="page-subtitle">Fill the form below to add a new product</p>
+        </div>
+        <div className="lg: grid lg:grid-cols-[60%_40%] lg:gap-6">
+          <div className="lg:order-2 px-3 w-full flex flex-col max-lg:justify-center items-center c-border">
             <label className="text-gray-700 w-full block mb-2 text-xl font-medium">Product Images:</label>
             <div className="size-72 border border-gray-400 rounded-md my-3">
               {imageShowing && "secure_url" in imageShowing && (
@@ -139,75 +103,57 @@ export default function AddProductPage() {
               uploadePreset="products-image"
               onSuccess={handleImageUpload}
               maxFiles={5}
-              buttonText="Upload Images"              
+              buttonText="Upload Images"
             />
           </div>
-          <div>
-            {addProductFields.map((field, index) => (
-              <div
-                key={index}
-                className={
-                  "text-gray-700 px-2 w-full " + (index > 4 ? "grid grid-cols-[30%_1fr] gap-x-4 items-center my-2" : "")
+          <div className="lg:order-1">
+            <Formik
+              initialValues={
+                {
+                  name: "",
+                  price: 0,
+                  productSubCategoryId: 0,
+                  brandId: "",
+                  description: "",
+                  sku: "",
+                  barcode: "",
+                  weight: 0,
+                  dimensions: "",
+                  images: [],
+                } as Partial<IProductFormValues>
+              }
+              validationSchema={addProductSchemas}
+              onSubmit={(values, { setSubmitting, resetForm }) => {
+                console.log("Form Values:", values);
+                console.log("Is Valid:", addProductSchemas.isValidSync(values));
+                try {
+                  addProductSchemas.validateSync(values, { abortEarly: false });
+                  console.log("Validation passed!");
+                  handleCreateProduct(values, resetForm);
+                  setSubmitting(false);
+                } catch (err) {
+                  if (err instanceof Yup.ValidationError) {
+                    console.log("Validation Errors:", err.errors);
+                  }
+                  setSubmitting(false);
                 }
-              >
-                <label htmlFor={field.name} className="block mb-2 text-xl font-medium">
-                  {field.title}
-                </label>
-                {field.type === "select" && field.options ? (
-                  <Field
-                    name={field.name}
-                    id={field.name}
-                    as="select"
-                    className="w-full bg-white border border-gray-300 rounded-md p-2"
-                  >
-                    {field.name === "productSubCategoryId" ? (
-                      <>
-                        <option value={0}>Select Sub Category</option>
-                        {productCategories.map((category) => (
-                          <optgroup key={category.id} label={category.name}>
-                            {productSubCategories
-                              .filter((subCategory) => subCategory.productCategoryId === category.id)
-                              .map((subCategory) => (
-                                <option key={subCategory.id} value={Number(subCategory.id)}>
-                                  {subCategory.name}
-                                </option>
-                              ))}
-                          </optgroup>
-                        ))}
-                      </>
-                    ) : (
-                      <>
-                        <option value="">Select Brand</option>
-                        {field.options?.map((option) => (
-                          <option key={option.id} value={option.id}>
-                            {option.name}
-                          </option>
-                        ))}
-                      </>
-                    )}
-                  </Field>
-                ) : (
-                  <Field
-                    type={field.type}
-                    name={field.name}
-                    id={field.name}
-                    className="w-full bg-white border border-gray-300 rounded-md p-2"
-                  />
-                )}
-                <ErrorMessage name={field.name} component="div" className="text-sm text-red-600" />
-              </div>
-            ))}
-          </div>
-          <div className="px-3 w-full">
-            <button
-              type="submit"
-              className="w-full mt-4 px-4 py-2 bg-red-800 text-white font-semibold text-2xl rounded-md "
+              }}
             >
-              Add Product
-            </button>
+              <Form>
+                <ProductInputFields />
+                <div className="px-3 w-full">
+                  <button
+                    type="submit"
+                    className="w-full mt-4 px-4 py-2 bg-red-800 text-white font-semibold text-2xl rounded-md "
+                  >
+                    Add Product
+                  </button>
+                </div>
+              </Form>
+            </Formik>
           </div>
-        </Form>
-      </Formik>
+        </div>
+      </div>
     </div>
   );
 }

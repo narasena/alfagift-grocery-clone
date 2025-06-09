@@ -11,10 +11,10 @@ export const useCreateProduct = () => {
     const { setImageShowing } = useProductImageShowing()
     const addProductFields: IAddProductField[] = [
         { name: "name", title: "Product Name", type: "text" },
-        { name: "price", title: "Product Price", type: "number" },
+        { name: "description", title: "Product Description", type: "text" },
         { name: "productSubCategoryId", title: "Product Sub Category", type: "select", options: productSubCategories },
         { name: "brandId", title: "Brand", type: "select", options: [] },
-        { name: "description", title: "Product Description", type: "text" },
+        { name: "price", title: "Product Price", type: "number" },
         { name: "sku", title: "SKU", type: "text" },
         { name: "barcode", title: "Barcode", type: "text" },
         { name: "weight", title: "Weight", type: "number" },
