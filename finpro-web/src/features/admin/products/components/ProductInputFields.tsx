@@ -22,17 +22,9 @@ export default function ProductInputFields() {
     { name: "sku", title: "SKU", type: "text" },
     { name: "barcode", title: "Barcode", type: "text" },
     { name: "weight", title: "Weight", type: "number" },
-    { name: "dimensions", title: "Dimensions", type: "text" }, // This should be populated with categories
+    { name: "dimensions", title: "Dimensions", type: "text" }
   ];
-  // const productFieldGroups: Record<TGroupedProductFields, string[]> = {
-  //   basic: ['name','description'],
-  //   category: ['productSubCategoryId'],
-  //   brand: ['brandId'],
-  //   price: ['price'],
-  //   inventory: ['sku','barcode'],
-  //   physical: ['wight','dimensions'],
-  //   others: []
-  // }
+
   const productFieldGroups: IProductFieldsGroup[] = [
     { group: "basic", title: "Name & Description", fields: ["name", "description"] },
     { group: "category", title: "Category", fields: ["productSubCategoryId"] },
@@ -48,19 +40,21 @@ export default function ProductInputFields() {
       {productFieldGroups.map(
         (group, index) =>
           group.fields.length > 0 && (
-            <div key={index} className="c-border-web">
-              <span className="page-title">{group.title}</span>
+            <div key={index} className="c-border-web !px-0">
+              <div className="page-title border-b border-gray-300 pb-4 mb-4">
+                <span className="px-6">{group.title}</span>
+              </div>
               {addProductFields
                 .filter((field) => group.fields.includes(field.name))
                 .map((field, indx) => (
                   <div
                     key={indx}
                     className={
-                      "text-gray-700 px-2 w-full " +
+                      "text-gray-600 px-6 w-full " +
                       (indx > 4 ? "grid grid-cols-[30%_1fr] gap-x-4 items-center my-2" : "")
                     }
                   >
-                    <label htmlFor={field.name} className="block mb-2 text-xl font-medium">
+                    <label htmlFor={field.name} className="block mb-2 text-base font-medium">
                       {field.title}
                     </label>
                     {field.type === "select" && field.options ? (
