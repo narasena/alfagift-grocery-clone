@@ -9,8 +9,8 @@ import { IProductFormValues } from "@/types/products/product.type";
 import { useProductImagesUpload } from "@/features/admin/products/add/hooks/useProductImagesUpload";
 import { useCreateProduct } from "@/features/admin/products/add/hooks/useCreateProduct";
 import ProductInputFields from "@/features/admin/products/components/ProductInputFields";
-import { RiImageAddFill } from "react-icons/ri";
 import ProductImageUploadWidget from "@/features/admin/products/components/ProductImageUploadWidget";
+import AdminPageTitle from "@/features/admin/components/AdminPageTitle";
 
 export default function AddProductPage() {
   const { imageShowing, handleImageClick, uploadedImages, handleSwapImage, handleSetAsMainImage, handleImageUpload } =
@@ -20,10 +20,7 @@ export default function AddProductPage() {
   return (
     <div className="bg-red-400">
       <div className="lg:bg-white lg:max-w-[1200px] lg:mx-auto lg:px-10 lg:py-4 px-4">
-        <div className="c-border-web lg:w-full lg:px-6 lg:py-4">
-          <span className="page-title">Add New Product</span>
-          <p className="page-subtitle">Fill the form below to add a new product</p>
-        </div>
+        <AdminPageTitle title="Add Product" subTitle="Fill the form below to add a new product"/>
         <div className="lg: grid lg:grid-cols-[60%_1fr] w-full gap-6">
           <div className="lg:order-2 lg:!px-0 max-w-full flex flex-col max-lg:justify-center items-center c-border">
             <div className="page-title border-b border-gray-300 pb-4 mb-4">
