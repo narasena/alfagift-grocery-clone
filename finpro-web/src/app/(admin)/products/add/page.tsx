@@ -1,19 +1,18 @@
 "use client";
 import * as React from "react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Form, Formik } from "formik";
 import { addProductSchemas } from "@/features/schemas/addProductSchemas";
 import * as Yup from "yup";
-import { CldImage, CldUploadWidget } from "next-cloudinary";
+import { CldImage } from "next-cloudinary";
 import { TbArrowBigLeftLinesFilled, TbArrowBigRightLinesFilled } from "react-icons/tb";
 import { IProductFormValues } from "@/types/products/product.type";
-import { useProductCategories } from "@/hooks/products/useProductCategories";
 import { useProductImagesUpload } from "@/features/admin/products/add/hooks/useProductImagesUpload";
 import { useCreateProduct } from "@/features/admin/products/add/hooks/useCreateProduct";
-import ProductImageUploadButton from "@/features/admin/products/components/ProductImageUploadButton";
 import ProductInputFields from "@/features/admin/products/components/ProductInputFields";
+import { RiImageAddFill } from "react-icons/ri";
+import ProductImageUploadWidget from "@/features/admin/products/components/ProductImageUploadWidget";
 
 export default function AddProductPage() {
-  const { productCategories, productSubCategories } = useProductCategories();
   const { imageShowing, handleImageClick, uploadedImages, handleSwapImage, handleSetAsMainImage, handleImageUpload } =
     useProductImagesUpload();
   const { addProductFields, handleCreateProduct } = useCreateProduct();
@@ -25,11 +24,13 @@ export default function AddProductPage() {
           <span className="page-title">Add New Product</span>
           <p className="page-subtitle">Fill the form below to add a new product</p>
         </div>
-        <div className="lg: grid lg:grid-cols-[60%_40%] lg:gap-6">
-          <div className="lg:order-2 px-3 w-full flex flex-col max-lg:justify-center items-center c-border">
-            <label className="text-gray-700 w-full block mb-2 text-xl font-medium">Product Images:</label>
-            <div className="size-72 border border-gray-400 rounded-md my-3">
-              {imageShowing && "secure_url" in imageShowing && (
+        <div className="lg: grid lg:grid-cols-[60%_1fr] w-full gap-6">
+          <div className="lg:order-2 lg:!px-0 max-w-full flex flex-col max-lg:justify-center items-center c-border">
+            <div className="page-title border-b border-gray-300 pb-4 mb-4">
+              <span className="px-6">Product Images</span>
+            </div>
+            {imageShowing && "secure_url" in imageShowing && (
+              <div className="size-72 border border-gray-400 rounded-md my-3">
                 <CldImage
                   width={288}
                   height={288}
@@ -37,8 +38,8 @@ export default function AddProductPage() {
                   alt="Selected Product Image"
                   className="w-full h-full object-cover"
                 />
-              )}
-            </div>
+              </div>
+            )}
             <div className="flex justify-center">
               {uploadedImages.length > 0 && imageShowing && imageShowing.isMainImage === false && (
                 <button
@@ -54,56 +55,60 @@ export default function AddProductPage() {
                 </button>
               )}
             </div>
-            <div className="flex justify-center gap-2">
-              {uploadedImages.map((image, index) => (
-                <div key={index} className="relative">
-                  <div
-                    className="size-18 border border-gray-400 overflow-hidden"
-                    onClick={() => handleImageClick(image)}
-                  >
-                    <CldImage width={72} height={72} src={image.secure_url} alt={`Uploaded Image ${index + 1}`} />
-                    {index === 0 && (
-                      <div className="absolute top-0 left-0 bg-red-600 text-white text-xs px-1">Main</div>
-                    )}
-                  </div>
-                  <div className="grid grid-cols-2 gap-1 mt-1">
-                    <div className="col-start-1 flex-1">
-                      {index > 0 && (
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSwapImage(index, index - 1);
-                          }}
-                          className="bg-gray-700 text-gray-200 w-full flex items-center justify-center text-2xl rounded-sm"
-                        >
-                          <TbArrowBigLeftLinesFilled />
-                        </button>
+            <div className="px-4 flex justify-center gap-2">
+              <div className="max-w-full flex justify-normal flex-wrap gap-4">
+                {uploadedImages.map((image, index) => (
+                  <div key={index} className="relative">
+                    <div
+                      className="max-lg:size-18 lg:size-28 border border-gray-400 rounded-md relative !overflow-hidden"
+                      onClick={() => handleImageClick(image)}
+                    >
+                      <CldImage fill src={image.secure_url} alt={`Uploaded Image ${index + 1}`} className="object-cover"/>
+                      {index === 0 && (
+                        <div className="absolute top-0 left-0 bg-red-600 text-white text-xs px-1">Main</div>
                       )}
                     </div>
-                    <div className="col-start-2 flex-1">
-                      {index < uploadedImages.length - 1 && (
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSwapImage(index, index + 1);
-                          }}
-                          className="bg-gray-200 text-gray-700 w-full flex items-center justify-center text-2xl rounded-sm"
-                        >
-                          <TbArrowBigRightLinesFilled />
-                        </button>
-                      )}
+                    <div className="grid grid-cols-2 gap-1 mt-1">
+                      <div className="col-start-1 flex-1">
+                        {index > 0 && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSwapImage(index, index - 1);
+                            }}
+                            className="bg-gray-700 text-gray-200 w-full flex items-center justify-center text-2xl rounded-sm"
+                          >
+                            <TbArrowBigLeftLinesFilled />
+                          </button>
+                        )}
+                      </div>
+                      <div className="col-start-2 flex-1">
+                        {index < uploadedImages.length - 1 && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleSwapImage(index, index + 1);
+                            }}
+                            className="bg-gray-200 text-gray-700 w-full flex items-center justify-center text-2xl rounded-sm"
+                          >
+                            <TbArrowBigRightLinesFilled />
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+                {<ProductImageUploadWidget uploadePreset="products-image" onSuccess={handleImageUpload} maxFiles={5} buttonText="Upload Images" type="thumbnails" uploadedImagesCount={uploadedImages.length} />}
+              </div>
             </div>
-            <ProductImageUploadButton
+            <ProductImageUploadWidget
               uploadePreset="products-image"
               onSuccess={handleImageUpload}
               maxFiles={5}
               buttonText="Upload Images"
+              type="button"
             />
           </div>
           <div className="lg:order-1">
