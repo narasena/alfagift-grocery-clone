@@ -1,6 +1,5 @@
 import { CldUploadWidget, CloudinaryUploadWidgetResults } from "next-cloudinary";
 import * as React from "react";
-import { useProductImagesUpload } from "../add/hooks/useProductImagesUpload";
 import { RiImageAddFill } from "react-icons/ri";
 
 export interface IProductImageUploadButton {
