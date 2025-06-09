@@ -15,9 +15,9 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@types/multer": "^1.4.13",
     "husky": "^9.1.7"
   },
-
   "dependencies": {
     "axios": "^1.9.0",
     "bcrypt": "^6.0.0",

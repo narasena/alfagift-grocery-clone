@@ -5,7 +5,7 @@ export default function dashboardPage() {
   const email = authStore((state) => state.email); 
 
   return (
-    <main>
+    <main className="text-black">
       <div>Selamat datang</div>
       <div>{email}</div>
     </main>
