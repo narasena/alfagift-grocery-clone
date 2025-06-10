@@ -9,6 +9,7 @@ export const useProductDetails = () => {
   const params = useParams();
   const { imageShowing, setImageShowing, handleImageClick } = useProductImageShowing();
   const [product, setProduct] = React.useState<IProductDetails | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = React.useState(0);
 
   const handleGetProductDetails = async () => {
     try {
@@ -20,12 +21,18 @@ export const useProductDetails = () => {
     }
   };
 
+  const refreshProductDetails = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
+
   React.useEffect(() => {
     handleGetProductDetails();
-  }, []);
+  }, [refreshTrigger, params.slug]);
+  
   return {
     product,
     imageShowing,
     handleImageClick,
+    refreshProductDetails,
   };
 };
