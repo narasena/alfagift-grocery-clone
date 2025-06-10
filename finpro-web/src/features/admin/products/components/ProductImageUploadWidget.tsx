@@ -40,10 +40,11 @@ export default function ProductImageUploadWidget(props: IProductImageUploadButto
                 <div key={indx} className="relative !cursor-pointer">
                   <button
                     type="button"
-                    className="max-lg:size-18 lg:size-28 border border-gray-400 bg-gray-100 rounded-md centered overflow-hidden"
+                    className="max-lg:size-18 lg:size-28 border border-gray-400 bg-gray-100 rounded-md centered flex-col justify-center overflow-hidden"
                     onClick={() => open?.()}
                   >
                     <RiImageAddFill className="text-gray-400 size-10" />
+                    <span className="text-gray-500 text-xs">Click to add image</span>
                   </button>
                 </div>
               ))
