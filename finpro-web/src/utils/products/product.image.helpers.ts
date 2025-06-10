@@ -1,5 +1,16 @@
 import { ICloudinaryResult, IProductImage } from "@/types/products/product.image.type";
+import { CloudinaryUploadWidgetResults } from "next-cloudinary";
 
+export function cloudinaryImageUpload (result: CloudinaryUploadWidgetResults) {
+  if (result.info && typeof result.info === 'object' && 'public_id' in result.info && 'secure_url' in result.info) {
+    const newImage = {
+      public_id: result.info.public_id as string,
+      secure_url: result.info.secure_url as string,
+      isMainImage: false,
+    };
+    return newImage;
+  }
+};
 export function setAsMainImage<T extends ICloudinaryResult | IProductImage>(
   images: T[],
   imageShowing: T
@@ -30,10 +41,18 @@ export function setAsMainImage<T extends ICloudinaryResult | IProductImage>(
   ];
 };
 
-export const swapImages = <T extends ICloudinaryResult | IProductImage>(images: T[], index1: number, index2: number): T[] => {
+export const swapImages = <T>(images: T[], index1: number, index2: number): T[] => {
   const newImages = [...images];
   const temp = newImages[index1];
   newImages[index1] = newImages[index2];
   newImages[index2] = temp;
   return newImages;
+};
+
+export const removeImage = <T extends ICloudinaryResult | IProductImage>(images: T[], public_id: string): T[] => {
+  const updatedImages = images.filter((image) => {
+    if ('public_id' in image) return image.public_id! !== public_id;
+    return image?.cldPublicId !== public_id;
+  });
+  return updatedImages;
 };
