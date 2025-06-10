@@ -1,32 +1,38 @@
-'use client'
-import AdminPageTitle from '@/features/admin/components/AdminPageTitle';
-import { useCreateProduct } from '@/features/admin/products/add/hooks/useCreateProduct';
-import { useProductImagesUpload } from '@/features/admin/products/add/hooks/useProductImagesUpload';
-import ProductImageUploadWidget from '@/features/admin/products/components/ProductImageUploadWidget';
-import ProductInputFields from '@/features/admin/products/components/ProductInputFields';
-import { addProductSchemas } from '@/features/schemas/addProductSchemas';
-import { useProductDetails } from '@/hooks/products/useProductDetails';
-import { IProductDetails, IProductFormValues } from '@/types/products/product.type';
-import { Form, Formik } from 'formik';
-import { CldImage } from 'next-cloudinary';
-import * as React from 'react';
-import { TbArrowBigLeftLinesFilled, TbArrowBigRightLinesFilled } from 'react-icons/tb';
-import * as Yup from 'yup';
+"use client";
+import AdminPageTitle from "@/features/admin/components/AdminPageTitle";
+import { useCreateProduct } from "@/features/admin/products/add/hooks/useCreateProduct";
+import { useProductImagesUpload } from "@/features/admin/products/add/hooks/useProductImagesUpload";
+import ProductImageUploadWidget from "@/features/admin/products/components/ProductImageUploadWidget";
+import ProductInputFields from "@/features/admin/products/components/ProductInputFields";
+import { useEditProductImage } from "@/features/admin/products/edit/components/useEditProductImage";
+import { useEditProduct } from "@/features/admin/products/edit/hooks/useEditProduct";
+import { addProductSchemas } from "@/features/schemas/addProductSchemas";
+import { useProductDetails } from "@/hooks/products/useProductDetails";
+import { IProductDetails, IProductFormValues } from "@/types/products/product.type";
+import { Form, Formik } from "formik";
+import { CldImage } from "next-cloudinary";
+import * as React from "react";
+import { TbArrowBigLeftLinesFilled, TbArrowBigRightLinesFilled } from "react-icons/tb";
+import * as Yup from "yup";
 
-export interface IAppProps {
-}
+export interface IAppProps {}
 
 export default function EditProductPage(props: IAppProps) {
-  const { product } = useProductDetails()
-  const { imageShowing, handleImageClick, uploadedImages, handleSwapImage, handleSetAsMainImage, handleImageUpload } =
-    useProductImagesUpload();
-  const { addProductFields, handleCreateProduct } = useCreateProduct();
-  // const [isLoading, setIsLoading] = React.useState(true);
-  // React.useEffect(() => {
-  //   if (product) {
-  //     setIsLoading(false)
-  //   }
-  // })
+  // const { product } = useProductDetails();
+  const {
+    product,
+    allImagesList,
+    uploadedImages,
+    handleImageClick,
+    handleSwapImage,
+    handleDeleteImage,
+    handleImageUploadSuccess,
+    imageShowing,
+    handleSetAsMainImage,
+  } = useEditProductImage();
+  const { handleSaveChanges } = useEditProduct();
+  console.log(allImagesList)
+
   return (
     <div className="bg-red-400">
       <div className="lg:bg-white lg:max-w-[1200px] lg:mx-auto lg:px-10 lg:py-4 px-4">
@@ -36,27 +42,30 @@ export default function EditProductPage(props: IAppProps) {
             <div className="page-title border-b border-gray-300 pb-4 mb-4">
               <span className="px-6">Product Images</span>
             </div>
-            {imageShowing && "secure_url" in imageShowing && (
-              <div className="size-72 border border-gray-400 rounded-md my-3">
+            {imageShowing && (
+              <div className="size-72 border border-gray-400 rounded-md my-3 overflow-hidden">
                 <CldImage
                   width={288}
                   height={288}
-                  src={imageShowing.secure_url}
+                  src={"secure_url" in imageShowing ? imageShowing.secure_url : imageShowing.imageUrl}
                   alt="Selected Product Image"
                   className="w-full h-full object-cover"
                 />
               </div>
             )}
             <div className="flex justify-center">
-              {uploadedImages.length > 0 && imageShowing && imageShowing.isMainImage === false && (
+              {allImagesList.length > 0 && imageShowing && imageShowing.isMainImage === false && (
                 <button
                   className="my-4 px-4 py-2 bg-red-800 text-white font-semibold text-xl rounded-md"
-                  onClick={handleSetAsMainImage}
+                  onClick={() => {
+                    handleSetAsMainImage();
+                    console.log("clicked");
+                  }}
                 >
                   Set As Main Image
                 </button>
               )}
-              {uploadedImages.length > 0 && imageShowing && imageShowing.isMainImage === true && (
+              {allImagesList.length > 0 && imageShowing && imageShowing.isMainImage === true && (
                 <button className="my-4 px-4 py-2 bg-gray-700 text-white font-semibold text-xl rounded-md">
                   Main Image
                 </button>
@@ -64,15 +73,16 @@ export default function EditProductPage(props: IAppProps) {
             </div>
             <div className="px-4 flex justify-center gap-2">
               <div className="max-w-full flex justify-normal flex-wrap gap-4">
-                {uploadedImages.map((image, index) => (
+                {allImagesList.map((image, index) => (
                   <div key={index} className="relative">
                     <div
                       className="max-lg:size-18 lg:size-28 border border-gray-400 rounded-md relative !overflow-hidden"
-                      onClick={() => handleImageClick(image)}
+                      onClick={() => handleImageClick(image.data)}
                     >
                       <CldImage
                         fill
-                        src={image.secure_url}
+                        sizes="(max-width: 768px) 72px, 112px"
+                        src={'secure_url' in image.data? image.data.secure_url : image.data.imageUrl}
                         alt={`Uploaded Image ${index + 1}`}
                         className="object-cover"
                       />
@@ -96,7 +106,7 @@ export default function EditProductPage(props: IAppProps) {
                         )}
                       </div>
                       <div className="col-start-2 flex-1">
-                        {index < uploadedImages.length - 1 && (
+                        {index < allImagesList.length - 1 && (
                           <button
                             type="button"
                             onClick={(e) => {
@@ -115,11 +125,11 @@ export default function EditProductPage(props: IAppProps) {
                 {
                   <ProductImageUploadWidget
                     uploadePreset="products-image"
-                    onSuccess={handleImageUpload}
+                    onSuccess={handleImageUploadSuccess}
                     maxFiles={5}
                     buttonText="Upload Images"
                     type="thumbnails"
-                    uploadedImagesCount={uploadedImages.length}
+                    uploadedImagesCount={allImagesList.length}
                   />
                 }
               </div>
@@ -130,8 +140,8 @@ export default function EditProductPage(props: IAppProps) {
               enableReinitialize={true}
               initialValues={
                 {
-                  name: product?.name ?? '',
-                  price: product?.price ?? 0,
+                  name: product?.name || "",
+                  price: product?.price || 0,
                   productSubCategoryId: product?.productSubCategoryId || 0,
                   brandId: product?.brandId || "",
                   description: product?.description || "",
@@ -149,7 +159,7 @@ export default function EditProductPage(props: IAppProps) {
                 try {
                   addProductSchemas.validateSync(values, { abortEarly: false });
                   console.log("Validation passed!");
-                  handleCreateProduct(values, resetForm);
+                  handleSaveChanges(values, resetForm);
                   setSubmitting(false);
                 } catch (err) {
                   if (err instanceof Yup.ValidationError) {
@@ -161,10 +171,6 @@ export default function EditProductPage(props: IAppProps) {
             >
               <Form>
                 <ProductInputFields />
-                {/* Debug output */}
-                <div className="px-3">
-                  <pre>{JSON.stringify(product, null, 2)}</pre>
-                </div>
                 <div className="px-3 w-full">
                   <button
                     type="submit"

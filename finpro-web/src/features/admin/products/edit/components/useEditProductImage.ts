@@ -4,14 +4,13 @@ import { useProductImageShowing } from "@/hooks/products/useProductImageShowing"
 import { ICloudinaryResult, IProductImage } from "@/types/products/product.image.type";
 import { toast } from "react-toastify";
 import { CloudinaryUploadWidgetResults } from "next-cloudinary";
-import { cloudinaryImageUpload, removeImage, setAsMainImage, swapImages } from "@/utils/products/product.image.helpers";
+import { cloudinaryImageUpload } from "@/utils/products/product.image.helpers";
 
 type TImageItem = { type: "existing"; data: IProductImage } | { type: "new"; data: ICloudinaryResult };
 
 export const useEditProductImage = () => {
   const { product } = useProductDetails();
   const [allImagesList, setAllImagesList] = React.useState<TImageItem[]>([]);
-  const [imageList, setImageList] = React.useState<IProductImage[]>(product?.productImage ?? []);
   const [uploadedImages, setUploadedImages] = React.useState<ICloudinaryResult[]>([]);
   const MAX_IMAGES = 5;
   const { imageShowing, setImageShowing, handleImageClick } = useProductImageShowing();
@@ -19,24 +18,38 @@ export const useEditProductImage = () => {
   React.useEffect(() => {
     if (product) {
       const existingImages: TImageItem[] = product.productImage.map((image) => ({ type: "existing", data: image }));
-      const newImages: TImageItem[] = uploadedImages.map((image) => ({ type: "new", data: image }));
-      
-      const sortedImages = [...existingImages, ...newImages].sort((a, b) => {
-        if ('isMainImage' in a.data && a.data.isMainImage) return -1
-        if ('isMainImage' in b.data && b.data.isMainImage) return 1
-        if ('updatedAt' in a.data && 'updatedAt' in b.data) {
-          return new Date(b.data.updatedAt).getTime() - new Date(a.data.updatedAt).getTime();
-        }
-        return 0;
-      });
-      setAllImagesList(sortedImages);
+      setAllImagesList(existingImages);
+      if (existingImages.length > 0 && !imageShowing) setImageShowing(existingImages[0].data);
     }
-  }, [product, uploadedImages]);
+  }, [product]);
 
+  React.useEffect(() => {
+    if (uploadedImages.length > 0 && uploadedImages.length < MAX_IMAGES) {
+      setAllImagesList((prevList) => {
+        const existingOnly = prevList.filter((item) => item.type === "existing");
+        const newImages: TImageItem[] = uploadedImages.map((image) => ({ type: "new", data: image }));
+
+        return [...existingOnly, ...newImages].sort((a, b) => {
+          if ("isMainImage" in a.data && a.data.isMainImage) return -1;
+          if ("isMainImage" in b.data && b.data.isMainImage) return 1;
+          if ("updatedAt" in a.data && "updatedAt" in b.data) {
+            return new Date(b.data.updatedAt).getTime() - new Date(a.data.updatedAt).getTime();
+          }
+          return 0;
+        });
+      });
+    }
+  }, [uploadedImages]);
+
+  React.useEffect(() => {
+    if(allImagesList.length > 0 && !imageShowing) setImageShowing(allImagesList[0].data)
+  },[allImagesList])
+  
   const handleImageUploadSuccess = (result: CloudinaryUploadWidgetResults) => {
-    if (MAX_IMAGES - imageList.length > 0 && uploadedImages.length <= MAX_IMAGES) {
+    if (MAX_IMAGES - allImagesList.length > 0 && uploadedImages.length <= MAX_IMAGES) {
       const newImage = cloudinaryImageUpload(result);
       if (newImage) {
+        setUploadedImages((prevImages) => [...prevImages, newImage]);
         toast.success("Image uploaded successfully");
       }
     } else {
@@ -46,14 +59,15 @@ export const useEditProductImage = () => {
 
   const handleSetAsMainImage = () => {
     if (!imageShowing) return;
-    setAllImagesList(prevImages => {
-      return prevImages.map((img) => {
+    setAllImagesList((prevImages) => {
+      const updatedImages =  prevImages.map((img) => {
         if (img.type === "existing" && "id" in imageShowing && img.data.id === imageShowing.id) {
           // For existing images
           return {
             type: "existing",
             data: { ...img.data, isMainImage: true },
-          } as TImageItem;
+          } as TImageItem
+
         } else if (img.type === "new" && "public_id" in imageShowing && img.data.public_id === imageShowing.public_id) {
           // For new images
           return {
@@ -68,10 +82,17 @@ export const useEditProductImage = () => {
           } as TImageItem;
         }
       });
+      const newMainImage = updatedImages.find((img) => img.data.isMainImage === true)
+
+      if (!newMainImage) return updatedImages
+      const otherImages = updatedImages.filter((img) => img !== newMainImage)
+      
+      console.log([newMainImage,...otherImages])
+      return [newMainImage,...otherImages]
     });
   };
 
-  const handleSwapImage = (index1:number, index2:number) => {
+  const handleSwapImage = (index1: number, index2: number) => {
     setAllImagesList((prevImages) => {
       // Create a new array with the swapped items
       const newImages = [...prevImages];
@@ -98,7 +119,7 @@ export const useEditProductImage = () => {
 
       return newImages;
     });
-  }
+  };
 
   const handleDeleteImage = (public_id: string) => {
     setAllImagesList((prevImages) => {
@@ -110,46 +131,48 @@ export const useEditProductImage = () => {
         }
         return false;
       });
-      if (targetIndex === -1) return prevImages
+      if (targetIndex === -1) return prevImages;
 
-      const isDeleteMainImage = targetIndex === 0 ||
-        ('isMainImage' in prevImages[targetIndex].data && prevImages[targetIndex].data.isMainImage)
-      
-      const newImages = [...prevImages]
-      newImages.splice(targetIndex, 1)
+      const isDeleteMainImage =
+        targetIndex === 0 ||
+        ("isMainImage" in prevImages[targetIndex].data && prevImages[targetIndex].data.isMainImage);
+
+      const newImages = [...prevImages];
+      newImages.splice(targetIndex, 1);
 
       if (isDeleteMainImage && newImages.length > 0) {
         return newImages.map((img, idx) => {
-          if(idx === 0) {
+          if (idx === 0) {
             return {
               type: img.type,
-              data: { ...img.data, isMainImage: true }
-            } as TImageItem
+              data: { ...img.data, isMainImage: true },
+            } as TImageItem;
           } else {
             return {
               type: img.type,
               data: {
                 ...img.data,
-                isMainImage: false
+                isMainImage: false,
+              },
+            } as TImageItem;
           }
-            } as TImageItem
-          }
-        })
+        });
       }
-      
-      return newImages
-      })
-    }
 
-  const saveChanges = () => {
-    const existingImages = allImagesList
-      .filter(img => img.type === "existing")
-      .map(img => img.data as IProductImage)
-    
-    const newUploads = allImagesList
-      .filter(img => img.type === "new")
-      .map(img => img.data as ICloudinaryResult)
-  }
+      return newImages;
+    });
+  };
 
-  return {};
+  return {
+    product,
+    allImagesList,
+    uploadedImages,
+    handleImageClick,
+    handleImageUploadSuccess,
+    handleSetAsMainImage,
+    handleSwapImage,
+    handleDeleteImage,
+    imageShowing,
+    setImageShowing,
+  };
 };
