@@ -1,6 +1,6 @@
-import { uploader } from '../middlewares/uploader.multer';
-import { ProductController } from '../controllers/product.controller';
-import { Router } from 'express';
+import { uploader } from "../middlewares/uploader.multer";
+import { ProductController } from "../controllers/product.controller/product.controller";
+import { Router } from "express";
 
 export class ProductRouter {
   private router: Router;
@@ -13,10 +13,14 @@ export class ProductRouter {
   }
 
   private initializeRoutes(): void {
-    this.router.post('/create', uploader(['image/jpeg', 'image/png', 'image/jpg', 'image/webp']).fields([{ name: 'images', maxCount: 3 }]), this.productController.createProduct);
-    this.router.post('/signed-upload', this.productController.handleSignedupload)
-    this.router.get('/all', this.productController.getProducts);
-    this.router.get('/:slug', this.productController.getProductById);
+    this.router.post(
+      "/create",
+      uploader(["image/jpeg", "image/png", "image/jpg", "image/webp"]).fields([{ name: "images", maxCount: 3 }]),
+      this.productController.createProduct,
+    );
+    this.router.post("/signed-upload", this.productController.handleSignedupload);
+    this.router.get("/all", this.productController.getProducts);
+    this.router.get("/:slug", this.productController.getProductById);
   }
 
   getRouter(): Router {
