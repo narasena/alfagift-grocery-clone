@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { Form, Formik } from "formik";
-import { addProductSchemas } from "@/features/schemas/addProductSchemas";
+import { formProductSchema } from "@/features/admin/products/schemas/formProductSchema";
 import * as Yup from "yup";
 import { CldImage } from "next-cloudinary";
 import { TbArrowBigLeftLinesFilled, TbArrowBigRightLinesFilled } from "react-icons/tb";
@@ -20,7 +20,7 @@ export default function AddProductPage() {
   return (
     <div className="bg-red-400">
       <div className="lg:bg-white lg:max-w-[1200px] lg:mx-auto lg:px-10 lg:py-4 px-4">
-        <AdminPageTitle title="Add Product" subTitle="Fill the form below to add a new product"/>
+        <AdminPageTitle title="Add Product" subTitle="Fill the form below to add a new product" />
         <div className="lg: grid lg:grid-cols-[60%_1fr] w-full gap-6">
           <div className="lg:order-2 lg:!px-0 max-w-full flex flex-col max-lg:justify-center items-center c-border">
             <div className="page-title border-b border-gray-300 pb-4 mb-4">
@@ -131,12 +131,12 @@ export default function AddProductPage() {
                   images: [],
                 } as Partial<IProductFormValues>
               }
-              validationSchema={addProductSchemas}
+              validationSchema={formProductSchema}
               onSubmit={(values, { setSubmitting, resetForm }) => {
                 console.log("Form Values:", values);
-                console.log("Is Valid:", addProductSchemas.isValidSync(values));
+                console.log("Is Valid:", formProductSchema.isValidSync(values));
                 try {
-                  addProductSchemas.validateSync(values, { abortEarly: false });
+                  formProductSchema.validateSync(values, { abortEarly: false });
                   console.log("Validation passed!");
                   handleCreateProduct(values, resetForm);
                   setSubmitting(false);
