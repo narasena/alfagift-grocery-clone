@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 
-export const addProductSchemas = Yup.object({
+export const formProductSchema = Yup.object({
     name: Yup.string().required('Required'),
     price: Yup.number().required('Required').positive('Price must be a positive number'),
     productSubCategoryId: Yup.string().required('Required'),
@@ -9,5 +9,5 @@ export const addProductSchemas = Yup.object({
     sku: Yup.string().optional(),
     barcode: Yup.string().optional(),
     weight: Yup.number().optional(),
-    dimensions: Yup.string().optional(),
+    dimensions: Yup.string().optional()
 });
