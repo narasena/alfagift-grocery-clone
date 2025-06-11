@@ -12,6 +12,7 @@ import { IProductDetails, IProductFormValues } from "@/types/products/product.ty
 import { Form, Formik } from "formik";
 import { CldImage } from "next-cloudinary";
 import * as React from "react";
+import { MdDeleteForever } from "react-icons/md";
 import { TbArrowBigLeftLinesFilled, TbArrowBigRightLinesFilled } from "react-icons/tb";
 import * as Yup from "yup";
 
@@ -31,7 +32,7 @@ export default function EditProductPage(props: IAppProps) {
     handleSetAsMainImage,
   } = useEditProductImage();
   const { handleSaveChanges } = useEditProduct();
-  console.log(allImagesList)
+  console.log(allImagesList);
 
   return (
     <div className="bg-red-400">
@@ -76,19 +77,35 @@ export default function EditProductPage(props: IAppProps) {
                 {allImagesList.map((image, index) => (
                   <div key={index} className="relative">
                     <div
-                      className="max-lg:size-18 lg:size-28 border border-gray-400 rounded-md relative !overflow-hidden"
+                      className="max-lg:size-18 lg:size-28 border border-gray-400 rounded-md relative group !overflow-hidden"
                       onClick={() => handleImageClick(image.data)}
                     >
                       <CldImage
                         fill
                         sizes="(max-width: 768px) 72px, 112px"
-                        src={'secure_url' in image.data? image.data.secure_url : image.data.imageUrl}
+                        src={"secure_url" in image.data ? image.data.secure_url : image.data.imageUrl}
                         alt={`Uploaded Image ${index + 1}`}
-                        className="object-cover"
+                        className="object-cover z-0"
                       />
                       {index === 0 && (
                         <div className="absolute top-0 left-0 bg-red-600 text-white text-xs px-1">Main</div>
                       )}
+                      <div className="absolute top-0 right-0 min-w-full min-h-full bg-gray-800/20 opacity-0 group-hover:opacity-100 group-hover:z-[20]"></div>
+                      <div className="absolute size-max top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 group-hover:z-30">
+                        <button
+                          className="py-0.5 px-2 text-xs bg-red-700 text-white rounded-xs font-medium centered cursor-pointer"
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteImage(
+                              "public_id" in image.data ? image.data.public_id : image.data.cldPublicId || ""
+                            );
+                          }}
+                        >
+                          <span>Delete </span>
+                          <MdDeleteForever />
+                        </button>
+                      </div>
                     </div>
                     <div className="grid grid-cols-2 gap-1 mt-1">
                       <div className="col-start-1 flex-1">
