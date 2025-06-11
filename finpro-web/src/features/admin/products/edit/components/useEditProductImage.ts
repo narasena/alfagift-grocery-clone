@@ -42,8 +42,16 @@ export const useEditProductImage = () => {
   }, [uploadedImages]);
 
   React.useEffect(() => {
-    if(allImagesList.length > 0 && !imageShowing) setImageShowing(allImagesList[0].data)
-  },[allImagesList])
+    if (allImagesList.length > 0 && !imageShowing) setImageShowing(allImagesList[0].data)
+    if (imageShowing && allImagesList.length > 0) {
+      const imageStillExists = allImagesList.some(img => {
+        if (img.type === "existing" && "id" in imageShowing && img.data.id === imageShowing.id) return true
+        else if (img.type === "new" && "public_id" in imageShowing && img.data.public_id === imageShowing.public_id) return true
+        return false
+      })
+      if (!imageStillExists) setImageShowing(allImagesList[0].data)
+    }
+  }, [allImagesList])
   
   const handleImageUploadSuccess = (result: CloudinaryUploadWidgetResults) => {
     if (MAX_IMAGES - allImagesList.length > 0 && uploadedImages.length <= MAX_IMAGES) {
@@ -60,7 +68,7 @@ export const useEditProductImage = () => {
   const handleSetAsMainImage = () => {
     if (!imageShowing) return;
     setAllImagesList((prevImages) => {
-      const updatedImages =  prevImages.map((img) => {
+      const updatedImages = prevImages.map((img) => {
         if (img.type === "existing" && "id" in imageShowing && img.data.id === imageShowing.id) {
           // For existing images
           return {
@@ -87,8 +95,8 @@ export const useEditProductImage = () => {
       if (!newMainImage) return updatedImages
       const otherImages = updatedImages.filter((img) => img !== newMainImage)
       
-      console.log([newMainImage,...otherImages])
-      return [newMainImage,...otherImages]
+      console.log([newMainImage, ...otherImages])
+      return [newMainImage, ...otherImages]
     });
   };
 
@@ -163,6 +171,17 @@ export const useEditProductImage = () => {
     });
   };
 
+  const isThumbnailSameWithImageShowing = (image: TImageItem, currentShowing: IProductImage|ICloudinaryResult) => {
+    if (!currentShowing) return false
+    if ("cldPublicId" in image.data && "cldPublicId" in currentShowing) {
+      return image.data.cldPublicId === currentShowing.cldPublicId
+    } else if ("public_id" in image.data && "public_id" in currentShowing) {
+      return image.data.public_id === currentShowing.public_id
+    }
+    return false
+ 
+  }
+
   return {
     product,
     allImagesList,
@@ -174,5 +193,6 @@ export const useEditProductImage = () => {
     handleDeleteImage,
     imageShowing,
     setImageShowing,
+    isThumbnailSameWithImageShowing
   };
 };

@@ -1,14 +1,11 @@
 "use client";
 import AdminPageTitle from "@/features/admin/components/AdminPageTitle";
-import { useCreateProduct } from "@/features/admin/products/add/hooks/useCreateProduct";
-import { useProductImagesUpload } from "@/features/admin/products/add/hooks/useProductImagesUpload";
 import ProductImageUploadWidget from "@/features/admin/products/components/ProductImageUploadWidget";
 import ProductInputFields from "@/features/admin/products/components/ProductInputFields";
 import { useEditProductImage } from "@/features/admin/products/edit/components/useEditProductImage";
 import { useEditProduct } from "@/features/admin/products/edit/hooks/useEditProduct";
 import { addProductSchemas } from "@/features/schemas/addProductSchemas";
-import { useProductDetails } from "@/hooks/products/useProductDetails";
-import { IProductDetails, IProductFormValues } from "@/types/products/product.type";
+import { IProductDetails } from "@/types/products/product.type";
 import { Form, Formik } from "formik";
 import { CldImage } from "next-cloudinary";
 import * as React from "react";
@@ -30,6 +27,7 @@ export default function EditProductPage(props: IAppProps) {
     handleImageUploadSuccess,
     imageShowing,
     handleSetAsMainImage,
+    isThumbnailSameWithImageShowing
   } = useEditProductImage();
   const { handleSaveChanges } = useEditProduct();
   console.log(allImagesList);
@@ -75,9 +73,11 @@ export default function EditProductPage(props: IAppProps) {
             <div className="px-4 flex justify-center gap-2">
               <div className="max-w-full flex justify-normal flex-wrap gap-4">
                 {allImagesList.map((image, index) => (
-                  <div key={index} className="relative">
+                  <div key={index} className={``}>
                     <div
-                      className="max-lg:size-18 lg:size-28 border border-gray-400 rounded-md relative group !overflow-hidden"
+                      className={`max-lg:size-18 lg:size-28 border border-gray-400 rounded-md relative group !overflow-hidden ${
+                        isThumbnailSameWithImageShowing(image, imageShowing!) ? "ring-2 ring-red-600" : ""
+                      }`}
                       onClick={() => handleImageClick(image.data)}
                     >
                       <CldImage
