@@ -3,6 +3,7 @@ import { IoTrashOutline } from "react-icons/io5";
 import { BsStopwatch } from "react-icons/bs";
 import { FaLocationDot } from "react-icons/fa6";
 import { useState } from "react";
+import useCartItems from "@/features/cart/hooks/useCartItems";
 
 // refactoring:
 // kalo component global, dipake di semua page
@@ -12,6 +13,7 @@ import { useState } from "react";
 // di atas line paling atas, di atas clear all button
 
 export default function CartPage() {
+  const { cartItems, loading, handleDisplayCartItems } = useCartItems(); // to display cart items
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
   return (
     <main className="min-h-screen bg-white flex flex-col items-center justify-between py-8">

@@ -297,7 +297,7 @@ model CartItem {
   productId         String
   storeId           String
   quantity          Int
-  status            CartItemStatus
+  status            CartItemStatus // ga dibikin active default?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   deletedAt         DateTime?
@@ -305,7 +305,6 @@ model CartItem {
   cart              Cart @relation(fields: [cartId], references: [id])
   productStock      ProductStock @relation(fields: [productId,storeId], references: [productId,storeId])
 
-  cartItemStatus   CartItemStatus @default(ACTIVE)
 
   @@map("cart_items")
 }
@@ -428,10 +427,4 @@ model PaymentProof {
   payment       Payment @relation(fields: [transactionId], references: [id])
 
   @@map("payment_proofs")
-}
-
-enum CartItemStatus {
-  ACTIVE
-  REMOVED
-  ORDERED
 }

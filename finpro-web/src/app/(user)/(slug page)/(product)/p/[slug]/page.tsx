@@ -25,7 +25,7 @@ export default function ProductSlugPage() {
   const { quantity, setQuantity, handleQuantityChange } = useProductQuantity();
   const { breadcrumbLinks } = useProductBreadcrumbs();
 
-  const { cart, handleAddToCart } = useCart();
+  const { cart, handleAddToCart } = useCart(); // to add items to cart
   const testDescription = {
     list: [
       "Tabung gas mini isi ulang dari HI-COOK",
@@ -238,7 +238,7 @@ export default function ProductSlugPage() {
               </div>
               <div className="flex-1">
                 <button
-                  onClick={() => handleAddToCart(product!)}
+                  onClick={() => handleAddToCart(product!, quantity)}
                   className="w-full text-white font-medium text-lg py-2 rounded-md flex items-center justify-center bg-red-700 cursor-pointer active:ring-4 active:ring-blue-300"
                 >
                   {`+ Keranjang`}

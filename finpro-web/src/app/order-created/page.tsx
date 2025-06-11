@@ -1,7 +1,7 @@
 "use client";
 import { TbCalendarTime } from "react-icons/tb";
 import { RiEBike2Line } from "react-icons/ri";
-
+import Link from "next/link";
 import { useState } from "react";
 
 // use modal for view details
@@ -98,24 +98,24 @@ export default function OrderDone() {
 
               {isTransaksiOpen && (
                 <div className="mt-2 pl-4 space-y-2">
-                  <a href="#" className="block text-sm text-gray-600 hover:text-black">
+                  <Link href="#" className="block text-sm text-gray-600 hover:text-black">
                     Terbuat
-                  </a>
-                  <a href="#" className="block text-sm text-gray-600 hover:text-black">
+                  </Link>
+                  <Link href="#" className="block text-sm text-gray-600 hover:text-black">
                     Menunggu Pembayaran
-                  </a>
-                  <a href="#" className="block text-sm text-gray-600 hover:text-black">
+                  </Link>
+                  <Link href="#" className="block text-sm text-gray-600 hover:text-black">
                     Sedang Diproses
-                  </a>
-                  <a href="#" className="block text-sm text-gray-600 hover:text-black">
+                  </Link>
+                  <Link href="#" className="block text-sm text-gray-600 hover:text-black">
                     Dikirim
-                  </a>
-                  <a href="#" className="block text-sm text-gray-600 hover:text-black">
+                  </Link>
+                  <Link href="/order-done" className="block text-sm text-gray-600 hover:text-black">
                     Selesai
-                  </a>
-                  <a href="#" className="block text-sm text-gray-600 hover:text-black">
+                  </Link>
+                  <Link href="#" className="block text-sm text-gray-600 hover:text-black">
                     Batal
-                  </a>
+                  </Link>
                 </div>
               )}
             </div>
@@ -149,13 +149,12 @@ export default function OrderDone() {
             </div>
           </div>
 
-          {/* Order Done */}
           <div className="bg-white border rounded-lg px-5 pt-3 md:col-span-5 border-gray-200">
             <div className="overflow-x-auto -mx-5 px-5">
               {/* Order Status Tabs */}
               <div className="flex flex-nowrap gap-2 whitespace-nowrap">
                 {["Terbuat", "Menunggu Pembayaran", "Sedang Diproses", "Dikirim", "Selesai", "Batal"].map((status) => {
-                  const isActive = status === "Selesai";
+                  const isActive = status === "Terbuat";
                   return (
                     <button
                       key={status}
@@ -172,47 +171,10 @@ export default function OrderDone() {
               </div>
             </div>
             <div className="-mx-5 h-[0.5px] bg-gray-200 my-3" />
-
-            {/* Order details */}
-            <div className="rounded-lg border border-gray-200 p-5 text-black mb-4">
-              {/* date n status */}
-              <div className="flex items-center space-x-2">
-                <span>
-                  <TbCalendarTime className="text-lg text-gray-400" />
-                </span>
-                {/* tgl dan hari order selesai */}
-                <span className="text-sm text-gray-400">11 Mei 2025 - 13:31 WIB</span>
-                <span className="badge bg-green-100 text-green-400 border-0 font-semibold px-4 py-2 rounded-xl">
-                  Selesai
-                </span>
-              </div>
-
-              {/* Detail pesanan */}
-              <div className="mt-7 flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <RiEBike2Line className="text-4xl" />
-                  <div>
-                    <h1>Nama Pengguna</h1>
-                    <h1 className="text-sm text-gray-500">No. Ref:</h1>
-                  </div>
-                </div>
-                {/* Right side: total belanja */}
-                <div className="text-right">
-                  <p className="text-sm text-gray-500">Total Belanja</p>
-                  <p className="text-sm font-semibold">6 Produk</p>
-                  <p className="text-lg font-bold text-red-600">Rp 142.600</p>
-                </div>
-              </div>
-              <hr className="border-t border-gray-200 my-4" />
-
-              <div className=" text-right">
-                <button
-                  className="bg-white text-red-600 border border-red-600 hover:bg-red-50 font-semibold px-4 py-2 rounded-lg"
-                  onClick={() => document.getElementById("my_modal_1").showModal()}
-                >
-                  Lihat Detail
-                </button>
-              </div>
+            {/* If order is empty */}
+            <div className="text-center space-y-4 py-3 pb-6">
+              <h1 className="text-gray-500">Anda belum memiliki pesanan. Tunggu apa lagi, belanja sekarang.</h1>
+              <button className="text-white bg-red-600 rounded-lg px-3 py-2">Yuk, belanja</button>
             </div>
           </div>
         </div>

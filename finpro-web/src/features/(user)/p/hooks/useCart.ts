@@ -6,12 +6,12 @@ import { toast } from "react-toastify";
 export default function useCart() {
   const [cart, setCart] = React.useState<ICartItem[]>([]);
 
-  const handleAddToCart = (product: IProductDetails) => {
+  const handleAddToCart = (product: IProductDetails, quantity: number = 1) => {
     const cartItem: ICartItem = {
       id: String(product.id),
       name: product.name,
       price: product.price,
-      quantity: 1,
+      quantity,
       image: product.productImage?.[0]?.imageUrl ?? "", // Fallback to empty string
     };
 
@@ -20,7 +20,7 @@ export default function useCart() {
 
     if (indexOfItem > -1) {
       // Product already exists in cart — update quantity
-      currentCart[indexOfItem].quantity += 1;
+      currentCart[indexOfItem].quantity += quantity;
       setCart(currentCart);
       toast.success(`Berhasil menambahkan ${product.name} ke keranjang!`);
     } else {
