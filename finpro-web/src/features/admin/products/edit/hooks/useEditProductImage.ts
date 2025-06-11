@@ -51,6 +51,7 @@ export const useEditProductImage = () => {
       })
       if (!imageStillExists) setImageShowing(allImagesList[0].data)
     }
+    if(allImagesList.length === 0) setImageShowing(null)
   }, [allImagesList])
   
   const handleImageUploadSuccess = (result: CloudinaryUploadWidgetResults) => {
