@@ -1,5 +1,5 @@
 import { IProductFormValues } from "@/types/products/product.type";
-import { TImageItem, useEditProductImage } from "./useEditProductImage";
+import { TImageItem } from "./useEditProductImage";
 import { ICloudinaryResult, IProductImage } from "@/types/products/product.image.type";
 import apiInstance from "@/utils/api/apiInstance";
 import { useProductDetails } from "@/hooks/products/useProductDetails";

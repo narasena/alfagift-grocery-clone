@@ -13,10 +13,8 @@ import { MdDeleteForever } from "react-icons/md";
 import { TbArrowBigLeftLinesFilled, TbArrowBigRightLinesFilled } from "react-icons/tb";
 import * as Yup from "yup";
 
-export interface IAppProps {}
 
-export default function EditProductPage(props: IAppProps) {
-  // const { product } = useProductDetails();
+export default function EditProductPage() {
   const {
     product,
     allImagesList,
