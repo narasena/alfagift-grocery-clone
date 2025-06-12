@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { CloudinaryUploadWidgetResults } from "next-cloudinary";
 import { cloudinaryImageUpload } from "@/utils/products/product.image.helpers";
 
-type TImageItem = { type: "existing"; data: IProductImage } | { type: "new"; data: ICloudinaryResult };
+export type TImageItem = { type: "existing"; data: IProductImage } | { type: "new"; data: ICloudinaryResult };
 
 export const useEditProductImage = () => {
   const { product } = useProductDetails();
@@ -42,18 +42,19 @@ export const useEditProductImage = () => {
   }, [uploadedImages]);
 
   React.useEffect(() => {
-    if (allImagesList.length > 0 && !imageShowing) setImageShowing(allImagesList[0].data)
+    if (allImagesList.length > 0 && !imageShowing) setImageShowing(allImagesList[0].data);
     if (imageShowing && allImagesList.length > 0) {
-      const imageStillExists = allImagesList.some(img => {
-        if (img.type === "existing" && "id" in imageShowing && img.data.id === imageShowing.id) return true
-        else if (img.type === "new" && "public_id" in imageShowing && img.data.public_id === imageShowing.public_id) return true
-        return false
-      })
-      if (!imageStillExists) setImageShowing(allImagesList[0].data)
+      const imageStillExists = allImagesList.some((img) => {
+        if (img.type === "existing" && "id" in imageShowing && img.data.id === imageShowing.id) return true;
+        else if (img.type === "new" && "public_id" in imageShowing && img.data.public_id === imageShowing.public_id)
+          return true;
+        return false;
+      });
+      if (!imageStillExists) setImageShowing(allImagesList[0].data);
     }
-    if(allImagesList.length === 0) setImageShowing(null)
-  }, [allImagesList])
-  
+    if (allImagesList.length === 0) setImageShowing(null);
+  }, [allImagesList]);
+
   const handleImageUploadSuccess = (result: CloudinaryUploadWidgetResults) => {
     if (MAX_IMAGES - allImagesList.length > 0 && uploadedImages.length <= MAX_IMAGES) {
       const newImage = cloudinaryImageUpload(result);
@@ -68,6 +69,7 @@ export const useEditProductImage = () => {
 
   const handleSetAsMainImage = () => {
     if (!imageShowing) return;
+    const updatedImageShowing = { ...imageShowing, isMainImage: true };
     setAllImagesList((prevImages) => {
       const updatedImages = prevImages.map((img) => {
         if (img.type === "existing" && "id" in imageShowing && img.data.id === imageShowing.id) {
@@ -75,8 +77,7 @@ export const useEditProductImage = () => {
           return {
             type: "existing",
             data: { ...img.data, isMainImage: true },
-          } as TImageItem
-
+          } as TImageItem;
         } else if (img.type === "new" && "public_id" in imageShowing && img.data.public_id === imageShowing.public_id) {
           // For new images
           return {
@@ -91,14 +92,15 @@ export const useEditProductImage = () => {
           } as TImageItem;
         }
       });
-      const newMainImage = updatedImages.find((img) => img.data.isMainImage === true)
+      const newMainImage = updatedImages.find((img) => img.data.isMainImage === true);
 
-      if (!newMainImage) return updatedImages
-      const otherImages = updatedImages.filter((img) => img !== newMainImage)
-      
-      console.log([newMainImage, ...otherImages])
-      return [newMainImage, ...otherImages]
+      if (!newMainImage) return updatedImages;
+      const otherImages = updatedImages.filter((img) => img !== newMainImage);
+
+      // console.log([newMainImage, ...otherImages])
+      return [newMainImage, ...otherImages];
     });
+    setImageShowing(updatedImageShowing);
   };
 
   const handleSwapImage = (index1: number, index2: number) => {
@@ -111,7 +113,7 @@ export const useEditProductImage = () => {
 
       // If one of the swapped images is at index 0, update isMainImage
       if (index1 === 0 || index2 === 0) {
-        return newImages.map((img, idx) => {
+        const updatedImages = newImages.map((img, idx) => {
           if (img.type === "existing") {
             return {
               type: "existing" as const,
@@ -124,6 +126,19 @@ export const useEditProductImage = () => {
             };
           }
         }) as TImageItem[];
+
+        if (imageShowing) {
+          const updatedImage = updatedImages.find((img) => {
+            return (
+              (img.type === "existing" && "id" in imageShowing && img.data.id === imageShowing.id) ||
+              (img.type === "new" && "public_id" in imageShowing && img.data.public_id === imageShowing.public_id)
+            );
+          });
+          if (updatedImage) {
+            setImageShowing(updatedImage.data);
+          }
+        }
+        return updatedImages;
       }
 
       return newImages;
@@ -172,16 +187,15 @@ export const useEditProductImage = () => {
     });
   };
 
-  const isThumbnailSameWithImageShowing = (image: TImageItem, currentShowing: IProductImage|ICloudinaryResult) => {
-    if (!currentShowing) return false
+  const isThumbnailSameWithImageShowing = (image: TImageItem, currentShowing: IProductImage | ICloudinaryResult) => {
+    if (!currentShowing) return false;
     if ("cldPublicId" in image.data && "cldPublicId" in currentShowing) {
-      return image.data.cldPublicId === currentShowing.cldPublicId
+      return image.data.cldPublicId === currentShowing.cldPublicId;
     } else if ("public_id" in image.data && "public_id" in currentShowing) {
-      return image.data.public_id === currentShowing.public_id
+      return image.data.public_id === currentShowing.public_id;
     }
-    return false
- 
-  }
+    return false;
+  };
 
   return {
     product,
@@ -194,6 +208,6 @@ export const useEditProductImage = () => {
     handleDeleteImage,
     imageShowing,
     setImageShowing,
-    isThumbnailSameWithImageShowing
+    isThumbnailSameWithImageShowing,
   };
 };

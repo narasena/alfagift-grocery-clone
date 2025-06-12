@@ -3,7 +3,7 @@ import { ICloudinaryResult, IProduct, IProductImage } from "../../types/product.
 import e, { NextFunction, Request, Response } from "express";
 import { v2 as cloudinary } from "cloudinary";
 import { Prisma } from "@prisma/client";
-import { EditProductImageService } from "@/services/product.service/product.image.service";
+import { EditProductImageService } from "../../services/product.service/product.image.service";
 
 export class ProductController {
   async createProduct(req: Request, res: Response, next: NextFunction) {
@@ -65,6 +65,7 @@ export class ProductController {
       const {
         name,
         price,
+        newSlug,
         productSubCategoryId,
         brandId,
         description,
@@ -108,6 +109,19 @@ export class ProductController {
         });
       }
       const productId = product?.id;
+
+      // Slug conflict: only if slug changed
+      if (newSlug && newSlug !== slug) {
+        const existing = await prisma.product.findUnique({ where: { slug: newSlug } });
+        if (existing && existing.id !== productId) {
+           res.status(400).json({
+            success: false,
+            message: "Product slug already exists, please try changing the name a bit.",
+          });
+        }
+      }
+
+      const existingName = product?.name;
       const existingProductImages: IProductImage[] = (await prisma.productImage.findMany({
         where: {
           productId: product?.id,
@@ -117,10 +131,11 @@ export class ProductController {
       const transactionResult = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         const updatedProduct = await tx.product.update({
           where: {
-            slug,
+            id: productId,
           },
           data: {
             name,
+            slug: newSlug,
             price,
             productSubCategoryId,
             brandId,
@@ -172,24 +187,24 @@ export class ProductController {
 
         if (productImageService.isOrderChanged()) {
           for (let i = 0; i < editedExistingImages.length; i++) {
-            const editedImg = editedExistingImages[i]
+            const editedImg = editedExistingImages[i];
             await tx.productImage.update({
-              where: {id: editedImg.id},
-              data: {}
-            })
+              where: { id: editedImg.id },
+              data: {},
+            });
           }
         }
 
-        const newImages = productImageService.getNewUploads()
+        const newImages = productImageService.getNewUploads();
         if (newImages.length > 0) {
           const createdData = newImages.map((img: ICloudinaryResult) => ({
             productId,
             cldPublicId: img.public_id,
-            imageUrl:img.secure_url
-          }))
+            imageUrl: img.secure_url,
+          }));
         }
 
-        const mainImageFromNewUploads = productImageService.mainImageFromNewUploads
+        const mainImageFromNewUploads = productImageService.mainImageFromNewUploads;
         if (mainImageFromNewUploads) {
           await tx.productImage.updateMany({
             where: {
@@ -197,28 +212,28 @@ export class ProductController {
               isMainImage: true,
               deletedAt: null,
             },
-            data: { isMainImage: false }
-          })
+            data: { isMainImage: false },
+          });
 
           await tx.productImage.updateMany({
             where: {
               productId,
               cldPublicId: mainImageFromNewUploads.public_id,
             },
-            data: { isMainImage: true }
-          })
+            data: { isMainImage: true },
+          });
         }
         return updatedProduct;
       });
 
       const resultProduct = await prisma.product.findUnique({
-        where: { slug },
+        where: { slug: newSlug },
         include: {
           productImage: {
-            where:{deletedAt: null}
-          }
-        }
-      })
+            where: { deletedAt: null },
+          },
+        },
+      });
 
       res.status(200).json({
         success: true,
@@ -251,14 +266,20 @@ export class ProductController {
   async getProducts(req: Request, res: Response, next: NextFunction) {
     try {
       const products = await prisma.product.findMany({
+        where: {
+          deletedAt: null,
+        },
         include: {
-          productImage: true,
+          productImage: {
+            where:{deletedAt: null}
+          },
           productSubCategory: {
             include: {
               productCategory: true,
-            },
+            }
+            
           },
-          productBrand: true,
+          productBrand: {where: {deletedAt: null}},
         },
       });
       res.status(200).json({
@@ -279,7 +300,15 @@ export class ProductController {
           slug,
         },
         include: {
-          productImage: true,
+          productImage: {
+            where: {
+              deletedAt: null,
+            },
+            orderBy: [
+              {isMainImage: 'desc'},
+              {updatedAt: 'desc'}
+            ]
+          },
           productSubCategory: {
             include: {
               productCategory: true,
