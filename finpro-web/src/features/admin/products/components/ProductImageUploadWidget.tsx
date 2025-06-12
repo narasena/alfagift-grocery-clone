@@ -3,7 +3,6 @@ import * as React from "react";
 import { RiImageAddFill } from "react-icons/ri";
 
 export interface IProductImageUploadButton {
-  uploadePreset: string;
   onSuccess: (result: CloudinaryUploadWidgetResults) => void;
   maxFiles: number;
   buttonText: string;
@@ -15,7 +14,7 @@ export default function ProductImageUploadWidget(props: IProductImageUploadButto
   return (
     <>
       <CldUploadWidget
-        uploadPreset={props.uploadePreset}
+        uploadPreset='products-image'
         signatureEndpoint={`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/signed-upload`}
         onSuccess={props.onSuccess}
         options={{
