@@ -21,6 +21,7 @@ export class ProductRouter {
     this.router.post("/signed-upload", this.productController.handleSignedupload);
     this.router.get("/all", this.productController.getProducts);
     this.router.get("/:slug", this.productController.getProductById);
+    this.router.put("/edit/:slug", this.productController.updateProduct);
   }
 
   getRouter(): Router {
