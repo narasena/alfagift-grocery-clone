@@ -19,7 +19,12 @@ export const useAdminProductInventoriesList = () => {
   const getStockCellValue = (stock: IProductStock, key: string) => {
     switch (key) {
       case "image":
-        return <AdminProductTableCellDataImage {...stock.product} />;
+        return (
+          <AdminProductTableCellDataImage
+            imageLink={stock.product.productImage.find((image) => image.isMainImage === true)?.imageUrl ?? "#"}
+            imageAlt={stock.product.name}
+          />
+        );
       case "name":
         return (
           <AdminProductTableCellDataLink
@@ -32,12 +37,7 @@ export const useAdminProductInventoriesList = () => {
       case "store":
         return stock.store.name || "—";
       case "action":
-            return (
-                <AdminProductTableCellDataLink
-                    hrefLink="#"
-                    hrefLabel="Edit"
-                />
-            )
+        return <AdminProductTableCellDataLink hrefLink="#" hrefLabel="Edit" />;
       default:
         return (stock.product[key as keyof typeof stock.product] as string | number) || "—";
     }

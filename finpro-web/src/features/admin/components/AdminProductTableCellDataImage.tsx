@@ -11,7 +11,6 @@ export default function AdminProductTableCellDataImage (props: IAdminProductTabl
   return (
     <div>
       <CldImage
-        // src={product.productImage.find((image) => image.isMainImage === true)?.imageUrl ?? ""}
         src={props.imageLink}
         width={60}
         height={60}
