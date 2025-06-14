@@ -34,8 +34,14 @@ export const useAdminProductInventoriesList = () => {
         );
       case "sku":
         return stock.product.sku || "—";
+
       case "store":
-        return stock.store.name || "—";
+        return (
+          <AdminProductTableCellDataLink
+            hrefLink={`/inventories/product/${stock.store.id}`}
+            hrefLabel={stock.store.name}
+          />
+        );
       case "action":
         return <AdminProductTableCellDataLink hrefLink="#" hrefLabel="Edit" />;
       default:
