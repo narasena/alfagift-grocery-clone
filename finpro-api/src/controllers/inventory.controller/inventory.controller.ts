@@ -113,6 +113,7 @@ export const getStockByStoreId = async (req: Request, res: Response, next: NextF
     res.status(200).json({
       success: true,
       message: "Product stocks fetched successfully",
+      storeName: store?.name,
       storeStocks,
     });
   } catch (error) {
