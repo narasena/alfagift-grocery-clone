@@ -12,7 +12,7 @@ export default function AdminProductListViewPage() {
       <AdminListTable
         title="Admin Products List View"
         tableDescription={`List of all products that are registered within the system. To view stocks / inventories, please click `}
-        linkHref="#"
+        linkHref="inventories/overview"
         linkLabel="here."
         columns={productsListColumnTitles}
         data={products as IProductDetailsTable[]}
