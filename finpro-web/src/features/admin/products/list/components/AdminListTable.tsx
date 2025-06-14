@@ -80,7 +80,7 @@ export default function AdminListTable<T extends Record<string, unknown>>({
                 </div>
               </td>
               {columns.map((col, colIndex) => (
-                <td key={colIndex} className="px-6 py-4">
+                <td key={colIndex} className={col.key === "image" ? "p-1.5" : "px-6 py-4"}>
                   {renderCell ? renderCell(row, col.key) : String(row[col.key] ?? "—")}
                 </td>
               ))}
