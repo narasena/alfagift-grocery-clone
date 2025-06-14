@@ -3,6 +3,8 @@ import { useProductDetails } from "@/hooks/products/useProductDetails"
 import { IProductDetails } from "@/types/products/product.type";
 import { CldImage } from "next-cloudinary";
 import Link from "next/link";
+import { ITableColumn } from "../components/AdminListTable";
+import { title } from "process";
 
 export const useAdminProductList = () => {
     const { products } = useAllProducts()
@@ -19,7 +21,8 @@ export const useAdminProductList = () => {
       { key: "weight", title: "Weight" },
       { key: "dimensions", title: "Dimensions" },
       { key: "action", title: "Actions" },
-    ];
+  ];
+  const columnTitles: ITableColumn[] = productsListTitle.map(({key, title})=>({key, label: title}));
     const getProductCellValue = (product: IProductDetails, key: string) => {
       switch (key) {
         case "image":
@@ -54,5 +57,5 @@ export const useAdminProductList = () => {
       }
     };
 
-    return {products, productsListTitle, getProductCellValue}
+    return {products, productsListTitle, columnTitles, getProductCellValue}
 }

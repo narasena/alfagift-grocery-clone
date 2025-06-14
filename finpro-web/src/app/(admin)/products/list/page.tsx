@@ -1,74 +1,24 @@
-'use client';
+"use client";
 
-import { useAdminProductList } from '@/features/admin/products/list/hooks/useAdminProductsList';
-import { IProductDetails } from '@/types/products/product.type';
-import apiInstance from '@/utils/api/apiInstance';
-import { CldImage } from 'next-cloudinary';
-import Link from 'next/link';
-import * as React from 'react';
-import { toast } from 'react-toastify';
+import AdminListTable from "@/features/admin/products/list/components/AdminListTable";
+import { useAdminProductList } from "@/features/admin/products/list/hooks/useAdminProductsList";
+import { IProductDetailsTable } from "@/types/products/product.type";
+import * as React from "react";
 
 export default function AdminProductListViewPage() {
-  const {products, productsListTitle, getProductCellValue} = useAdminProductList()
+  const { products, productsListTitle, columnTitles, getProductCellValue } = useAdminProductList();
   return (
     <div className="p-4 bg-red-200">
-      <div className="relative overflow-x-auto shadow-lg sm:rounded-lg">
-        <table className="w-full text-sm text-left text-gray-500">
-          <caption className="p-5 text-lg font-semibold text-left text-gray-900 bg-white">
-            {`Admin's Products List View`}
-            <p className="mt-1 text-sm font-normal text-gray-500">
-              {`List of all products that are registered within the system. To view stocks / inventories, please click `}
-              <Link href={""} className="font-medium text-blue-600 hover:underline">
-                {`here.`}
-              </Link>
-            </p>
-          </caption>
-          <thead className="text-xs text-gray-700 uppercase bg-gray-200">
-            <tr>
-              <th scope="col" className="p-4">
-                <div className="flex items-center">
-                  <input
-                    id="checkbox-all-search"
-                    type="checkbox"
-                    className="size-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
-                  />
-                  <label htmlFor="checkbox-all-search" className="sr-only">
-                    checkbox
-                  </label>
-                </div>
-              </th>
-              {productsListTitle.map((title, index) => (
-                <th scope="col" key={index} className="px-6 py-3">
-                  {title.title}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product, index) => (
-              <tr key={index} className="bg-white border-b border-gray-200 hover:bg-gray-50">
-                <td className="w-4 p-4">
-                  <div className="flex items-center">
-                    <input
-                      id={`checkbox-table-search-${index}`}
-                      type="checkbox"
-                      className="size-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
-                    />
-                    <label htmlFor={`checkbox-table-search-${index}`} className="sr-only">
-                      checkbox
-                    </label>
-                  </div>
-                </td>
-                {productsListTitle.map((title, indx) => (
-                  <td key={indx} className="px-6 py-4">
-                    {getProductCellValue(product, title.key)}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <AdminListTable
+        title="Admin Products List View"
+        tableDescription={`List of all products that are registered within the system. To view stocks / inventories, please click `}
+        linkHref="#"
+        linkLabel="here."
+        columns={columnTitles}
+        data={products as IProductDetailsTable[]}
+        withCheckbox={true}
+        renderCell={getProductCellValue}
+      />
     </div>
   );
 }
