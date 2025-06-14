@@ -28,7 +28,7 @@ export const useAdminProductStocksPerProduct = () => {
             case "store":
                     return (
                     <AdminProductTableCellDataLink
-                        hrefLink={`/inventories/product/${productStock.store.id}`}
+                        hrefLink={`/inventories/store/${productStock.store.id}`}
                         hrefLabel={productStock.store.name}
                     />
                 );
