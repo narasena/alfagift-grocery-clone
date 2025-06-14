@@ -1,9 +1,8 @@
-import { IProductStock, IProductStockTable } from "@/types/inventories/product.stock.type";
+import { IProductStock } from "@/types/inventories/product.stock.type";
 import { useAllProductsStocks } from "../../hooks/useAllProductsStocks";
 import { ITableColumn } from "@/features/admin/products/list/components/AdminListTable";
 import AdminProductTableCellDataImage from "@/features/admin/components/AdminProductTableCellDataImage";
-import AdminProductTableCellDataName from "@/features/admin/components/AdminProductTableCellDataName";
-import AdminProductTableCellDataEdit from "@/features/admin/components/AdminProductTableCellDataEdit";
+import AdminProductTableCellDataLink from "@/features/admin/components/AdminProductTableCellDataLink";
 
 export const useAdminProductInventoriesList = () => {
   const { stocks } = useAllProductsStocks();
@@ -22,13 +21,23 @@ export const useAdminProductInventoriesList = () => {
       case "image":
         return <AdminProductTableCellDataImage {...stock.product} />;
       case "name":
-        return <AdminProductTableCellDataName {...stock.product} />;
+        return (
+          <AdminProductTableCellDataLink
+            hrefLink={`/inventories/product/${stock.product.slug}`}
+            hrefLabel={stock.product.name}
+          />
+        );
       case "sku":
         return stock.product.sku || "—";
       case "store":
         return stock.store.name || "—";
       case "action":
-        return <AdminProductTableCellDataEdit {...stock.product} />;
+            return (
+                <AdminProductTableCellDataLink
+                    hrefLink="#"
+                    hrefLabel="Edit"
+                />
+            )
       default:
         return (stock.product[key as keyof typeof stock.product] as string | number) || "—";
     }
