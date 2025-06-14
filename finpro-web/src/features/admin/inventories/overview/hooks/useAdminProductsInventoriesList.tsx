@@ -42,7 +42,7 @@ export const useAdminProductInventoriesList = () => {
             hrefLabel={stock.store.name}
           />
         );
-      case "action":
+      case "actions":
         return <AdminProductTableCellDataLink hrefLink="#" hrefLabel="Edit" />;
       default:
         return (stock.product[key as keyof typeof stock.product] as string | number) || "—";

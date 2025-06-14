@@ -6,7 +6,6 @@ import * as React from "react";
 
 export default function AdminInventoryOverviewPage() {
   const { stocks, stocksListColumnTitles, getStockCellValue } = useAdminProductInventoriesList();
-  console.log(stocks);
 
   return (
     <div>
