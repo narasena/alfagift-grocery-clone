@@ -35,3 +35,7 @@ export interface IProductDetails extends IProduct {
   productSubCategory: IProductSubCategory & { productCategory: IProductSubCategory }
   productBrand: IProductBrand
 }
+
+export interface IProductDetailsTable extends IProductDetails {
+  [key: string]: unknown
+}
