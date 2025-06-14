@@ -92,7 +92,7 @@ export const getStockByStoreId = async (req: Request, res: Response, next: NextF
       });
     }
     const storeName = store?.name
-    const stocksPerStore = await prisma.productStock.findMany({
+    const storeStocks = await prisma.productStock.findMany({
       where: {
         storeId,
         product: {
@@ -111,11 +111,11 @@ export const getStockByStoreId = async (req: Request, res: Response, next: NextF
         },
       },
     });
-    const storeStocks = {...stocksPerStore, storeName}
     res.status(200).json({
       success: true,
       message: "Product stocks fetched successfully",
-      storeStocks
+      storeStocks,
+      storeName
     });
   } catch (error) {
     next(error);

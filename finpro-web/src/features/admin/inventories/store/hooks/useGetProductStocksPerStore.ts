@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 export const useGetProductStocksPerStore = () => {
   const { storeId } = useParams();
   const [storeStocks, setStoreStocks] = React.useState<IProductStock[]>([]);
+  const [storeName, setStoreName] = React.useState<string>("");
   const handleGetProductStocksPerStore = async () => {
     try {
       const storeStocksResponse = await apiInstance.get("inventories/store/" + storeId);
@@ -20,5 +21,5 @@ export const useGetProductStocksPerStore = () => {
   React.useEffect(() => {
     handleGetProductStocksPerStore();
   }, []);
-  return { storeStocks };
+  return { storeStocks,storeName };
 };

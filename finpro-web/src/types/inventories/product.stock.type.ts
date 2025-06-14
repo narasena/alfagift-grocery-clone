@@ -15,7 +15,3 @@ export interface IProductStock {
 export interface IProductStockTable extends IProductStock {
     [key: string]: unknown
 }
-
-export interface IProductStockWithStoreName extends IProductStock {
-    storeName: string
-}

@@ -5,13 +5,13 @@ import { IProductStockTable } from "@/types/inventories/product.stock.type";
 import * as React from "react";
 
 export default function AdminInventoryByStorePage() {
-  const { storeStocks, storeStocksListColumnTitles, getStoreStocksCellValue } = useAdminProductStocksPerStore();
+  const { storeStocks, storeName, storeStocksListColumnTitles, getStoreStocksCellValue } = useAdminProductStocksPerStore();
 console.log(storeStocks);
   return (
     <div>
       {storeStocks.length > 0 && (
         <AdminListTable
-          title={`Store Stocks of: ${storeStocks?.storeName || ""}`}
+          title={`Store Stocks of: ${storeName || ""}`}
           tableDescription={`List of all products in store `}
           columns={storeStocksListColumnTitles}
           data={storeStocks as IProductStockTable[]}

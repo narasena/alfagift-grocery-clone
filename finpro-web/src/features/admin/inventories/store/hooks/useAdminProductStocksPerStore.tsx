@@ -4,7 +4,7 @@ import AdminProductTableCellDataImage from "@/features/admin/components/AdminPro
 import AdminProductTableCellDataLink from "@/features/admin/components/AdminProductTableCellDataLink";
 
 export const useAdminProductStocksPerStore = () => {
-  const { storeStocks } = useGetProductStocksPerStore();
+  const { storeStocks, storeName } = useGetProductStocksPerStore();
   const storeStocksListColumnTitles = [
     { key: "image", label: "Image" },
     { key: "name", label: "Product Name" },
@@ -43,6 +43,7 @@ export const useAdminProductStocksPerStore = () => {
   };
     return {
         storeStocks,
+        storeName,
         storeStocksListColumnTitles,
         getStoreStocksCellValue
   };
