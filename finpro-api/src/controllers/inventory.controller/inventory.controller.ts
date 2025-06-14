@@ -1,4 +1,3 @@
-import { Prisma, PrismaClientExtends } from "@prisma/client";
 import { prisma } from "../../prisma";
 import { NextFunction, Request, Response } from "express";
 
@@ -15,9 +14,10 @@ export const getAllStocks = async (req: Request, res: Response, next: NextFuncti
               deletedAt: null,
             },
           },
-          productBrand: {
-            deletedAt: null,
-          },
+          OR: [
+            {productBrand: null},
+            {productBrand: {deletedAt: null}}
+          ]
         },
         store: { deletedAt: null },
       },
@@ -39,6 +39,7 @@ export const getAllStocks = async (req: Request, res: Response, next: NextFuncti
         store: true,
       },
     });
+  console.log(stocks.length)
   res.status(200).json({
     success: true,
     message: "Stocks fetched successfully",
