@@ -9,16 +9,16 @@ export default function AdminInventoryByStorePage() {
 console.log(storeStocks);
   return (
     <div>
-      {/* {storeStocks.length > 0 && (
+      {storeStocks.length > 0 && (
         <AdminListTable
-          title={`Store Stocks of: ${storeStocks[0]?.store.name || ""}`}
+          title={`Store Stocks of: ${storeStocks?.storeName || ""}`}
           tableDescription={`List of all products in store `}
           columns={storeStocksListColumnTitles}
           data={storeStocks as IProductStockTable[]}
           withCheckbox={true}
           renderCell={getStoreStocksCellValue}
         />
-      )} */}
+      )}
     </div>
   );
 }
