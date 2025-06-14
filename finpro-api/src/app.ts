@@ -11,6 +11,7 @@ import cors from 'cors';
 import { PORT } from './config';
 import { ProductCategoryRouter } from './routers/product.category.router';
 import { ProductRouter } from './routers/product.router';
+import storeRouter from './routers/store.router';
 
 export default class App {
   private app: Express;
@@ -66,6 +67,7 @@ export default class App {
 
     this.app.use('/api/product', productRouter.getRouter());
     this.app.use('/api/product-category', productCategoryRouter.getRouter());
+    this.app.use('/api/store', storeRouter)
   }
 
   public start(): void {
