@@ -8,16 +8,6 @@ export const getAllStocks = async (req: Request, res: Response, next: NextFuncti
         deletedAt: null,
         product: {
           deletedAt: null,
-          productSubCategory: {
-            deletedAt: null,
-            productCategory: {
-              deletedAt: null,
-            },
-          },
-          OR: [
-            {productBrand: null},
-            {productBrand: {deletedAt: null}}
-          ]
         },
         store: { deletedAt: null },
       },
@@ -28,12 +18,6 @@ export const getAllStocks = async (req: Request, res: Response, next: NextFuncti
               where: { deletedAt: null },
               orderBy: [{ isMainImage: "desc" }, { updatedAt: "desc" }],
             },
-            productSubCategory: {
-              include: {
-                productCategory: true
-              }
-            },
-            productBrand: true
           },
         },
         store: true,
@@ -49,3 +33,48 @@ export const getAllStocks = async (req: Request, res: Response, next: NextFuncti
     next(error);
   }
 };
+
+export const getStockByProductId = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { slug } = req.params;
+    const productId = (await prisma.product.findUnique({
+      where:{slug}
+    }))?.id
+    if (!productId) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      })
+    }
+    const productStocks = await prisma.productStock.findMany({
+      where: {
+        productId,
+        product: {
+          deletedAt: null,
+        },
+        deletedAt: null,
+        store: { deletedAt: null },
+      },
+      include: {
+        store: true,
+        product: {
+          include: {
+            productImage: {
+              where: { deletedAt: null },
+              orderBy: [{ isMainImage: "desc" }, { updatedAt: "desc" }],
+            },
+          },
+        }
+      }
+    })
+    res.status(200).json({
+      success: true,
+      message: "Product stocks fetched successfully",
+      productStocks,
+    })
+    
+  } catch (error) {
+    next(error);
+    
+  }
+}
