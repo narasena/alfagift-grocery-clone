@@ -6,7 +6,6 @@ import * as React from "react";
 
 export default function AdminInventoryByStorePage() {
   const { storeStocks, storeName, storeStocksListColumnTitles, getStoreStocksCellValue } = useAdminProductStocksPerStore();
-console.log(storeStocks);
   return (
     <div>
       {storeStocks.length > 0 && (

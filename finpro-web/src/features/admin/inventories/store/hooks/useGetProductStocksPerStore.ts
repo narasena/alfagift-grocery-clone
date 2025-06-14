@@ -12,6 +12,7 @@ export const useGetProductStocksPerStore = () => {
     try {
       const storeStocksResponse = await apiInstance.get("inventories/store/" + storeId);
       setStoreStocks(storeStocksResponse.data.storeStocks);
+      setStoreName(storeStocksResponse.data.storeName);
       toast.success(storeStocksResponse.data.message);
     } catch (error) {
       console.error("Error fetching product stocks per store:", error);
