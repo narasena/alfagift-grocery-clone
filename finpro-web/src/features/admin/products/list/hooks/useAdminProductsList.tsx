@@ -5,6 +5,9 @@ import { CldImage } from "next-cloudinary";
 import Link from "next/link";
 import { ITableColumn } from "../components/AdminListTable";
 import { title } from "process";
+import AdminProductTableCellDataImage from "@/features/admin/components/AdminProductTableCellDataImage";
+import AdminProductTableCellDataName from "@/features/admin/components/AdminProductTableCellDataName";
+import AdminProductTableCellDataEdit from "@/features/admin/components/AdminProductTableCellDataEdit";
 
 export const useAdminProductList = () => {
     const { products } = useAllProducts()
@@ -27,18 +30,11 @@ export const useAdminProductList = () => {
       switch (key) {
         case "image":
           return (
-            <CldImage
-              src={product.productImage.find((image) => image.isMainImage === true)?.imageUrl ?? ""}
-              width={60}
-              height={60}
-              alt={product.name}
-            />
+            <AdminProductTableCellDataImage {...product} />
           );
         case "name":
           return (
-            <Link href={`/p/${product.slug}`} className="text-blue-600 hover:underline hover:font-medium">
-              {product.name || "—"}
-            </Link>
+            <AdminProductTableCellDataName {...product} />
           );
         case "brand":
           return product.productBrand?.name || "—";
@@ -48,9 +44,7 @@ export const useAdminProductList = () => {
           return product.productSubCategory.name || "—";
         case "action":
           return (
-            <Link href={`/products/edit/${product.slug}`} className="font-medium text-blue-600 hover:underline">
-              Edit
-            </Link>
+            <AdminProductTableCellDataEdit {...product} />
           );
         default:
           return (product[key as keyof IProductDetails] as string | number) || "—";
