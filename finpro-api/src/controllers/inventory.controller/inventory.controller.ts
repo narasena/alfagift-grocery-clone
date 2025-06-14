@@ -78,3 +78,44 @@ export const getStockByProductId = async (req: Request, res: Response, next: Nex
     
   }
 }
+
+export const getStockByStoreId = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { storeId } = req.params;
+    const store = await prisma.store.findUnique({
+      where: { id: storeId },
+    })
+    if (!storeId) {
+      return res.status(404).json({
+        success: false,
+        message: "Store not found",
+      });
+    }
+    const storeStocks = await prisma.productStock.findMany({
+      where: {
+        storeId,
+        product: {
+          deletedAt: null,
+        },
+        deletedAt: null,
+      },
+      include: {
+        product: {
+          include: {
+            productImage: {
+              where: { deletedAt: null },
+              orderBy: [{ isMainImage: "desc" }, { updatedAt: "desc" }],
+            },
+          },
+        },
+      },
+    });
+    res.status(200).json({
+      success: true,
+      message: "Product stocks fetched successfully",
+      storeStocks,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
