@@ -6,7 +6,7 @@ import { IProductDetailsTable } from "@/types/products/product.type";
 import * as React from "react";
 
 export default function AdminProductListViewPage() {
-  const { products, productsListTitle, columnTitles, getProductCellValue } = useAdminProductList();
+  const { products, productsListColumnTitles, getProductCellValue } = useAdminProductList();
   return (
     <div className="p-4 bg-red-200">
       <AdminListTable
@@ -14,7 +14,7 @@ export default function AdminProductListViewPage() {
         tableDescription={`List of all products that are registered within the system. To view stocks / inventories, please click `}
         linkHref="#"
         linkLabel="here."
-        columns={columnTitles}
+        columns={productsListColumnTitles}
         data={products as IProductDetailsTable[]}
         withCheckbox={true}
         renderCell={getProductCellValue}

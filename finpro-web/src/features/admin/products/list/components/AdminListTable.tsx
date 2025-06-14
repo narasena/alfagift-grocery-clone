@@ -1,4 +1,3 @@
-import { link } from "fs";
 import Link from "next/link";
 import * as React from "react";
 
@@ -15,7 +14,7 @@ interface IAdminListTableProps<T> {
   columns: ITableColumn[];
   data: T[];
   withCheckbox?: boolean;
-  renderCell?: (row: T, key:string) => React.ReactNode
+  renderCell?: (row: T, key: string) => React.ReactNode;
 }
 
 export default function AdminListTable<T extends Record<string, unknown>>({
@@ -26,7 +25,7 @@ export default function AdminListTable<T extends Record<string, unknown>>({
   columns,
   data,
   withCheckbox,
-  renderCell
+  renderCell,
 }: IAdminListTableProps<T>) {
   return (
     <div className="relative !overflow-auto shadow-lg sm:rounded-lg">

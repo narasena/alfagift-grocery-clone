@@ -22,7 +22,7 @@ export const useAdminProductList = () => {
       { key: "dimensions", title: "Dimensions" },
       { key: "action", title: "Actions" },
   ];
-  const columnTitles: ITableColumn[] = productsListTitle.map(({key, title})=>({key, label: title}));
+  const productsListColumnTitles: ITableColumn[] = productsListTitle.map(({key, title})=>({key, label: title}));
     const getProductCellValue = (product: IProductDetails, key: string) => {
       switch (key) {
         case "image":
@@ -57,5 +57,5 @@ export const useAdminProductList = () => {
       }
     };
 
-    return {products, productsListTitle, columnTitles, getProductCellValue}
+    return {products, productsListTitle, productsListColumnTitles, getProductCellValue}
 }
