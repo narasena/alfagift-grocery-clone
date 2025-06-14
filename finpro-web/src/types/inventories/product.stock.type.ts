@@ -11,3 +11,7 @@ export interface IProductStock {
     updatedAt: Date
     deletedAt?: Date
 }
+
+export interface IProductStockTable extends IProductStock {
+    [key: string]: unknown
+}
