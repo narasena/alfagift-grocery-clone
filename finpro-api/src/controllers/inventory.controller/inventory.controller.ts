@@ -121,3 +121,83 @@ export const getStockByStoreId = async (req: Request, res: Response, next: NextF
     next(error);
   }
 };
+
+export const getProductStockDetail = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { slug, storeId } = req.params;
+    const product = await prisma.product.findUnique({
+      where: { slug },
+    });
+    const store = await prisma.store.findUnique({
+      where: { id: storeId },
+    });
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+    if (!store) {
+      return res.status(404).json({
+        success: false,
+        message: "Store not found",
+      });
+    }
+    const productId = product.id
+    const productStockDetail = await prisma.productStock.findUnique({
+      where: {
+        productId_storeId: {
+          productId,
+          storeId
+        },
+        deletedAt: null,
+        product: {
+          deletedAt: null,
+          productSubCategory: {
+            deletedAt: null,
+            productCategory: {
+              deletedAt: null
+            }
+          },
+          OR: [
+            { productBrand: null },
+            { productBrand: { deletedAt: null } },
+          ]
+        },
+        store: { deletedAt: null },
+      },
+      include: {
+        product: {
+          include: {
+            productImage: {
+              where: { deletedAt: null },
+              orderBy: [{ isMainImage: "desc" }, { updatedAt: "desc" }],
+            },
+            productSubCategory: {
+              include: {
+                productCategory: true,
+              },
+            },
+            productBrand: true,
+          },
+        },
+        store: true,
+        stockHistory: { 
+          where: {
+            deletedAt: null,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      }
+    })
+    res.status(200).json({
+      success: true,
+      message: "Product stock detail fetched successfully",
+      productStockDetail
+    });
+  } catch (error) {
+    next(error);    
+  }
+}
