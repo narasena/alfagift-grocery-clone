@@ -1,6 +1,6 @@
 import { IProductStock } from "@/types/inventories/product.stock.type";
 import { useAllProductsStocks } from "../../hooks/useAllProductsStocks";
-import { ITableColumn } from "@/features/admin/products/list/components/AdminListTable";
+import { ITableColumn } from "@/features/admin/components/AdminTable";
 import AdminProductTableCellDataImage from "@/features/admin/components/AdminProductTableCellDataImage";
 import AdminProductTableCellDataLink from "@/features/admin/components/AdminProductTableCellDataLink";
 

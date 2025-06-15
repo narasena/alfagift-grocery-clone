@@ -17,7 +17,7 @@ interface IAdminListTableProps<T> {
   renderCell?: (row: T, key: string) => React.ReactNode;
 }
 
-export default function AdminListTable<T extends Record<string, unknown>>({
+export default function AdminTable<T extends Record<string, unknown>>({
   title,
   tableDescription,
   linkHref,

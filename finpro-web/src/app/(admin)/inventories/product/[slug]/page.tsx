@@ -1,6 +1,6 @@
 "use client";
 import { useAdminProductStocksPerProduct } from "@/features/admin/inventories/product/hooks/useAdminProductStocksPerProduct";
-import AdminListTable from "@/features/admin/products/list/components/AdminListTable";
+import AdminTable from "@/features/admin/components/AdminTable";
 import { IProductStockTable } from "@/types/inventories/product.stock.type";
 import * as React from "react";
 
@@ -10,7 +10,7 @@ export default function AdminInventoryByProductPage() {
   return (
     <div>
       {productStocks.length > 0 && (
-        <AdminListTable
+        <AdminTable
           title={`Product Stocks of: ${productStocks[0]?.product.name || ""}`}
           tableDescription={`View product page `}
           linkHref={`/p/${productStocks[0]?.product.slug}` || "#"}
