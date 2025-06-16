@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../../prisma";
 import { NextFunction, Request, Response } from "express";
 
@@ -199,5 +200,94 @@ export const getProductStockDetail = async (req: Request, res: Response, next: N
     });
   } catch (error) {
     next(error);    
+  }
+}
+
+export const updateProductStockDetail = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { slug, storeId } = req.params;
+    const { quantity, type, reference, notes } = req.body;
+    const product = await prisma.product.findUnique({
+      where: { slug },
+    });
+    const store = await prisma.store.findUnique({
+      where: { id: storeId },
+    });
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+    if (!store) {
+      return res.status(404).json({
+        success: false,
+        message: "Store not found",
+      });
+    }
+    const productId = product.id
+
+    const updateResult  = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const stockHistory = await tx.productStockHistory.create({
+        data: {
+          productId,
+          storeId,
+          quantity: Number(quantity),
+          type,
+          reference,
+          notes
+        }
+      })
+
+      const currentStock = await tx.productStock.findUnique({
+        where: {
+          productId_storeId: {
+            productId,
+            storeId
+          },
+          deletedAt: null,
+        }
+      })
+
+      let newStockQuantity = currentStock?.stock || 0
+
+      switch (type) {
+        case 'STORE_IN':
+          newStockQuantity += Number(quantity)
+          break;
+        case 'STORE_OUT':
+          newStockQuantity -= Number(quantity)
+          break;
+        case 'SALE':
+          newStockQuantity -= Number(quantity)
+          break;
+        case 'ADJUSTMENT':
+          newStockQuantity += Number(quantity)
+          break;
+      }
+
+      const updatedStock = await tx.productStock.update({
+        where: {
+          productId_storeId: {
+            productId,
+            storeId
+          },
+          deletedAt: null,
+        },
+        data: {
+          stock: newStockQuantity
+        }
+      })
+      return { stockHistory, updatedStock }
+    })
+    res.status(200).json({
+      success: true,
+      message: "Product stock detail updated successfully",
+      updateResult
+    });
+  
+  } catch (error) {
+    next(error);
+    
   }
 }
