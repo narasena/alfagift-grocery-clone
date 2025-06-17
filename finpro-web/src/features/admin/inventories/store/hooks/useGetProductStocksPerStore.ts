@@ -22,5 +22,5 @@ export const useGetProductStocksPerStore = () => {
   React.useEffect(() => {
     handleGetProductStocksPerStore();
   }, []);
-  return { storeStocks,storeName };
+  return { storeId,storeStocks,storeName, handleGetProductStocksPerStore };
 };
