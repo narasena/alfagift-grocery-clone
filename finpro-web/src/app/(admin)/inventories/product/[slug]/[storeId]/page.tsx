@@ -28,7 +28,7 @@ export default function AdminInventoryByProductInStorePage() {
     }));
   const handleUpdateStock = async (values: IProductStockDetailForm) => {
     try {
-      const response = await apiInstance.put(`/inventories/product/update/${productStockDetail?.product.slug}/${productStockDetail?.storeId}`, {
+      const response = await apiInstance.put(`/inventories/product/update-stock/${productStockDetail?.product.slug}/${productStockDetail?.storeId}`, {
         quantity: values.quantity,
         type: values.type,
         reference: values.reference,
