@@ -7,27 +7,63 @@ export interface ITableColumn {
   label: string;
 }
 
-export interface IAdminTableProps<T> {
+interface ICommonAdminTableProps<T> {
   title?: string;
   tableDescription?: string;
   linkHref?: string;
   linkLabel?: string;
   columns: ITableColumn[];
   data: T[];
-  withCheckbox?: boolean;
   renderCell?: (row: T, key: string) => React.ReactNode | undefined;
 }
 
-export default function AdminTable<T extends Record<string, unknown>>({
-  title,
-  tableDescription,
-  linkHref,
-  linkLabel,
-  columns,
-  data,
-  withCheckbox,
-  renderCell,
-}: IAdminTableProps<T>) {
+interface IAdminTablePropsWithCheckbox<T> extends ICommonAdminTableProps<T> {
+  withCheckbox: boolean;
+  getRowId: (row:T) => string
+  onCheckboxChange?: (checkedRows: string[]) => void;
+}
+
+interface IAdminTablePropsWithoutCheckbox<T> extends ICommonAdminTableProps<T> {
+  withCheckbox?: false;
+  getRowId?: never;
+  onCheckboxChange?: never;
+}
+
+export type IAdminTableProps<T> =
+  | IAdminTablePropsWithCheckbox<T>
+  | IAdminTablePropsWithoutCheckbox<T>;
+
+export default function AdminTable<T extends Record<string, unknown>>(props: IAdminTableProps<T>) {
+  const {
+    title,
+    tableDescription,
+    linkHref,
+    linkLabel,
+    columns,
+    data,
+    renderCell,
+    withCheckbox
+  } = props
+
+  const [checkedRows, setCheckedRows] = React.useState<string[]>([]);
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const rowId = event.target.value;
+    const isChecked = event.target.checked 
+    
+    let newCheckedRows: string[]
+
+    if (isChecked) {
+      newCheckedRows = [...checkedRows, rowId]
+    } else {
+      newCheckedRows = checkedRows.filter((id) => id !== rowId)
+    }
+    setCheckedRows(newCheckedRows)
+    if(withCheckbox && props.onCheckboxChange) props.onCheckboxChange(newCheckedRows)
+  }
+  React.useEffect(() => {
+    console.log(checkedRows);
+  },[checkedRows])
   return (
     <div className="relative !overflow-auto shadow-lg sm:rounded-lg">
       <table className="w-full text-sm text-left text-gray-500">
@@ -40,6 +76,15 @@ export default function AdminTable<T extends Record<string, unknown>>({
                   <input
                     id="checkbox-all"
                     type="checkbox"
+                    checked={data.length > 0 && checkedRows.length === data.length}
+                    onChange={(event) => {
+                      const allIds = event.target.checked
+                        ? data.map((row) => props.getRowId(row))
+                        : [];
+
+                      setCheckedRows(allIds);
+                      if (props.onCheckboxChange) props.onCheckboxChange(allIds);
+                    }}
                     className="size-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
                   />
                   <label htmlFor="checkbox-all" className="sr-only">
@@ -56,29 +101,35 @@ export default function AdminTable<T extends Record<string, unknown>>({
           </tr>
         </thead>
         <tbody>
-          {data.map((row, rowIndex) => (
-            <tr key={rowIndex} className="bg-white border-b border-gray-200 hover:bg-gray-50">
-              {withCheckbox && (
-                <td className="w-4 p-4">
-                  <div className="flex items-center">
-                    <input
-                      id={`checkbox-table-search-${rowIndex}`}
-                      type="checkbox"
-                      className="size-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
-                    />
-                    <label htmlFor={`checkbox-table-search-${rowIndex}`} className="sr-only">
-                      checkbox
-                    </label>
-                  </div>
-                </td>
-              )}
-              {columns.map((col, colIndex) => (
-                <td key={colIndex} className={col.key === "image" ? "p-1.5" : "px-6 py-4"}>
-                  {renderCell ? renderCell(row, col.key) : String(row[col.key] ?? "—")}
-                </td>
-              ))}
-            </tr>
-          ))}
+          {data.map((row, rowIndex) => {
+            const rowId = withCheckbox ? props.getRowId(row): ""
+            return (
+              <tr key={rowIndex} className="bg-white border-b border-gray-200 hover:bg-gray-50">
+                {withCheckbox && (
+                  <td className="w-4 p-4">
+                    <div className="flex items-center">
+                      <input
+                        id={`checkbox-${rowId}`}
+                        type="checkbox"
+                        checked={checkedRows.includes(rowId)}
+                        value={rowId}
+                        onChange={handleCheckboxChange}
+                        className="size-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
+                      />
+                      <label htmlFor={`checkbox-${rowId}`} className="sr-only">
+                        checkbox
+                      </label>
+                    </div>
+                  </td>
+                )}
+                {columns.map((col, colIndex) => (
+                  <td key={colIndex} className={col.key === "image" ? "p-1.5" : "px-6 py-4"}>
+                    {renderCell ? renderCell(row, col.key) : String(row[col.key] ?? "—")}
+                  </td>
+                ))}
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </div>
