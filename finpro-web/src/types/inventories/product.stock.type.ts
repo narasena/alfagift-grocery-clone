@@ -36,6 +36,10 @@ export enum EStockMovementType {
     SALE = "SALE",          // Sale of products to customers 
     ADJUSTMENT = "ADJUSTMENT",   // Manual adjustment of stock (e.g. correction of stock count)
 }
+
+export interface IProductStocksByStoreForm extends IProductStockDetailForm {
+    products: string[]
+}
   
   export interface IProductStockDetailTable extends IProductStockDetail {
     [key: string]: unknown
