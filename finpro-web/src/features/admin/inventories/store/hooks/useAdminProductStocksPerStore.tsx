@@ -3,9 +3,11 @@ import { EStockMovementType, IProductStock, IProductStockForm } from "@/types/in
 import { useGetProductStocksPerStore } from "./useGetProductStocksPerStore";
 import AdminProductTableCellDataImage from "@/features/admin/components/AdminProductTableCellDataImage";
 import AdminProductTableCellDataLink from "@/features/admin/components/AdminProductTableCellDataLink";
+import { toast } from "react-toastify";
+import apiInstance from "@/utils/api/apiInstance";
 
 export const useAdminProductStocksPerStore = () => {
-  const { storeStocks, storeName } = useGetProductStocksPerStore();
+  const { storeStocks,storeId, storeName, handleGetProductStocksPerStore } = useGetProductStocksPerStore();
   const [toBeUpdatedStocks, setToBeUpdatedStocks] = React.useState<IProductStockForm[]>([]);
   const [checkedRows, setCheckedRows] = React.useState<string[]>([]);
   const [massQuantity, setMassQuantity] = React.useState<number | string>("");
@@ -533,9 +535,30 @@ export const useAdminProductStocksPerStore = () => {
     }
   };
 
+  const [massEdit, setMassEdit] = React.useState<boolean>(false);
+
+  const handleUpdateStocks = async () => {
+    try {
+      const response = await apiInstance.put(`/inventories/store/update-stocks/${storeId}`, { toBeUpdatedStocks });
+      if (response.status === 200) {
+        toast.success("Stocks updated successfully");
+        setToBeUpdatedStocks([]);
+        setCheckedRows([]);
+        setMassEdit(false);
+        await handleGetProductStocksPerStore();
+        toast.success(response.data.message);
+      }
+      
+    } catch (error) {
+      console.error("Error updating stock:", error);
+      toast.error("Error updating stock");
+    }
+  }
+
   return {
     storeStocks,
     storeName,
+    stockMovementType,
     storeStocksListColumnTitles,
     getStoreStocksCellValue,
     checkedRows,
@@ -544,6 +567,8 @@ export const useAdminProductStocksPerStore = () => {
     handleCheckboxChange,
     storeStocksUpdateFormsColumnTitles,
     getStoreStocksUpdateFormsCellValue,
+    massEdit,
+    setMassEdit,
     massQuantity,
     massType,
     massReference,
@@ -551,6 +576,7 @@ export const useAdminProductStocksPerStore = () => {
     handleMassQuantityChange,
     handleMassTypeChange,
     handleMassReferenceChange,
-    handleMassNotesChange
+    handleMassNotesChange,
+    handleUpdateStocks
   };
 };
