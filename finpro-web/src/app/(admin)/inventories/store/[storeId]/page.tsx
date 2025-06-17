@@ -12,6 +12,9 @@ export default function AdminInventoryByStorePage() {
     storeName,
     storeStocksListColumnTitles,
     checkedRows,
+    massEdit,
+    setMassEdit,
+    stockMovementType,
     toBeUpdatedStocks,
     handleCheckboxChange,
     getStoreStocksCellValue,
@@ -25,27 +28,8 @@ export default function AdminInventoryByStorePage() {
     handleMassTypeChange,
     handleMassReferenceChange,
     handleMassNotesChange,
+    handleUpdateStocks
   } = useAdminProductStocksPerStore();
-  const [massEdit, setMassEdit] = React.useState<boolean>(false);
-  const stockMovementType = Object.keys(EStockMovementType)
-    .filter((key) => isNaN(Number(key)))
-    .map((key) => ({
-      value: EStockMovementType[key as keyof typeof EStockMovementType],
-      label: key.replace(/_/g, " ").replace(/\b\w/g, (char) => char.toUpperCase()),
-    }));
-  const handleUpdateStock = async () => {
-    try {
-      const response = await apiInstance.put(
-        `/inventories/store/update-stock/${storeStocks[0].storeId}`,
-        toBeUpdatedStocks
-      );
-      toast.success("Product stocks updated successfully");
-      console.log("Stock updated successfully:", response.data);
-    } catch (error) {
-      console.error("Error updating stock:", error);
-      toast.error("Error updating stock");
-    }
-  };
 
   return (
     <div>
@@ -120,7 +104,7 @@ export default function AdminInventoryByStorePage() {
           <div className="">
             <button
               className="bg-red-700 text-white px-4 py-2 rounded-md hover:bg-red-500 active:ring-2 active:ring-blue-500"
-              onClick={handleUpdateStock}
+              onClick={handleUpdateStocks}
             >
               Update Stock
             </button>
