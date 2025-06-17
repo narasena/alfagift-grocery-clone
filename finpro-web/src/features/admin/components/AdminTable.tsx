@@ -21,12 +21,14 @@ interface IAdminTablePropsWithCheckbox<T> extends ICommonAdminTableProps<T> {
   withCheckbox: boolean;
   getRowId: (row:T) => string
   onCheckboxChange?: (checkedRows: string[]) => void;
+  checkedRows?: string[];
 }
 
 interface IAdminTablePropsWithoutCheckbox<T> extends ICommonAdminTableProps<T> {
   withCheckbox?: false;
   getRowId?: never;
   onCheckboxChange?: never;
+  checkedRows?: never;
 }
 
 export type IAdminTableProps<T> =
@@ -45,9 +47,12 @@ export default function AdminTable<T extends Record<string, unknown>>(props: IAd
     withCheckbox
   } = props
 
-  const [checkedRows, setCheckedRows] = React.useState<string[]>([]);
+  const [internalChecked, setInternalChecked] = React.useState<string[]>([]);
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const isControlled = withCheckbox && Array.isArray(props.checkedRows);
+  const checkedRows:string[] = isControlled ? (props as IAdminTablePropsWithCheckbox<T>).checkedRows! : internalChecked
+
+  const handleCheckboxChangeInternal = (event: React.ChangeEvent<HTMLInputElement>) => {
     const rowId = event.target.value;
     const isChecked = event.target.checked 
     
@@ -58,7 +63,7 @@ export default function AdminTable<T extends Record<string, unknown>>(props: IAd
     } else {
       newCheckedRows = checkedRows.filter((id) => id !== rowId)
     }
-    setCheckedRows(newCheckedRows)
+    setInternalChecked(newCheckedRows)
     if(withCheckbox && props.onCheckboxChange) props.onCheckboxChange(newCheckedRows)
   }
   React.useEffect(() => {
@@ -82,7 +87,7 @@ export default function AdminTable<T extends Record<string, unknown>>(props: IAd
                         ? data.map((row) => props.getRowId(row))
                         : [];
 
-                      setCheckedRows(allIds);
+                      setInternalChecked(allIds);
                       if (props.onCheckboxChange) props.onCheckboxChange(allIds);
                     }}
                     className="size-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
@@ -113,7 +118,7 @@ export default function AdminTable<T extends Record<string, unknown>>(props: IAd
                         type="checkbox"
                         checked={checkedRows.includes(rowId)}
                         value={rowId}
-                        onChange={handleCheckboxChange}
+                        onChange={handleCheckboxChangeInternal}
                         className="size-4 text-blue-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500 focus:ring-2"
                       />
                       <label htmlFor={`checkbox-${rowId}`} className="sr-only">
