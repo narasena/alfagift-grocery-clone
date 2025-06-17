@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "../../prisma";
 import { NextFunction, Request, Response } from "express";
+import { IProductStock, IProductStockHistory, IProductStockHistoryForm } from "@/types/product.stock.type";
 
 export const getAllStocks = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -24,12 +25,12 @@ export const getAllStocks = async (req: Request, res: Response, next: NextFuncti
         store: true,
       },
     });
-  console.log(stocks.length)
-  res.status(200).json({
-    success: true,
-    message: "Stocks fetched successfully",
-    stocks,
-  })
+    console.log(stocks.length);
+    res.status(200).json({
+      success: true,
+      message: "Stocks fetched successfully",
+      stocks,
+    });
   } catch (error) {
     next(error);
   }
@@ -38,14 +39,16 @@ export const getAllStocks = async (req: Request, res: Response, next: NextFuncti
 export const getStockByProductId = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { slug } = req.params;
-    const productId = (await prisma.product.findUnique({
-      where:{slug}
-    }))?.id
+    const productId = (
+      await prisma.product.findUnique({
+        where: { slug },
+      })
+    )?.id;
     if (!productId) {
       return res.status(404).json({
         success: false,
         message: "Product not found",
-      })
+      });
     }
     const productStocks = await prisma.productStock.findMany({
       where: {
@@ -65,34 +68,32 @@ export const getStockByProductId = async (req: Request, res: Response, next: Nex
               orderBy: [{ isMainImage: "desc" }, { updatedAt: "desc" }],
             },
           },
-        }
-      }
-    })
+        },
+      },
+    });
     res.status(200).json({
       success: true,
       message: "Product stocks fetched successfully",
       productStocks,
-    })
-    
+    });
   } catch (error) {
     next(error);
-    
   }
-}
+};
 
 export const getStockByStoreId = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { storeId } = req.params;
     const store = await prisma.store.findUnique({
       where: { id: storeId },
-    })
+    });
     if (!storeId) {
       return res.status(404).json({
         success: false,
         message: "Store not found",
       });
     }
-    const storeName = store?.name
+    const storeName = store?.name;
     const storeStocks = await prisma.productStock.findMany({
       where: {
         storeId,
@@ -116,7 +117,7 @@ export const getStockByStoreId = async (req: Request, res: Response, next: NextF
       success: true,
       message: "Product stocks fetched successfully",
       storeStocks,
-      storeName
+      storeName,
     });
   } catch (error) {
     next(error);
@@ -144,12 +145,12 @@ export const getProductStockDetail = async (req: Request, res: Response, next: N
         message: "Store not found",
       });
     }
-    const productId = product.id
+    const productId = product.id;
     const productStockDetail = await prisma.productStock.findUnique({
       where: {
         productId_storeId: {
           productId,
-          storeId
+          storeId,
         },
         deletedAt: null,
         product: {
@@ -157,13 +158,10 @@ export const getProductStockDetail = async (req: Request, res: Response, next: N
           productSubCategory: {
             deletedAt: null,
             productCategory: {
-              deletedAt: null
-            }
+              deletedAt: null,
+            },
           },
-          OR: [
-            { productBrand: null },
-            { productBrand: { deletedAt: null } },
-          ]
+          OR: [{ productBrand: null }, { productBrand: { deletedAt: null } }],
         },
         store: { deletedAt: null },
       },
@@ -183,7 +181,7 @@ export const getProductStockDetail = async (req: Request, res: Response, next: N
           },
         },
         store: true,
-        stockHistory: { 
+        stockHistory: {
           where: {
             deletedAt: null,
           },
@@ -191,17 +189,17 @@ export const getProductStockDetail = async (req: Request, res: Response, next: N
             createdAt: "desc",
           },
         },
-      }
-    })
+      },
+    });
     res.status(200).json({
       success: true,
       message: "Product stock detail fetched successfully",
-      productStockDetail
+      productStockDetail,
     });
   } catch (error) {
-    next(error);    
+    next(error);
   }
-}
+};
 
 export const updateProductStockDetail = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -225,9 +223,9 @@ export const updateProductStockDetail = async (req: Request, res: Response, next
         message: "Store not found",
       });
     }
-    const productId = product.id
+    const productId = product.id;
 
-    const updateResult  = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    const updateResult = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
       const stockHistory = await tx.productStockHistory.create({
         data: {
           productId,
@@ -235,34 +233,34 @@ export const updateProductStockDetail = async (req: Request, res: Response, next
           quantity: Number(quantity),
           type,
           reference,
-          notes
-        }
-      })
+          notes,
+        },
+      });
 
       const currentStock = await tx.productStock.findUnique({
         where: {
           productId_storeId: {
             productId,
-            storeId
+            storeId,
           },
           deletedAt: null,
-        }
-      })
+        },
+      });
 
-      let newStockQuantity = currentStock?.stock || 0
+      let newStockQuantity = currentStock?.stock || 0;
 
       switch (type) {
-        case 'STORE_IN':
-          newStockQuantity += Number(quantity)
+        case "STORE_IN":
+          newStockQuantity += Number(quantity);
           break;
-        case 'STORE_OUT':
-          newStockQuantity -= Number(quantity)
+        case "STORE_OUT":
+          newStockQuantity -= Number(quantity);
           break;
-        case 'SALE':
-          newStockQuantity -= Number(quantity)
+        case "SALE":
+          newStockQuantity -= Number(quantity);
           break;
-        case 'ADJUSTMENT':
-          newStockQuantity += Number(quantity)
+        case "ADJUSTMENT":
+          newStockQuantity += Number(quantity);
           break;
       }
 
@@ -270,24 +268,107 @@ export const updateProductStockDetail = async (req: Request, res: Response, next
         where: {
           productId_storeId: {
             productId,
-            storeId
+            storeId,
           },
           deletedAt: null,
         },
         data: {
-          stock: newStockQuantity
-        }
-      })
-      return { stockHistory, updatedStock }
-    })
+          stock: newStockQuantity,
+        },
+      });
+      return { stockHistory, updatedStock };
+    });
     res.status(200).json({
       success: true,
       message: "Product stock detail updated successfully",
-      updateResult
+      updateResult,
     });
-  
   } catch (error) {
     next(error);
-    
   }
-}
+};
+
+export const updateProductStocksByStore = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { storeId } = req.params;
+    const { toBeUpdatedStocks } = req.body;
+    if (!storeId) {
+      res.status(404).json({
+        success: false,
+        message: "Store not found",
+      });
+    }
+    if (toBeUpdatedStocks.length === 0) {
+      res.status(400).json({
+        success: false,
+        message: "No stock to be updated",
+      });
+    }
+    const updateResult = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const stockHistory = await tx.productStockHistory.createMany({
+        data: toBeUpdatedStocks.map((stock: IProductStockHistory) => ({
+          productId: stock.productId,
+          storeId,
+          quantity: Number(stock.quantity),
+          type: stock.type,
+          reference: stock.reference,
+          notes: stock.notes,
+        })),
+      });
+
+      const currentStocks = await tx.productStock.findMany({
+        where: {
+          productId: {
+            in: toBeUpdatedStocks.map((stock: IProductStockHistory) => stock.productId),
+          },
+          storeId,
+          deletedAt: null,
+        },
+      });
+
+      const updatedStocks = await Promise.all(
+        toBeUpdatedStocks.map(async (stock: IProductStockHistory) => {
+          const currentStock = currentStocks.find((cs: IProductStock) => cs.productId === stock.productId);
+          let newStockQuantity = currentStock?.stock || 0;
+
+          switch (stock.type) {
+            case "STORE_IN":
+              newStockQuantity += Number(stock.quantity);
+              break;
+            case "STORE_OUT":
+              newStockQuantity -= Number(stock.quantity);
+              break;
+            case "SALE":
+              newStockQuantity -= Number(stock.quantity);
+              break;
+            case "ADJUSTMENT":
+              newStockQuantity += Number(stock.quantity);
+              break;
+          }
+
+          return tx.productStock.update({
+            where: {
+              productId_storeId: {
+                productId: stock.productId,
+                storeId,
+              },
+              deletedAt: null,
+            },
+            data: {
+              stock: newStockQuantity,
+            },
+          });
+        }),
+      );
+      return { stockHistory, updatedStocks };
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Product stocks updated successfully",
+      updateResult,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
