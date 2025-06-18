@@ -1,4 +1,4 @@
-import { useProductImageShowing } from "@/hooks/products/useProductImageShowing";
+import { useProductImageShowing } from "@/features/admin/products/hooks/products/useProductImageShowing";
 import { ICloudinaryResult } from "@/types/products/product.image.type";
 import { IProductFormValues } from "@/types/products/product.type";
 import apiInstance from "@/utils/api/apiInstance";
@@ -70,6 +70,6 @@ export const useProductImagesUpload = () => {
     handleSwapImage,
     handleSetAsMainImage,
     handleImageUpload,
-    handleDeleteImage
+    handleDeleteImage,
   };
 };

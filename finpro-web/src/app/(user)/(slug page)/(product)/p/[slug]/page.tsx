@@ -9,14 +9,14 @@ import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import AppsInfoComponent from "./components/AppsInformation";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";
-import { useProductDetails } from "@/hooks/products/useProductDetails";
-import { useProductQuantity } from "@/hooks/products/useProductQuantity";
-import { useProductBreadcrumbs } from "@/hooks/products/useProductBreadcrumbs";
+import { useProductDetails } from "@/features/admin/products/hooks/products/useProductDetails";
+import { useProductQuantity } from "@/features/admin/products/hooks/products/useProductQuantity";
+import { useProductBreadcrumbs } from "@/features/admin/products/hooks/products/useProductBreadcrumbs";
 
 export default function ProductSlugPage() {
-  const { product, imageShowing, handleImageClick } = useProductDetails()
-  const { quantity, setQuantity, handleQuantityChange } = useProductQuantity()
-  const { breadcrumbLinks } = useProductBreadcrumbs()
+  const { product, imageShowing, handleImageClick } = useProductDetails();
+  const { quantity, setQuantity, handleQuantityChange } = useProductQuantity();
+  const { breadcrumbLinks } = useProductBreadcrumbs();
   const testDescription = {
     list: [
       "Tabung gas mini isi ulang dari HI-COOK",
@@ -29,9 +29,7 @@ export default function ProductSlugPage() {
       "Kegiatan masak-memasak menjadi lancar sesuai harapan karena kompor selalu mendapat suplai gas yang mencukupi berkat HI-COOK Tabung Gas Mini",
     long: "merupakan tabung gas ukuran mini yang diciptakan khusus untuk memenuhi kebutuhan anda. Dapat untuk diaplikasikan pada kompor gas tipe mini atau alat-alat lainnya. Cocok untuk digunakan sebagai peralatan bekal memasak ketika aktivitas berkemah atau aktivitas di luar rumah lainnya. Mempunyai desain mini sehingga sangat praktis dibawa atau ditaruh dimanapun. HI-COOK Tabung Gas Mini sangat memenuhi kebutuhan anda.",
   };
-  
 
-  
   return (
     <div className="lg:px-2 py-4 bg-white text-gray-600 max-w-[500px] lg:max-w-[1200px] mx-auto flex flex-col max-lg:overflow-x-hidden relative">
       {/* Breadcrumb */}

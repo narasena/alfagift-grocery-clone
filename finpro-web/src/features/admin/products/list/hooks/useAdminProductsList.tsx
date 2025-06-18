@@ -1,4 +1,4 @@
-import { useAllProducts } from "@/hooks/products/useAllProducts";
+import { useAllProducts } from "@/features/admin/products/hooks/products/useAllProducts";
 import { IProductDetails } from "@/types/products/product.type";
 import { ITableColumn } from "../../../components/AdminTable";
 import AdminProductTableCellDataImage from "@/features/admin/components/AdminProductTableCellDataImage";
