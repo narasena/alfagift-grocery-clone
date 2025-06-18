@@ -104,7 +104,6 @@ export default function AddProductPage() {
                 ))}
                 {
                   <ProductImageUploadWidget
-                    uploadePreset="products-image"
                     onSuccess={handleImageUpload}
                     maxFiles={5}
                     buttonText="Upload Images"
