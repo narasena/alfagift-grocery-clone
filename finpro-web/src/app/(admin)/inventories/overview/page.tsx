@@ -16,6 +16,7 @@ export default function AdminInventoryOverviewPage() {
         linkLabel="here."
         columns={stocksListColumnTitles}
         data={stocks as IProductStockTable[]}
+        getRowId={(row: IProductStockTable) => String(row.productId+"_"+row.storeId)}
         withCheckbox={true}
         renderCell={getStockCellValue}
       />

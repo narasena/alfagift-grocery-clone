@@ -34,7 +34,8 @@ export const useAdminProductInventoriesList = () => {
         );
       case "sku":
         return stock.product.sku || "—";
-
+      case "stock":
+        return stock.stock || "—";
       case "store":
         return (
           <AdminProductTableCellDataLink
