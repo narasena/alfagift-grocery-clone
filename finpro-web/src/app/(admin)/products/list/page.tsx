@@ -16,6 +16,7 @@ export default function AdminProductListViewPage() {
         linkLabel="here."
         columns={productsListColumnTitles}
         data={products as IProductDetailsTable[]}
+        getRowId={row => row.id}
         withCheckbox={true}
         renderCell={getProductCellValue}
       />
