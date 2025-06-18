@@ -92,70 +92,71 @@ export const createCartItems = async (req: Request, res: Response, next: NextFun
   }
 };
 
-// export const getCartItems = async (req: Request, res: Response, next: NextFunction) => {
-//   try {
-//     //cari userId dulu
-//     const userId = req.user?.id; // Adjust based on your auth middleware
+export const getCartItems = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    //cari userId dulu
+    // const userId = req.user?.id; // Adjust based on your auth middleware
+    const userId = req.body.userId;
 
-//     if (!userId) {
-//       throw new AppError("User not authenticated.", 401);
-//     }
+    if (!userId) {
+      throw new AppError("User not authenticated.", 401);
+    }
 
-//     // Find the cart for the user
-//     const cart = await prisma.cart.findUnique({
-//       where: {
-//         userId,
-//       },
-//       include: {
-//         cartItems: {
-//           where: {
-//             status: "ACTIVE",
-//           },
-//           include: {
-//             productStock: {
-//               include: {
-//                 product: {
-//                   include: {
-//                     productImage: {
-//                       where: { isMainImage: true },
-//                       take: 1,
-//                     },
-//                     productBrand: true,
-//                     productSubCategory: {
-//                       include: {
-//                         productCategory: true,
-//                       },
-//                     },
-//                     productDiscount: {
-//                       where: {
-//                         isActive: true,
-//                         startDate: { lte: new Date() },
-//                         endDate: { gte: new Date() },
-//                       },
-//                     },
-//                   },
-//                 },
-//                 store: true,
-//               },
-//             },
-//           },
-//         },
-//       },
-//     });
+    // Find the cart for the user
+    const cart = await prisma.cart.findUnique({
+      where: {
+        userId,
+      },
+      include: {
+        cartItems: {
+          where: {
+            status: "ACTIVE",
+          },
+          include: {
+            productStock: {
+              include: {
+                product: {
+                  include: {
+                    productImage: {
+                      where: { isMainImage: true },
+                      take: 1,
+                    },
+                    productBrand: true,
+                    productSubCategory: {
+                      include: {
+                        productCategory: true,
+                      },
+                    },
+                    productDiscount: {
+                      where: {
+                        isActive: true,
+                        startDate: { lte: new Date() },
+                        endDate: { gte: new Date() },
+                      },
+                    },
+                  },
+                },
+                store: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
-//     if (!cart) {
-//       throw new AppError("Cart not found.", 404);
-//     }
+    if (!cart) {
+      throw new AppError("Cart not found.", 404);
+    }
 
-//     res.status(200).json({
-//       success: true,
-//       message: "Cart items retrieved successfully.",
-//       data: cart.cartItems,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    res.status(200).json({
+      success: true,
+      message: "Cart items retrieved successfully.",
+      data: cart.cartItems,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 // export const deleteCartItem = async (req: Request, res: Response, next: NextFunction) => {
 //   try {
