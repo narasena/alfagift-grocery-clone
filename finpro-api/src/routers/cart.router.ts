@@ -1,13 +1,18 @@
 import { Router } from "express";
-// import { deleteCartItem, getCartItems, createCartItems, deleteAllCartItems } from "../controllers/cart.controller";
-import { createCartItems } from "../controllers/cart.controller";
-import { getCartItems } from "../controllers/cart.controller";
-import { deleteAllCartItems } from "../controllers/cart.controller";
+import {
+  deleteCartItem,
+  getCartItems,
+  createCartItems,
+  deleteAllCartItems,
+  updateCartItemQuantity,
+} from "../controllers/cart.controller";
+
 const cartRouter = Router();
 
 cartRouter.get("/", getCartItems);
 cartRouter.post("/add", createCartItems);
-// cartRouter.put("/:id/delete", deleteCartItem); //hrs pake slug? //delete atau put?
+cartRouter.put("/:cartItemId/delete", deleteCartItem);
 cartRouter.put("/delete-all", deleteAllCartItems);
+cartRouter.put("/:cartItemId/update-qty", updateCartItemQuantity);
 
 export default cartRouter;

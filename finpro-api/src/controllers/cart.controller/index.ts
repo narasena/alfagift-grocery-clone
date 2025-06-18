@@ -164,56 +164,62 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
   }
 };
 
-// export const deleteCartItem = async (req: Request, res: Response, next: NextFunction) => {
-//   try {
-//     const userId = req.user?.id;
-//     const cartItemId = req.params.cartItemId; // assuming DELETE /cart/item/:cartItemId
+export const deleteCartItem = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // const userId = req.user?.id;
+    const userId = req.body.userId;
 
-//     if (!userId) {
-//       throw new AppError("User not authenticated.", 401);
-//     }
+    const cartItemId = req.params.cartItemId; // assuming DELETE /cart/item/:cartItemId
 
-//     if (!cartItemId) {
-//       throw new AppError("Cart item ID is required.", 400);
-//     }
+    if (!userId) {
+      throw new AppError("User not authenticated.", 401);
+    }
 
-//     // Get the user's cart
-//     const cart = await prisma.cart.findUnique({
-//       where: { userId },
-//     });
+    if (!cartItemId) {
+      throw new AppError("Cart item ID is required.", 400);
+    }
 
-//     if (!cart) {
-//       throw new AppError("Cart not found.", 404);
-//     }
+    // Get the user's cart
+    const cart = await prisma.cart.findUnique({
+      where: { userId },
+    });
 
-//     // Check if the cart item exists and belongs to this cart
-//     const cartItem = await prisma.cartItem.findUnique({
-//       where: { id: cartItemId },
-//     });
+    if (!cart) {
+      throw new AppError("Cart not found.", 404);
+    }
 
-//     if (!cartItem || cartItem.cartId !== cart.id) {
-//       throw new AppError("Cart item not found or unauthorized.", 404);
-//     }
+    // Check if the cart item exists and belongs to this cart
+    const cartItem = await prisma.cartItem.findUnique({
+      where: { id: cartItemId },
+    });
 
-//     // Soft delete: update deletedAt and optionally status
-//     await prisma.cartItem.update({
-//       where: { id: cartItemId },
-//       data: {
-//         deletedAt: new Date(),
-//         status: "REMOVED", // optional: mark as inactive
-//       },
-//     });
+    if (!cartItem || cartItem.cartId !== cart.id) {
+      throw new AppError("Cart item not found or unauthorized.", 404);
+    }
 
-//     res.status(200).json({
-//       success: true,
-//       message: "Cart item soft-deleted successfully.",
-//       data: null,
-//     });
-//   } catch (error) {
-//     console.error("Soft delete failed:", error);
-//     next(error);
-//   }
-// };
+    if (cartItem.deletedAt) {
+      throw new AppError("Cart item already deleted.", 400);
+    }
+
+    // Soft delete: update deletedAt and optionally status
+    await prisma.cartItem.update({
+      where: { id: cartItemId },
+      data: {
+        deletedAt: new Date(),
+        status: "REMOVED", // optional: mark as inactive
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Cart item soft-deleted successfully.",
+      data: null,
+    });
+  } catch (error) {
+    console.error("Soft delete failed:", error);
+    next(error);
+  }
+};
 
 export const deleteAllCartItems = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -252,6 +258,50 @@ export const deleteAllCartItems = async (req: Request, res: Response, next: Next
     });
   } catch (error) {
     console.error("Failed to soft-delete all cart items:", error);
+    next(error);
+  }
+};
+
+export const updateCartItemQuantity = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.body.userId; // Or req.user?.id if using auth middleware
+    const cartItemId = req.params.cartItemId; // assuming PUT /cart/item/:cartItemId/update-qty
+    const { quantity } = req.body;
+
+    if (!userId || !cartItemId || typeof quantity !== "number") {
+      throw new AppError("Invalid input data.", 400);
+    }
+
+    if (quantity < 1) {
+      throw new AppError("Quantity must be at least 1.", 400);
+    }
+
+    // Make sure the cart item belongs to the user
+    const existingCartItem = await prisma.cartItem.findFirst({
+      where: {
+        id: cartItemId,
+        cart: {
+          userId: userId,
+        },
+        status: "ACTIVE", // Ensure we only update active items
+      },
+    });
+
+    if (!existingCartItem) {
+      throw new AppError("Cart item not found or does not belong to this user.", 404);
+    }
+
+    const updatedCartItem = await prisma.cartItem.update({
+      where: { id: cartItemId },
+      data: { quantity },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Cart item quantity updated successfully.",
+      data: updatedCartItem,
+    });
+  } catch (error) {
     next(error);
   }
 };
