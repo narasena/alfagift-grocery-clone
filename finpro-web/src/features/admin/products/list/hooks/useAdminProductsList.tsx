@@ -24,7 +24,7 @@ export const useAdminProductList = () => {
   const getProductCellValue = (product: IProductDetails, key: string) => {
     switch (key) {
       case "image":
-        return <AdminProductTableCellDataImage {...product} />;
+        return <AdminProductTableCellDataImage imageLink={product.productImage.find((image) => image.isMainImage === true)?.imageUrl ?? "#"} imageAlt={product.name} />;
       case "name":
         return <AdminProductTableCellDataLink hrefLink={`/p/${product.slug}`} hrefLabel={product.name} />;
       case "brand":
