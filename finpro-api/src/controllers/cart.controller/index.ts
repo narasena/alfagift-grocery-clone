@@ -62,6 +62,7 @@ export const createCartItems = async (req: Request, res: Response, next: NextFun
         cartId: cart.id,
         productId,
         storeId,
+        status: "ACTIVE", // Ensure we only consider active items
       },
     });
 
@@ -81,6 +82,7 @@ export const createCartItems = async (req: Request, res: Response, next: NextFun
           productId,
           storeId,
           quantity,
+          status: "ACTIVE", // Set status to ACTIVE
         },
       });
     }
@@ -148,6 +150,10 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
       throw new AppError("Cart not found.", 404);
     }
 
+    if (!cart.cartItems || cart.cartItems.length === 0) {
+      throw new AppError("No items in the cart.", 404);
+    }
+
     res.status(200).json({
       success: true,
       message: "Cart items retrieved successfully.",
@@ -209,43 +215,43 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
 //   }
 // };
 
-// export const deleteAllCartItems = async (req: Request, res: Response, next: NextFunction) => {
-//   try {
-//     const userId = req.user?.id;
+export const deleteAllCartItems = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // const userId = req.user?.id;
+    const userId = req.body.userId;
+    if (!userId) {
+      throw new AppError("User not authenticated.", 401);
+    }
 
-//     if (!userId) {
-//       throw new AppError("User not authenticated.", 401);
-//     }
+    // Get the user's cart
+    const cart = await prisma.cart.findUnique({
+      where: { userId },
+    });
 
-//     // Get the user's cart
-//     const cart = await prisma.cart.findUnique({
-//       where: { userId },
-//     });
+    if (!cart) {
+      throw new AppError("Cart not found.", 404);
+    }
 
-//     if (!cart) {
-//       throw new AppError("Cart not found.", 404);
-//     }
+    // Soft delete all active & non-deleted cart items
+    await prisma.cartItem.updateMany({
+      where: {
+        cartId: cart.id,
+        deletedAt: null,
+        status: "ACTIVE",
+      },
+      data: {
+        deletedAt: new Date(),
+        status: "REMOVED", // Optional: change status to inactive
+      },
+    });
 
-//     // Soft delete all active & non-deleted cart items
-//     await prisma.cartItem.updateMany({
-//       where: {
-//         cartId: cart.id,
-//         deletedAt: null,
-//         status: "ACTIVE",
-//       },
-//       data: {
-//         deletedAt: new Date(),
-//         status: "REMOVED", // Optional: change status to inactive
-//       },
-//     });
-
-//     res.status(200).json({
-//       success: true,
-//       message: "All cart items soft-deleted successfully.",
-//       data: null,
-//     });
-//   } catch (error) {
-//     console.error("Failed to soft-delete all cart items:", error);
-//     next(error);
-//   }
-// };
+    res.status(200).json({
+      success: true,
+      message: "All cart items soft-deleted successfully.",
+      data: null,
+    });
+  } catch (error) {
+    console.error("Failed to soft-delete all cart items:", error);
+    next(error);
+  }
+};
