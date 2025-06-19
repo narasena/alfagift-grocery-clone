@@ -1,95 +1,89 @@
+"use client";
+
 import Image from "next/image";
-import styles from "./page.module.css";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+    <div>
+      {/* Header */}
+      <header className="bg-red-600 text-white p-4 flex justify-between items-center">
+        <h1 className="text-xl font-bold">Alfagift</h1>
+        <input
+          type="text"
+          placeholder="Temukan produk favoritmu disini"
+          className="input input-bordered w-full max-w-xs text-black"
         />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+      </header>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+      {/* Carousel */}
+      <section className="mt-4 px-4">
+        <div className="carousel w-full rounded-xl">
+          <div id="slide1" className="carousel-item relative w-full">
+            <Image src="/banner1.jpg" alt="promo1" width={800} height={400} className="w-full object-cover" />
+            <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+              <a href="#slide3" className="btn btn-circle">
+                ❮
+              </a>
+              <a href="#slide2" className="btn btn-circle">
+                ❯
+              </a>
+            </div>
+          </div>
+          <div id="slide2" className="carousel-item relative w-full">
+            <Image src="/banner2.jpg" alt="promo2" width={800} height={400} className="w-full object-cover" />
+            <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+              <a href="#slide1" className="btn btn-circle">
+                ❮
+              </a>
+              <a href="#slide3" className="btn btn-circle">
+                ❯
+              </a>
+            </div>
+          </div>
+          <div id="slide3" className="carousel-item relative w-full">
+            <Image src="/banner3.jpg" alt="promo3" width={800} height={400} className="w-full object-cover" />
+            <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
+              <a href="#slide2" className="btn btn-circle">
+                ❮
+              </a>
+              <a href="#slide1" className="btn btn-circle">
+                ❯
+              </a>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      {/* Banner Promo */}
+      <section className="mt-4 px-4">
+        <Image src="/banner-alfa.jpg" alt="download banner" width={800} height={200} className="rounded-xl" />
+      </section>
+
+      {/* Produk Rekomendasi */}
+      <section className="mt-6 px-4">
+        <h2 className="text-lg font-semibold mb-2">Produk Rekomendasi</h2>
+        <div className="grid grid-cols-2 gap-4">
+          {[
+            { name: "Teh Botol Sosro", price: "Rp 5.000", image: "/tehbotol.jpg" },
+            { name: "Kopi ABC Susu", price: "Rp 2.500", image: "/kopiabc.jpg" },
+            { name: "Indomie Goreng", price: "Rp 3.000", image: "/indomie.jpg" },
+            { name: "Chitato Sapi Panggang", price: "Rp 7.500", image: "/chitato.jpg" },
+          ].map((product, i) => (
+            <div key={i} className="card bg-base-100 shadow-md">
+              <figure>
+                <Image src={product.image} alt={product.name} width={150} height={150} className="object-cover" />
+              </figure>
+              <div className="card-body p-4">
+                <h2 className="text-sm font-medium">{product.name}</h2>
+                <p className="text-red-600 font-semibold">{product.price}</p>
+                <div className="card-actions justify-end">
+                  <button className="btn btn-sm btn-error text-white">Beli</button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

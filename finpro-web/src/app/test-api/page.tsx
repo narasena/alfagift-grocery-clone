@@ -1,6 +1,6 @@
-'use client';
-import apiInstance from '@/utils/api/apiInstance';
-import * as React from 'react';
+"use client";
+import apiInstance from "@/utils/api/apiInstance";
+import * as React from "react";
 
 export default function ApiTestPage() {
   const handleApiTest = async () => {

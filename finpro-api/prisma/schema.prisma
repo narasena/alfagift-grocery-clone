@@ -413,8 +413,8 @@ enum PaymentStatus {
 model PaymentProof {
   id                String   @id @default(cuid())
   transactionId     String
-  imageUrl          String
-  cldPublicId       String? // Cloudinary public ID for the image
+  imageUrl          String // secure_url
+  cldPublicId       String? // Cloudinary public ID for the image // public_id
   status            String
   verifiedBy         String?
   verifiedAt         DateTime?
