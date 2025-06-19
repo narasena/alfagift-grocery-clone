@@ -284,7 +284,7 @@ export const useAdminProductStocksPerStore = () => {
     const rowId = String(row.productId);
     const existing = toBeUpdatedStocks.find((p) => String(p.productId) === rowId);
     // Determine the new value or undefined
-    let newOverrides: Partial<IProductStockForm> = {};
+    const newOverrides: Partial<IProductStockForm> = {};
     if (field === "quantity") {
       const valNum = rawValue === "" ? 0 : Number(rawValue);
       if (valNum <= 0) {

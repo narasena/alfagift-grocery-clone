@@ -47,34 +47,34 @@ export const useProductCategoriesTree = () => {
     return rootNodes;
   };
 
-  const handleGetProductCategories = async () => {
-    try {
-      const categoryResponse = await apiInstance.get("/product-category");
-      const subCategoryResponse = await apiInstance.get("/product-category/subcategories");
-
-      const categories = categoryResponse.data.productCategories.map((cat: IProductCategory) => ({
-        ...cat,
-        parentId: null,
-        children: [],
-      }));
-
-      const subCategories = subCategoryResponse.data.productSubCategories.map((subCat: IProductSubCategory) => ({
-        ...subCat,
-        parentId: subCat.productCategoryId,
-        children: [],
-      }));
-
-      const allCategories = [...categories, ...subCategories];
-      setFlatCategories(allCategories);
-
-      const tree = buildCategoryTree(allCategories);
-      setCategoryTree(tree);
-    } catch (error) {
-      console.error("Error fetching product categories:", error);
-    }
-  };
-
+  
   React.useEffect(() => {
+    const handleGetProductCategories = async () => {
+      try {
+        const categoryResponse = await apiInstance.get("/product-category");
+        const subCategoryResponse = await apiInstance.get("/product-category/subcategories");
+  
+        const categories = categoryResponse.data.productCategories.map((cat: IProductCategory) => ({
+          ...cat,
+          parentId: null,
+          children: [],
+        }));
+  
+        const subCategories = subCategoryResponse.data.productSubCategories.map((subCat: IProductSubCategory) => ({
+          ...subCat,
+          parentId: subCat.productCategoryId,
+          children: [],
+        }));
+  
+        const allCategories = [...categories, ...subCategories];
+        setFlatCategories(allCategories);
+  
+        const tree = buildCategoryTree(allCategories);
+        setCategoryTree(tree);
+      } catch (error) {
+        console.error("Error fetching product categories:", error);
+      }
+    };
     handleGetProductCategories();
   }, []);
 

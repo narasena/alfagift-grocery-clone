@@ -1,6 +1,5 @@
 import * as React from "react";
 import { IProductStock } from "@/types/inventories/product.stock.type";
-import next from "next";
 import apiInstance from "@/utils/api/apiInstance";
 import { toast } from "react-toastify";
 

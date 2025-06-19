@@ -3,8 +3,6 @@ import { useAdminProductStocksPerStore } from "@/features/admin/inventories/stor
 import AdminTable from "@/features/admin/components/AdminTable";
 import { EStockMovementType, IProductStockTable } from "@/types/inventories/product.stock.type";
 import * as React from "react";
-import apiInstance from "@/utils/api/apiInstance";
-import { toast } from "react-toastify";
 
 export default function AdminInventoryByStorePage() {
   const {
@@ -28,7 +26,7 @@ export default function AdminInventoryByStorePage() {
     handleMassTypeChange,
     handleMassReferenceChange,
     handleMassNotesChange,
-    handleUpdateStocks
+    handleUpdateStocks,
   } = useAdminProductStocksPerStore();
 
   return (
@@ -62,7 +60,7 @@ export default function AdminInventoryByStorePage() {
               placeholder="input stock"
               value={massQuantity}
               onChange={(e) => {
-                const value = handleMassQuantityChange(Number(e.target.value));
+                handleMassQuantityChange(Number(e.target.value));
               }}
             />
           </div>

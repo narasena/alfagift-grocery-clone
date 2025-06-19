@@ -1,4 +1,3 @@
-import { IProductDetails } from '@/types/products/product.type';
 import { CldImage } from 'next-cloudinary';
 import * as React from 'react';
 

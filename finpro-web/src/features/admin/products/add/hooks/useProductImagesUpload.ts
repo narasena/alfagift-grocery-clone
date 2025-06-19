@@ -1,7 +1,5 @@
 import { useProductImageShowing } from "@/features/admin/products/hooks/products/useProductImageShowing";
 import { ICloudinaryResult } from "@/types/products/product.image.type";
-import { IProductFormValues } from "@/types/products/product.type";
-import apiInstance from "@/utils/api/apiInstance";
 import { CloudinaryUploadWidgetResults } from "next-cloudinary";
 import * as React from "react";
 import { toast } from "react-toastify";
