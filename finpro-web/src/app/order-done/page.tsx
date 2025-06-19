@@ -21,6 +21,13 @@ export default function OrderDone() {
     setIsMyAccountOpen(!isMyAccountOpen);
   };
 
+  const openModal = () => {
+    const modal = document.getElementById("cart") as HTMLDialogElement | null;
+    if (modal) {
+      modal.showModal();
+    }
+  };
+
   return (
     <main className="min-h-screen bg-white flex flex-col items-center justify-between py-8">
       <div className="w-full max-w-6xl px-5">
@@ -208,7 +215,7 @@ export default function OrderDone() {
               <div className=" text-right">
                 <button
                   className="bg-white text-red-600 border border-red-600 hover:bg-red-50 font-semibold px-4 py-2 rounded-lg"
-                  onClick={() => document.getElementById("my_modal_1").showModal()}
+                  onClick={openModal}
                 >
                   Lihat Detail
                 </button>

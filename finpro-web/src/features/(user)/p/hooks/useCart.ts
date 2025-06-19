@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ICartItem } from "@/types/carts/cart.type";
+import { ICartItem } from "@/types/carts/cartItem.type";
 import { IProductDetails } from "@/types/products/product.type";
 import { toast } from "react-toastify";
 

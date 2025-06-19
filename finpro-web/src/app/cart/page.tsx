@@ -12,9 +12,35 @@ import useCartItems from "@/features/cart/hooks/useCartItems";
 // mobile tambahin Kirim ke: Alamat
 // di atas line paling atas, di atas clear all button
 
+// display cart items
+// delete item
+// delete all items
+// update quantity
+
 export default function CartPage() {
   const { cartItems, loading, handleDisplayCartItems } = useCartItems(); // to display cart items
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
+
+  const openClearAllModal = () => {
+    const modal = document.getElementById("clear_all") as HTMLDialogElement | null;
+    modal?.showModal();
+  };
+
+  const closeClearAllModal = () => {
+    const modal = document.getElementById("clear_all") as HTMLDialogElement | null;
+    modal?.close();
+  };
+
+  const openClearItemModal = () => {
+    const modal = document.getElementById("clear_item") as HTMLDialogElement | null;
+    modal?.showModal();
+  };
+
+  const closeClearItemModal = () => {
+    const modal = document.getElementById("clear_item") as HTMLDialogElement | null;
+    modal?.close();
+  };
+
   return (
     <main className="min-h-screen bg-white flex flex-col items-center justify-between py-8">
       {/* Modal */}
@@ -28,13 +54,10 @@ export default function CartPage() {
                 Cancel
               </button>
             </form>
+            {/* clear all ok and then close */}
             <button
               className="btn w-28 shadow-none rounded-lg text-lg bg-red-600 border-red-600 text-white"
-              onClick={() => {
-                // remove all items from cart logic here
-                console.log("All items removed OK button clicked");
-                document.getElementById("clear_all").close();
-              }}
+              onClick={closeClearAllModal}
             >
               OK
             </button>
@@ -51,13 +74,10 @@ export default function CartPage() {
                 Cancel
               </button>
             </form>
+            {/* clear all item button */}
             <button
               className="btn w-28 shadow-none rounded-lg text-lg bg-red-600 border-red-600 text-white"
-              onClick={() => {
-                // remove all items from cart logic here
-                console.log("remove item OK button clicked");
-                document.getElementById("clear_item").close();
-              }}
+              onClick={closeClearItemModal}
             >
               OK
             </button>
@@ -80,7 +100,7 @@ export default function CartPage() {
             {/* Button clear all */}
             <button
               className="px-4 my-6 flex justify-between items-center bg-white text-blue-600 py-2 rounded-lg transition border-2"
-              onClick={() => document.getElementById("clear_all").showModal()}
+              onClick={openClearAllModal}
             >
               <div className="pr-2">
                 <IoTrashOutline />
@@ -118,7 +138,7 @@ export default function CartPage() {
                     {/* Remove Button */}
                     <button
                       className="flex justify-between items-center bg-white text-blue-600 transition"
-                      onClick={() => document.getElementById("clear_item").showModal()}
+                      onClick={openClearItemModal}
                     >
                       <IoTrashOutline className="text-2xl" />
                     </button>

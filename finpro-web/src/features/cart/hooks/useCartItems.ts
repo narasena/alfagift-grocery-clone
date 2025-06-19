@@ -1,4 +1,4 @@
-import { ICartItem } from "@/types/carts/cart.type";
+import { ICartItem } from "@/types/carts/cartItem.type";
 import * as React from "react";
 import { handleGetCartItems } from "../api/handleGetCartItems";
 

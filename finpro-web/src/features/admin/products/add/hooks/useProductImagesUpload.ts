@@ -1,7 +1,7 @@
-import { useProductImageShowing } from "@/hooks/products/useProductImageShowing";
+import { useProductImageShowing } from "@/features/(user)/p/hooks/useProductImageShowing";
 import { ICloudinaryResult } from "@/types/products/product.image.type";
-import { IProductFormValues } from "@/types/products/product.type";
-import apiInstance from "@/utils/api/apiInstance";
+// import { IProductFormValues } from "@/types/products/product.type";
+// import apiInstance from "@/utils/api/apiInstance";
 import { CloudinaryUploadWidgetResults } from "next-cloudinary";
 import * as React from "react";
 import { toast } from "react-toastify";
@@ -70,6 +70,6 @@ export const useProductImagesUpload = () => {
     handleSwapImage,
     handleSetAsMainImage,
     handleImageUpload,
-    handleDeleteImage
+    handleDeleteImage,
   };
 };

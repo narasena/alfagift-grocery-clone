@@ -1,6 +1,4 @@
 "use client";
-import apiInstance from "@/utils//api/apiInstance";
-import { IProductDetails } from "@/types/products/product.type";
 import { CldImage } from "next-cloudinary";
 import Link from "next/link";
 import * as React from "react";
@@ -16,6 +14,9 @@ import { useProductQuantity } from "@/features/(user)/p/hooks/useProductQuantity
 import { useProductBreadcrumbs } from "@/features/(user)/p/hooks/useProductBreadcrumbs";
 
 import { HiOutlineShoppingCart } from "react-icons/hi";
+
+import { useRef } from "react";
+import { ICartItem } from "@/types/carts/cartItem.type";
 
 import useCart from "@/features/(user)/p/hooks/useCart";
 // import useGetProductDetails from "@/features/(user)/p/hooks/useGetProductDetails";
@@ -39,11 +40,25 @@ export default function ProductSlugPage() {
     long: "merupakan tabung gas ukuran mini yang diciptakan khusus untuk memenuhi kebutuhan anda. Dapat untuk diaplikasikan pada kompor gas tipe mini atau alat-alat lainnya. Cocok untuk digunakan sebagai peralatan bekal memasak ketika aktivitas berkemah atau aktivitas di luar rumah lainnya. Mempunyai desain mini sehingga sangat praktis dibawa atau ditaruh dimanapun. HI-COOK Tabung Gas Mini sangat memenuhi kebutuhan anda.",
   };
 
+  const openModal = () => {
+    const modal = document.getElementById("cart") as HTMLDialogElement | null;
+    if (modal) {
+      modal.showModal();
+    }
+  };
+
+  // const Cart = ({ cart }: { cart: ICartItem[] }) => {
+  //   const dialogRef = useRef<HTMLDialogElement>(null);
+
+  //   const openModal = () => {
+  //     dialogRef.current?.showModal();
+  //   };
+  //emg boleh gini?
   return (
     <div className="lg:px-2 py-4 bg-white text-gray-600 max-w-[500px] lg:max-w-[1200px] mx-auto flex flex-col max-lg:overflow-x-hidden relative">
       <div className="text-black">
         <button
-          onClick={() => document.getElementById("cart").showModal()}
+          onClick={openModal}
           className="fixed bottom-20 right-4 z-50 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 flex items-center gap-2"
         >
           <HiOutlineShoppingCart className="text-xl" />
@@ -162,14 +177,22 @@ export default function ProductSlugPage() {
           {/* Product Price */}
           <div className="px-3">
             <h1 className="text-2xl text-red-700 font-bold py-2">
-              {product?.price.toLocaleString("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 })}
+              {product?.price.toLocaleString("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                minimumFractionDigits: 0,
+              })}
             </h1>
           </div>
           {/* Product Discount */}
           <div className="px-3 flex items-center gap-2">
             <div className="px-2 py-1 size-max rounded-md bg-amber-600 font-medium text-sm text-white">{`6 %`}</div>
             <div className="text-xs text-gray-600 line-through">
-              {Number(28200).toLocaleString("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 })}
+              {Number(28200).toLocaleString("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                minimumFractionDigits: 0,
+              })}
             </div>
           </div>
           {/* Line Divider */}
