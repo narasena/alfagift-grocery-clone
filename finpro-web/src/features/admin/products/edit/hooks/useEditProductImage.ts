@@ -1,6 +1,6 @@
 import * as React from "react";
-import { useProductDetails } from "@/features/admin/products/hooks/products/useProductDetails";
-import { useProductImageShowing } from "@/features/admin/products/hooks/products/useProductImageShowing";
+import { useProductDetails } from "@/features/admin/products/hooks/useProductDetails";
+import { useProductImageShowing } from "@/features/admin/products/hooks/useProductImageShowing";
 import { ICloudinaryResult, IProductImage } from "@/types/products/product.image.type";
 import { toast } from "react-toastify";
 import { CloudinaryUploadWidgetResults } from "next-cloudinary";

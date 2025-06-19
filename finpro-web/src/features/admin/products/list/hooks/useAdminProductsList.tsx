@@ -1,4 +1,4 @@
-import { useAllProducts } from "@/features/admin/products/hooks/products/useAllProducts";
+import { useAllProducts } from "@/features/admin/products/hooks/useAllProducts";
 import { IProductDetails } from "@/types/products/product.type";
 import { ITableColumn } from "../../../components/AdminTable";
 import AdminProductTableCellDataImage from "@/features/admin/components/AdminProductTableCellDataImage";
@@ -24,7 +24,12 @@ export const useAdminProductList = () => {
   const getProductCellValue = (product: IProductDetails, key: string) => {
     switch (key) {
       case "image":
-        return <AdminProductTableCellDataImage imageLink={product.productImage.find((image) => image.isMainImage === true)?.imageUrl ?? "#"} imageAlt={product.name} />;
+        return (
+          <AdminProductTableCellDataImage
+            imageLink={product.productImage.find((image) => image.isMainImage === true)?.imageUrl ?? "#"}
+            imageAlt={product.name}
+          />
+        );
       case "name":
         return <AdminProductTableCellDataLink hrefLink={`/p/${product.slug}`} hrefLabel={product.name} />;
       case "brand":

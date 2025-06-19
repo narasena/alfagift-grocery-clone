@@ -1,4 +1,4 @@
-import { useProductCategories } from "@/features/admin/products/hooks/products/useProductCategories";
+import { useProductCategories } from "@/features/admin/products/hooks/useProductCategories";
 import { IAddProductField } from "@/types/products/product.type";
 import { ErrorMessage, Field } from "formik";
 import * as React from "react";

@@ -1,8 +1,8 @@
-import { useProductCategories } from "@/features/admin/products/hooks/products/useProductCategories";
+import { useProductCategories } from "@/features/admin/products/hooks/useProductCategories";
 import { IAddProductField, IProductFormValues } from "@/types/products/product.type";
 import apiInstance from "@/utils/api/apiInstance";
 import { useProductImagesUpload } from "./useProductImagesUpload";
-import { useProductImageShowing } from "@/features/admin/products/hooks/products/useProductImageShowing";
+import { useProductImageShowing } from "@/features/admin/products/hooks/useProductImageShowing";
 import { toast } from "react-toastify";
 
 export const useCreateProduct = () => {

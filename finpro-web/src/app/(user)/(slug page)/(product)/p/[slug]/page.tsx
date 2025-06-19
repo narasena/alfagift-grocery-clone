@@ -9,9 +9,9 @@ import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import AppsInfoComponent from "./components/AppsInformation";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";
-import { useProductDetails } from "@/features/admin/products/hooks/products/useProductDetails";
-import { useProductQuantity } from "@/features/admin/products/hooks/products/useProductQuantity";
-import { useProductBreadcrumbs } from "@/features/admin/products/hooks/products/useProductBreadcrumbs";
+import { useProductDetails } from "@/features/admin/products/hooks/useProductDetails";
+import { useProductQuantity } from "@/features/admin/products/hooks/useProductQuantity";
+import { useProductBreadcrumbs } from "@/features/admin/products/hooks/useProductBreadcrumbs";
 
 import { HiOutlineShoppingCart } from "react-icons/hi";
 

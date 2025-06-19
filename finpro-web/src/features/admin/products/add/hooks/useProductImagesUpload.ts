@@ -1,4 +1,4 @@
-import { useProductImageShowing } from "@/features/admin/products/hooks/products/useProductImageShowing";
+import { useProductImageShowing } from "@/features/admin/products/hooks/useProductImageShowing";
 import { ICloudinaryResult } from "@/types/products/product.image.type";
 import { CloudinaryUploadWidgetResults } from "next-cloudinary";
 import * as React from "react";
