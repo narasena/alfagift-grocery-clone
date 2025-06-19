@@ -3,7 +3,7 @@ import { IoTrashOutline } from "react-icons/io5";
 import { BsStopwatch } from "react-icons/bs";
 import { FaLocationDot } from "react-icons/fa6";
 import { useState } from "react";
-import useCartItems from "@/features/cart/hooks/useCartItems";
+// import useCartItems from "@/features/cart/hooks/useCartItems";
 
 // refactoring:
 // kalo component global, dipake di semua page
@@ -18,7 +18,7 @@ import useCartItems from "@/features/cart/hooks/useCartItems";
 // update quantity
 
 export default function CartPage() {
-  const { cartItems, loading, handleDisplayCartItems } = useCartItems(); // to display cart items
+  // const { cartItems, loading, handleDisplayCartItems } = useCartItems(); // to display cart items
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
 
   const openClearAllModal = () => {

@@ -30,10 +30,11 @@ export default function AuthProvider({
       });
       setIsHandleSessionLoginDone(true);
     } catch (error) {
+      console.error(error);
       setAuth({
         _token: null,
         _email: null,
-        _role: null,
+        _id: null,
       });
       setIsHandleSessionLoginDone(true);
     }

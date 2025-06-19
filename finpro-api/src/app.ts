@@ -7,6 +7,8 @@ import cartRouter from "./routers/cart.router";
 import orderRouter from "./routers/order.router";
 import authRouter from "./routers/auth.router";
 import getMapRouter from "./routers/getMap.router";
+import storeRouter from './routers/store.router';
+import inventoryRouter from './routers/inventory.router';
 
 export default class App {
   private app: Express;
@@ -67,6 +69,8 @@ export default class App {
     this.app.use("/api", getMapRouter);
     this.app.use("/api/cart", cartRouter);
     this.app.use("/api/order", orderRouter);
+    this.app.use('/api/store', storeRouter)
+    this.app.use('/api/inventories', inventoryRouter)
   }
 
   public start(): void {

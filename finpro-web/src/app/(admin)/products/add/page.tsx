@@ -15,7 +15,7 @@ import AdminPageTitle from "@/features/admin/components/AdminPageTitle";
 export default function AddProductPage() {
   const { imageShowing, handleImageClick, uploadedImages, handleSwapImage, handleSetAsMainImage, handleImageUpload } =
     useProductImagesUpload();
-  const { addProductFields, handleCreateProduct } = useCreateProduct();
+  const {  handleCreateProduct } = useCreateProduct();
 
   return (
     <div className="bg-red-400">
@@ -104,7 +104,6 @@ export default function AddProductPage() {
                 ))}
                 {
                   <ProductImageUploadWidget
-                    uploadePreset="products-image"
                     onSuccess={handleImageUpload}
                     maxFiles={5}
                     buttonText="Upload Images"

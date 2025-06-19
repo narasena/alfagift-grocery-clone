@@ -7,9 +7,16 @@ interface IAuthStore {
   _id: string | null;
 }
 
+interface IAuthState {
+  token: string | null;
+  email: string | null;
+  id: string | null;
+  setAuth: ({ _token, _email, _id }: IAuthStore) => void;
+}
+
 // Persistance  : Untuk Menyimpan ke Local Storage / Cookies & Partialize : Untuk Mengambil Sebagian Data di Global State untuk di Simpan ke Local Storage / Cookies
 
-const authStore = create(
+const authStore = create<IAuthState>()(
   persist(
     (set) => ({
       token: null,
@@ -22,7 +29,7 @@ const authStore = create(
     }),
     {
       name: 'token',
-      partialize: (state: any) => ({ token: state.token }),
+      partialize: (state: IAuthState) => ({ token: state.token }),
     },
   ),
 );

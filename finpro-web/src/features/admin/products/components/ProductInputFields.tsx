@@ -1,4 +1,4 @@
-import { useProductCategories } from "@/hooks/products/useProductCategories";
+import { useProductCategories } from "@/features/admin/products/hooks/useProductCategories";
 import { IAddProductField } from "@/types/products/product.type";
 import { ErrorMessage, Field } from "formik";
 import * as React from "react";
@@ -22,7 +22,7 @@ export default function ProductInputFields() {
     { name: "sku", title: "SKU", type: "text" },
     { name: "barcode", title: "Barcode", type: "text" },
     { name: "weight", title: "Weight", type: "number" },
-    { name: "dimensions", title: "Dimensions", type: "text" }
+    { name: "dimensions", title: "Dimensions", type: "text" },
   ];
 
   const productFieldGroups: IProductFieldsGroup[] = [

@@ -1,0 +1,27 @@
+export interface IProductStockHistoryForm {
+  productId: string;
+  quantity: number;
+  type: EStockMovementType;
+  reference: string;
+  notes: string;
+}
+
+export interface IProductStockHistory extends IProductStockHistoryForm {
+    storeId: string
+}
+
+enum EStockMovementType {
+    STORE_IN = "STORE_IN",
+    STORE_OUT = "STORE_OUT",
+    SALE = "SALE",
+    ADJUSTMENT = "ADJUSTMENT",
+}
+
+export interface IProductStock {
+    productId: string
+    storeId: string
+    stock: number
+    type: EStockMovementType
+    createdAt: Date
+    updatedAt: Date
+}

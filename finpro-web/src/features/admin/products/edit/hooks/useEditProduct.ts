@@ -2,7 +2,7 @@ import { IProductFormValues } from "@/types/products/product.type";
 import { TImageItem } from "./useEditProductImage";
 import { ICloudinaryResult, IProductImage } from "@/types/products/product.image.type";
 import apiInstance from "@/utils/api/apiInstance";
-import { useProductDetails } from "@/hooks/products/useProductDetails";
+import { useProductDetails } from "@/features/admin/products/hooks/useProductDetails";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 

@@ -9,14 +9,14 @@ import { RiMoneyDollarCircleFill } from "react-icons/ri";
 import AppsInfoComponent from "./components/AppsInformation";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";
-import { useProductDetails } from "@/features/(user)/p/hooks/useProductDetails";
-import { useProductQuantity } from "@/features/(user)/p/hooks/useProductQuantity";
-import { useProductBreadcrumbs } from "@/features/(user)/p/hooks/useProductBreadcrumbs";
+import { useProductDetails } from "@/features/admin/products/hooks/useProductDetails";
+import { useProductQuantity } from "@/features/admin/products/hooks/useProductQuantity";
+import { useProductBreadcrumbs } from "@/features/admin/products/hooks/useProductBreadcrumbs";
 
 import { HiOutlineShoppingCart } from "react-icons/hi";
 
-import { useRef } from "react";
-import { ICartItem } from "@/types/carts/cartItem.type";
+// import { useRef } from "react";
+// import { ICartItem } from "@/types/carts/cartItem.type";
 
 import useCart from "@/features/(user)/p/hooks/useCart";
 // import useGetProductDetails from "@/features/(user)/p/hooks/useGetProductDetails";
