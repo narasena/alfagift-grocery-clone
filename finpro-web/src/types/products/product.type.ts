@@ -1,6 +1,6 @@
-import { IProductBrand } from './product.brand.type';
-import { IProductSubCategory } from './product.category.type';
-import { IProductImage } from './product.image.type';
+import { IProductBrand } from "./product.brand.type";
+import { IProductSubCategory } from "./product.category.type";
+import { IProductImage } from "./product.image.type";
 
 export interface IAddProductField {
   name: string;
@@ -28,7 +28,7 @@ export interface IProduct {
 
 
 export interface IProductDetails extends IProduct {
-  productImage: IProductImage[]
-  productSubCategory: IProductSubCategory & { productCategory: IProductSubCategory }
-  productBrand: IProductBrand
+  productImage: IProductImage[];
+  productSubCategory: IProductSubCategory & { productCategory: IProductSubCategory };
+  productBrand: IProductBrand;
 }
