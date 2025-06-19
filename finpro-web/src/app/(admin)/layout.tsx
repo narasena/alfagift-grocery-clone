@@ -1,37 +1,15 @@
-'use client';
-import Link from 'next/link';
-import * as React from 'react';
-import { HiHome } from 'react-icons/hi';
-import { BiSolidReport } from 'react-icons/bi';
-import { AiFillProduct } from 'react-icons/ai';
-import { GrUserAdmin } from 'react-icons/gr';
-import { RiDiscountPercentFill } from 'react-icons/ri';
-import { usePathname } from 'next/navigation';
-
+"use client";
+import AdminBottonNavBar from "@/features/admin/components/AdminBottomNavBar";
+import AdminSideNavBar from "@/features/admin/components/AdminSideNavBar";
+import * as React from "react";
 
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const bottomNav = [
-    { name: 'Home', href: '/dashboard', icon: <HiHome /> },
-    { name: 'Reports', href: '/reports', icon: <BiSolidReport /> },
-    { name: 'Products', href: '/products', icon: <AiFillProduct /> },
-    { name: 'Discounts', href: '/discounts', icon: <RiDiscountPercentFill /> },
-    { name: 'Admin', href: '/admin', icon: <GrUserAdmin />  },
-  ];
-  const pathName = usePathname();
   return (
-    <div className='relative overflow-x-hidden w-full h-screen bg-white pb-20'>
-      {children}
-      <div className='w-full h-20 bg-red-700 fixed bottom-0 left-0 z-20 flex items-center justify-between'>
-        {bottomNav.map((item, index) => (
-          <div key={index} className={'w-1/5 h-full flex flex-col items-center justify-center '+ (pathName === item.href ? 'bg-red-500' : '')}>
-            <Link href={item.href} className='text-white text-sm font-medium flex flex-col items-center justify-center'>
-              <div className='text-3xl'>{item.icon}</div>
-              <div>{item.name}</div>
-            </Link>
-          </div>
-        ))}
-      </div>
+    <div className="relative lg:grid lg:grid-cols-[280px_1fr] overflow-x-hidden h-screen bg-white max-lg:pb-20">
+      <AdminSideNavBar/>
+      <div className="px-4">{children}</div>
+      <AdminBottonNavBar/>
     </div>
   );
 }

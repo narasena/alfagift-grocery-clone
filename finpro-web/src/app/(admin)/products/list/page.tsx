@@ -59,7 +59,7 @@ export default function AdminProductListViewPage() {
         return product.productSubCategory.name || "—";
       case "action":
         return (
-          <Link href={`/admin/products/edit/${product.id}`} className="font-medium text-blue-600 hover:underline">
+          <Link href={`/products/edit/${product.slug}`} className="font-medium text-blue-600 hover:underline">
             Edit
           </Link>
         );

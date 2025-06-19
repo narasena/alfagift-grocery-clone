@@ -1,5 +1,5 @@
-import { prisma } from '../prisma';
-import { Request, Response, NextFunction } from 'express';
+import { prisma } from "../../prisma";
+import { Request, Response, NextFunction } from "express";
 
 export class ProductCategoryController {
   async getProductSubCategories(req: Request, res: Response, next: NextFunction) {
@@ -7,7 +7,7 @@ export class ProductCategoryController {
       const productSubCategories = await prisma.productSubCategory.findMany();
       res.status(200).json({
         success: true,
-        message: 'Get data successfull',
+        message: "Get data successfull",
         productSubCategories,
       });
     } catch (error) {
@@ -20,7 +20,7 @@ export class ProductCategoryController {
       const productCategories = await prisma.productCategory.findMany();
       res.status(200).json({
         success: true,
-        message: 'Get data successfull',
+        message: "Get data successfull",
         productCategories,
       });
     } catch (error) {
