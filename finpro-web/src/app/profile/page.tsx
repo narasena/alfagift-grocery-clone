@@ -9,9 +9,9 @@ export default function ProfilePage() {
 
   const handleSignOut = () => {
     setAuth({
-      token: null,
-      email: null,
-      id: null,
+      _token: null,
+      _email: null,
+      _id: null,
     });
     router.push('/'); 
   };

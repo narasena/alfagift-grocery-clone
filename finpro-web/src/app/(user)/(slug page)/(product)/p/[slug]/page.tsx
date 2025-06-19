@@ -15,8 +15,8 @@ import { useProductBreadcrumbs } from "@/features/admin/products/hooks/useProduc
 
 import { HiOutlineShoppingCart } from "react-icons/hi";
 
-import { useRef } from "react";
-import { ICartItem } from "@/types/carts/cartItem.type";
+// import { useRef } from "react";
+// import { ICartItem } from "@/types/carts/cartItem.type";
 
 import useCart from "@/features/(user)/p/hooks/useCart";
 // import useGetProductDetails from "@/features/(user)/p/hooks/useGetProductDetails";
