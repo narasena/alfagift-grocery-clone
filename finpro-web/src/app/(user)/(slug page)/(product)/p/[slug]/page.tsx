@@ -1,5 +1,5 @@
 "use client";
-import apiInstance from "@/utils/apiInstance";
+import apiInstance from "@/utils//api/apiInstance";
 import { IProductDetails } from "@/types/products/product.type";
 import { CldImage } from "next-cloudinary";
 import Link from "next/link";

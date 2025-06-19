@@ -2,9 +2,12 @@
 // import { AppError } from "../../utils/app.error";
 // import { Request, Response, NextFunction } from "express";
 
+// // belum selesai
+
 // export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 //   try {
-//     const userId = req.user?.id;
+//     // const userId = req.user?.id;
+//     const userId = req.body.userId;
 //     const { shippingAddressId, storeId } = req.body;
 
 //     if (!userId || !shippingAddressId || !storeId) {
@@ -20,13 +23,14 @@
 //             status: "ACTIVE",
 //             deletedAt: null,
 //           },
-//           //   include: {
-//           //     productStock: {
-//           //       include: {
-//           //         productDiscount: true,
-//           //       },
-//           //     },
-//           //   },
+//           include: {
+//             productStock: {
+//               include: {
+//                 productDiscount: true,
+//                 product: true,
+//               },
+//             },
+//           },
 //         },
 //       },
 //     });
@@ -35,6 +39,11 @@
 //       throw new AppError("No items in cart to checkout.", 400);
 //     }
 
+//     for (const item of cart.cartItems) {
+//       if (item.quantity > item.productStock.stock) {
+//         throw new AppError(`Insufficient stock for product ID ${item.productId}`, 400);
+//       }
+//     }
 //     // 2. Build orderItems and total amount
 //     const orderItemsData = cart.cartItems.map((item: any) => {
 //       const originalPrice = item.productStock.price;
