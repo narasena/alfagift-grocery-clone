@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { IProductDetails } from '@/types/products/product.type';
-import apiInstance from '@/utils/api/apiInstance';
-import { CldImage } from 'next-cloudinary';
-import Link from 'next/link';
-import * as React from 'react';
-import { toast } from 'react-toastify';
+import { IProductDetails } from "@/types/products/product.type";
+import apiInstance from "@/utils/api/apiInstance";
+import { CldImage } from "next-cloudinary";
+import Link from "next/link";
+import * as React from "react";
+import { toast } from "react-toastify";
 
 export default function AdminProductListViewPage() {
   const [products, setProducts] = React.useState<IProductDetails[]>([]);

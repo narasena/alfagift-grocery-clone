@@ -31,7 +31,7 @@ export interface IProductFormValues extends IProduct {
 
 
 export interface IProductDetails extends IProduct {
-  productImage: IProductImage[]
-  productSubCategory: IProductSubCategory & { productCategory: IProductSubCategory }
-  productBrand: IProductBrand
+  productImage: IProductImage[];
+  productSubCategory: IProductSubCategory & { productCategory: IProductSubCategory };
+  productBrand: IProductBrand;
 }
