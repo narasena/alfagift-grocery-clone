@@ -5,6 +5,8 @@ import { ProductCategoryRouter } from "./routers/product.category.router";
 import { ProductRouter } from "./routers/product.router";
 import cartRouter from "./routers/cart.router";
 import orderRouter from "./routers/order.router";
+import authRouter from "./routers/auth.router";
+import getMapRouter from "./routers/getMap.router";
 
 export default class App {
   private app: Express;
@@ -61,6 +63,8 @@ export default class App {
     //tambahin router di sini
     this.app.use("/api/product", productRouter.getRouter());
     this.app.use("/api/product-category", productCategoryRouter.getRouter());
+    this.app.use("/api/user", authRouter);
+    this.app.use("/api", getMapRouter);
     this.app.use("/api/cart", cartRouter);
     this.app.use("/api/order", orderRouter);
   }
