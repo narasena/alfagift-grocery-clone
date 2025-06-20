@@ -121,9 +121,9 @@ export default function CartPage() {
                 <li key={index} className="flex justify-between items-center border rounded p-4">
                   {/* Left: Item details */}
                   <div className="flex flex-col">
-                    <span className="text-black font-semibold">{item.productStock.product.name}</span>
+                    <span className="text-black font-semibold">{item.productStock?.product.name}</span>
                     <span className="text-gray-500 text-sm mb-2">
-                      Rp {item.productStock.product.price.toLocaleString("id-ID")}
+                      Rp {item.productStock?.product.price.toLocaleString("id-ID")}
                     </span>
                   </div>
                   {/* Right: Subtotal + Quantity controls */}
@@ -135,7 +135,7 @@ export default function CartPage() {
                     </div>
                     <div className="flex items-center space-x-2 md:space-x-4">
                       <div className="text-black font-medium min-w-[80px] text-right">
-                        Rp {(item.productStock.product.price * item.quantity)?.toLocaleString("id-ID")}
+                        Rp {(item.productStock?.product.price ?? 0 * item.quantity).toLocaleString("id-ID")}
                       </div>
                       <button
                         className="flex justify-between items-center bg-white text-blue-600 transition"

@@ -8,12 +8,12 @@ export interface ICartItem {
   price: number;
   quantity: number;
   image: string;
-  productStock: IProductStock & {
+  productStock?: IProductStock & {
     product:
       | IProductDetails
       | (IProduct & {
           productDiscount: string[];
         });
   };
-  store: IStore;
+  store?: IStore;
 }

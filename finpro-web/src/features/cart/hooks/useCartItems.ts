@@ -1,16 +1,14 @@
 import { ICartItem } from "@/types/carts/cartItem.type";
 import * as React from "react";
-import { handleGetCartItems } from "../api/handleGetCartItems";
 import authStore from "@/zustand/store";
 import apiInstance from "@/utils/api/apiInstance";
+import { IAuthState } from "@/types/auth/auth.type";
 
 export default function useCartItems() {
-  const token = authStore((state: any) => state.token);
+  const token = authStore((state: IAuthState) => state.token);
 
   const [cartItems, setCartItems] = React.useState<ICartItem[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
-  // const [token, setToken] = React.useState<string | null>(null);
-  // const getToken = () => setToken(authStore((state: any) => state.token));
 
   const handleGetCartItems = async () => {
     try {
