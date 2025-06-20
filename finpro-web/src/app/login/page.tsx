@@ -62,26 +62,18 @@ export default function LoginPage() {
         >
           <Form className="space-y-3 pt-6">
             <div className="pt-2">
-              <label className="text-sm font-semibold text-gray-700 block mb-1">
-                Email/No. Handphone
-              </label>
+              <label className="text-sm font-semibold text-gray-700 block mb-1">Email/No. Handphone</label>
               <Field
                 name="email"
                 type="text"
                 placeholder="Ketik user Anda"
                 className="w-full px-4 py-2 border text-gray-700 placeholder:text-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <ErrorMessage
-                name="email"
-                component="div"
-                className="text-red-500 text-sm pt-1"
-              />
+              <ErrorMessage name="email" component="div" className="text-red-500 text-sm pt-1" />
             </div>
 
             <div className="pt-2">
-              <label className="text-sm font-semibold text-gray-700 block mb-1">
-                Password
-              </label>
+              <label className="text-sm font-semibold text-gray-700 block mb-1">Password</label>
               <div className="relative">
                 <Field
                   name="password"
@@ -94,18 +86,10 @@ export default function LoginPage() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500"
                 >
-                  {showPassword ? (
-                    <AiOutlineEyeInvisible size={20} />
-                  ) : (
-                    <AiOutlineEye size={20} />
-                  )}
+                  {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
                 </button>
               </div>
-              <ErrorMessage
-                name="password"
-                component="div"
-                className="text-red-500 text-sm pt-1"
-              />
+              <ErrorMessage name="password" component="div" className="text-red-500 text-sm pt-1" />
             </div>
 
             <div className="flex items-center gap-2 text-sm pt-2">
