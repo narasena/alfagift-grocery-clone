@@ -3,7 +3,7 @@ import { IoTrashOutline } from "react-icons/io5";
 import { BsStopwatch } from "react-icons/bs";
 import { FaLocationDot } from "react-icons/fa6";
 import { useState } from "react";
-// import useCartItems from "@/features/cart/hooks/useCartItems";
+import useCartItems from "@/features/cart/hooks/useCartItems";
 
 // refactoring:
 // kalo component global, dipake di semua page
@@ -18,8 +18,11 @@ import { useState } from "react";
 // update quantity
 
 export default function CartPage() {
-  // const { cartItems, loading, handleDisplayCartItems } = useCartItems(); // to display cart items
+  const { cartItems, loading } = useCartItems(); // to display cart items
+  console.log("Cart items:", cartItems);
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
+
+  if (loading) return <p>Loading cart items...</p>;
 
   const openClearAllModal = () => {
     const modal = document.getElementById("clear_all") as HTMLDialogElement | null;
@@ -114,37 +117,36 @@ export default function CartPage() {
               Pengiriman Instan
             </div>
             <ul className="space-y-4">
-              <li className="flex justify-between items-center border rounded p-4">
-                {/* Left: Item details */}
-                <div className="flex flex-col">
-                  <span className="text-black font-semibold">Item 1</span>
-                  <span className="text-gray-500 text-sm mb-2">Rp 10,000</span>
-                </div>
-
-                {/* Right: Subtotal + Quantity controls */}
-                <div className="flex items-center justify-end md:justify-start space-x-2 md:space-x-4">
-                  {/* Quantity Controls - Now stays in line with price on mobile */}
-                  <div className="flex items-center space-x-2">
-                    <button className="w-8 h-8 border rounded text-lg text-gray-600 hover:bg-gray-100">-</button>
-                    <span className="w-6 text-center text-black">2</span>
-                    <button className="w-8 h-8 border rounded text-lg text-gray-600 hover:bg-gray-100">+</button>
+              {cartItems.map((item, index) => (
+                <li key={index} className="flex justify-between items-center border rounded p-4">
+                  {/* Left: Item details */}
+                  <div className="flex flex-col">
+                    <span className="text-black font-semibold">{item.productStock?.product.name}</span>
+                    <span className="text-gray-500 text-sm mb-2">
+                      Rp {item.productStock?.product.price.toLocaleString("id-ID")}
+                    </span>
                   </div>
-
-                  {/* Subtotal and Remove Button - Now in same line on mobile */}
-                  <div className="flex items-center space-x-2 md:space-x-4">
-                    {/* Subtotal */}
-                    <div className="text-black font-medium min-w-[80px] text-right">Rp {10000 * 2}</div>
-
-                    {/* Remove Button */}
-                    <button
-                      className="flex justify-between items-center bg-white text-blue-600 transition"
-                      onClick={openClearItemModal}
-                    >
-                      <IoTrashOutline className="text-2xl" />
-                    </button>
+                  {/* Right: Subtotal + Quantity controls */}
+                  <div className="flex items-center justify-end md:justify-start space-x-2 md:space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <button className="w-8 h-8 border rounded text-lg text-gray-600 hover:bg-gray-100">-</button>
+                      <span className="w-6 text-center text-black">{item.quantity}</span>
+                      <button className="w-8 h-8 border rounded text-lg text-gray-600 hover:bg-gray-100">+</button>
+                    </div>
+                    <div className="flex items-center space-x-2 md:space-x-4">
+                      <div className="text-black font-medium min-w-[80px] text-right">
+                        Rp {(item.productStock?.product.price ?? 0 * item.quantity).toLocaleString("id-ID")}
+                      </div>
+                      <button
+                        className="flex justify-between items-center bg-white text-blue-600 transition"
+                        onClick={() => openClearItemModal()} // Pass item.id for deletion
+                      >
+                        <IoTrashOutline className="text-2xl" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </li>
+                </li>
+              ))}
             </ul>
           </div>
 

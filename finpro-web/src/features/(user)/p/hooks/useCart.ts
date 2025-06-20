@@ -12,7 +12,7 @@ export default function useCart() {
       name: product.name,
       price: product.price,
       quantity,
-      image: product.productImage?.[0]?.imageUrl ?? "", // Fallback to empty string
+      image: product.productImage?.[0]?.imageUrl ?? "",
     };
 
     const currentCart = [...cart];
