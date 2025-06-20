@@ -22,7 +22,6 @@ export const createCartItems = async (req: Request, res: Response, next: NextFun
     const { productId, storeId, quantity } = req.body;
 
     if (!userId || !productId || !storeId || !quantity || quantity < 1) {
-      //   return res.status(400).json({ message: "Invalid input data." });
       throw new AppError("Invalid input data.", 400);
     }
 
@@ -97,7 +96,7 @@ export const createCartItems = async (req: Request, res: Response, next: NextFun
 export const getCartItems = async (req: Request, res: Response, next: NextFunction) => {
   try {
     //cari userId dulu
-    // const userId = req.body.userId;
+    // const userId = req.body.userId
 
     const { userId } = req.body.payload;
 
@@ -158,7 +157,7 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
     res.status(200).json({
       success: true,
       message: "Cart items retrieved successfully.",
-      data: cart.cartItems,
+      cart,
     });
   } catch (error) {
     next(error);
