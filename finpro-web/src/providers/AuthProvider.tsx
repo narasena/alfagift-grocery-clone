@@ -4,6 +4,7 @@ import instance from "../utils/axiosinstance";
 import { useEffect, useState } from "react";
 import authStore from "../zustand/store";
 import { useRouter, usePathname } from "next/navigation";
+import apiInstance from "@/utils/api/apiInstance";
 
 export default function AuthProvider({
   children,
@@ -17,7 +18,7 @@ export default function AuthProvider({
 
   const handleSessionLogin = async () => {
     try {
-      const response = await instance.get("/user/session-login", {
+      const response = await apiInstance.get("/user/session-login", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

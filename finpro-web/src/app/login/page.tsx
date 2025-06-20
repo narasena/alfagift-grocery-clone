@@ -8,6 +8,7 @@ import instance from "../../utils/axiosinstance";
 import { toast } from "react-toastify";
 import authStore from "../../zustand/store";
 import { useRouter } from "next/navigation";
+import apiInstance from "@/utils/api/apiInstance";
 
 interface iHandleAuthLogin {
   email: string;
@@ -20,7 +21,7 @@ export default function LoginPage() {
 
   const handleAuthLogin = async ({ email, password }: iHandleAuthLogin) => {
     try {
-      const response = await instance.post("/user/login", {
+      const response = await apiInstance.post("/user/login", {
         email,
         password,
       });
