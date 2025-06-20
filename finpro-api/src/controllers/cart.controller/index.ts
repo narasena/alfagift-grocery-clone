@@ -16,9 +16,9 @@ export const createCartItems = async (req: Request, res: Response, next: NextFun
   try {
     //cari userId dulu
     // userId ambil dari req.body buat sementara
+    // const userId = req.body.userId;
 
-    // const userId = req.user?.id; // Adjust based on your auth middleware
-    const userId = req.body.userId;
+    const { userId } = req.body.payload; // Adjust based on your auth middleware
     const { productId, storeId, quantity } = req.body;
 
     if (!userId || !productId || !storeId || !quantity || quantity < 1) {
@@ -97,8 +97,9 @@ export const createCartItems = async (req: Request, res: Response, next: NextFun
 export const getCartItems = async (req: Request, res: Response, next: NextFunction) => {
   try {
     //cari userId dulu
-    // const userId = req.user?.id; // Adjust based on your auth middleware
-    const userId = req.body.userId;
+    // const userId = req.body.userId;
+
+    const { userId } = req.body.payload;
 
     if (!userId) {
       throw new AppError("User not authenticated.", 401);
@@ -167,7 +168,8 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
 export const deleteCartItem = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // const userId = req.user?.id;
-    const userId = req.body.userId;
+    // const userId = req.body.userId;
+    const { userId } = req.body.payload;
 
     const cartItemId = req.params.cartItemId; // assuming DELETE /cart/item/:cartItemId
 
@@ -224,7 +226,9 @@ export const deleteCartItem = async (req: Request, res: Response, next: NextFunc
 export const deleteAllCartItems = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // const userId = req.user?.id;
-    const userId = req.body.userId;
+    // const userId = req.body.userId;
+
+    const { userId } = req.body.payload;
     if (!userId) {
       throw new AppError("User not authenticated.", 401);
     }
@@ -262,11 +266,18 @@ export const deleteAllCartItems = async (req: Request, res: Response, next: Next
   }
 };
 
+//belum
 export const updateCartItemQuantity = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.body.userId; // Or req.user?.id if using auth middleware
+    // const userId = req.body.userId; // Or req.user?.id if using auth middleware
+    const { userId } = req.body.payload;
     const cartItemId = req.params.cartItemId; // assuming PUT /cart/item/:cartItemId/update-qty
     const { quantity } = req.body;
+
+    // tambahin storeid
+    // ngecek stock
+
+    // cek harga
 
     if (!userId || !cartItemId || typeof quantity !== "number") {
       throw new AppError("Invalid input data.", 400);

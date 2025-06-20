@@ -143,6 +143,7 @@ model Product {
   productDiscount   ProductDiscount[]
   productBrand      ProductBrand? @relation(fields: [brandId], references: [id])
 
+  cartItem          CartItem[]
   @@map("products")
 }
 
@@ -302,6 +303,7 @@ model CartItem {
   updatedAt         DateTime @updatedAt
   deletedAt         DateTime?
 
+  product          Product @relation(fields: [productId], references: [id])
   cart              Cart @relation(fields: [cartId], references: [id])
   productStock      ProductStock @relation(fields: [productId,storeId], references: [productId,storeId])
 

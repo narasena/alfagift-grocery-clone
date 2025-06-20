@@ -29431,7 +29431,7 @@ export namespace Prisma {
   export type CartItemCreateInput = {
     id?: string
     quantity: number
-    status: $Enums.CartItemStatus
+    status?: $Enums.CartItemStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -29445,7 +29445,7 @@ export namespace Prisma {
     productId: string
     storeId: string
     quantity: number
-    status: $Enums.CartItemStatus
+    status?: $Enums.CartItemStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -29480,7 +29480,7 @@ export namespace Prisma {
     productId: string
     storeId: string
     quantity: number
-    status: $Enums.CartItemStatus
+    status?: $Enums.CartItemStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -34770,7 +34770,7 @@ export namespace Prisma {
   export type CartItemCreateWithoutProductStockInput = {
     id?: string
     quantity: number
-    status: $Enums.CartItemStatus
+    status?: $Enums.CartItemStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -34781,7 +34781,7 @@ export namespace Prisma {
     id?: string
     cartId: string
     quantity: number
-    status: $Enums.CartItemStatus
+    status?: $Enums.CartItemStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -35347,7 +35347,7 @@ export namespace Prisma {
   export type CartItemCreateWithoutCartInput = {
     id?: string
     quantity: number
-    status: $Enums.CartItemStatus
+    status?: $Enums.CartItemStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -35359,7 +35359,7 @@ export namespace Prisma {
     productId: string
     storeId: string
     quantity: number
-    status: $Enums.CartItemStatus
+    status?: $Enums.CartItemStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -37493,7 +37493,7 @@ export namespace Prisma {
     id?: string
     cartId: string
     quantity: number
-    status: $Enums.CartItemStatus
+    status?: $Enums.CartItemStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null
@@ -37666,7 +37666,7 @@ export namespace Prisma {
     productId: string
     storeId: string
     quantity: number
-    status: $Enums.CartItemStatus
+    status?: $Enums.CartItemStatus
     createdAt?: Date | string
     updatedAt?: Date | string
     deletedAt?: Date | string | null

@@ -6,13 +6,14 @@ import {
   deleteAllCartItems,
   updateCartItemQuantity,
 } from "../controllers/cart.controller";
+import { jwtDecode } from "../middlewares/jwt.decode";
 
 const cartRouter = Router();
 
-cartRouter.get("/", getCartItems);
-cartRouter.post("/add", createCartItems);
-cartRouter.put("/:cartItemId/delete", deleteCartItem);
-cartRouter.put("/delete-all", deleteAllCartItems);
-cartRouter.put("/:cartItemId/update-qty", updateCartItemQuantity);
+cartRouter.get("/", jwtDecode, getCartItems);
+cartRouter.post("/add", jwtDecode, createCartItems);
+cartRouter.put("/:cartItemId/delete", jwtDecode, deleteCartItem);
+cartRouter.put("/delete-all", jwtDecode, deleteAllCartItems);
+cartRouter.put("/:cartItemId/update-qty", jwtDecode, updateCartItemQuantity);
 
 export default cartRouter;

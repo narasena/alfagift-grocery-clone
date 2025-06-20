@@ -43,7 +43,7 @@ export default class App {
     // Error Handler
     this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
       if (req.path.includes("/api/")) {
-        console.error("Error : ", err.stack);
+        console.error("Error : ", err);
         res.status(500).json({
           success: false,
           message: "Internal server error. Please try again later!",
