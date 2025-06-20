@@ -5,7 +5,6 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import dynamic from "next/dynamic";
 import { registerValidationSchema } from "../features/register/schemas/registerValidationSchema";
-import instance from "../../utils/axiosinstance";
 import { toast } from "react-toastify";
 import apiInstance from "@/utils/api/apiInstance";
 

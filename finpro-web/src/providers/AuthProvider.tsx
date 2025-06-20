@@ -1,6 +1,5 @@
 "use client";
 
-import instance from "../utils/axiosinstance";
 import { useEffect, useState } from "react";
 import authStore from "../zustand/store";
 import { useRouter, usePathname } from "next/navigation";
