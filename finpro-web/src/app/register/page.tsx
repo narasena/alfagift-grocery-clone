@@ -5,8 +5,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import dynamic from "next/dynamic";
 import { registerValidationSchema } from "../features/register/schemas/registerValidationSchema";
-import instance from "../../utils/axiosinstance";
 import { toast } from "react-toastify";
+import apiInstance from "@/utils/api/apiInstance";
 
 const MapPicker = dynamic(() => import("../../components/MapPicker"), {
   ssr: false,
@@ -74,7 +74,7 @@ export default function RegisterPage() {
     isMainAddress,
   }: IHandleRegisterUser) => {
     try {
-      const response = await instance.post("/user/register", {
+      const response = await apiInstance.post("/user/register", {
         firstName,
         lastName,
         email,
