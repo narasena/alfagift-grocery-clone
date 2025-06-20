@@ -33,7 +33,7 @@ interface IHandleRegisterUser {
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [showAddressForm, setShowAddressForm] = useState(true); // opsional
+  const [showAddressForm] = useState(true); // opsional
 
   const initialValues = {
     firstName: "",

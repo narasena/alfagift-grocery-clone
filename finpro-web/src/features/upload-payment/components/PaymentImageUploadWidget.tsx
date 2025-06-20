@@ -1,6 +1,5 @@
 import { CldUploadWidget, CloudinaryUploadWidgetResults } from "next-cloudinary";
 import * as React from "react";
-import { RiImageAddFill } from "react-icons/ri";
 
 export interface IPaymentImageUploadButton {
   onSuccess: (result: CloudinaryUploadWidgetResults) => void;

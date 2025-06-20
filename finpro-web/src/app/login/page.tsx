@@ -15,7 +15,7 @@ interface iHandleAuthLogin {
 }
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const setAuth = authStore((state: any) => state.setAuth);
+  const setAuth = authStore((state) => state.setAuth);
   const router = useRouter();
 
   const handleAuthLogin = async ({ email, password }: iHandleAuthLogin) => {
