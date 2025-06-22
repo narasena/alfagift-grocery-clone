@@ -132,6 +132,7 @@ exports.Prisma.UserScalarFieldEnum = {
   isEmailVerified: 'isEmailVerified',
   passwordResetCount: 'passwordResetCount',
   emailChangeCount: 'emailChangeCount',
+  referralCode: 'referralCode',
   avatarImgUrl: 'avatarImgUrl',
   cldPublicId: 'cldPublicId',
   createdAt: 'createdAt',
@@ -285,13 +286,51 @@ exports.Prisma.ProductDiscountScalarFieldEnum = {
   discountType: 'discountType',
   discountValue: 'discountValue',
   minPurchaseValue: 'minPurchaseValue',
-  maxDiscountValue: 'maxDiscountValue',
+  buyQuantity: 'buyQuantity',
+  getQuantity: 'getQuantity',
   startDate: 'startDate',
   endDate: 'endDate',
   isActive: 'isActive',
   isGlobalProduct: 'isGlobalProduct',
+  isGlobalStore: 'isGlobalStore',
   productId: 'productId',
   storeId: 'storeId',
+  usageLimitPerTransaction: 'usageLimitPerTransaction',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.VoucherScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  code: 'code',
+  voucherType: 'voucherType',
+  discountId: 'discountId',
+  discountValue: 'discountValue',
+  discountValueType: 'discountValueType',
+  maxTotalDiscountValue: 'maxTotalDiscountValue',
+  userId: 'userId',
+  generatorOrderId: 'generatorOrderId',
+  storeId: 'storeId',
+  referrerId: 'referrerId',
+  refereeId: 'refereeId',
+  expiredDate: 'expiredDate',
+  minTransactionTimes: 'minTransactionTimes',
+  usageLimitPerUser: 'usageLimitPerUser',
+  totalUsageLimit: 'totalUsageLimit',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.VoucherUsageScalarFieldEnum = {
+  id: 'id',
+  voucherId: 'voucherId',
+  userId: 'userId',
+  orderId: 'orderId',
+  discountedAmount: 'discountedAmount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -321,8 +360,13 @@ exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   storeId: 'storeId',
-  totalAmount: 'totalAmount',
   shippingAddressId: 'shippingAddressId',
+  totalAmount: 'totalAmount',
+  discountedTotalAmount: 'discountedTotalAmount',
+  finalTotalAmount: 'finalTotalAmount',
+  shippingCost: 'shippingCost',
+  discountedShippingCost: 'discountedShippingCost',
+  finalShippingCost: 'finalShippingCost',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -333,10 +377,11 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   orderId: 'orderId',
   productId: 'productId',
   storeId: 'storeId',
+  discountId: 'discountId',
   quantity: 'quantity',
   originalPrice: 'originalPrice',
+  discountedPrice: 'discountedPrice',
   finalPrice: 'finalPrice',
-  discountId: 'discountId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -355,14 +400,21 @@ exports.Prisma.PaymentScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
   paymentType: 'paymentType',
-  paymentStatus: 'paymentStatus',
   paymentMethod: 'paymentMethod',
   paymentAmount: 'paymentAmount',
   paymentDate: 'paymentDate',
   isVerified: 'isVerified',
-  verifiedBy: 'verifiedBy',
-  verifiedAt: 'verifiedAt',
   notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  deletedAt: 'deletedAt'
+};
+
+exports.Prisma.PaymentHistoryScalarFieldEnum = {
+  id: 'id',
+  paymentId: 'paymentId',
+  paymentStatus: 'paymentStatus',
+  verifiedByAdminId: 'verifiedByAdminId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   deletedAt: 'deletedAt'
@@ -370,7 +422,7 @@ exports.Prisma.PaymentScalarFieldEnum = {
 
 exports.Prisma.PaymentProofScalarFieldEnum = {
   id: 'id',
-  transactionId: 'transactionId',
+  paymentId: 'paymentId',
   imageUrl: 'imageUrl',
   cldPublicId: 'cldPublicId',
   status: 'status',
@@ -415,6 +467,17 @@ exports.DiscountType = exports.$Enums.DiscountType = {
   MIN_PURCHASE: 'MIN_PURCHASE'
 };
 
+exports.VoucherType = exports.$Enums.VoucherType = {
+  PRICE_CUT: 'PRICE_CUT',
+  FREE_SHIPPING: 'FREE_SHIPPING',
+  REFERRAL: 'REFERRAL'
+};
+
+exports.DiscountValueType = exports.$Enums.DiscountValueType = {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED_AMOUNT: 'FIXED_AMOUNT'
+};
+
 exports.CartItemStatus = exports.$Enums.CartItemStatus = {
   ACTIVE: 'ACTIVE',
   ORDERED: 'ORDERED',
@@ -454,12 +517,15 @@ exports.Prisma.ModelName = {
   ProductStock: 'ProductStock',
   ProductStockHistory: 'ProductStockHistory',
   ProductDiscount: 'ProductDiscount',
+  Voucher: 'Voucher',
+  VoucherUsage: 'VoucherUsage',
   Cart: 'Cart',
   CartItem: 'CartItem',
   Order: 'Order',
   OrderItem: 'OrderItem',
   OrderHistory: 'OrderHistory',
   Payment: 'Payment',
+  PaymentHistory: 'PaymentHistory',
   PaymentProof: 'PaymentProof'
 };
 
