@@ -1,9 +1,10 @@
 export enum EDiscountType {
     PERCENTAGE = "PERCENTAGE",
-    FIXED = "FIXED",
+    FIXED_AMOUNT = "FIXED_AMOUNT",
     BUY1_GET1 = "BUY1_GET1",
     MIN_PURCHASE = "MIN_PURCHASE"
 }
+export type TDiscountType = keyof typeof EDiscountType;
 
 export interface IDiscountForm {
     name: string;
