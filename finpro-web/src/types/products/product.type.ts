@@ -36,6 +36,10 @@ export interface IProductDetails extends IProduct {
   productBrand: IProductBrand
 }
 
+export interface IProductTable extends IProduct {
+  [key: string]: unknown
+}
+
 export interface IProductDetailsTable extends IProductDetails {
   [key: string]: unknown
 }
