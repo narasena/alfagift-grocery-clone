@@ -28,6 +28,7 @@ model User {
   isEmailVerified     Boolean          @default(false)
   passwordResetCount  Int              @default(0)
   emailChangeCount    Int              @default(0)
+  referralCode        String?         @unique
   avatarImgUrl        String?
   cldPublicId         String? // Cloudinary public ID for the avatar image
   createdAt           DateTime @default(now())
@@ -37,6 +38,10 @@ model User {
   userAddress         UserAddress[]
   cart                Cart?
   orders               Order[]
+  vouchers             Voucher[]
+  referralsMade       Voucher[] @relation("ReferralsMade")
+  referralUsage       Voucher? @relation("ReferralUsage")
+  voucherUsages        VoucherUsage[]
 
   @@map("users")
 }
@@ -88,6 +93,7 @@ model Store {
   productDiscount   ProductDiscount[]
   admins            Admin[]
   orders            Order[]
+  vouchers          Voucher[]
 
   @@map("stores")
 }
@@ -110,7 +116,7 @@ model Admin {
   deletedAt         DateTime?
   storeId           String
   store             Store   @relation(fields: [storeId], references: [id])
-  payments          Payment[]
+  paymentHistory          PaymentHistory[]
 
   @@map("admins")
 }
@@ -252,22 +258,26 @@ model ProductDiscount {
   name             String
   description      String?
   discountType     DiscountType
-  discountValue    Float
+  discountValue    Float?
   minPurchaseValue Float?
-  maxDiscountValue Float?
+  buyQuantity       Int?
+  getQuantity       Int?
   startDate        DateTime
   endDate          DateTime
   isActive         Boolean @default(true)
   isGlobalProduct Boolean @default(false)
-  productId         String
-  storeId           String?
+  isGlobalStore  Boolean @default(false)
+  productId         String?
+  storeId           String?                         //if the company event discount applied global to every single product storeId can be nulled and only check globalProduct
+  usageLimitPerTransaction Int?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   deletedAt         DateTime?
 
-  product          Product @relation(fields: [productId], references: [id])
+  product          Product? @relation(fields: [productId], references: [id])
   store            Store? @relation(fields: [storeId], references: [id])
   orderItem        OrderItem[]
+  voucher         Voucher[]
 
   @@map("product_discounts")
 }
@@ -277,6 +287,69 @@ enum DiscountType {
   FIXED_AMOUNT
   BUY1_GET1
   MIN_PURCHASE
+}
+
+model Voucher {
+    id                   String             @id @default(cuid())
+    name                 String
+    description          String?
+    code                 String?           // it might need code (global voucher), or not (when bound to user), referalcode are in user       
+    voucherType          VoucherType
+    discountId           String?
+    discountValue        Float?
+    discountValueType    DiscountValueType             //percentage or fixed amount
+    maxTotalDiscountValue   Float?
+    userId                String?
+    generatorOrderId      String?         // if the order id have min purchase discount scheme
+    storeId               String?
+    referrerId            String?
+    refereeId             String?         @unique
+    expiredDate          DateTime
+    minTransactionTimes  Int?              // min number of transaction before voucher can be used
+    usageLimitPerUser     Int?
+    totalUsageLimit       Int?   
+    createdAt             DateTime        @default(now())
+    updatedAt             DateTime        @updatedAt
+    deletedAt             DateTime?
+
+    discount            ProductDiscount? @relation(fields: [discountId], references: [id])
+    user                User?             @relation(fields: [userId],references: [id])
+    voucherGenerator    Order?            @relation("GeneratedVouchers",fields: [generatorOrderId],references: [id]) 
+    store               Store?             @relation(fields: [storeId],references: [id])
+    voucherUsage        VoucherUsage[]
+    referrer            User?            @relation("ReferralsMade",fields: [referrerId],references: [id])
+    referred            User?            @relation("ReferralUsage",fields: [refereeId],references: [id])           
+
+    @@map("vouchers")
+}
+
+enum VoucherType {
+    PRICE_CUT
+    FREE_SHIPPING
+    REFERRAL
+}
+
+enum DiscountValueType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+model VoucherUsage {
+  id                    String            @id @default(cuid())
+  voucherId             String
+  userId                String
+  orderId               String
+  discountedAmount      Float
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+  deletedAt             DateTime?
+
+  voucher               Voucher           @relation(fields:[voucherId],references:[id])
+  user                  User              @relation(fields: [userId],references: [id])
+  order                 Order             @relation(fields: [orderId],references: [id])
+
+
+  @@map("voucher_usages")
 }
 
 model Cart {
@@ -320,8 +393,13 @@ model Order {
   id                String   @id @default(cuid())
   userId            String
   storeId           String
-  totalAmount       Float
   shippingAddressId String
+  totalAmount       Float
+  discountedTotalAmount Float       
+  finalTotalAmount  Float
+  shippingCost      Float
+  discountedShippingCost    Float   
+  finalShippingCost Float
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   deletedAt         DateTime?
@@ -331,7 +409,10 @@ model Order {
   shippingAddress   UserAddress @relation(fields: [shippingAddressId], references: [id])
   orderItems        OrderItem[]
   orderHistories    OrderHistory[]
-  payment       Payment?
+  payment           Payment?
+  generatedVouchers Voucher[]  @relation("GeneratedVouchers")
+  voucherUsages     VoucherUsage[]
+
 
   @@map("orders")
 }
@@ -341,10 +422,11 @@ model OrderItem {
   orderId           String
   productId         String
   storeId           String
+  discountId       String?
   quantity          Int
   originalPrice     Float
+  discountedPrice   Float       
   finalPrice        Float
-  discountId       String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   deletedAt         DateTime?
@@ -382,21 +464,18 @@ model Payment {
   id                String   @id @default(cuid())
   orderId           String   @unique
   paymentType       PaymentType
-  paymentStatus     PaymentStatus   @default(PENDING)
   paymentMethod     String
   paymentAmount     Float
   paymentDate       DateTime
   isVerified        Boolean @default(false)
-  verifiedBy       String?
-  verifiedAt       DateTime?
   notes            String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   deletedAt         DateTime?
 
-  admin             Admin? @relation(fields: [verifiedBy], references: [id])
   order             Order @relation(fields: [orderId], references: [id])
   paymentProof     PaymentProof[]
+  paymentHistory  PaymentHistory[]
 
   @@map("payments")
 }
@@ -412,9 +491,25 @@ enum PaymentStatus {
   FAILED        // Payment failed (fraudulent or declined)
 }
 
+model PaymentHistory {
+  id                  String                @id @default(cuid())
+  paymentId           String
+  paymentStatus     PaymentStatus
+  verifiedByAdminId   String?
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  deletedAt         DateTime?
+
+  admin             Admin? @relation(fields: [verifiedByAdminId], references: [id])
+  payment             Payment       @relation(fields: [paymentId],references: [id])
+
+  @@map("payment_histories")
+}
+
 model PaymentProof {
   id                String   @id @default(cuid())
-  transactionId     String
+  paymentId     String
   imageUrl          String // secure_url
   cldPublicId       String? // Cloudinary public ID for the image // public_id
   status            String
@@ -425,7 +520,7 @@ model PaymentProof {
   updatedAt         DateTime @updatedAt
   deletedAt         DateTime?
 
-  payment       Payment @relation(fields: [transactionId], references: [id])
+  payment       Payment @relation(fields: [paymentId], references: [id])
 
   @@map("payment_proofs")
 }
