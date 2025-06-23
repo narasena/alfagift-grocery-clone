@@ -72,7 +72,7 @@ export default function ProductSlugPage() {
             <p className="text-gray-500">Keranjang masih kosong.</p>
           ) : (
             <div className="flex flex-col gap-4">
-              {cart.map((item) => (
+              {cart.map((item: any) => (
                 <div key={item.id} className="border-b pb-2 flex justify-between items-center">
                   <div>
                     <h4 className="font-medium">{item.name}</h4>
@@ -100,7 +100,7 @@ export default function ProductSlugPage() {
                 <span>Total</span>
                 <span>
                   {cart
-                    .reduce((acc, item) => acc + item.price * item.quantity, 0)
+                    .reduce((acc: any, item: any) => acc + item.price * item.quantity, 0)
                     .toLocaleString("id-ID", {
                       style: "currency",
                       currency: "IDR",
@@ -260,8 +260,9 @@ export default function ProductSlugPage() {
                 </div>
               </div>
               <div className="flex-1">
+                {/* store nya belum */}
                 <button
-                  onClick={() => handleAddToCart(product!, quantity)}
+                  onClick={() => handleAddToCart(product?.id, quantity, store.id)}
                   className="w-full text-white font-medium text-lg py-2 rounded-md flex items-center justify-center bg-red-700 cursor-pointer active:ring-4 active:ring-blue-300"
                 >
                   {`+ Keranjang`}

@@ -99,6 +99,7 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
     // const userId = req.body.userId
 
     const { userId } = req.body.payload;
+    console.log(req.body.payload);
 
     if (!userId) {
       throw new AppError("User not authenticated.", 401);
@@ -273,14 +274,31 @@ export const updateCartItemQuantity = async (req: Request, res: Response, next: 
     const cartItemId = req.params.cartItemId; // assuming PUT /cart/item/:cartItemId/update-qty
     const { quantity } = req.body;
 
-    // tambahin storeid
-    // ngecek stock
-
-    // cek harga
-
     if (!userId || !cartItemId || typeof quantity !== "number") {
       throw new AppError("Invalid input data.", 400);
     }
+
+    const currentProductStock = await prisma.productStock.findUnique({
+      where: {
+        productId_storeId: {
+          productId: req.body.productId, // Assuming productId is passed in the body
+          storeId: req.body.storeId, // Assuming storeId is passed in the body
+        },
+      },
+    });
+
+    // ngecek stock dgn store id product id
+    const currentStock = currentProductStock?.stock || 0;
+
+    if (currentStock === 0) {
+      throw new AppError("Product is out of stock.", 400);
+    }
+
+    if (quantity < currentStock) {
+      throw new AppError("Requested quantity exceeds available stock.", 400);
+    }
+
+    // cek harga
 
     if (quantity < 1) {
       throw new AppError("Quantity must be at least 1.", 400);
@@ -309,7 +327,7 @@ export const updateCartItemQuantity = async (req: Request, res: Response, next: 
     res.status(200).json({
       success: true,
       message: "Cart item quantity updated successfully.",
-      data: updatedCartItem,
+      updatedCartItem,
     });
   } catch (error) {
     next(error);

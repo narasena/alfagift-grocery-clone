@@ -19,11 +19,15 @@ import useCartItems from "@/features/cart/hooks/useCartItems";
 
 export default function CartPage() {
   const { cartItems, loading } = useCartItems(); // to display cart items
-  console.log("Cart items:", cartItems);
+  // console.log("Cart items:", cartItems);
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
 
-  if (loading) return <p>Loading cart items...</p>;
-
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
   const openClearAllModal = () => {
     const modal = document.getElementById("clear_all") as HTMLDialogElement | null;
     modal?.showModal();
@@ -117,7 +121,7 @@ export default function CartPage() {
               Pengiriman Instan
             </div>
             <ul className="space-y-4">
-              {cartItems.map((item, index) => (
+              {cartItems?.map((item, index) => (
                 <li key={index} className="flex justify-between items-center border rounded p-4">
                   {/* Left: Item details */}
                   <div className="flex flex-col">
