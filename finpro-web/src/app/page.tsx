@@ -1,9 +1,11 @@
-'use client'
+
+"use client";
 
 import Footer from "@/components/Footer"
 import HeroCarousel from "../components/HeroCarousel"
 import Navbar from "../components/Navbar"
 import ProductList from "../components/ProductList"
+import Image from "next/image";
 
 export default function HomePage() {
   return (
@@ -82,7 +84,7 @@ export default function HomePage() {
 //         </div>
 //       </section>
 
-//       {/* Banner Promo */}
+//       Banner Promo
 //       <section className="mt-4 px-4">
 //         <Image src="/banner-alfa.jpg" alt="download banner" width={800} height={200} className="rounded-xl" />
 //       </section>
@@ -114,3 +116,4 @@ export default function HomePage() {
 //       </section>
 //     </div>
 //   );
+// }

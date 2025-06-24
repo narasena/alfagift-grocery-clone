@@ -46,6 +46,8 @@ export default class App {
     this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
       if (req.path.includes("/api/")) {
         console.error("Error : ", err);
+      if (req.path.includes('/api/')) {
+        console.error('Error : ', err);
         res.status(500).json({
           success: false,
           message: "Internal server error. Please try again later!",
@@ -73,7 +75,10 @@ export default class App {
     this.app.use("/api/order", orderRouter);
     this.app.use('/api/store', storeRouter)
     this.app.use('/api/inventories', inventoryRouter)
-    this.app.use('/api/store', storeRouter);
+    this.app.use('/api/product', productRouter.getRouter());
+    this.app.use('/api/product-category', productCategoryRouter.getRouter());
+    this.app.use('/api/user', authRouter)
+    this.app.use('/api', getMapRouter)
     this.app.use('/api/admin', adminRouter)
   }
 
