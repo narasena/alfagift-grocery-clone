@@ -9,26 +9,36 @@ export type TDiscountType = keyof typeof EDiscountType;
 export interface IDiscountForm {
     name: string;
     description?: string;
-    discountType: EDiscountType;
+    discountType: TDiscountType|"";
     discountValue?: number;
     minPurchaseValue?: number;
-    buyQuantity?: number;
-    getQuantity?: number;
-    startDate: Date;
-    endDate: Date;
+    startDate: string;
+    endDate: string;
     isGlobalProduct: boolean;
     isGlobalStore: boolean;
-    productId?: string
-    storeId?: string
     usageLimitPerTransaction?: number
 }
 
-export interface IDiscount extends IDiscountForm {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt?: Date;
+export interface IPriceCutSelectedProduct {
+  discountValue: number;
+  productIds: string[];
+}
 
+export interface IAddDiscountInitialValues extends IDiscountForm {
+    selectedProducts: string[];
+    selectedStores: string[];
+    toBeDiscountedProducts: IPriceCutSelectedProduct[]
+}
+
+export interface IDiscount extends IDiscountForm {
+  id: string;
+  buyQuantity?: number;
+  getQuantity?: number;
+  productId?: string;
+  storeId?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
 }
 
 export interface IVoucherForm {
