@@ -39,7 +39,7 @@ export default function AdminInputFieldAsSelect(props: IAdminInputFieldAsSelectP
           </select>
         )}
           </Field>
-          <ErrorMessage name={props.name} component="div" className="text-xs p-0.5 text-white bg-red-600"/>
+          <ErrorMessage name={props.name} component="div" className="formik-error-msg"/>
     </div>
   );
 }

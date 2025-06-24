@@ -35,7 +35,7 @@ export default function AdminInputField(props: TAdminInputFieldProps) {
         {props.label}
       </label>
       <Field name={props.name}>
-        {({ field }: FieldProps) => 
+        {({ field, meta }: FieldProps) => 
           props.as === "textarea" ? (
             <textarea
               {...field}
@@ -49,6 +49,7 @@ export default function AdminInputField(props: TAdminInputFieldProps) {
                   (props as IAdminInputFieldAsTextAreaProps).onChange?.(e as React.ChangeEvent<HTMLTextAreaElement>);
                 }
               }}
+              onBlur={field.onBlur}
             />
           ) : (
             <input
@@ -63,11 +64,12 @@ export default function AdminInputField(props: TAdminInputFieldProps) {
                   (props as IAdminInputFieldAsInputProps).onChange?.(e as React.ChangeEvent<HTMLInputElement>);
                 }
               }}
+              onBlur={field.onBlur}
             />
           )
         }
       </Field>
-      <ErrorMessage name={props.name} component="div" className="text-xs p-0.5 text-white bg-red-600"/>
+      <ErrorMessage name={props.name} component="div" className="formik-error-msg"/>
     </div>
   );
 }

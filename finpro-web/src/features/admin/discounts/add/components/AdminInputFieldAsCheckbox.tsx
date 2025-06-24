@@ -1,4 +1,4 @@
-import { Field, FieldProps } from "formik";
+import { ErrorMessage, Field, FieldProps } from "formik";
 import * as React from "react";
 
 interface IAdminInputFieldAsCheckboxProps {
@@ -33,6 +33,7 @@ export default function AdminInputFieldAsCheckbox(props: IAdminInputFieldAsCheck
           </>
         )}
       </Field>
+      <ErrorMessage name={props.name} component="div" className="formik-error-msg"/>
     </div>
   );
 }
