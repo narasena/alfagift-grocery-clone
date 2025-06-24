@@ -1,27 +1,32 @@
 import * as React from "react";
-import { EDiscountType, TDiscountType } from "@/types/discounts/discount.type";
+import { EDiscountType, IAddDiscountInitialValues, TDiscountType } from "@/types/discounts/discount.type";
 import { useAllStores } from "@/features/admin/products/hooks/stores/useAllStores";
 import { useAllProducts } from "@/features/admin/products/hooks/useAllProducts";
 import { IStore } from "@/types/stores/store.type";
 import { IProductDetails } from "@/types/products/product.type";
 
-interface IPriceCutSelectedProduct {
-  discountValue: number;
-  productIds: string[];
-}
-
-export const useAdminAddDiscounts = () => {
+export const useAdminAddDiscounts = (setFieldValue?: (field: string, value: any) => void) => {
   const discountTypes = Object.keys(EDiscountType);
   const { stores } = useAllStores();
   const { products } = useAllProducts();
-  const [discountType, setDiscountType] = React.useState<TDiscountType | "">("");
-  const [isChooseStores, setIsChooseStores] = React.useState<boolean>(false);
-  const [isChooseProducts, setIsChooseProducts] = React.useState<boolean>(false);
-  const [selectedStores, setSelectedStores] = React.useState<string[]>([]);
-  const [selectedProducts, setSelectedProducts] = React.useState<string[]>([]);
-    const [toBeDiscountedProducts, setToBeDiscountedProducts] = React.useState<IPriceCutSelectedProduct[]>([]);
-    const [showStoreDropDown, setStoreShowDropDown] = React.useState<boolean>(false);
-    const [showB1G1ProductDropDown, setB1G1ProductShowDropDown] = React.useState<boolean>(false);
+  const [showStoreDropDown, setStoreShowDropDown] = React.useState<boolean>(false);
+  const [showB1G1ProductDropDown, setB1G1ProductShowDropDown] = React.useState<boolean>(false);
+
+  const addDiscountInitialValues: IAddDiscountInitialValues = {
+    name: "",
+    description: "",
+    discountType: "",
+    discountValue: 0,
+    minPurchaseValue: 0,
+    startDate: "",
+    endDate: "",
+    isGlobalProduct: true,
+    isGlobalStore: true,
+    usageLimitPerTransaction: 0,
+    selectedProducts: [],
+    selectedStores: [],
+    toBeDiscountedProducts: [],
+  };
 
   const storeColumnTitles = [{ key: "name", label: "Store Name" }];
   const productColumnTitles = [{ key: "name", label: "Product Name" }];
@@ -33,93 +38,68 @@ export const useAdminAddDiscounts = () => {
     return row.name || "—";
   };
 
-  const handleDiscountValueChange = (productId: string, value: number) => {
-    setToBeDiscountedProducts((prev) => {
-      const existingIndex = prev.findIndex((p) => p.productIds.includes(productId));
+  const handlePriceCutProductCheckbox = (
+    newSelectedProducts: string[],
+    discountIndex: number,
+    currentProducts: any[]
+  ) => {
+    const updated = [...currentProducts];
+    const currentGroup = updated[discountIndex];
 
-      if (existingIndex >= 0) {
-        // Update existing product discount
-        const updated = [...prev];
-        updated[existingIndex] = {
-          ...updated[existingIndex],
-          discountValue: value,
-        };
-        return updated;
-      } else {
-        // Create new product discount
-        return [
-          ...prev,
-          {
-            productIds: [productId],
-            discountValue: value,
-          },
-        ];
-      }
-    });
-  };
-  const handlePriceCutProductCheckbox = (newSelectedProducts: string[], discountIndex: number) => {
-    setToBeDiscountedProducts((prev) => {
-      const updated = [...prev];
-      const currentGroup = updated[discountIndex];
-      
-      if (currentGroup) {
-        // Get products already selected in other discount groups
-        const otherGroupProducts = updated
-          .filter((_, i) => i !== discountIndex)
-          .flatMap(group => group.productIds);
-        
-        // Only allow products that aren't in other groups or are currently in this group
-        const validProducts = newSelectedProducts.filter(productId => 
-          !otherGroupProducts.includes(productId) || currentGroup.productIds.includes(productId)
-        );
-        
-        updated[discountIndex].productIds = validProducts;
-      }
-      return updated;
-    });
-    };
-    
-    const handleProductCheckBox = (newSelectedProducts: string[]) => {
-      setSelectedProducts(newSelectedProducts);
+    if (currentGroup) {
+      // Get products already selected in other discount groups
+      const otherGroupProducts = updated.filter((_, i) => i !== discountIndex).flatMap((group) => group.productIds);
+
+      // Only allow products that aren't in other groups or are currently in this group
+      const validProducts = newSelectedProducts.filter(
+        (productId) => !otherGroupProducts.includes(productId) || currentGroup.productIds.includes(productId)
+      );
+
+      updated[discountIndex].productIds = validProducts;
     }
+
+    // Update Formik state
+    if (setFieldValue) {
+      setFieldValue("toBeDiscountedProducts", updated);
+    }
+
+    return updated;
+  };
+
+  const handleProductCheckBox = (newSelectedProducts: string[]) => {
+    if (setFieldValue) {
+      setFieldValue("selectedProducts", newSelectedProducts);
+    }
+  };
 
   const handleStoreCheckbox = (newSelectedStores: string[]) => {
-    setSelectedStores(newSelectedStores);
-    };
-    
-    const handleStoreDropDown = () => {
-      setStoreShowDropDown(!showStoreDropDown);
-    };
-    const handleB1G1ProductDropDown = () => {
-      setB1G1ProductShowDropDown(!showB1G1ProductDropDown);
+    if (setFieldValue) {
+      setFieldValue("selectedStores", newSelectedStores);
     }
+  };
+
+  const handleStoreDropDown = () => {
+    setStoreShowDropDown(!showStoreDropDown);
+  };
+  const handleB1G1ProductDropDown = () => {
+    setB1G1ProductShowDropDown(!showB1G1ProductDropDown);
+  };
 
   return {
     stores,
     products,
     discountTypes,
-    discountType,
-    setDiscountType,
-    isChooseStores,
-    setIsChooseStores,
-    isChooseProducts,
-    setIsChooseProducts,
-    selectedStores,
-    setSelectedStores,
-    selectedProducts,
-    setSelectedProducts,
     storeColumnTitles,
     productColumnTitles,
     getStoreNameCellValue,
     getProductNameCellValue,
-    toBeDiscountedProducts,
-    setToBeDiscountedProducts,
     handlePriceCutProductCheckbox,
     handleStoreCheckbox,
     showStoreDropDown,
     handleStoreDropDown,
-      handleProductCheckBox,
+    handleProductCheckBox,
     showB1G1ProductDropDown,
-    handleB1G1ProductDropDown
+    handleB1G1ProductDropDown,
+    addDiscountInitialValues,
   };
 };

@@ -63,9 +63,9 @@ export default function AdminTable<T extends Record<string, unknown>>(props: IAd
     setInternalChecked(newCheckedRows);
     if (withCheckbox && props.onCheckboxChange) props.onCheckboxChange(newCheckedRows);
   };
-  React.useEffect(() => {
-    console.log(checkedRows);
-  }, [checkedRows]);
+  // React.useEffect(() => {
+  //   console.log(checkedRows);
+  // }, [checkedRows]);
   return (
     <div className="relative !overflow-auto shadow-lg sm:rounded-lg">
       <table className="w-full text-sm text-left text-gray-500">

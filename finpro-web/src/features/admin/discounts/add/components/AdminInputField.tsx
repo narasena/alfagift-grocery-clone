@@ -39,6 +39,7 @@ export default function AdminInputField(props: TAdminInputFieldProps) {
           props.as === "textarea" ? (
             <textarea
               {...field}
+              value={field.value || ''}
               id={props.name}
               rows={(props as IAdminInputFieldAsTextAreaProps).rows}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
@@ -54,9 +55,12 @@ export default function AdminInputField(props: TAdminInputFieldProps) {
           ) : (
             <input
               {...field}
+              value={field.value || ''}
               type={props.type}
               id={props.name}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 ${
+                props.type === 'datetime-local' ? '[&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:cursor-pointer' : ''
+              }`}
               placeholder={props.placeholder}
               onChange={(e) => {
                 field.onChange(e);
