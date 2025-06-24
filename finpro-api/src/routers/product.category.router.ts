@@ -1,6 +1,5 @@
-
-import { ProductCategoryController } from '../controllers/product.category.controller';
-import { Router } from 'express';
+import { ProductCategoryController } from "../controllers/product.controller/product.category.controller";
+import { Router } from "express";
 
 export class ProductCategoryRouter {
   private router: Router;
@@ -13,8 +12,8 @@ export class ProductCategoryRouter {
   }
 
   private initializeRoutes(): void {
-    this.router.get('/', this.productCategoryController.getProductCategories);
-    this.router.get('/subcategories', this.productCategoryController.getProductSubCategories);
+    this.router.get("/", this.productCategoryController.getProductCategories);
+    this.router.get("/subcategories", this.productCategoryController.getProductSubCategories);
   }
 
   getRouter(): Router {

@@ -1,11 +1,11 @@
 "use client";
 
-import instance from "../utils/axiosinstance";
 import { useEffect, useState } from "react";
 import authStore from "../zustand/authStore";
 import { ReactNode } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
+import instance from "../utils/axiosinstance";
 
 interface DecodedToken {
   userId?: string;
