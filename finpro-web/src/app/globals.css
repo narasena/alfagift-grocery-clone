@@ -53,6 +53,9 @@ input[type="number"] {
   .page-subtitle {
     @apply text-gray-500 text-sm w-full
   }
+  .formik-error-msg {
+    @apply text-xs font-medium py-1 px-2 my-1 w-max rounded-sm text-white bg-red-700
+  }
 }
 
 @layer utilities {
