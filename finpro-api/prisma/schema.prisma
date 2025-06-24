@@ -39,8 +39,8 @@ model User {
   cart                Cart?
   orders               Order[]
   vouchers             Voucher[]
-  referralsMade       Voucher[] @relation("ReferralsMade")
-  referralUsage       Voucher? @relation("ReferralUsage")
+  referralsMade       Referral[] @relation("ReferralsMade")
+  referralUsage       Referral? @relation("ReferralUsage")
   voucherUsages        VoucherUsage[]
 
   @@map("users")
@@ -93,7 +93,6 @@ model Store {
   admins            Admin[]
   orders            Order[]
   storeDiscountHistories StoreDiscountHistory[]
-  vouchers          Voucher[]
 
   @@map("stores")
 }
@@ -313,6 +312,22 @@ model StoreDiscountHistory {
   @@map("store_discounts_histories")
 }
 
+model Referral {
+  id                String              @id @default(cuid())
+  referrerId        String
+  refereeId         String            @unique
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  deletedAt           DateTime?
+
+      referrer            User?            @relation("ReferralsMade",fields: [referrerId],references: [id])
+    referred            User?            @relation("ReferralUsage",fields: [refereeId],references: [id]) 
+    vouchers          Voucher[] 
+
+
+  @@map("user_referrals")
+}
+
 model Voucher {
     id                   String             @id @default(cuid())
     name                 String
@@ -322,26 +337,22 @@ model Voucher {
     discountValueType    DiscountValueType             //percentage or fixed amount
     discountValue        Float?
     maxTotalDiscountValue   Float?
-    userId                String?
+    userId                String
     generatorOrderId      String?         // if the order id have min purchase discount scheme
-    storeId               String?
-    referrerId            String?
-    refereeId             String?         @unique
+    referralId            String?
     expiredDate          DateTime
     minTransactionTimes  Int?              // min number of transaction before voucher can be used
-    usageLimitPerUser     Int?
-    totalUsageLimit       Int?   
+    usageLimitPerUser     Int?  
     createdAt             DateTime        @default(now())
     updatedAt             DateTime        @updatedAt
     deletedAt             DateTime?
 
     discount            ProductDiscount? @relation(fields: [discountId], references: [id])
     user                User?             @relation(fields: [userId],references: [id])
+    referral            Referral?         @relation(fields: [referralId],references: [id])
     voucherGenerator    Order?            @relation("GeneratedVouchers",fields: [generatorOrderId],references: [id]) 
-    store               Store?             @relation(fields: [storeId],references: [id])
     voucherUsage        VoucherUsage[]
-    referrer            User?            @relation("ReferralsMade",fields: [referrerId],references: [id])
-    referred            User?            @relation("ReferralUsage",fields: [refereeId],references: [id])           
+         
 
     @@map("vouchers")
 }
