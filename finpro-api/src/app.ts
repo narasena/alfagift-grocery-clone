@@ -13,6 +13,8 @@ import { ProductCategoryRouter } from './routers/product.category.router';
 import { ProductRouter } from './routers/product.router';
 import authRouter from './routers/auth.router';
 import getMapRouter from './routers/getMap.router';
+import storeRouter from './routers/store.router';
+import adminRouter from './routers/admin.router';
 
 export default class App {
   private app: Express;
@@ -47,7 +49,7 @@ export default class App {
     // Error Handler
     this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
       if (req.path.includes('/api/')) {
-        console.error('Error : ', err.stack);
+        console.error('Error : ', err);
         res.status(500).json({
           success: false,
           message: 'Internal server error. Please try again later!',
@@ -70,6 +72,8 @@ export default class App {
     this.app.use('/api/product-category', productCategoryRouter.getRouter());
     this.app.use('/api/user', authRouter)
     this.app.use('/api', getMapRouter)
+    this.app.use('/api/store', storeRouter);
+    this.app.use('/api/admin', adminRouter)
   }
 
   public start(): void {

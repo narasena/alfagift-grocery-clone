@@ -1,19 +1,15 @@
 'use client';
 
-import authStore from '../../zustand/store';
+import authStore from '../../zustand/authStore';
 import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
-  const setAuth = authStore((state) => state.setAuth);
+  const clearAuth = authStore((state) => state.clearAuth);
   const router = useRouter();
 
   const handleSignOut = () => {
-    setAuth({
-      token: null,
-      email: null,
-      id: null,
-    });
-    router.push('/'); 
+    clearAuth(); 
+    router.push('/');
   };
 
   return (

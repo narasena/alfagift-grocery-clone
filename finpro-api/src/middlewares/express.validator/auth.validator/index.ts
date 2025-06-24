@@ -6,3 +6,10 @@ export const registerUserValidator = [
     body('phoneNumber').isMobilePhone('any').withMessage('Nomor handphone invalid'),
     body('password').isLength({ min: 6 }).withMessage('Password minimal 6 karakter'),
 ]
+
+export const registerAdminValidator = [
+    body(['firstName', 'lastName', 'email', 'password', 'phoneNumber', 'role', 'storeId']).notEmpty().withMessage('Data tidak boleh kosong'),
+    body('email').isEmail().withMessage('Alamat email invalid'),
+    body('phoneNumber').isMobilePhone('any').withMessage('Nomor handphone invalid'),
+    body('password').isLength({ min: 6 }).withMessage('Password minimal 6 karakter'),
+]
