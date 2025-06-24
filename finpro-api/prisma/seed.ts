@@ -51,10 +51,34 @@ async function seedProductSubCategory() {
   }
 }
 
+async function seedProductInventories() {
+  console.log('🌱 Seeding Initial Product Inventories...')
+  const stores = await prisma.store.findMany({ where: { deletedAt: null } });
+  const products = await prisma.product.findMany({ where: { deletedAt: null } });
+  
+  try {
+    await prisma.productStock.createMany({
+      data: products.flatMap(product => 
+        stores.map(store => ({
+          productId: product.id,
+          storeId: store.id,
+          stock: 0
+        }))
+      ),
+      skipDuplicates: true
+    })
+    console.log(`Seeded ${products.length * stores.length} product inventories`);
+  } catch (error) {
+    console.error(`Error seeding product inventories: ${error}`);    
+  }
+  
+}
+
 async function main() {
   console.log(`🌱🌱🌱 Seeding database...`);
   await seedProductCategory();
   await seedProductSubCategory();
+  await seedProductInventories();
   console.log(`🌱🌱 Seeding completed! 🌱🌱`);
 }
 

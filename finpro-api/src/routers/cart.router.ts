@@ -1,0 +1,19 @@
+import { Router } from "express";
+import {
+  deleteCartItem,
+  getCartItems,
+  createCartItems,
+  deleteAllCartItems,
+  updateCartItemQuantity,
+} from "../controllers/cart.controller";
+import { jwtDecode } from "../middlewares/jwt.decode";
+
+const cartRouter = Router();
+
+cartRouter.get("/", jwtDecode, getCartItems);
+cartRouter.post("/add", jwtDecode, createCartItems);
+cartRouter.put("/:cartItemId/delete", jwtDecode, deleteCartItem);
+cartRouter.put("/delete-all", jwtDecode, deleteAllCartItems);
+cartRouter.put("/:cartItemId/update-qty", jwtDecode, updateCartItemQuantity);
+
+export default cartRouter;

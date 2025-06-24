@@ -8,3 +8,11 @@ export interface IProductImage {
     updatedAt: Date
     deletedAt?: Date
 }
+
+export interface ICloudinaryResult {
+  public_id: string;
+  secure_url: string;
+  isMainImage: boolean;
+}
+
+export interface IProductImageModification extends Omit<Partial<IProductImage>, 'isMainImage'>, ICloudinaryResult {}
