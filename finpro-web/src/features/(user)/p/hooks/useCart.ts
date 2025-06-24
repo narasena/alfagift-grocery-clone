@@ -8,7 +8,7 @@ import { addProductToCart } from "../api/handleAddProductToCart";
 import { handleGetCartItems } from "@/features/cart/api/handleGetCartItems";
 
 export default function useCart() {
-  // const [cart, setCart] = React.useState<ICartItem[]>([]);
+  const [cart, setCart] = React.useState<ICartItem[]>([]);
   // const { handleDisplayCartItems } = useCartItems();
   const token = authStore((state: IAuthState) => state.token);
 
@@ -23,7 +23,15 @@ export default function useCart() {
       console.error("Failed to add item to cart:", error);
     }
   };
+  const openModal = () => {
+    const modal = document.getElementById("cart") as HTMLDialogElement | null;
+    if (modal) {
+      modal.showModal();
+    }
+  };
   return {
+    cart,
+    openModal,
     handleAddToCart,
   };
 }

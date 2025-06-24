@@ -15,18 +15,19 @@ import { useProductBreadcrumbs } from "@/features/admin/products/hooks/useProduc
 
 import { HiOutlineShoppingCart } from "react-icons/hi";
 
-// import { useRef } from "react";
-// import { ICartItem } from "@/types/carts/cartItem.type";
+import { IProduct } from "@/types/products/product.type";
 
 import useCart from "@/features/(user)/p/hooks/useCart";
-// import useGetProductDetails from "@/features/(user)/p/hooks/useGetProductDetails";
 
-export default function ProductSlugPage() {
+// cari productId dr params slug
+export default function ProductSlugPage({ slug }: IProduct) {
   const { product, imageShowing, handleImageClick } = useProductDetails();
   const { quantity, setQuantity, handleQuantityChange } = useProductQuantity();
   const { breadcrumbLinks } = useProductBreadcrumbs();
 
-  const { cart, handleAddToCart } = useCart(); // to add items to cart
+  // const {productId} = slug;
+
+  const { cart, handleAddToCart, openModal } = useCart(); // to add items to cart
   const testDescription = {
     list: [
       "Tabung gas mini isi ulang dari HI-COOK",
@@ -40,20 +41,6 @@ export default function ProductSlugPage() {
     long: "merupakan tabung gas ukuran mini yang diciptakan khusus untuk memenuhi kebutuhan anda. Dapat untuk diaplikasikan pada kompor gas tipe mini atau alat-alat lainnya. Cocok untuk digunakan sebagai peralatan bekal memasak ketika aktivitas berkemah atau aktivitas di luar rumah lainnya. Mempunyai desain mini sehingga sangat praktis dibawa atau ditaruh dimanapun. HI-COOK Tabung Gas Mini sangat memenuhi kebutuhan anda.",
   };
 
-  const openModal = () => {
-    const modal = document.getElementById("cart") as HTMLDialogElement | null;
-    if (modal) {
-      modal.showModal();
-    }
-  };
-
-  // const Cart = ({ cart }: { cart: ICartItem[] }) => {
-  //   const dialogRef = useRef<HTMLDialogElement>(null);
-
-  //   const openModal = () => {
-  //     dialogRef.current?.showModal();
-  //   };
-  //emg boleh gini?
   return (
     <div className="lg:px-2 py-4 bg-white text-gray-600 max-w-[500px] lg:max-w-[1200px] mx-auto flex flex-col max-lg:overflow-x-hidden relative">
       <div className="text-black">
@@ -262,7 +249,7 @@ export default function ProductSlugPage() {
               <div className="flex-1">
                 {/* store nya belum */}
                 <button
-                  onClick={() => handleAddToCart(product?.id, quantity, store.id)}
+                  onClick={() => handleAddToCart(quantity, storeId, product, productId)}
                   className="w-full text-white font-medium text-lg py-2 rounded-md flex items-center justify-center bg-red-700 cursor-pointer active:ring-4 active:ring-blue-300"
                 >
                   {`+ Keranjang`}

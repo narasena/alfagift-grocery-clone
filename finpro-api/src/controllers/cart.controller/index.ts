@@ -272,8 +272,10 @@ export const updateCartItemQuantity = async (req: Request, res: Response, next: 
     // const userId = req.body.userId; // Or req.user?.id if using auth middleware
     const { userId } = req.body.payload;
     const cartItemId = req.params.cartItemId; // assuming PUT /cart/item/:cartItemId/update-qty
-    const { quantity } = req.body;
+    let { quantity } = req.body;
+    quantity = parseInt(quantity);
 
+    // error di sini gabisa update qty
     if (!userId || !cartItemId || typeof quantity !== "number") {
       throw new AppError("Invalid input data.", 400);
     }

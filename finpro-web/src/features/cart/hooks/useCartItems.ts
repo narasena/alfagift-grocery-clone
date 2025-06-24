@@ -5,6 +5,7 @@ import { IAuthState } from "@/types/auth/auth.type";
 import { handleGetCartItems } from "../api/handleGetCartItems";
 import { deleteCartItem } from "../api/handleDeleteCartItems";
 import { deleteAllCartItems } from "../api/handleDeleteAllCartItems";
+import { updateCartItemQuantity } from "../api/handleUpdateCartItemQuantity";
 import { toast } from "react-toastify";
 
 export default function useCartItems() {
@@ -12,6 +13,10 @@ export default function useCartItems() {
 
   const [cartItems, setCartItems] = React.useState<ICartItem[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
+
+  const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  const [itemToDelete, setItemToDelete] = React.useState<string | null>(null);
 
   const handleDisplayCartItems = async () => {
     try {
@@ -26,6 +31,8 @@ export default function useCartItems() {
       }
     } catch (error) {
       console.error("Error displaying cart items:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -53,6 +60,62 @@ export default function useCartItems() {
     }
   };
 
+  const openClearAllModal = () => {
+    const modal = document.getElementById("clear_all") as HTMLDialogElement | null;
+    modal?.showModal();
+  };
+
+  const closeClearAllModal = () => {
+    const modal = document.getElementById("clear_all") as HTMLDialogElement | null;
+    modal?.close();
+  };
+
+  const openClearItemModal = (cartItemId: string) => {
+    setItemToDelete(cartItemId);
+    const modal = document.getElementById("clear_item") as HTMLDialogElement | null;
+    modal?.showModal();
+  };
+
+  const closeClearItemModal = () => {
+    const modal = document.getElementById("clear_item") as HTMLDialogElement | null;
+    modal?.close();
+  };
+
+  const updateQuantity = async (cartItemId: string, newQuantity: number) => {
+    // Implement your API call to update quantity in the backend
+    if (token) {
+      try {
+        // Validate quantity
+        if (newQuantity < 1) return;
+
+        // Call API to update quantity
+        await updateCartItemQuantity(token, cartItemId, newQuantity);
+
+        // Update local state
+        setCartItems((prev) =>
+          prev.map((item) => (item.id === cartItemId ? { ...item, quantity: newQuantity } : item))
+        );
+      } catch (error) {
+        console.error("Failed to update quantity:", error);
+        // You might want to show an error toast here
+      }
+    }
+  };
+
+  const incrementQuantity = async (itemId: string) => {
+    const item = cartItems.find((item) => item.id === itemId);
+    if (item) {
+      await updateQuantity(itemId, item.quantity + 1);
+    }
+  };
+
+  const decrementQuantity = async (itemId: string) => {
+    const item = cartItems.find((item) => item.id === itemId);
+    if (item && item.quantity > 1) {
+      await updateQuantity(itemId, item.quantity - 1);
+    }
+  };
+
   React.useEffect(() => {
     if (token) {
       handleDisplayCartItems();
@@ -63,8 +126,20 @@ export default function useCartItems() {
     cartItems,
     loading,
     token,
+    isSummaryOpen,
+    setIsSummaryOpen,
+    isDeleting,
+    setIsDeleting,
+    itemToDelete,
     handleDisplayCartItems,
     handleDeleteCartItem,
     handleDeleteAllCartItems,
+    openClearAllModal,
+    closeClearAllModal,
+    openClearItemModal,
+    closeClearItemModal,
+    updateQuantity,
+    incrementQuantity,
+    decrementQuantity,
   };
 }
