@@ -1,6 +1,6 @@
-import { prisma } from "@/prisma";
+import { prisma } from "../../prisma";
 import { NextFunction, Request, Response } from "express";
-import {TDiscountType} from "../../types/discount.type";
+import {IPriceCutSelectedProduct, TDiscountType} from "../../types/discount.type";
 import { Prisma } from "@prisma/client";
 
 export async function createDiscount(req: Request, res: Response, next: NextFunction) {
@@ -20,6 +20,7 @@ export async function createDiscount(req: Request, res: Response, next: NextFunc
             selectedProducts,
             toBeDiscountedProducts
         } = req.body;
+        console.log
         if(!name || !discountType || !startDate || !endDate) {
             throw { isExpose: true, status: 400, message: "Name, discount type, start date, and end date are required" };
         }
@@ -58,17 +59,18 @@ export async function createDiscount(req: Request, res: Response, next: NextFunc
         
         validations[discountType as TDiscountType]?.();
 
-        const key = discountType as TDiscountType;
+        const utcStartDate = new Date(new Date(startDate).getTime() - (7 * 60 * 60 * 1000));
+        const utcEndDate = new Date(new Date(endDate).getTime() - (7 * 60 * 60 * 1000));
         
-        const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+        const createdDiscount = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
           const discount = await tx.productDiscount.create({
             data: {
               name,
               description: description === "" ? null : description ?? null,
               discountType,
               minPurchaseValue: discountType === "MIN_PURCHASE" ? Number(minPurchaseValue) : null,
-              startDate,
-              endDate,
+              startDate: utcStartDate,
+              endDate: utcEndDate,
               isActive: true,
               isGlobalStore,
               isGlobalProduct,
@@ -79,8 +81,9 @@ export async function createDiscount(req: Request, res: Response, next: NextFunc
           // Store Discount History
           const storeIds = isGlobalStore ? (await tx.store.findMany()).map((store: { id: string }) => store.id) : selectedStores;
 
+          let appliedStores: [] = [];
           if (storeIds.length > 0) {
-            await tx.storeDiscountHistory.createMany({
+            appliedStores = await tx.storeDiscountHistory.createMany({
               data: storeIds.map((storeId: string) => ({
                 storeId,
                 discountId: discount.id,
@@ -89,6 +92,7 @@ export async function createDiscount(req: Request, res: Response, next: NextFunc
           }
 
           // Product Discount History
+          let discountedProducts: []= [];
           if (["PERCENTAGE", "FIXED_AMOUNT", "BUY1_GET1"].includes(discountType)) {
             const productData = isGlobalProduct
               ? (await tx.product.findMany()).map((product: { id: string }) => ({
@@ -101,24 +105,26 @@ export async function createDiscount(req: Request, res: Response, next: NextFunc
                     productId,
                     discountId: discount.id,
                   }))
-                : toBeDiscountedProducts.map((product: { id: string; discountValue: number }) => ({
-                    productId: product.id,
-                    discountId: discount.id,
-                    discountValue: Number(product.discountValue),
-                  }));
-
+                : (toBeDiscountedProducts as IPriceCutSelectedProduct[]).flatMap((group) =>
+                    group.productIds.map((productId) => ({
+                      productId,
+                      discountId: discount.id,
+                      discountValue: Number(group.discountValue),
+                    })),
+                  );
+            
             if (productData.length > 0) {
-              await tx.productDiscountHistory.createMany({ data: productData });
+                discountedProducts = await tx.productDiscountHistory.createMany({ data: productData });
             }
           }
 
-          return discount;
+            return { discount, appliedStores, discountedProducts };
         });
 
         res.status(200).json({
             success: true,
             message: "Create discount successfull",
-            result
+            createdDiscount
         });
     } catch (error) {
         next(error);
