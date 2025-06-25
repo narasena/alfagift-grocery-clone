@@ -8,12 +8,19 @@ const addDiscountSchema = Yup.object().shape({
     .required("Discount type is required")
     .oneOf(Object.values(EDiscountType), "Invalid discount type"),
   discountValue: Yup.number()
-    .optional()
+    .nullable()
+    .transform((val, orig) => (orig === "" ? null : val))
     .when(["discountType", "isGlobalProduct"], {
       is: (discountType: string, isGlobalProduct: boolean) =>
-        ["PERCENTAGE", "FIXED_AMOUNT"].includes(discountType) && isGlobalProduct,
-      then: (schema) => schema.required("Discount value is required").min(50000,"Discount value must be at least 50,000"),
-      otherwise: (schema) => schema.strip(),
+        discountType === "PERCENTAGE" && isGlobalProduct,
+      then: (schema) => schema.required("Discount value is required").min(0.01, "Must be greater than 0").max(99.99, "Must be less than 100"),
+      otherwise: (schema) => schema.optional(),
+    })
+    .when(["discountType", "isGlobalProduct"], {
+      is: (discountType: string, isGlobalProduct: boolean) =>
+        discountType === "FIXED_AMOUNT" && isGlobalProduct,
+      then: (schema) => schema.required("Discount value is required").min(50000, "Must be at least 50,000"),
+      otherwise: (schema) => schema.optional(),
     }),
   minPurchaseValue: Yup.number()
     .optional()
