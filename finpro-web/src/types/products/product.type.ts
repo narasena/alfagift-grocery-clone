@@ -1,3 +1,4 @@
+import { TDiscountType } from '../discounts/discount.type';
 import { IProductBrand } from './product.brand.type';
 import { IProductSubCategory } from './product.category.type';
 import { ICloudinaryResult, IProductImage } from './product.image.type';
@@ -29,11 +30,21 @@ export interface IProductFormValues extends IProduct {
   images: ICloudinaryResult[];
 }
 
+export interface IProductDiscountDetails {
+  name: string
+  description: string
+  type: TDiscountType
+  discountValue: number
+  discountedPrice: number
+
+}
 
 export interface IProductDetails extends IProduct {
   productImage: IProductImage[]
   productSubCategory: IProductSubCategory & { productCategory: IProductSubCategory }
   productBrand: IProductBrand
+  stock: number
+  discount: IProductDiscountDetails
 }
 
 export interface IProductTable extends IProduct {

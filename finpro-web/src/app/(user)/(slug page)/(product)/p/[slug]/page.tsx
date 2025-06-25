@@ -185,16 +185,28 @@ export default function ProductSlugPage() {
             </h1>
           </div>
           {/* Product Discount */}
-          <div className="px-3 flex items-center gap-2">
-            <div className="px-2 py-1 size-max rounded-md bg-amber-600 font-medium text-sm text-white">{`6 %`}</div>
-            <div className="text-xs text-gray-600 line-through">
-              {Number(28200).toLocaleString("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                minimumFractionDigits: 0,
-              })}
+          {product?.discount && (
+            <div className="px-3 flex items-center gap-2">
+              <div className="px-2 py-1 size-max rounded-md bg-amber-600 font-medium text-sm text-white">
+                {product?.discount.type === "PERCENTAGE"
+                  ? `-${product?.discount.discountValue}%`
+                  : product?.discount.type === "FIXED_AMOUNT"
+                  ? `Rp ${product?.discount.discountValue}`
+                  : ""}
+              </div>
+              <div className="text-xs text-gray-600 line-through">
+                {Number(product?.discount ? product?.discount.discountedPrice : product?.price).toLocaleString(
+                  "id-ID",
+                  {
+                    style: "currency",
+                    currency: "IDR",
+                    minimumFractionDigits: 0,
+                  }
+                )}
+              </div>
             </div>
-          </div>
+          )}
+
           {/* Line Divider */}
           <div className="px-3 my-6 border border-gray-200 w-full"></div>
 
