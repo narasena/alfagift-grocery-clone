@@ -18,7 +18,6 @@ export class ProductRouter {
       uploader(["image/jpeg", "image/png", "image/jpg", "image/webp"]).fields([{ name: "images", maxCount: 3 }]),
       this.productController.createProduct,
     );
-    this.router.post("/signed-upload", this.productController.handleSignedupload);
     this.router.get("/all", this.productController.getProducts);
     this.router.get("/:slug", this.productController.getProductById);
     this.router.put("/edit/:slug", this.productController.updateProduct);
