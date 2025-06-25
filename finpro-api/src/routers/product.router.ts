@@ -19,7 +19,7 @@ export class ProductRouter {
       this.productController.createProduct,
     );
     this.router.get("/all", this.productController.getProducts);
-    this.router.get("/:slug", this.productController.getProductById);
+    this.router.get("/:slug/:storeId", this.productController.getProductById);
     this.router.put("/edit/:slug", this.productController.updateProduct);
   }
 
