@@ -10,8 +10,7 @@ export const useAllStores = () => {
         try {
             const response = await apiInstance.get("/store/all");
             setStores(response.data.stores);
-            // console.log(`Stores: `, response.data.stores);
-            toast.success(response.data.message);
+            // toast.success(response.data.message);
         } catch (error) {
             console.error(`Error fetching stores: `, error);
             toast.error(`Failed to fetch stores. Please try again later.`);

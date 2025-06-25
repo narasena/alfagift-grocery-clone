@@ -10,8 +10,7 @@ export const useAllProducts = () => {
         try {
           const response = await apiInstance.get("/product/all");
           setProducts(response.data.products);
-          // console.log(`Products: `, response.data.products);
-          toast.success(response.data.message);
+          // toast.success(response.data.message);
         } catch (error) {
           console.error(`Error fetching products: `, error);
           toast.error(`Failed to fetch products. Please try again later.`);
