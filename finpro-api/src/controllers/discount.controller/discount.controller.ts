@@ -64,7 +64,7 @@ export async function createDiscount(req: Request, res: Response, next: NextFunc
           const discount = await tx.productDiscount.create({
             data: {
               name,
-              description: description || null,
+              description: description === "" ? null : description ?? null,
               discountType,
               minPurchaseValue: discountType === "MIN_PURCHASE" ? Number(minPurchaseValue) : null,
               startDate,
@@ -77,11 +77,11 @@ export async function createDiscount(req: Request, res: Response, next: NextFunc
           });
 
           // Store Discount History
-          const storeIds = isGlobalStore ? (await tx.store.findMany()).map((store) => store.id) : selectedStores;
+          const storeIds = isGlobalStore ? (await tx.store.findMany()).map((store: { id: string }) => store.id) : selectedStores;
 
           if (storeIds.length > 0) {
             await tx.storeDiscountHistory.createMany({
-              data: storeIds.map((storeId) => ({
+              data: storeIds.map((storeId: string) => ({
                 storeId,
                 discountId: discount.id,
               })),
@@ -91,10 +91,10 @@ export async function createDiscount(req: Request, res: Response, next: NextFunc
           // Product Discount History
           if (["PERCENTAGE", "FIXED_AMOUNT", "BUY1_GET1"].includes(discountType)) {
             const productData = isGlobalProduct
-              ? (await tx.product.findMany()).map((product) => ({
+              ? (await tx.product.findMany()).map((product: { id: string }) => ({
                   productId: product.id,
                   discountId: discount.id,
-                  discountValue: discountType !== "BUY1_GET1" ? Number(discountValue) : undefined,
+                  discountValue: discountType !== "BUY1_GET1" ? Number(discountValue) : null,
                 }))
               : discountType === "BUY1_GET1"
                 ? selectedProducts.map((productId: string) => ({
