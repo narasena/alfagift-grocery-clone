@@ -129,13 +129,11 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
                         productCategory: true,
                       },
                     },
-                    productDiscount: {
-                      where: {
-                        isActive: true,
-                        startDate: { lte: new Date() },
-                        endDate: { gte: new Date() },
-                      },
-                    },
+                    productDiscountHistories: {
+                      include: {
+                        discount: true
+                      }
+                    }
                   },
                 },
                 store: true,
