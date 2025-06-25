@@ -39,8 +39,8 @@ model User {
   cart                Cart?
   orders               Order[]
   vouchers             Voucher[]
-  referralsMade       Voucher[] @relation("ReferralsMade")
-  referralUsage       Voucher? @relation("ReferralUsage")
+  referralsMade       Referral[] @relation("ReferralsMade")
+  referralUsage       Referral? @relation("ReferralUsage")
   voucherUsages        VoucherUsage[]
 
   @@map("users")
@@ -90,10 +90,9 @@ model Store {
   updatedAt         DateTime @updatedAt
   deletedAt         DateTime?
   productStock      ProductStock[]
-  productDiscount   ProductDiscount[]
   admins            Admin[]
   orders            Order[]
-  vouchers          Voucher[]
+  storeDiscountHistories StoreDiscountHistory[]
 
   @@map("stores")
 }
@@ -146,8 +145,8 @@ model Product {
   deletedAt         DateTime?
   productImage      ProductImage[]
   productStock      ProductStock[]
-  productDiscount   ProductDiscount[]
   productBrand      ProductBrand? @relation(fields: [brandId], references: [id])
+  productDiscountHistories ProductDiscountHistory[]
 
   cartItem          CartItem[]
   @@map("products")
@@ -258,24 +257,19 @@ model ProductDiscount {
   name             String
   description      String?
   discountType     DiscountType
-  discountValue    Float?
   minPurchaseValue Float?
-  buyQuantity       Int?
-  getQuantity       Int?
   startDate        DateTime
   endDate          DateTime
   isActive         Boolean @default(true)
   isGlobalProduct Boolean @default(false)
-  isGlobalStore  Boolean @default(false)
-  productId         String?
-  storeId           String?                         //if the company event discount applied global to every single product storeId can be nulled and only check globalProduct
+  isGlobalStore  Boolean @default(false)                    //if the company event discount applied global to every single product storeId can be nulled and only check globalProduct
   usageLimitPerTransaction Int?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   deletedAt         DateTime?
 
-  product          Product? @relation(fields: [productId], references: [id])
-  store            Store? @relation(fields: [storeId], references: [id])
+  productDiscountHistories ProductDiscountHistory[]
+  storeDiscountHistories   StoreDiscountHistory[]
   orderItem        OrderItem[]
   voucher         Voucher[]
 
@@ -289,36 +283,76 @@ enum DiscountType {
   MIN_PURCHASE
 }
 
+model ProductDiscountHistory {
+  id                  String              @id @default(cuid())
+  productId           String
+  discountId          String
+  discountValue       Float?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  deletedAt           DateTime?
+
+  product             Product         @relation(fields: [productId],references: [id])
+  discount            ProductDiscount @relation(fields: [discountId],references: [id])
+
+  @@map("product_discounts_histories")
+}
+
+model StoreDiscountHistory {
+  id                String                @id @default(cuid())
+  storeId           String
+  discountId        String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  deletedAt           DateTime?
+
+  store             Store           @relation(fields: [storeId],references: [id])
+  discount          ProductDiscount @relation(fields: [discountId],references: [id])
+
+  @@map("store_discounts_histories")
+}
+
+model Referral {
+  id                String              @id @default(cuid())
+  referrerId        String
+  refereeId         String            @unique
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  deletedAt           DateTime?
+
+      referrer            User?            @relation("ReferralsMade",fields: [referrerId],references: [id])
+    referred            User?            @relation("ReferralUsage",fields: [refereeId],references: [id]) 
+    vouchers          Voucher[] 
+
+
+  @@map("user_referrals")
+}
+
 model Voucher {
     id                   String             @id @default(cuid())
     name                 String
-    description          String?
-    code                 String?           // it might need code (global voucher), or not (when bound to user), referalcode are in user       
+    description          String?      
     voucherType          VoucherType
     discountId           String?
-    discountValue        Float?
     discountValueType    DiscountValueType             //percentage or fixed amount
+    discountValue        Float?
     maxTotalDiscountValue   Float?
-    userId                String?
+    userId                String
     generatorOrderId      String?         // if the order id have min purchase discount scheme
-    storeId               String?
-    referrerId            String?
-    refereeId             String?         @unique
+    referralId            String?
     expiredDate          DateTime
     minTransactionTimes  Int?              // min number of transaction before voucher can be used
-    usageLimitPerUser     Int?
-    totalUsageLimit       Int?   
+    usageLimitPerUser     Int?  
     createdAt             DateTime        @default(now())
     updatedAt             DateTime        @updatedAt
     deletedAt             DateTime?
 
     discount            ProductDiscount? @relation(fields: [discountId], references: [id])
     user                User?             @relation(fields: [userId],references: [id])
+    referral            Referral?         @relation(fields: [referralId],references: [id])
     voucherGenerator    Order?            @relation("GeneratedVouchers",fields: [generatorOrderId],references: [id]) 
-    store               Store?             @relation(fields: [storeId],references: [id])
     voucherUsage        VoucherUsage[]
-    referrer            User?            @relation("ReferralsMade",fields: [referrerId],references: [id])
-    referred            User?            @relation("ReferralUsage",fields: [refereeId],references: [id])           
+         
 
     @@map("vouchers")
 }
