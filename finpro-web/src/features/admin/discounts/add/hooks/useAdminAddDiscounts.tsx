@@ -1,9 +1,11 @@
 import * as React from "react";
-import { EDiscountType, IAddDiscountInitialValues, TDiscountType } from "@/types/discounts/discount.type";
+import { EDiscountType, IAddDiscountForm } from "@/types/discounts/discount.type";
 import { useAllStores } from "@/features/admin/products/hooks/stores/useAllStores";
 import { useAllProducts } from "@/features/admin/products/hooks/useAllProducts";
 import { IStore } from "@/types/stores/store.type";
 import { IProductDetails } from "@/types/products/product.type";
+import apiInstance from "@/utils/api/apiInstance";
+import { toast } from "react-toastify";
 
 export const useAdminAddDiscounts = (setFieldValue?: (field: string, value: any) => void) => {
   const discountTypes = Object.keys(EDiscountType);
@@ -12,7 +14,7 @@ export const useAdminAddDiscounts = (setFieldValue?: (field: string, value: any)
   const [showStoreDropDown, setStoreShowDropDown] = React.useState<boolean>(false);
   const [showB1G1ProductDropDown, setB1G1ProductShowDropDown] = React.useState<boolean>(false);
 
-  const addDiscountInitialValues: IAddDiscountInitialValues = {
+  const addDiscountInitialValues: IAddDiscountForm = {
     name: "",
     description: "",
     discountType: "",
@@ -85,6 +87,17 @@ export const useAdminAddDiscounts = (setFieldValue?: (field: string, value: any)
     setB1G1ProductShowDropDown(!showB1G1ProductDropDown);
   };
 
+  const handleCreateDiscount = async (values: IAddDiscountForm) => {
+    try {
+      const response = await apiInstance.post("/discounts/create", values);
+      console.log(response.data.discount)
+      toast.success(response.data.message);
+    } catch (error) {
+      toast.error("Failed to create discount. Please try again.");
+      console.error("Error creating discount:", error);
+    }
+  };
+
   return {
     stores,
     products,
@@ -101,5 +114,6 @@ export const useAdminAddDiscounts = (setFieldValue?: (field: string, value: any)
     showB1G1ProductDropDown,
     handleB1G1ProductDropDown,
     addDiscountInitialValues,
+    handleCreateDiscount
   };
 };

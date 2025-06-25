@@ -29,6 +29,7 @@ export default function AdminAddDiscountPage() {
     showB1G1ProductDropDown,
     handleB1G1ProductDropDown,
     addDiscountInitialValues,
+    handleCreateDiscount
   } = useAdminAddDiscounts();
 
   return (
@@ -42,6 +43,7 @@ export default function AdminAddDiscountPage() {
         try {
           addDiscountSchema.validateSync(values, { abortEarly: false });
           console.log("Validation passed!");
+          handleCreateDiscount(values);
           setSubmitting(false);
         } catch (err) {
           if (err instanceof Yup.ValidationError) {
