@@ -114,7 +114,7 @@ export class ProductController {
       if (newSlug && newSlug !== slug) {
         const existing = await prisma.product.findUnique({ where: { slug: newSlug } });
         if (existing && existing.id !== productId) {
-           res.status(400).json({
+          res.status(400).json({
             success: false,
             message: "Product slug already exists, please try changing the name a bit.",
           });
@@ -253,15 +253,14 @@ export class ProductController {
         },
         include: {
           productImage: {
-            where:{deletedAt: null}
+            where: { deletedAt: null },
           },
           productSubCategory: {
             include: {
               productCategory: true,
-            }
-            
+            },
           },
-          productBrand: {where: {deletedAt: null}},
+          productBrand: { where: { deletedAt: null } },
         },
       });
       res.status(200).json({
@@ -276,20 +275,18 @@ export class ProductController {
 
   async getProductById(req: Request, res: Response, next: NextFunction) {
     try {
-      const { slug } = req.params;
+      const { slug, storeId } = req.params;
       const product = await prisma.product.findUnique({
         where: {
           slug,
+          deletedAt: null,
         },
         include: {
           productImage: {
             where: {
               deletedAt: null,
             },
-            orderBy: [
-              {isMainImage: 'desc'},
-              {updatedAt: 'desc'}
-            ]
+            orderBy: [{ isMainImage: "desc" }, { updatedAt: "desc" }],
           },
           productSubCategory: {
             include: {
@@ -299,10 +296,64 @@ export class ProductController {
           productBrand: true,
         },
       });
+      const stock = (
+        await prisma.productStock.findUnique({
+          where: {
+            productId_storeId: {
+              productId: product?.id!,
+              storeId,
+            },
+            deletedAt: null,
+          },
+        })
+      )?.stock;
+
+      const activeDiscount = await prisma.productDiscount.findFirst({
+        where: {
+          startDate: { lte: new Date() },
+          endDate: { gte: new Date() },
+        },
+      });
+      const activeProductDiscount = await prisma.productDiscountHistory.findFirst({
+        where: {
+          productId: product?.id!,
+          discountId: activeDiscount?.id,
+        },
+      });
+      const activeStoreDiscount = await prisma.storeDiscountHistory.findFirst({
+        where: {
+          storeId,
+          discountId: activeDiscount?.id,
+        }
+      })
+
+      let discount: {} | null = {};
+
+      if (activeDiscount && activeProductDiscount && activeStoreDiscount) {
+        const _discountValue = activeProductDiscount?.discountValue;
+        let _discountedPrice = product?.price!;
+
+        if (activeDiscount?.discountType === "PERCENTAGE" && _discountValue) {
+          _discountedPrice = product?.price! - (product?.price! * _discountValue) / 100;
+        } else if (activeDiscount?.discountType === "FIXED_AMOUNT" && _discountValue) {
+          _discountedPrice = product?.price! - _discountValue;
+        }
+
+        discount = {
+          name: activeDiscount?.name,
+          description: activeDiscount?.description,
+          type: activeDiscount?.discountType,
+          discountValue: activeDiscount?.discountType === "BUY1_GET1" ? null : _discountValue,
+          discountedPrice: activeDiscount?.discountType === "BUY1_GET1" ? null : _discountedPrice,
+        };
+      } else {
+        discount = null;
+      }
+
       res.status(200).json({
         success: true,
         message: "Product fetched successfully",
-        product,
+        product: { ...product, stock, discount },
       });
     } catch (error) {
       next(error);
