@@ -1,6 +1,6 @@
 import * as React from "react";
 import { EDiscountType, IAddDiscountForm } from "@/types/discounts/discount.type";
-import { useAllStores } from "@/features/admin/products/hooks/stores/useAllStores";
+import { useAllStores } from "@/hooks/stores/useAllStores";
 import { useAllProducts } from "@/features/admin/products/hooks/useAllProducts";
 import { IStore } from "@/types/stores/store.type";
 import { IProductDetails } from "@/types/products/product.type";
@@ -90,7 +90,7 @@ export const useAdminAddDiscounts = (setFieldValue?: (field: string, value: any)
   const handleCreateDiscount = async (values: IAddDiscountForm) => {
     try {
       const response = await apiInstance.post("/discounts/create", values);
-      console.log(response.data.discount)
+      console.log(response.data.discount);
       toast.success(response.data.message);
     } catch (error) {
       toast.error("Failed to create discount. Please try again.");
@@ -114,6 +114,6 @@ export const useAdminAddDiscounts = (setFieldValue?: (field: string, value: any)
     showB1G1ProductDropDown,
     handleB1G1ProductDropDown,
     addDiscountInitialValues,
-    handleCreateDiscount
+    handleCreateDiscount,
   };
 };
