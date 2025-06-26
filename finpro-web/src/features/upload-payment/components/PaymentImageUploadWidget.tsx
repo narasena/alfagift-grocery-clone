@@ -24,7 +24,7 @@ export default function PaymentImageUploadWidget(props: IPaymentImageUploadButto
         {({ open }) => (
           <button
             type="button"
-            className="mt-4 px-4 py-2 bg-red-800 text-white font-semibold text-xl rounded-md"
+            className="mt-4 px-4 py-2 bg-red-600 text-white font-semibold text-xl rounded-md"
             onClick={() => open?.()}
           >
             {props.buttonText}
