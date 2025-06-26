@@ -3,7 +3,7 @@ import { prisma } from "../../prisma";
 import { hashPassword } from "../../utils/hash.password";
 import { comparePassword } from "../../utils/compare.password";
 import { jwtSign, jwtSignAdmin } from "../../utils/jwt.sign";
-import jwt from "jsonwebtoken";
+
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {

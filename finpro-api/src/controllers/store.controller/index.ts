@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { prisma } from "../../prisma";
 
+
 export const getAllStores = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Verifikasi token admin (contoh)
@@ -173,6 +174,70 @@ export const deleteStore = async (req: Request, res: Response, next: NextFunctio
     await prisma.store.delete({ where: { id } });
 
     res.status(200).json({ message: "Store berhasil dihapus" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getNearestStoreByAddress = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { addressId } = req.params;
+
+    const address = await prisma.userAddress.findUnique({
+      where: { id: addressId },
+    });
+
+    console.log("Alamat latitude:", address?.latitude);
+    console.log("Alamat longitude:", address?.longitude);
+
+    if (!address || !address.latitude || !address.longitude) {
+      throw {
+        status: 404,
+        message: "Alamat tidak ditemukan atau belum memiliki koordinat",
+        isExpose: true,
+      };
+    }
+
+    const latitude = parseFloat(address.latitude);
+    const longitude = parseFloat(address.longitude);
+
+    // pengecekan bentul lat dan lon
+    if (isNaN(latitude) || isNaN(longitude)) {
+      throw {
+        status: 400,
+        message: "Koordinat alamat tidak valid (bukan angka)",
+        isExpose: true,
+      };
+    }
+
+    const nearestStores = await prisma.$queryRawUnsafe<any[]>(`
+  SELECT id, name, city, 
+    (
+      6371 * acos(
+        cos(radians(${latitude})) * 
+        cos(radians(CAST(latitude AS FLOAT))) * 
+        cos(radians(CAST(longitude AS FLOAT)) - radians(${longitude})) +
+        sin(radians(${latitude})) * 
+        sin(radians(CAST(latitude AS FLOAT)))
+      )
+    ) AS distance
+  FROM "stores"
+  WHERE 
+    "deletedAt" IS NULL
+    AND latitude IS NOT NULL AND latitude != ''
+    AND longitude IS NOT NULL AND longitude != ''
+  ORDER BY distance ASC
+  LIMIT 1
+`);
+
+    if (!nearestStores || nearestStores.length === 0) {
+      throw { status: 404, message: "Tidak ada store ditemukan", isExpose: true };
+    }
+
+    res.status(200).json({
+      message: "Toko terdekat berhasil ditemukan",
+      nearestStore: nearestStores[0],
+    });
   } catch (error) {
     next(error);
   }

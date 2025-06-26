@@ -10,6 +10,7 @@ import getMapRouter from "./routers/getMap.router";
 import storeRouter from './routers/store.router';
 import inventoryRouter from './routers/inventory.router';
 import adminRouter from './routers/admin.router';
+import userRouter from "./routers/user.router";
 
 export default class App {
   private app: Express;
@@ -55,7 +56,9 @@ export default class App {
       } else {
         next();
       }
+    }
     });
+    
   }
 
   private routes(): void {
@@ -77,9 +80,9 @@ export default class App {
     this.app.use('/api/inventories', inventoryRouter)
     this.app.use('/api/product', productRouter.getRouter());
     this.app.use('/api/product-category', productCategoryRouter.getRouter());
-    this.app.use('/api/user', authRouter)
     this.app.use('/api', getMapRouter)
     this.app.use('/api/admin', adminRouter)
+    this.app.use("/api/user", userRouter)
   }
 
   public start(): void {
