@@ -1,8 +1,14 @@
 import apiInstance from "@/utils/api/apiInstance";
 
-export const updateCartItemQuantity = async (token: String, cartItemId: String, quantity: Number) => {
+export const updateCartItemQuantity = async (
+  token: String,
+  cartItemId: String,
+  quantity: Number,
+  productId: String,
+  storeId: String
+) => {
   const response = await apiInstance.put(
-    `/cart/${cartItemId}/update-qty`,
+    `/cart/item/${cartItemId}/product/${productId}/store/${storeId}/update-qty`,
     { quantity },
     {
       headers: { Authorization: `Bearer ${token}` },
@@ -10,3 +16,5 @@ export const updateCartItemQuantity = async (token: String, cartItemId: String, 
   );
   return response;
 };
+
+// `/cart/${cartItemId}/update-qty`,

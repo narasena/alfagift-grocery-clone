@@ -83,7 +83,7 @@ export default function useCartItems() {
     modal?.close();
   };
 
-  const updateQuantity = async (cartItemId: string, newQuantity: number) => {
+  const updateQuantity = async (cartItemId: string, newQuantity: number, productId: string, storeId: string) => {
     // Implement your API call to update quantity in the backend
     if (token) {
       try {
@@ -91,15 +91,29 @@ export default function useCartItems() {
         if (newQuantity < 1) return;
 
         // Call API to update quantity
-        await updateCartItemQuantity(token, cartItemId, newQuantity);
+        await updateCartItemQuantity(token, cartItemId, newQuantity, productId, storeId);
 
         // Update local state
         setCartItems((prev) =>
           prev.map((item) => (item.id === cartItemId ? { ...item, quantity: newQuantity } : item))
         );
-      } catch (error) {
+      } catch (error: any) {
+        // console.error("Failed to update quantity:", error);
+        // // You might want to show an error toast here
+        // toast.error("Gagal memperbarui jumlah barang.");
+        const message = error?.response?.data?.message || error.message;
+
+        // if (message.includes("out of stock")) {
+        //   toast.error("Produk habis, stok tidak mencukupi!");
+        // } else if (message.includes("exceeds")) {
+        //   toast.warning("Jumlah melebihi stok yang tersedia!");
+        // } else {
+        //   toast.error("Gagal memperbarui jumlah produk");
+        // }
+
+        toast.error(message);
         console.error("Failed to update quantity:", error);
-        // You might want to show an error toast here
+        throw error; // Optional: re-throw for input rollback
       }
     }
   };
@@ -107,14 +121,14 @@ export default function useCartItems() {
   const incrementQuantity = async (itemId: string) => {
     const item = cartItems.find((item) => item.id === itemId);
     if (item) {
-      await updateQuantity(itemId, item.quantity + 1);
+      await updateQuantity(itemId, item.quantity + 1, item.productId, item.storeId);
     }
   };
 
   const decrementQuantity = async (itemId: string) => {
     const item = cartItems.find((item) => item.id === itemId);
     if (item && item.quantity > 1) {
-      await updateQuantity(itemId, item.quantity - 1);
+      await updateQuantity(itemId, item.quantity - 1, item.productId, item.storeId);
     }
   };
 

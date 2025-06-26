@@ -15,6 +15,7 @@ cartRouter.get("/", jwtDecode, getCartItems);
 cartRouter.post("/:storeId/add", jwtDecode, createCartItems);
 cartRouter.put("/:cartItemId/delete", jwtDecode, deleteCartItem);
 cartRouter.put("/delete-all", jwtDecode, deleteAllCartItems);
-cartRouter.put("/:cartItemId/update-qty", jwtDecode, updateCartItemQuantity);
+cartRouter.put("/item/:cartItemId/product/:productId/store/:storeId/update-qty", jwtDecode, updateCartItemQuantity);
+// cartRouter.put("/:cartItemId/update-qty", jwtDecode, updateCartItemQuantity);
 
 export default cartRouter;
