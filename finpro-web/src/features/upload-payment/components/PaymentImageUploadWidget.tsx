@@ -13,7 +13,7 @@ export default function PaymentImageUploadWidget(props: IPaymentImageUploadButto
     <>
       <CldUploadWidget
         uploadPreset="payment-image"
-        signatureEndpoint={`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/signed-upload`}
+        signatureEndpoint={`${process.env.NEXT_PUBLIC_API_BASE_URL}/cloudinary/signed-upload`}
         onSuccess={props.onSuccess}
         options={{
           sources: ["local", "url", "camera", "image_search", "google_drive"],

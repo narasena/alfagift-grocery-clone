@@ -15,3 +15,7 @@ export interface IStore {
     updatedAt: Date
     deletedAt?: Date
 }
+
+export interface IStoreTable extends IStore {
+    [key: string]: unknown
+}
