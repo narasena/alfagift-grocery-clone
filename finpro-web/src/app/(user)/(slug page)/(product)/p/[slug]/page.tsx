@@ -15,7 +15,7 @@ import { useProductBreadcrumbs } from "@/features/admin/products/hooks/useProduc
 
 import { HiOutlineShoppingCart } from "react-icons/hi";
 
-import { IProduct } from "@/types/products/product.type";
+import { IProduct, IProductDetails } from "@/types/products/product.type";
 
 import useCart from "@/features/(user)/p/hooks/useCart";
 import usePickStoreId from "@/hooks/stores/usePickStoreId";
@@ -167,11 +167,14 @@ export default function ProductSlugPage({ slug }: IProduct) {
           {/* Product Price */}
           <div className="px-3">
             <h1 className="text-2xl text-red-700 font-bold py-2">
-              {(product?.discount ? product?.discount?.discountedPrice : product?.price ?? 0).toLocaleString("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                minimumFractionDigits: 0,
-              })}
+              {(product?.discount ? product?.discount?.discountedPrice ?? 0 : product?.price ?? 0).toLocaleString(
+                "id-ID",
+                {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
+                }
+              )}
             </h1>
           </div>
           {/* Product Discount */}
@@ -185,14 +188,11 @@ export default function ProductSlugPage({ slug }: IProduct) {
                   : ""}
               </div>
               <div className="text-xs text-gray-600 line-through">
-                {Number(product?.price).toLocaleString(
-                  "id-ID",
-                  {
-                    style: "currency",
-                    currency: "IDR",
-                    minimumFractionDigits: 0,
-                  }
-                )}
+                {Number(product?.price).toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
+                })}
               </div>
             </div>
           )}
@@ -264,7 +264,7 @@ export default function ProductSlugPage({ slug }: IProduct) {
               <div className="flex-1">
                 {/* store nya belum */}
                 <button
-                  onClick={() => handleAddToCart(quantity, storeId!, product?.id!, product as IProduct)}
+                  onClick={() => handleAddToCart(quantity, product?.id!, storeId!, product as IProductDetails)}
                   className="w-full text-white font-medium text-lg py-2 rounded-md flex items-center justify-center bg-red-700 cursor-pointer active:ring-4 active:ring-blue-300"
                 >
                   {`+ Keranjang`}

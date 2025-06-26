@@ -26,13 +26,22 @@ export const createCartItems = async (req: Request, res: Response, next: NextFun
       throw new AppError("Invalid input data.", 400);
     }
 
+    console.log("Checking stock for", { storeId, productId });
+
     // Check product stock (assuming product is unique per store)
     const productStock = await prisma.productStock.findFirst({
       where: {
-        productId,
         storeId,
+        productId,
       },
     });
+
+    const price = (
+      await prisma.product.findUnique({
+        where: { id: productId },
+        select: { price: true },
+      })
+    )?.price;
 
     if (!productStock) {
       throw new AppError("Product not found.", 404);
@@ -98,7 +107,6 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
   try {
     //cari userId dulu
     // const userId = req.body.userId
-
     const { userId } = req.body.payload;
     console.log(req.body.payload);
 
@@ -106,58 +114,62 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
       throw new AppError("User not authenticated.", 401);
     }
 
-    // Find the cart for the user
-    const cart = await prisma.cart.findUnique({
+    const cartId = (
+      await prisma.cart.findUnique({
+        where: { userId },
+      })
+    )?.id;
+    if (!cartId) {
+      throw new AppError("Cart not found.", 404);
+    }
+    const productDiscountIds = await prisma.productDiscount.findMany({
       where: {
-        userId,
+        startDate: { lte: new Date() },
+        endDate: { gte: new Date() },
+      },
+    });
+
+    const cartItems = await prisma.cartItem.findMany({
+      where: {
+        cartId,
+        status: "ACTIVE", // Only get active items
       },
       include: {
-        cartItems: {
-          where: {
-            status: "ACTIVE",
-          },
-          include: {
-            productStock: {
-              include: {
-                product: {
-                  include: {
-                    productImage: {
-                      where: { isMainImage: true },
-                      take: 1,
-                    },
-                    productBrand: true,
-                    productSubCategory: {
-                      include: {
-                        productCategory: true,
-                      },
-                    },
-                    productDiscountHistories: {
-                      include: {
-                        discount: true,
-                      },
-                    },
-                  },
+        product: {
+          select: {
+            name: true,
+            price: true,
+            productDiscountHistories: {
+              where: {
+                discountId: {
+                  in: productDiscountIds.map((discount) => discount.id),
                 },
-                store: true,
+              },
+              select: {
+                id: true,
+                discountId: true,
+                discountValue: true,
+                discount: true,
               },
             },
+          },
+        },
+        productStock: {
+          select: {
+            stock: true,
           },
         },
       },
     });
 
-    if (!cart) {
-      throw new AppError("Cart not found.", 404);
-    }
-
-    if (!cart.cartItems || cart.cartItems.length === 0) {
+    if (cartItems.length === 0) {
       throw new AppError("No items in the cart.", 404);
     }
 
     res.status(200).json({
       success: true,
       message: "Cart items retrieved successfully.",
-      cart,
+      cartItems,
     });
   } catch (error) {
     next(error);

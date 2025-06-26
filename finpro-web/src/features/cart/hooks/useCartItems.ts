@@ -7,27 +7,31 @@ import { deleteCartItem } from "../api/handleDeleteCartItems";
 import { deleteAllCartItems } from "../api/handleDeleteAllCartItems";
 import { updateCartItemQuantity } from "../api/handleUpdateCartItemQuantity";
 import { toast } from "react-toastify";
+import usePickStoreId from "@/hooks/stores/usePickStoreId";
 
 export default function useCartItems() {
   const token = authStore((state: IAuthState) => state.token);
+  const { storeId } = usePickStoreId();
 
-  const [cartItems, setCartItems] = React.useState<ICartItem[]>([]);
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const [cartItems, setCartItems] = React.useState<any[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [itemToDelete, setItemToDelete] = React.useState<string | null>(null);
+  // const handleInitialize = React.useRef(false);
 
   const handleDisplayCartItems = async () => {
     try {
       // console.log(token);
 
       if (token) {
+        setLoading(true);
         const cartItems = await handleGetCartItems(token);
-        console.log("Cart items:", cartItems.data.cart.cartItems);
-        setCartItems(cartItems.data.cart.cartItems);
-        setLoading(false);
+        console.log("Cart items:", cartItems.data.cartItems);
+        setCartItems(cartItems.data.cartItems);
         toast.success("Berhasil menampilkan barang di keranjang");
+        setLoading(false);
       }
     } catch (error) {
       console.error("Error displaying cart items:", error);
@@ -120,6 +124,7 @@ export default function useCartItems() {
     if (token) {
       handleDisplayCartItems();
     }
+    // handleInitialize.current = true;
   }, [token]);
 
   return {

@@ -44,7 +44,7 @@ export default function CartPage() {
 
   const totalBelanja =
     cartItems?.reduce((total, item) => {
-      const price = item.productStock?.product.price ?? 0;
+      const price = item.product.price ?? 0;
       return total + price * item.quantity;
     }, 0) ?? 0;
 
@@ -152,10 +152,8 @@ export default function CartPage() {
                       <div className="flex flex-col md:flex-row md:items-center justify-between w-full">
                         {/* Product Name + Price */}
                         <div className="flex-1">
-                          <p className="text-black font-semibold">{item.productStock?.product.name}</p>
-                          <p className="text-gray-500 text-md mb-2">
-                            Rp {item.productStock?.product.price.toLocaleString("id-ID")}
-                          </p>
+                          <p className="text-black font-semibold">{item.product.name}</p>
+                          <p className="text-gray-500 text-md mb-2">Rp {item.product.price.toLocaleString("id-ID")}</p>
                         </div>
 
                         {/* Quantity Controls */}
@@ -201,7 +199,7 @@ export default function CartPage() {
                         {/* Price + Delete Button */}
                         <div className="flex items-center justify-between md:justify-end gap-4 md:gap-6 min-w-[140px]">
                           <div className="text-red-700 font-bold text-md text-right">
-                            Rp {((item.productStock?.product.price ?? 0) * item.quantity).toLocaleString("id-ID")}
+                            Rp {((item.product.price ?? 0) * item.quantity).toLocaleString("id-ID")}
                           </div>
                           <button
                             className="flex justify-between items-center bg-white text-blue-600 transition"

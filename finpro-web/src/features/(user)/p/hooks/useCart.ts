@@ -12,12 +12,25 @@ export default function useCart() {
   // const { handleDisplayCartItems } = useCartItems();
   const token = authStore((state: IAuthState) => state.token);
 
-  const handleAddToCart = async (quantity: number = 1, productId: string, storeId: string, product: IProduct) => {
+  const handleAddToCart = async (
+    quantity: number = 1,
+    productId: string,
+    storeId: string,
+    product: IProductDetails
+  ) => {
+    const cartItem: ICartItem = {
+      id: String(product.id),
+      name: product.name,
+      price: product.discount ? product.discount.discountedPrice : product.price,
+      quantity,
+      image: product.productImage?.[0]?.imageUrl ?? "",
+    };
     try {
       if (token) {
         await addProductToCart(productId, quantity, storeId, token);
-        const { data } = await handleGetCartItems(token);
-        setCart(data);
+        const updatedCartItems = await handleGetCartItems(token);
+        console.log("Updated cart items:", updatedCartItems.data.cartItems);
+        // setCart(updatedCartItems.data.cart.cartItems);
         // await handleGetCartItems(token);
         toast.success(`Berhasil menambahkan ${product.name} ke keranjang!`);
       }
