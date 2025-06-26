@@ -65,6 +65,7 @@ export default function ProductSlugPage() {
           <span className="text-sm font-medium">{cart.length}</span>
         </button>
       </div>
+      {/* Cart Modal */}
       <dialog id="cart" className="modal">
         <div className="modal-box bg-white">
           <h2 className="text-lg font-bold mb-4">Keranjang</h2>
@@ -177,7 +178,7 @@ export default function ProductSlugPage() {
           {/* Product Price */}
           <div className="px-3">
             <h1 className="text-2xl text-red-700 font-bold py-2">
-              {product?.price.toLocaleString("id-ID", {
+              {(product?.discount ? product?.discount?.discountedPrice : product?.price ?? 0).toLocaleString("id-ID", {
                 style: "currency",
                 currency: "IDR",
                 minimumFractionDigits: 0,
@@ -195,7 +196,7 @@ export default function ProductSlugPage() {
                   : ""}
               </div>
               <div className="text-xs text-gray-600 line-through">
-                {Number(product?.discount ? product?.discount.discountedPrice : product?.price).toLocaleString(
+                {Number(product?.price).toLocaleString(
                   "id-ID",
                   {
                     style: "currency",
