@@ -16,7 +16,9 @@ export default function useCart() {
     try {
       if (token) {
         await addProductToCart(productId, quantity, storeId, token);
-        await handleGetCartItems(token);
+        const { data } = await handleGetCartItems(token);
+        setCart(data);
+        // await handleGetCartItems(token);
         toast.success(`Berhasil menambahkan ${product.name} ke keranjang!`);
       }
     } catch (error) {

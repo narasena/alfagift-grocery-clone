@@ -18,12 +18,14 @@ import { HiOutlineShoppingCart } from "react-icons/hi";
 import { IProduct } from "@/types/products/product.type";
 
 import useCart from "@/features/(user)/p/hooks/useCart";
+import usePickStoreId from "@/hooks/stores/usePickStoreId";
 
 // cari productId dr params slug
 export default function ProductSlugPage({ slug }: IProduct) {
   const { product, imageShowing, handleImageClick } = useProductDetails();
   const { quantity, setQuantity, handleQuantityChange } = useProductQuantity();
   const { breadcrumbLinks } = useProductBreadcrumbs();
+  const { storeId } = usePickStoreId(); // ambil storeId dari hook
 
   // const {productId} = slug;
 
@@ -249,7 +251,7 @@ export default function ProductSlugPage({ slug }: IProduct) {
               <div className="flex-1">
                 {/* store nya belum */}
                 <button
-                  onClick={() => handleAddToCart(quantity, storeId, product, productId)}
+                  onClick={() => handleAddToCart(quantity, storeId!, product?.id!, product as IProduct)}
                   className="w-full text-white font-medium text-lg py-2 rounded-md flex items-center justify-center bg-red-700 cursor-pointer active:ring-4 active:ring-blue-300"
                 >
                   {`+ Keranjang`}
