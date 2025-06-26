@@ -7,11 +7,9 @@ import { deleteCartItem } from "../api/handleDeleteCartItems";
 import { deleteAllCartItems } from "../api/handleDeleteAllCartItems";
 import { updateCartItemQuantity } from "../api/handleUpdateCartItemQuantity";
 import { toast } from "react-toastify";
-import usePickStoreId from "@/hooks/stores/usePickStoreId";
 
 export default function useCartItems() {
   const token = authStore((state: IAuthState) => state.token);
-  const { storeId } = usePickStoreId();
 
   const [cartItems, setCartItems] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
