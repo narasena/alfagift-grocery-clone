@@ -179,7 +179,7 @@ export default function CartPage() {
                                 const value = parseInt(e.target.value);
                                 if (!isNaN(value) && value >= 1) {
                                   try {
-                                    await updateQuantity(item.id, value);
+                                    await updateQuantity(item.id, value, item.productId, item.storeId);
                                   } catch (error) {
                                     e.target.value = item.quantity.toString();
                                   }
