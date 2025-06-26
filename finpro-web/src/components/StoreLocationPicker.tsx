@@ -1,27 +1,13 @@
 "use client";
-import { useAllStores } from "@/hooks/stores/useAllStores";
-import storeLocationStore from "@/zustand/storeLocation.store";
+import usePickStoreId from "@/hooks/stores/usePickStoreId";
 import * as React from "react";
 import { FaChevronDown } from "react-icons/fa";
 import { IoStorefront } from "react-icons/io5";
 
 export default function StoreLocationPicker() {
-  const { stores } = useAllStores();
-  const setLocationStore = storeLocationStore((state) => state.setStoreLocation);
-  const currentStoreId = storeLocationStore((state) => state.storeId);
-  const handleInitialLocationStore = () => {
-    if (!currentStoreId) {
-      setLocationStore({ _latitude: null, _longitude: null, _storeId: "cmbrpl9tp0002p1oo9ca2exgc" });
-    }
-  };
-  const [miniButton, setMiniButton] = React.useState(true);
-  const [dropdown, setDropdown] = React.useState(false);
-
-  React.useEffect(() => {
-    if (stores.length > 0) {
-      handleInitialLocationStore();
-    }
-  }, [stores]);
+  const { stores, storeId, setLocationStore, miniButton, setMiniButton, dropdown, setDropdown } =
+    usePickStoreId();
+  
 
   return (
     <div
@@ -47,7 +33,7 @@ export default function StoreLocationPicker() {
         <div className="flex flex-col gap-2">
           <div className="text-xs py-1.5 px-2.5 bg-blue-800 text-white rounded-md w-max">
             <div>{`Current Store: `}</div>
-            <b className="text-sm">{stores.find((store) => store.id === currentStoreId)?.name}</b>
+            <b className="text-sm">{stores.find((store) => store.id === storeId)?.name}</b>
           </div>
           <button
             id="dropdownDefaultButton"
