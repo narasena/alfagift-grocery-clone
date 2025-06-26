@@ -10,7 +10,7 @@ export default function useCart() {
     const cartItem: ICartItem = {
       id: String(product.id),
       name: product.name,
-      price: product.price,
+      price: product.discount? product.discount.discountedPrice: product.price,
       quantity,
       image: product.productImage?.[0]?.imageUrl ?? "",
     };
