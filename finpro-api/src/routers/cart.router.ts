@@ -11,7 +11,8 @@ import { jwtDecode } from "../middlewares/jwt.decode";
 const cartRouter = Router();
 
 cartRouter.get("/", jwtDecode, getCartItems);
-cartRouter.post("/add", jwtDecode, createCartItems);
+// cartRouter.post("/add", jwtDecode, createCartItems);
+cartRouter.post("/:storeId/add", jwtDecode, createCartItems);
 cartRouter.put("/:cartItemId/delete", jwtDecode, deleteCartItem);
 cartRouter.put("/delete-all", jwtDecode, deleteAllCartItems);
 cartRouter.put("/:cartItemId/update-qty", jwtDecode, updateCartItemQuantity);

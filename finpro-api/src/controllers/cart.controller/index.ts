@@ -19,19 +19,29 @@ export const createCartItems = async (req: Request, res: Response, next: NextFun
     // const userId = req.body.userId;
 
     const { userId } = req.body.payload; // Adjust based on your auth middleware
-    const { productId, storeId, quantity } = req.body;
+    const { productId, quantity } = req.body; //storeId
+    const { storeId } = req.params; // Assuming storeId is passed as a URL parameter
 
     if (!userId || !productId || !storeId || !quantity || quantity < 1) {
       throw new AppError("Invalid input data.", 400);
     }
 
+    console.log("Checking stock for", { storeId, productId });
+
     // Check product stock (assuming product is unique per store)
     const productStock = await prisma.productStock.findFirst({
       where: {
-        productId,
         storeId,
+        productId,
       },
     });
+
+    const price = (
+      await prisma.product.findUnique({
+        where: { id: productId },
+        select: { price: true },
+      })
+    )?.price;
 
     if (!productStock) {
       throw new AppError("Product not found.", 404);
@@ -97,65 +107,69 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
   try {
     //cari userId dulu
     // const userId = req.body.userId
-
     const { userId } = req.body.payload;
+    console.log(req.body.payload);
 
     if (!userId) {
       throw new AppError("User not authenticated.", 401);
     }
 
-    // Find the cart for the user
-    const cart = await prisma.cart.findUnique({
+    const cartId = (
+      await prisma.cart.findUnique({
+        where: { userId },
+      })
+    )?.id;
+    if (!cartId) {
+      throw new AppError("Cart not found.", 404);
+    }
+    const productDiscountIds = await prisma.productDiscount.findMany({
       where: {
-        userId,
+        startDate: { lte: new Date() },
+        endDate: { gte: new Date() },
+      },
+    });
+
+    const cartItems = await prisma.cartItem.findMany({
+      where: {
+        cartId,
+        status: "ACTIVE", // Only get active items
       },
       include: {
-        cartItems: {
-          where: {
-            status: "ACTIVE",
-          },
-          include: {
-            productStock: {
-              include: {
-                product: {
-                  include: {
-                    productImage: {
-                      where: { isMainImage: true },
-                      take: 1,
-                    },
-                    productBrand: true,
-                    productSubCategory: {
-                      include: {
-                        productCategory: true,
-                      },
-                    },
-                    productDiscountHistories: {
-                      include: {
-                        discount: true
-                      }
-                    }
-                  },
+        product: {
+          select: {
+            name: true,
+            price: true,
+            productDiscountHistories: {
+              where: {
+                discountId: {
+                  in: productDiscountIds.map((discount) => discount.id),
                 },
-                store: true,
+              },
+              select: {
+                id: true,
+                discountId: true,
+                discountValue: true,
+                discount: true,
               },
             },
+          },
+        },
+        productStock: {
+          select: {
+            stock: true,
           },
         },
       },
     });
 
-    if (!cart) {
-      throw new AppError("Cart not found.", 404);
-    }
-
-    if (!cart.cartItems || cart.cartItems.length === 0) {
+    if (cartItems.length === 0) {
       throw new AppError("No items in the cart.", 404);
     }
 
     res.status(200).json({
       success: true,
       message: "Cart items retrieved successfully.",
-      cart,
+      cartItems,
     });
   } catch (error) {
     next(error);
@@ -269,16 +283,35 @@ export const updateCartItemQuantity = async (req: Request, res: Response, next: 
     // const userId = req.body.userId; // Or req.user?.id if using auth middleware
     const { userId } = req.body.payload;
     const cartItemId = req.params.cartItemId; // assuming PUT /cart/item/:cartItemId/update-qty
-    const { quantity } = req.body;
+    let { quantity } = req.body;
+    quantity = parseInt(quantity);
 
-    // tambahin storeid
-    // ngecek stock
-
-    // cek harga
-
+    // error di sini gabisa update qty
     if (!userId || !cartItemId || typeof quantity !== "number") {
       throw new AppError("Invalid input data.", 400);
     }
+
+    const currentProductStock = await prisma.productStock.findUnique({
+      where: {
+        productId_storeId: {
+          productId: req.body.productId, // Assuming productId is passed in the body
+          storeId: req.body.storeId, // Assuming storeId is passed in the body
+        },
+      },
+    });
+
+    // ngecek stock dgn store id product id
+    const currentStock = currentProductStock?.stock || 0;
+
+    if (currentStock === 0) {
+      throw new AppError("Product is out of stock.", 400);
+    }
+
+    if (quantity < currentStock) {
+      throw new AppError("Requested quantity exceeds available stock.", 400);
+    }
+
+    // cek harga
 
     if (quantity < 1) {
       throw new AppError("Quantity must be at least 1.", 400);
@@ -307,7 +340,7 @@ export const updateCartItemQuantity = async (req: Request, res: Response, next: 
     res.status(200).json({
       success: true,
       message: "Cart item quantity updated successfully.",
-      data: updatedCartItem,
+      updatedCartItem,
     });
   } catch (error) {
     next(error);

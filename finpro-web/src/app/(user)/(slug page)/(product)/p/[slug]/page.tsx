@@ -15,18 +15,21 @@ import { useProductBreadcrumbs } from "@/features/admin/products/hooks/useProduc
 
 import { HiOutlineShoppingCart } from "react-icons/hi";
 
-// import { useRef } from "react";
-// import { ICartItem } from "@/types/carts/cartItem.type";
+import { IProduct, IProductDetails } from "@/types/products/product.type";
 
 import useCart from "@/features/(user)/p/hooks/useCart";
-// import useGetProductDetails from "@/features/(user)/p/hooks/useGetProductDetails";
+import usePickStoreId from "@/hooks/stores/usePickStoreId";
 
-export default function ProductSlugPage() {
+// cari productId dr params slug
+export default function ProductSlugPage({ slug }: IProduct) {
   const { product, imageShowing, handleImageClick } = useProductDetails();
   const { quantity, setQuantity, handleQuantityChange } = useProductQuantity();
   const { breadcrumbLinks } = useProductBreadcrumbs();
+  const { storeId } = usePickStoreId(); // ambil storeId dari hook
 
-  const { cart, handleAddToCart } = useCart(); // to add items to cart
+  // const {productId} = slug;
+
+  const { cart, handleAddToCart, openModal } = useCart(); // to add items to cart
   const testDescription = {
     list: [
       "Tabung gas mini isi ulang dari HI-COOK",
@@ -40,20 +43,6 @@ export default function ProductSlugPage() {
     long: "merupakan tabung gas ukuran mini yang diciptakan khusus untuk memenuhi kebutuhan anda. Dapat untuk diaplikasikan pada kompor gas tipe mini atau alat-alat lainnya. Cocok untuk digunakan sebagai peralatan bekal memasak ketika aktivitas berkemah atau aktivitas di luar rumah lainnya. Mempunyai desain mini sehingga sangat praktis dibawa atau ditaruh dimanapun. HI-COOK Tabung Gas Mini sangat memenuhi kebutuhan anda.",
   };
 
-  const openModal = () => {
-    const modal = document.getElementById("cart") as HTMLDialogElement | null;
-    if (modal) {
-      modal.showModal();
-    }
-  };
-
-  // const Cart = ({ cart }: { cart: ICartItem[] }) => {
-  //   const dialogRef = useRef<HTMLDialogElement>(null);
-
-  //   const openModal = () => {
-  //     dialogRef.current?.showModal();
-  //   };
-  //emg boleh gini?
   return (
     <div className="lg:px-2 py-4 bg-white text-gray-600 max-w-[500px] lg:max-w-[1200px] mx-auto flex flex-col max-lg:overflow-x-hidden relative">
       <div className="text-black">
@@ -73,7 +62,7 @@ export default function ProductSlugPage() {
             <p className="text-gray-500">Keranjang masih kosong.</p>
           ) : (
             <div className="flex flex-col gap-4">
-              {cart.map((item) => (
+              {cart.map((item: any) => (
                 <div key={item.id} className="border-b pb-2 flex justify-between items-center">
                   <div>
                     <h4 className="font-medium">{item.name}</h4>
@@ -101,7 +90,7 @@ export default function ProductSlugPage() {
                 <span>Total</span>
                 <span>
                   {cart
-                    .reduce((acc, item) => acc + item.price * item.quantity, 0)
+                    .reduce((acc: any, item: any) => acc + item.price * item.quantity, 0)
                     .toLocaleString("id-ID", {
                       style: "currency",
                       currency: "IDR",
@@ -178,11 +167,14 @@ export default function ProductSlugPage() {
           {/* Product Price */}
           <div className="px-3">
             <h1 className="text-2xl text-red-700 font-bold py-2">
-              {(product?.discount ? product?.discount?.discountedPrice : product?.price ?? 0).toLocaleString("id-ID", {
-                style: "currency",
-                currency: "IDR",
-                minimumFractionDigits: 0,
-              })}
+              {(product?.discount ? product?.discount?.discountedPrice ?? 0 : product?.price ?? 0).toLocaleString(
+                "id-ID",
+                {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
+                }
+              )}
             </h1>
           </div>
           {/* Product Discount */}
@@ -196,14 +188,11 @@ export default function ProductSlugPage() {
                   : ""}
               </div>
               <div className="text-xs text-gray-600 line-through">
-                {Number(product?.price).toLocaleString(
-                  "id-ID",
-                  {
-                    style: "currency",
-                    currency: "IDR",
-                    minimumFractionDigits: 0,
-                  }
-                )}
+                {Number(product?.price).toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
+                })}
               </div>
             </div>
           )}
@@ -273,8 +262,9 @@ export default function ProductSlugPage() {
                 </div>
               </div>
               <div className="flex-1">
+                {/* store nya belum */}
                 <button
-                  onClick={() => handleAddToCart(product!, quantity)}
+                  onClick={() => handleAddToCart(quantity, product?.id!, storeId!, product as IProductDetails)}
                   className="w-full text-white font-medium text-lg py-2 rounded-md flex items-center justify-center bg-red-700 cursor-pointer active:ring-4 active:ring-blue-300"
                 >
                   {`+ Keranjang`}
