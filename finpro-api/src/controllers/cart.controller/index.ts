@@ -1,14 +1,11 @@
 import { prisma } from "../../prisma";
 import { AppError } from "../../utils/app.error";
 import { Request, Response, NextFunction } from "express";
-//create cart items to add items to the cart
-//get cart items
-
-// delete cart items
-// delete all cart items
 
 // update? the qty backend or frontend?
 // calculate the total price backend or frontend?
+
+// disocunt belum
 
 // checkout
 
@@ -19,19 +16,29 @@ export const createCartItems = async (req: Request, res: Response, next: NextFun
     // const userId = req.body.userId;
 
     const { userId } = req.body.payload; // Adjust based on your auth middleware
-    const { productId, storeId, quantity } = req.body;
+    const { productId, quantity } = req.body; //storeId
+    const { storeId } = req.params; // Assuming storeId is passed as a URL parameter
 
     if (!userId || !productId || !storeId || !quantity || quantity < 1) {
       throw new AppError("Invalid input data.", 400);
     }
 
+    console.log("Checking stock for", { storeId, productId });
+
     // Check product stock (assuming product is unique per store)
     const productStock = await prisma.productStock.findFirst({
       where: {
-        productId,
         storeId,
+        productId,
       },
     });
+
+    const price = (
+      await prisma.product.findUnique({
+        where: { id: productId },
+        select: { price: true },
+      })
+    )?.price;
 
     if (!productStock) {
       throw new AppError("Product not found.", 404);
@@ -97,67 +104,82 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
   try {
     //cari userId dulu
     // const userId = req.body.userId
-
     const { userId } = req.body.payload;
+    console.log(req.body.payload);
 
     if (!userId) {
       throw new AppError("User not authenticated.", 401);
     }
 
-    // Find the cart for the user
-    const cart = await prisma.cart.findUnique({
+    const cartId = (
+      await prisma.cart.findUnique({
+        where: { userId },
+      })
+    )?.id;
+
+    if (!cartId) {
+      throw new AppError("Cart not found.", 404);
+    }
+    const activeDiscounts = await prisma.productDiscount.findMany({
       where: {
-        userId,
+        startDate: { lte: new Date() },
+        endDate: { gte: new Date() },
+      },
+    });
+
+    const activeDiscountIds = activeDiscounts.map((discount) => discount.id);
+
+    const cartItemsRaw = await prisma.cartItem.findMany({
+      where: {
+        cartId,
+        status: "ACTIVE", // Only get active items
       },
       include: {
-        cartItems: {
-          where: {
-            status: "ACTIVE",
-          },
-          include: {
-            productStock: {
-              include: {
-                product: {
-                  include: {
-                    productImage: {
-                      where: { isMainImage: true },
-                      take: 1,
-                    },
-                    productBrand: true,
-                    productSubCategory: {
-                      include: {
-                        productCategory: true,
-                      },
-                    },
-                    productDiscount: {
-                      where: {
-                        isActive: true,
-                        startDate: { lte: new Date() },
-                        endDate: { gte: new Date() },
-                      },
-                    },
-                  },
+        product: {
+          select: {
+            name: true,
+            price: true,
+            productDiscountHistories: {
+              where: {
+                discountId: {
+                  in: activeDiscountIds,
                 },
-                store: true,
+              },
+              select: {
+                id: true,
+                discountId: true,
+                discountValue: true,
+                discount: true,
               },
             },
+          },
+        },
+        productStock: {
+          select: {
+            stock: true,
           },
         },
       },
     });
 
-    if (!cart) {
-      throw new AppError("Cart not found.", 404);
-    }
-
-    if (!cart.cartItems || cart.cartItems.length === 0) {
+    if (cartItemsRaw.length === 0) {
       throw new AppError("No items in the cart.", 404);
     }
+
+    const cartItems = cartItemsRaw.map((item) => {
+      const discountValue = item.product.productDiscountHistories[0]?.discountValue ?? 0;
+      const finalPrice = item.product.price - discountValue;
+
+      return {
+        ...item,
+        finalPrice,
+      };
+    });
 
     res.status(200).json({
       success: true,
       message: "Cart items retrieved successfully.",
-      cart,
+      cartItems,
     });
   } catch (error) {
     next(error);
@@ -271,20 +293,41 @@ export const updateCartItemQuantity = async (req: Request, res: Response, next: 
     // const userId = req.body.userId; // Or req.user?.id if using auth middleware
     const { userId } = req.body.payload;
     const cartItemId = req.params.cartItemId; // assuming PUT /cart/item/:cartItemId/update-qty
-    const { quantity } = req.body;
+    const productId = req.params.productId; // assuming productId is passed in the URL
+    const storeId = req.params.storeId; // assuming storeId is passed in the URL
+    let { quantity } = req.body;
+    quantity = parseInt(quantity);
 
-    // tambahin storeid
-    // ngecek stock
-
-    // cek harga
-
-    if (!userId || !cartItemId || typeof quantity !== "number") {
+    // error di sini gabisa update qty
+    if (!userId || !cartItemId || !productId || !storeId || isNaN(quantity)) {
       throw new AppError("Invalid input data.", 400);
     }
 
     if (quantity < 1) {
       throw new AppError("Quantity must be at least 1.", 400);
     }
+
+    const currentProductStock = await prisma.productStock.findUnique({
+      where: {
+        productId_storeId: {
+          productId, // Assuming productId is passed in the body
+          storeId,
+        },
+      },
+    });
+
+    // ngecek stock dgn store id product id
+    const currentStock = currentProductStock?.stock || 0;
+
+    if (currentStock === 0) {
+      throw new AppError("Product is out of stock.", 400);
+    }
+
+    if (quantity > currentStock) {
+      throw new AppError("Requested quantity exceeds available stock.", 400);
+    }
+
+    // cek harga
 
     // Make sure the cart item belongs to the user
     const existingCartItem = await prisma.cartItem.findFirst({
@@ -309,7 +352,7 @@ export const updateCartItemQuantity = async (req: Request, res: Response, next: 
     res.status(200).json({
       success: true,
       message: "Cart item quantity updated successfully.",
-      data: updatedCartItem,
+      updatedCartItem,
     });
   } catch (error) {
     next(error);

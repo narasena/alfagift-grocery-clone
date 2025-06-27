@@ -4,6 +4,7 @@ import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import Footer from "../components/Footer";
 import AuthProvider from "../providers/AuthProvider";
+import StoreLocationPicker from "../components/StoreLocationPicker";
 
 
 // const geistSans = Geist({
@@ -31,6 +32,7 @@ export default function RootLayout({
       {/* <body className={`${geistSans.variable} ${geistMono.variable} h-full`} suppressHydrationWarning> */}
       <body className={`h-full`} suppressHydrationWarning>
         <ToastContainer />
+        <StoreLocationPicker/>
         <AuthProvider>
         {children}
         </AuthProvider> 

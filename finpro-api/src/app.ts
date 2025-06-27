@@ -11,6 +11,13 @@ import storeRouter from './routers/store.router';
 import inventoryRouter from './routers/inventory.router';
 import adminRouter from './routers/admin.router';
 import userRouter from "./routers/user.router";
+import discountRouter from "./routers/discount.router";
+import cloudinaryRouter from "./routers/cloudinary.router";
+
+interface ICustomError extends Error {
+  isExpose?: boolean;
+  status?: number;
+}
 
 export default class App {
   private app: Express;
@@ -44,7 +51,7 @@ export default class App {
 
     
     // Error Handler
-    this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    this.app.use((err: ICustomError, req: Request, res: Response, next: NextFunction) => {
       if (req.path.includes("/api/")) {
         console.error("Error : ", err);
       if (req.path.includes('/api/')) {
@@ -53,6 +60,20 @@ export default class App {
           success: false,
           message: "Internal server error. Please try again later!",
         });
+        
+        // Check if error is exposed (safe to show to client)
+        if (err.isExpose) {
+          res.status(err.status || 400).json({
+            success: false,
+            message: err.message,
+          });
+        } else {
+          // Internal server error (hide details from client)
+          res.status(500).json({
+            success: false,
+            message: "Internal server error. Please try again later!",
+          });
+        }
       } else {
         next();
       }
@@ -83,6 +104,8 @@ export default class App {
     this.app.use('/api', getMapRouter)
     this.app.use('/api/admin', adminRouter)
     this.app.use("/api/user", userRouter)
+    this.app.use('/api/discounts', discountRouter)
+    this.app.use('/api/cloudinary', cloudinaryRouter)
   }
 
   public start(): void {

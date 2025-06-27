@@ -13,7 +13,7 @@ export default function PaymentImageUploadWidget(props: IPaymentImageUploadButto
     <>
       <CldUploadWidget
         uploadPreset="payment-image"
-        signatureEndpoint={`${process.env.NEXT_PUBLIC_API_BASE_URL}/product/signed-upload`}
+        signatureEndpoint={`${process.env.NEXT_PUBLIC_API_BASE_URL}/cloudinary/signed-upload`}
         onSuccess={props.onSuccess}
         options={{
           sources: ["local", "url", "camera", "image_search", "google_drive"],
@@ -24,7 +24,7 @@ export default function PaymentImageUploadWidget(props: IPaymentImageUploadButto
         {({ open }) => (
           <button
             type="button"
-            className="mt-4 px-4 py-2 bg-red-800 text-white font-semibold text-xl rounded-md"
+            className="mt-4 px-4 py-2 bg-red-600 text-white font-semibold text-xl rounded-md"
             onClick={() => open?.()}
           >
             {props.buttonText}
