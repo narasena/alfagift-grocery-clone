@@ -6,7 +6,7 @@ import Link from 'next/link';
 export default function AdminSideNavBar() {
     const {sideNav, pathName } = useAdminDashboardNavItems()
   return (
-    <div className="hidden px-4 lg:flex lg:flex-col bg-red-700 text-white">
+    <div className="sticky top-0 left-0 max-h-screen z-30 w-full hidden px-4 lg:flex lg:flex-col bg-red-700 text-white shadow-lg/100">
       <div className="uppercase text-white font-bold text-2xl py-4">admin dashboard</div>
       <div>
         <div className="text-xl font-medium">Main Menu</div>
