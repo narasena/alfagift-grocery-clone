@@ -21,7 +21,7 @@ export class ProductController {
       }
 
       const existingProduct = await prisma.product.findUnique({
-        where: { slug },
+        where: { slug , deletedAt: null },
       });
       if (existingProduct) {
         res.status(400).json({
