@@ -13,9 +13,16 @@ import ProductImageUploadWidget from "@/features/admin/products/components/Produ
 import AdminPageTitle from "@/features/admin/components/AdminPageTitle";
 
 export default function AddProductPage() {
-  const { imageShowing, handleImageClick, uploadedImages, handleSwapImage, handleSetAsMainImage, handleImageUpload } =
-    useProductImagesUpload();
-  const {  handleCreateProduct } = useCreateProduct();
+  const {
+    imageShowing,
+    handleImageClick,
+    uploadedImages,
+    handleSwapImage,
+    handleSetAsMainImage,
+    handleImageUpload,
+    handleDeleteImage,
+    handleCreateProduct,
+  } = useCreateProduct();
 
   return (
     <div className="bg-red-400">
@@ -147,17 +154,19 @@ export default function AddProductPage() {
                 }
               }}
             >
-              <Form>
-                <ProductInputFields />
-                <div className="px-3 w-full">
-                  <button
-                    type="submit"
-                    className="w-full mt-4 px-4 py-2 bg-red-800 text-white font-semibold text-2xl rounded-md "
-                  >
-                    Add Product
-                  </button>
-                </div>
-              </Form>
+              {({ resetForm }) => (
+                <Form>
+                  <ProductInputFields resetForm={resetForm} />
+                  <div className="px-3 w-full">
+                    <button
+                      type="submit"
+                      className="w-full mt-4 px-4 py-2 bg-red-800 text-white font-semibold text-2xl rounded-md "
+                    >
+                      Add Product
+                    </button>
+                  </div>
+                </Form>
+              )}
             </Formik>
           </div>
         </div>
