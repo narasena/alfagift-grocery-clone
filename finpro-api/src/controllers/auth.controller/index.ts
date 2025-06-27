@@ -2,13 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import { prisma } from "../../prisma";
 import { hashPassword } from "../../utils/hash.password";
 import { comparePassword } from "../../utils/compare.password";
-import { jwtSign } from "../../utils/jwt.sign";
+import { jwtSign, jwtSignAdmin } from "../../utils/jwt.sign";
 
-export const registerUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+
+export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {
       firstName,
@@ -85,68 +82,87 @@ export const registerUser = async (
   }
 };
 
-export const loginUser = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+
+export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password } = req.body;
 
-    const findUserByEmail = await prisma.user.findFirst({
-      where: { email },
-    });
+    const findUser = await prisma.user.findFirst({ where: { email } });
+    const findAdmin = await prisma.admin.findFirst({ where: { email } });
 
-    if (findUserByEmail === null) {
-      throw{isExpose: true, status: 404, message: "Email not found"}
+    if (!findUser && !findAdmin) {
+      throw { isExpose: true, status: 404, message: "User not found" };
     }
 
-    const isPasswordMatch = await comparePassword(password, findUserByEmail.password);
+    let token: string;
+    let role: string;
 
+    if (findUser) {
+      const isPasswordMatch = await comparePassword(password, findUser.password);
+      if (!isPasswordMatch) throw { isExpose: true, status: 401, message: "Invalid password" };
 
-    if (isPasswordMatch === false) {
-      throw{isExpose: true, status: 401, message: "Invalid password"}
+      token = jwtSign({
+        userId: findUser.id,
+        email: findUser.email,
+        isEmailVerified: findUser.isEmailVerified,
+      });
+      role = "user";
+
+      res.status(200).json({
+        success: true,
+        message: "Login success (user)",
+        data: { token, role, userId: findUser.id, email: findUser.email },
+      });
     }
 
-    const token = jwtSign({ userId: findUserByEmail?.id, email: findUserByEmail?.email, isEmailVerified: findUserByEmail?.isEmailVerified } )
-    console.log(token)
+    if (findAdmin) {
+      const isPasswordMatch = await comparePassword(password, findAdmin.password);
+      if (!isPasswordMatch) throw { isExpose: true, status: 401, message: "Invalid password" };
 
-    res.status(200).json({
-      success: true,
-      message: "Login successfull",
-      data: {
-        token,
-        userId: findUserByEmail.id,
-        user: findUserByEmail.email,
-        isEmailVerified: findUserByEmail.isEmailVerified 
-      },
-    })
+      token = jwtSignAdmin({
+        adminId: findAdmin.id,
+        email: findAdmin.email,
+        role: findAdmin.role,
+      });
+      role = findAdmin.role.toLowerCase();
 
+      res.status(200).json({
+        success: true,
+        message: "Login success (admin)",
+        data: {
+          token,
+          role,
+          adminId: findAdmin.id,
+          email: findAdmin.email,
+        },
+      });
+    }
   } catch (error) {
     next(error);
   }
 };
 
-export const sessionLoginUser = async ( req: Request, res: Response, next: NextFunction ) => {
-  try{
+
+
+export const sessionLoginUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
     const { payload } = req.body;
-    
-    const findUserByUserId = await prisma.user.findFirst({
-      where: {
-        id: payload.userId
-      }
-    })
+    const user = await prisma.user.findUnique({ where: { id: payload.userId } });
+
+    if (!user) throw { status: 404, isExpose: true, message: "User tidak ditemukan" };
+
+    const token = req.headers.authorization?.split(" ")[1];
+
     res.status(200).json({
       success: true,
-      message: "Session Login successfull",
+      message: "Session login user berhasil",
       data: {
-        token: req.headers.authorization?.split(" ")[1],
-        userId: findUserByUserId?.id,
-        user: findUserByUserId?.email,
-        isEmailVerified: findUserByUserId?.isEmailVerified 
+        token,
+        userId: user.id,
+        email: user.email,
       },
-    })
-  }catch (error) {
+    });
+  } catch (error) {
     next(error);
   }
-}
+};

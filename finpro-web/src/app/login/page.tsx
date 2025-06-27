@@ -5,7 +5,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { authValidationSchema } from "../features/auth/schemas/authValidationSchema";
 import { toast } from "react-toastify";
-import authStore from "../../zustand/store";
+import authStore from "../../zustand/authStore";
 import { useRouter } from "next/navigation";
 import apiInstance from "@/utils/api/apiInstance";
 
@@ -25,15 +25,15 @@ export default function LoginPage() {
         password,
       });
 
-      console.log(response);
       toast.success(response.data.message);
       setAuth({
-        _token: response.data.data.token,
-        _email: response.data.data.user,
-        _id: response.data.data.userId,
+        token: response.data.data.token,
+        email: response.data.data.user,
+        id: response.data.data.userId,
+        role: null,
       });
 
-      router.push("/main");
+      router.push("/");
     } catch (error) {
       console.log(error);
     }

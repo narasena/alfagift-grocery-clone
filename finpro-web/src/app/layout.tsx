@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 // import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
-import AuthProvider from "@/providers/AuthProvider";
-import StoreLocationPicker from "@/components/StoreLocationPicker";
+import Footer from "../components/Footer";
+import AuthProvider from "../providers/AuthProvider";
+import StoreLocationPicker from "../components/StoreLocationPicker";
+
 
 // const geistSans = Geist({
 //   variable: "--font-geist-sans",
@@ -31,7 +33,9 @@ export default function RootLayout({
       <body className={`h-full`} suppressHydrationWarning>
         <ToastContainer />
         <StoreLocationPicker/>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+        {children}
+        </AuthProvider> 
       </body>
     </html>
   );
