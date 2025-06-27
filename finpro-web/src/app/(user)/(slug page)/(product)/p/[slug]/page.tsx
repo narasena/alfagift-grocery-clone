@@ -185,14 +185,11 @@ export default function ProductSlugPage({ slug }: IProduct) {
                   : ""}
               </div>
               <div className="text-xs text-gray-600 line-through">
-                {Number(product?.price).toLocaleString(
-                  "id-ID",
-                  {
-                    style: "currency",
-                    currency: "IDR",
-                    minimumFractionDigits: 0,
-                  }
-                )}
+                {Number(product?.price).toLocaleString("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
+                })}
               </div>
             </div>
           )}
