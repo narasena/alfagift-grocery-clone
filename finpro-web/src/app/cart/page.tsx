@@ -2,8 +2,11 @@
 import { IoTrashOutline } from "react-icons/io5";
 import { BsStopwatch } from "react-icons/bs";
 import { FaLocationDot } from "react-icons/fa6";
-import { useState } from "react";
 import useCartItems from "@/features/cart/hooks/useCartItems";
+import { useProductQuantity } from "@/features/(user)/p/hooks/useProductQuantity";
+import * as React from "react";
+
+import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi"; // top of file
 
 // refactoring:
 // kalo component global, dipake di semua page
@@ -18,31 +21,39 @@ import useCartItems from "@/features/cart/hooks/useCartItems";
 // update quantity
 
 export default function CartPage() {
-  const { cartItems, loading } = useCartItems(); // to display cart items
-  console.log("Cart items:", cartItems);
-  const [isSummaryOpen, setIsSummaryOpen] = useState(false);
+  const {
+    cartItems,
+    loading,
+    isSummaryOpen,
+    setIsSummaryOpen,
+    isDeleting,
+    setIsDeleting,
+    itemToDelete,
+    handleDeleteAllCartItems,
+    handleDeleteCartItem,
+    openClearAllModal,
+    closeClearAllModal,
+    openClearItemModal,
+    closeClearItemModal,
+    updateQuantity,
+    incrementQuantity,
+    decrementQuantity,
+  } = useCartItems();
 
-  if (loading) return <p>Loading cart items...</p>;
+  // const { quantity, setQuantity, handleQuantityChange } = useProductQuantity();
 
-  const openClearAllModal = () => {
-    const modal = document.getElementById("clear_all") as HTMLDialogElement | null;
-    modal?.showModal();
-  };
+  const totalBelanja =
+    cartItems?.reduce((total, item) => {
+      const price = item.product.price ?? 0;
+      return total + price * item.quantity;
+    }, 0) ?? 0;
 
-  const closeClearAllModal = () => {
-    const modal = document.getElementById("clear_all") as HTMLDialogElement | null;
-    modal?.close();
-  };
-
-  const openClearItemModal = () => {
-    const modal = document.getElementById("clear_item") as HTMLDialogElement | null;
-    modal?.showModal();
-  };
-
-  const closeClearItemModal = () => {
-    const modal = document.getElementById("clear_item") as HTMLDialogElement | null;
-    modal?.close();
-  };
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
 
   return (
     <main className="min-h-screen bg-white flex flex-col items-center justify-between py-8">
@@ -53,16 +64,25 @@ export default function CartPage() {
           <div className="modal-action flex justify-center gap-x-4">
             <form method="dialog">
               {/* Cancel button closes the modal */}
-              <button className="btn w-28 border-red-600 bg-white text-red-600 shadow-none rounded-lg text-lg">
+              <button
+                className="btn w-28 border-red-600 bg-white text-red-600 shadow-none rounded-lg text-lg"
+                disabled={isDeleting}
+              >
                 Cancel
               </button>
             </form>
             {/* clear all ok and then close */}
             <button
               className="btn w-28 shadow-none rounded-lg text-lg bg-red-600 border-red-600 text-white"
-              onClick={closeClearAllModal}
+              onClick={async () => {
+                setIsDeleting(true);
+                await handleDeleteAllCartItems();
+                setIsDeleting(false);
+                closeClearAllModal();
+              }}
+              disabled={isDeleting}
             >
-              OK
+              {isDeleting ? "Deleting..." : "OK"}
             </button>
           </div>
         </div>
@@ -77,10 +97,16 @@ export default function CartPage() {
                 Cancel
               </button>
             </form>
-            {/* clear all item button */}
+            {/* clear item button */}
             <button
               className="btn w-28 shadow-none rounded-lg text-lg bg-red-600 border-red-600 text-white"
-              onClick={closeClearItemModal}
+              onClick={async () => {
+                if (!itemToDelete) return;
+                setIsDeleting(true);
+                await handleDeleteCartItem(itemToDelete);
+                setIsDeleting(false);
+                closeClearItemModal();
+              }}
             >
               OK
             </button>
@@ -100,54 +126,99 @@ export default function CartPage() {
               <h3 className="font-semibold text-gray-700 text-sm">Kirim ke:</h3>
               <p className="text-sm text-gray-600">Jl. Contoh No. 123, Jakarta</p>
             </div>
-            {/* Button clear all */}
-            <button
-              className="px-4 my-6 flex justify-between items-center bg-white text-blue-600 py-2 rounded-lg transition border-2"
-              onClick={openClearAllModal}
-            >
-              <div className="pr-2">
-                <IoTrashOutline />
-              </div>
-              Hapus Semua
-            </button>
-            <div className="text-black flex items-center gap-2 mb-2">
-              <div className="">
-                <BsStopwatch className="text-black" />
-              </div>
-              Pengiriman Instan
-            </div>
-            <ul className="space-y-4">
-              {cartItems.map((item, index) => (
-                <li key={index} className="flex justify-between items-center border rounded p-4">
-                  {/* Left: Item details */}
-                  <div className="flex flex-col">
-                    <span className="text-black font-semibold">{item.productStock?.product.name}</span>
-                    <span className="text-gray-500 text-sm mb-2">
-                      Rp {item.productStock?.product.price.toLocaleString("id-ID")}
-                    </span>
+            {cartItems && cartItems.length > 0 ? (
+              <>
+                {/* Hapus Semua Button */}
+                <button
+                  className="px-4 my-6 flex justify-between items-center bg-white text-blue-600 py-2 rounded-lg transition border-2"
+                  onClick={openClearAllModal}
+                >
+                  <div className="pr-2">
+                    <IoTrashOutline />
                   </div>
-                  {/* Right: Subtotal + Quantity controls */}
-                  <div className="flex items-center justify-end md:justify-start space-x-2 md:space-x-4">
-                    <div className="flex items-center space-x-2">
-                      <button className="w-8 h-8 border rounded text-lg text-gray-600 hover:bg-gray-100">-</button>
-                      <span className="w-6 text-center text-black">{item.quantity}</span>
-                      <button className="w-8 h-8 border rounded text-lg text-gray-600 hover:bg-gray-100">+</button>
-                    </div>
-                    <div className="flex items-center space-x-2 md:space-x-4">
-                      <div className="text-black font-medium min-w-[80px] text-right">
-                        Rp {(item.productStock?.product.price ?? 0 * item.quantity).toLocaleString("id-ID")}
+                  Hapus Semua
+                </button>
+
+                {/* Pengiriman Instan */}
+                <div className="text-black flex items-center gap-2 mb-2">
+                  <BsStopwatch className="text-black" />
+                  <span>Pengiriman Instan</span>
+                </div>
+
+                {/* List of Items */}
+                <ul className="space-y-4">
+                  {cartItems.map((item, index) => (
+                    <li key={index} className="flex flex-col md:flex-row md:justify-between gap-4 border rounded p-4">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between w-full">
+                        {/* Product Name + Price */}
+                        <div className="flex-1">
+                          <p className="text-black font-semibold">{item.product.name}</p>
+                          <p className="text-gray-500 text-md mb-2">Rp {item.product.price.toLocaleString("id-ID")}</p>
+                        </div>
+
+                        {/* Quantity Controls */}
+                        <div className="flex items-center gap-1 md:gap-2">
+                          <div
+                            className={`p-1 border border-gray-300 cursor-pointer rounded-lg active:ring-2 active:ring-gray-300 active:bg-gray-400 group ${
+                              item.quantity === 1 && "pointer-events-none bg-gray-300"
+                            }`}
+                            onClick={() => decrementQuantity(item.id)}
+                          >
+                            <HiOutlineMinusSm
+                              className={`text-blue-700 hover:text-gray-500 group-active:text-gray-500 ${
+                                item.quantity === 1 && "text-gray-500"
+                              }`}
+                            />
+                          </div>
+                          <div className="w-12 border-b border-gray-400">
+                            <input
+                              type="number"
+                              className="w-full text-center outline-none"
+                              value={item.quantity}
+                              onChange={async (e) => {
+                                const value = parseInt(e.target.value);
+                                if (!isNaN(value) && value >= 1) {
+                                  try {
+                                    await updateQuantity(item.id, value, item.productId, item.storeId);
+                                  } catch (error) {
+                                    e.target.value = item.quantity.toString();
+                                  }
+                                }
+                              }}
+                              min={1}
+                            />
+                          </div>
+                          <div
+                            className="p-1 border border-gray-300 cursor-pointer rounded-lg active:ring-2 active:ring-gray-300 active:bg-gray-400 group"
+                            onClick={() => incrementQuantity(item.id)}
+                          >
+                            <HiOutlinePlusSm className="text-blue-700 hover:text-gray-600 group-active:text-gray-500" />
+                          </div>
+                        </div>
+
+                        {/* Price + Delete Button */}
+                        <div className="flex items-center justify-between md:justify-end gap-4 md:gap-6 min-w-[140px]">
+                          <div className="text-red-700 font-bold text-md text-right">
+                            Rp {((item.product.price ?? 0) * item.quantity).toLocaleString("id-ID")}
+                          </div>
+                          <button
+                            className="flex justify-between items-center bg-white text-blue-600 transition"
+                            onClick={() => openClearItemModal(item.id)}
+                          >
+                            <IoTrashOutline className="text-2xl" />
+                          </button>
+                        </div>
                       </div>
-                      <button
-                        className="flex justify-between items-center bg-white text-blue-600 transition"
-                        onClick={() => openClearItemModal()} // Pass item.id for deletion
-                      >
-                        <IoTrashOutline className="text-2xl" />
-                      </button>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <div className="text-center text-gray-500 py-12">
+                <p className="text-lg font-semibold">Keranjang kamu kosong</p>
+                <p className="text-sm mt-2">Yuk, tambahkan produk ke keranjang dulu!</p>
+              </div>
+            )}
           </div>
 
           {/* Order Summary - Hidden on mobile */}
@@ -156,7 +227,7 @@ export default function CartPage() {
             <div className="space-y-4 text-black">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>Rp 0</span>
+                <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
               </div>
               <div className="flex justify-between">
                 <span>Diskon</span>
@@ -169,7 +240,7 @@ export default function CartPage() {
             <div className="text-black font-bold">
               <div className="flex justify-between">
                 <span>Total Belanja</span>
-                <span>Rp 0</span>
+                <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
               </div>
             </div>
             <button className="w-full mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition text-lg">
@@ -186,7 +257,7 @@ export default function CartPage() {
                 <div className="space-y-4 text-black">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>Rp 0</span>
+                    <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Diskon</span>
@@ -199,7 +270,7 @@ export default function CartPage() {
                 <div className="text-black font-bold">
                   <div className="flex justify-between">
                     <span>Total Belanja</span>
-                    <span>Rp 0</span>
+                    <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
                   </div>
                 </div>
               </div>
@@ -219,8 +290,8 @@ export default function CartPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                     <div className="flex flex-col">
-                      <div className="text-black font-semibold"> Belanja</div>
-                      <div className="font-bold text-black">Rp {10000 * 2}</div>
+                      <div className="text-black font-semibold">Total Belanja</div>
+                      <div className="font-bold text-black">Rp {totalBelanja.toLocaleString("id-ID")}</div>
                     </div>
                   </div>
                 </div>
