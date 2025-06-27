@@ -20,6 +20,16 @@ export class ProductController {
         });
       }
 
+      const existingProduct = await prisma.product.findUnique({
+        where: { slug },
+      });
+      if (existingProduct) {
+        res.status(400).json({
+          success: false,
+          message: "Product with this name already exists",
+        });
+      }
+
       const newProduct = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
         const product = await tx.product.create({
           data: {
@@ -46,7 +56,20 @@ export class ProductController {
             isMainImage: image.isMainImage,
           })),
         });
-        return { product, productImages };
+
+        const storesIds = await tx.store.findMany({ where: { deletedAt: null }, select: { id: true } });
+
+        const productStocks = await tx.productStock.createMany({
+          data: storesIds.map((storeId: string) => ({
+            productId_storeId: {
+              productId,
+              storeId
+            },
+            stock:0
+          })),
+        });
+
+        return { product, productImages, productStocks };
       });
 
       res.status(201).json({
