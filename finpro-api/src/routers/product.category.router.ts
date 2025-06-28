@@ -15,6 +15,7 @@ export class ProductCategoryRouter {
     this.router.get("/", this.productCategoryController.getProductCategories);
     this.router.get("/subcategories", this.productCategoryController.getProductSubCategories);
     this.router.post("/create", this.productCategoryController.createProductCategory);
+    this.router.post("/subcategories/create", this.productCategoryController.createProductSubCategory);
   }
 
   getRouter(): Router {
