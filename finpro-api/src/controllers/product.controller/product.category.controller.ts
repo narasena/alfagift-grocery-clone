@@ -44,5 +44,47 @@ export class ProductCategoryController {
     }
   }
 
-  async createProductCategory(req: Request, res: Response, next: NextFunction) {}
+  async createProductCategory(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { name } = req.body
+      if (!name || name === "") {
+        throw {
+          isExpose: true,
+          success: false,
+          status: 400,
+          message: "Category name is required",
+        };
+      }
+
+      const existingCategoryNames = await prisma.productCategory.findMany({
+        select: { name: true },
+      });
+
+      if (existingCategoryNames.some((category) => category.name === name)) {
+        throw {
+          isExpose: true,
+          success: false,
+          status: 400,
+          message: "Category name already exists",
+        };
+      }
+
+      const newSlug = name.toLowerCase().replace(/\s+/g, "-");
+
+      const newProductCategory = await prisma.productCategory.create({
+        data: {
+          name,
+          slug: newSlug,
+        },
+      })
+
+      res.status(200).json({
+        success: true,
+        message: "Create data successfull",
+        newProductCategory,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
