@@ -16,14 +16,11 @@ export const useAdminsAdmin = () => {
         }
     ]
     const [activeTab, setActiveTab] = React.useState<(typeof tabHeaders)[number]["key"]>("admins");
-    const handleClickTab = (key: (typeof tabHeaders)[number]["key"]) => {
-      setActiveTab(key);
-    };
 
 
     return {
         activeTab,
+        setActiveTab,
         tabHeaders,
-        handleClickTab
     }
 }
