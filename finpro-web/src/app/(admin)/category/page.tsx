@@ -5,10 +5,7 @@ import * as React from "react";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
 import * as Yup from "yup";
 
-export interface ICategoryFormData {
-  name: string;
-  categoryId?: number;
-}
+
 
 export default function AdminCategoryPage() {
   const {
@@ -24,26 +21,11 @@ export default function AdminCategoryPage() {
     handleCategoryChange,
     handleInputChange,
     isCategoryFormOpen,
-    setIsCategoryFormOpen,
+		setIsCategoryFormOpen,
+		handleSubmit
   } = useAdminsCategory();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await categorySchema.validate(formData, { abortEarly: false });
-      console.log("Valid data:", formData);
-      // Handle form submission here
-      setFormData({ name: "" }); // Reset form
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const validationErrors: { [key: string]: string } = {};
-        err.inner.forEach((error) => {
-          if (error.path) validationErrors[error.path] = error.message;
-        });
-        setErrors(validationErrors);
-      }
-    }
-  };
+  
   return (
     <div>
       <AdminPageTitle title="Product Category Manager" subTitle="Create, Edit and Delete Product Category" />
@@ -128,22 +110,22 @@ export default function AdminCategoryPage() {
                   Category
                 </label>
                 <select
-                  id="categoryId"
-                  name="categoryId"
-                  value={formData.categoryId || ""}
+                  id="productCategoryId"
+                  name="productCategoryId"
+                  value={formData.productCategoryId || 0}
                   onChange={handleCategoryChange}
                   className={`bg-gray-50 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 ${
-                    errors.categoryId ? "border-2 border-red-500" : "border border-gray-300"
+                    errors.productCategoryId ? "border-2 border-red-500" : "border border-gray-300"
                   }`}
                 >
-                  <option value="">Select category</option>
+                  <option value={0}>Select category</option>
                   {productCategories.map((category) => (
                     <option key={category.id} value={category.id}>
                       {category.name}
                     </option>
                   ))}
                 </select>
-                {errors.categoryId && <p className="mt-1 text-sm text-red-600">{errors.categoryId}</p>}
+                {errors.productCategoryId && <p className="mt-1 text-sm text-red-600">{errors.productCategoryId}</p>}
               </div>
               <div className="mb-4">
                 <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900">

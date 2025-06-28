@@ -91,6 +91,7 @@ export class ProductCategoryController {
   async createProductSubCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const { name, productCategoryId } = req.body
+      console.log(name, productCategoryId);
       if (!name || name === "" || !productCategoryId || productCategoryId === "") {
         throw {
           isExpose: true,
