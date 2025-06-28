@@ -1,8 +1,10 @@
 "use client";
+import ItemActions from "@/features/admin/category/components/ItemActions";
 import { useAdminsCategory } from "@/features/admin/category/hooks/useAdminsCategory";
 import AdminPageTitle from "@/features/admin/components/AdminPageTitle";
 import * as React from "react";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
+import { GrView } from "react-icons/gr";
 import * as Yup from "yup";
 
 
@@ -37,10 +39,17 @@ export default function AdminCategoryPage() {
             {productCategories.map((cat, index) => (
               <ul key={index} className="font-medium border border-gray-100 text-base">
                 <li
-                  className="flex items-center justify-between cursor-pointer bg-slate-700 hover:bg-slate-500 text-white px-2 py-1.5"
+                  className="flex items-center group justify-between cursor-pointer bg-slate-700 hover:bg-slate-600 text-white px-2 py-1.5"
                   onClick={() => toggleTab(cat.id)}
                 >
-                  <span>{cat.name}</span>
+                  <div className="flex items-center gap-1">
+										<span>{cat.name}</span>
+										<div className="opacity-0 pointer-events-none group-hover:opacity-80 group-hover:pointer-events-auto">
+
+                    <ItemActions />
+										</div>
+                  </div>
+
                   {isTabOpen(cat.id) ? <BiSolidUpArrow /> : <BiSolidDownArrow />}
                 </li>
                 {productSubCategories
