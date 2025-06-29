@@ -1,9 +1,7 @@
-import { Router } from "express";
-import { getUserAddresses } from "../controllers/user.controller";
-import { jwtDecode } from "../middlewares/jwt.decode";
+import * as userController from "../controllers/user.controller/user.controller";
 
-const userRouter = Router()
+const userRouter = require("express").Router();
 
-userRouter.get("/addresses", jwtDecode, getUserAddresses) 
+userRouter.get("/", userController.getAllUsers);
 
-export default userRouter
+export default userRouter;

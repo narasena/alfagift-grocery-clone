@@ -7,12 +7,12 @@ import cartRouter from "./routers/cart.router";
 import orderRouter from "./routers/order.router";
 import authRouter from "./routers/auth.router";
 import getMapRouter from "./routers/getMap.router";
-import storeRouter from './routers/store.router';
-import inventoryRouter from './routers/inventory.router';
-import adminRouter from './routers/admin.router';
-import userRouter from "./routers/user.router";
+import storeRouter from "./routers/store.router";
+import inventoryRouter from "./routers/inventory.router";
 import discountRouter from "./routers/discount.router";
 import cloudinaryRouter from "./routers/cloudinary.router";
+import adminRouter from "./routers/admins.router";
+import userRouter from "./routers/user.router";
 
 interface ICustomError extends Error {
   isExpose?: boolean;
@@ -49,18 +49,11 @@ export default class App {
       }
     });
 
-    
     // Error Handler
     this.app.use((err: ICustomError, req: Request, res: Response, next: NextFunction) => {
       if (req.path.includes("/api/")) {
         console.error("Error : ", err);
-      if (req.path.includes('/api/')) {
-        console.error('Error : ', err);
-        res.status(500).json({
-          success: false,
-          message: "Internal server error. Please try again later!",
-        });
-        
+
         // Check if error is exposed (safe to show to client)
         if (err.isExpose) {
           res.status(err.status || 400).json({
@@ -77,9 +70,7 @@ export default class App {
       } else {
         next();
       }
-    }
     });
-    
   }
 
   private routes(): void {
@@ -97,15 +88,12 @@ export default class App {
     this.app.use("/api", getMapRouter);
     this.app.use("/api/cart", cartRouter);
     this.app.use("/api/order", orderRouter);
-    this.app.use('/api/store', storeRouter)
-    this.app.use('/api/inventories', inventoryRouter)
-    this.app.use('/api/product', productRouter.getRouter());
-    this.app.use('/api/product-category', productCategoryRouter.getRouter());
-    this.app.use('/api', getMapRouter)
-    this.app.use('/api/admin', adminRouter)
-    this.app.use("/api/user", userRouter)
-    this.app.use('/api/discounts', discountRouter)
-    this.app.use('/api/cloudinary', cloudinaryRouter)
+    this.app.use("/api/store", storeRouter);
+    this.app.use("/api/inventories", inventoryRouter);
+    this.app.use("/api/discounts", discountRouter);
+    this.app.use("/api/cloudinary", cloudinaryRouter);
+    this.app.use("/api/admins", adminRouter);
+    this.app.use('/api/users', userRouter)
   }
 
   public start(): void {
