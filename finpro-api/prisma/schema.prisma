@@ -28,7 +28,7 @@ model User {
   isEmailVerified     Boolean          @default(false)
   passwordResetCount  Int              @default(0)
   emailChangeCount    Int              @default(0)
-  referralCode        String?         @unique
+  referralCode        String         @unique
   avatarImgUrl        String?
   cldPublicId         String? // Cloudinary public ID for the avatar image
   createdAt           DateTime @default(now())

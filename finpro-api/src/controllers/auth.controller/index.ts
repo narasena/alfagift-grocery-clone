@@ -3,6 +3,7 @@ import { prisma } from "../../prisma";
 import { hashPassword } from "../../utils/hash.password";
 import { comparePassword } from "../../utils/compare.password";
 import { jwtSign, jwtSignAdmin } from "../../utils/jwt.sign";
+import generateCodeTenChars from "../../utils/code.generator/codeGeneratorTenChars";
 
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -42,6 +43,12 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
 
     const hashedPassword = await hashPassword(password);
 
+    // referral
+    let referralCode = generateCodeTenChars();
+    while (await prisma.user.findFirst({ where: { referralCode } })) {
+      referralCode = generateCodeTenChars();
+    }
+
     const newUser = await prisma.user.create({
       data: {
         firstName,
@@ -54,6 +61,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
         isEmailVerified: false, //for default
         passwordResetCount: 0, //default
         emailChangeCount: 0, //default
+        referralCode,
         userAddress: {
           create: {
             address,
