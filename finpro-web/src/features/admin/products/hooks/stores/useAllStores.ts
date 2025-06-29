@@ -8,7 +8,7 @@ export const useAllStores = () => {
 
     const handleGetAllStores = async () => {
         try {
-            const response = await apiInstance.get("/store/all");
+            const response = await apiInstance.get("/stores/all");
             setStores(response.data.stores);
             console.log(`Stores: `, response.data.stores);
             toast.success(response.data.message);
