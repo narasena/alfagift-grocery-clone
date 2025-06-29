@@ -5,6 +5,7 @@ import useStoreStore from "../zustand/storeStore";
 import { useEffect, useState } from "react";
 import instance from "../utils/axiosinstance";
 import { toast } from "react-toastify";
+import { FaLocationDot } from "react-icons/fa6";
 
 export default function StoreSelector() {
   const { selectedStore, setSelectedStore } = useStoreStore();
@@ -48,14 +49,15 @@ export default function StoreSelector() {
   return (
     <div className="bg-gray-100 px-4 py-2 text-sm flex items-center justify-between border-b border-gray-200">
       <div className="flex items-center space-x-1">
+        <FaLocationDot /> 
         <span className="text-gray-700 font-semibold">
-          📍 {selectedStore ? selectedStore.city : "Lokasi belum dipilih"}.
+           {selectedStore ? selectedStore.name : "Lokasi belum dipilih"}.
         </span>
         <button
           className="text-blue-600 hover:underline ml-1"
           onClick={handleChangeAddress}
         >
-          Masuk untuk ubah lokasi
+          Klik untuk ubah lokasi
         </button>
       </div>
     </div>

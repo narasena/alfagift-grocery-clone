@@ -13,6 +13,8 @@ import adminRouter from './routers/admin.router';
 import userRouter from "./routers/user.router";
 import discountRouter from "./routers/discount.router";
 import cloudinaryRouter from "./routers/cloudinary.router";
+import shippingRouter from "./routers/shipping.router";
+import addressRouter from "./routers/address.router";
 
 interface ICustomError extends Error {
   isExpose?: boolean;
@@ -106,6 +108,9 @@ export default class App {
     this.app.use("/api/user", userRouter)
     this.app.use('/api/discounts', discountRouter)
     this.app.use('/api/cloudinary', cloudinaryRouter)
+    this.app.use('/api/user', userRouter)
+    this.app.use('api/shipping', shippingRouter)
+    this.app.use('/api/address', addressRouter)
   }
 
   public start(): void {
