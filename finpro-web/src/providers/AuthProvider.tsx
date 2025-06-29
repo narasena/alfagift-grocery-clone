@@ -1,46 +1,66 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import authStore from "../zustand/store";
+import authStore from "../zustand/authStore";
+import { ReactNode } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import apiInstance from "@/utils/api/apiInstance";
+import { jwtDecode } from "jwt-decode";
+import instance from "../utils/axiosinstance";
 
-export default function AuthProvider({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+interface DecodedToken {
+  userId?: string;
+  adminId?: string;
+  email: string;
+  role?: "SuperAdmin" | "Admin";
+  isEmailVerified?: boolean;
+  exp?: number;
+}
+
+export default function AuthProvider({ children }: { children: ReactNode }) {
   const token = authStore((state) => state.token);
   const setAuth = authStore((state) => state.setAuth);
-  const pathName = usePathname();
+  const clearAuth = authStore((state) => state.clearAuth);
   const router = useRouter();
+  const pathName = usePathname();
   const [isHandleSessionLoginDone, setIsHandleSessionLoginDone] =
-  useState(false);
+    useState(false);
 
   const handleSessionLogin = async () => {
     try {
-      const response = await apiInstance.get("/user/session-login", {
+      // Decode token untuk tahu ini user atau admin
+      const decoded: DecodedToken = jwtDecode(token!);
+
+      // Tentukan endpoint berdasarkan payload
+      const endpoint = decoded.adminId
+        ? "/admin/session-login"
+        : "/user/session-login";
+
+      const response = await instance.get(endpoint, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
+      const data = response.data.data;
+
       setAuth({
-        _token: response.data.data.token,
-        _email: response.data.data.user,
-        _id: response.data.data.userId,
+        token: data.token,
+        email: data.email,
+        id: data.adminId || data.userId,
+        role: data.role || null,
       });
+
       setIsHandleSessionLoginDone(true);
     } catch (error) {
-      console.error(error);
-      setAuth({
-        _token: null,
-        _email: null,
-        _id: null,
-      });
+      // Reset auth jika gagal
+      // clearAuth();
+      console.log("Gagal handle session login");
+      console.log(error);
       setIsHandleSessionLoginDone(true);
     }
   };
 
-    // Dijalankan Pertama Kali
+  // Pertama kali dijalankan
   useEffect(() => {
     if (token) {
       handleSessionLogin();
@@ -49,35 +69,32 @@ export default function AuthProvider({
     }
   }, [token]);
 
-    useEffect(() => {
-    if (isHandleSessionLoginDone) {
-      const isPublicPath = ["/", "/login", "/register"].includes(pathName);
-      if (token && pathName === "/") {
-        router.push("/main");
-      } else if (!token && !isPublicPath) {
+  // Redirect setelah handle session selesai
+  useEffect(() => {
+    if (isHandleSessionLoginDone && token) {
+      const isPublicPath = ["/", "/login", "/register", "/admin/login"].includes(pathName);
+      const isAdminPath = [
+        "/admin",
+        "/dashboard",
+        "/discounts",
+        "/products",
+        "/reports",
+        "/store"
+      ].includes(pathName);
+
+      const isAdmin = authStore.getState().role === "Admin" || authStore.getState().role === "SuperAdmin";
+      // console.log("isAdmin", isAdmin);
+      
+
+      if (token && isPublicPath && isAdmin) {
+        router.push("/dashboard");
+      } else if (token && !isAdmin && isAdminPath) {
         router.push("/");
+      } else if (!token && (!isPublicPath || !isAdminPath)) {
+        router.push("/login");
       }
     }
-  }, [isHandleSessionLoginDone, pathName]);
+  }, [token, isHandleSessionLoginDone, pathName]);
 
-// const handleProtectPage = () => {
-//   if (token && pathName === '/') return router.push('/main')
-// }
-
-//  const handleProtectPageNeedToLogin = () => {
-//    if (!token && pathName !== '/') return router.push('/')
-//  }
-
-//   useEffect(() => {
-//     if (token) {
-//       handleSessionLogin();
-//       handleProtectPage();
-//     }
-//   }, [token]);
-
-//   useEffect(()=> {
-//     handleProtectPageNeedToLogin()
-//   }, [pathName]);
-
-  return <div>{children}</div>;
+  return <>{children}</>;
 }

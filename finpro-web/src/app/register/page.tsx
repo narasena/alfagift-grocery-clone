@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { registerValidationSchema } from "../features/register/schemas/registerValidationSchema";
 import { toast } from "react-toastify";
 import apiInstance from "@/utils/api/apiInstance";
+import { useRouter } from "next/navigation";
 
 const MapPicker = dynamic(() => import("../../components/MapPicker"), {
   ssr: false,
@@ -34,6 +35,7 @@ interface IHandleRegisterUser {
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showAddressForm] = useState(true); // opsional
+  const router = useRouter();
 
   const initialValues = {
     firstName: "",
@@ -44,7 +46,6 @@ export default function RegisterPage() {
     gender: "",
     dateOfBirth: "",
     address: "",
-    village: "",
     subDistrict: "",
     district: "",
     city: "",
@@ -94,6 +95,9 @@ export default function RegisterPage() {
       });
 
       toast.success(response.data.message);
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
     } catch (error) {
       console.log(error);
     }
@@ -103,9 +107,7 @@ export default function RegisterPage() {
     <div className="flex flex-col min-h-screen">
       <div className="flex items-center justify-center bg-white px-4 sm:px-6">
         <div className="w-full max-w-md sm:max-w-lg border h-auto border-gray-400 rounded-lg p-5 sm:p-7">
-          <h2 className="text-center text-black text-lg sm:text-xl font-medium">
-            Daftar
-          </h2>
+          <h2 className="text-center text-black text-lg sm:text-xl font-medium">Daftar</h2>
           <p className="text-center text-gray-600 text-sm mt-2">
             Sudah punya akun Alfagift?{" "}
             <a href="#" className="text-blue-600 font-semibold">
@@ -116,79 +118,56 @@ export default function RegisterPage() {
           <Formik
             initialValues={initialValues}
             validationSchema={registerValidationSchema}
-            onSubmit={handleSubmit}
+            onSubmit={(values) => {
+              console.log("Submit berhasil, isi values:", values);
+              handleSubmit(values);
+            }}
           >
             {({ setFieldValue }) => (
               <Form className="space-y-3 pt-4 sm:pt-6">
                 <div className="pt-2">
-                  <label className="text-sm font-semibold text-gray-700 block mb-1">
-                    Nama Depan
-                  </label>
+                  <label className="text-sm font-semibold text-gray-700 block mb-1">Nama Depan</label>
                   <Field
                     name="firstName"
                     placeholder="Nama depan Anda"
                     className="w-full px-3 py-2 border border-gray-400 text-black rounded-md text-sm"
                   />
-                  <ErrorMessage
-                    name="firstName"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
+                  <ErrorMessage name="firstName" component="div" className="text-red-500 text-sm" />
                 </div>
 
                 <div className="pt-2">
-                  <label className="text-sm font-semibold text-gray-700 block mb-1">
-                    Nama Belakang
-                  </label>
+                  <label className="text-sm font-semibold text-gray-700 block mb-1">Nama Belakang</label>
                   <Field
                     name="lastName"
                     placeholder="Nama belakang Anda"
                     className="w-full px-3 py-2 border border-gray-400 text-black rounded-md text-sm"
                   />
-                  <ErrorMessage
-                    name="lastName"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
+                  <ErrorMessage name="lastName" component="div" className="text-red-500 text-sm" />
                 </div>
 
                 <div className="pt-2">
-                  <label className="text-sm font-semibold text-gray-700 block mb-1">
-                    Email
-                  </label>
+                  <label className="text-sm font-semibold text-gray-700 block mb-1">Email</label>
                   <Field
                     type="email"
                     name="email"
                     placeholder="Email Anda"
                     className="w-full px-3 py-2 border border-gray-400 text-black  rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-300"
                   />
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
+                  <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
                 </div>
 
                 <div className="pt-2">
-                  <label className="text-sm font-semibold text-gray-700 block mb-1">
-                    No. Handphone
-                  </label>
+                  <label className="text-sm font-semibold text-gray-700 block mb-1">No. Handphone</label>
                   <Field
                     name="phoneNumber"
                     placeholder="Nomor handphone"
                     className="w-full px-3 py-2 border border-gray-400 text-black  rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-300"
                   />
-                  <ErrorMessage
-                    name="phoneNumber"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
+                  <ErrorMessage name="phoneNumber" component="div" className="text-red-500 text-sm" />
                 </div>
 
                 <div className="pt-2">
-                  <label className="text-sm font-semibold text-gray-700 block mb-1">
-                    Password
-                  </label>
+                  <label className="text-sm font-semibold text-gray-700 block mb-1">Password</label>
                   <div className="relative">
                     <Field
                       name="password"
@@ -201,24 +180,14 @@ export default function RegisterPage() {
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500"
                     >
-                      {showPassword ? (
-                        <AiOutlineEyeInvisible size={20} />
-                      ) : (
-                        <AiOutlineEye size={20} />
-                      )}
+                      {showPassword ? <AiOutlineEyeInvisible size={20} /> : <AiOutlineEye size={20} />}
                     </button>
                   </div>
-                  <ErrorMessage
-                    name="password"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
+                  <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
                 </div>
 
                 <div className="pt-2">
-                  <label className="text-sm font-semibold text-gray-700 block mb-1">
-                    Gender
-                  </label>
+                  <label className="text-sm font-semibold text-gray-700 block mb-1">Gender</label>
                   <Field
                     as="select"
                     name="gender"
@@ -229,49 +198,31 @@ export default function RegisterPage() {
                     <option value="Wanita">Wanita</option>
                     <option value="Lainnya">Lainnya</option>
                   </Field>
-                  <ErrorMessage
-                    name="gender"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
+                  <ErrorMessage name="gender" component="div" className="text-red-500 text-sm" />
                 </div>
 
                 <div className="pt-2">
-                  <label className="text-sm font-semibold text-gray-700 block mb-1">
-                    Tanggal Lahir
-                  </label>
+                  <label className="text-sm font-semibold text-gray-700 block mb-1">Tanggal Lahir</label>
                   <Field
                     type="date"
                     name="dateOfBirth"
                     className="w-full px-3 py-2 border border-gray-400 text-black  rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-300"
                   />
-                  <ErrorMessage
-                    name="dateOfBirth"
-                    component="div"
-                    className="text-red-500 text-sm"
-                  />
+                  <ErrorMessage name="dateOfBirth" component="div" className="text-red-500 text-sm" />
                 </div>
 
                 {showAddressForm && (
                   <div className="mt-4 border-t pt-4">
-                    <h3 className="text-md font-medium text-gray-700">
-                      Alamat
-                    </h3>
+                    <h3 className="text-md font-medium text-gray-700">Alamat</h3>
 
                     <div className="pt-2">
-                      <label className="text-sm font-semibold text-gray-700 block mb-1">
-                        Alamat Lengkap
-                      </label>
+                      <label className="text-sm font-semibold text-gray-700 block mb-1">Alamat Lengkap</label>
                       <Field
                         name="address"
                         placeholder="Alamat lengkap"
                         className="w-full px-3 py-2 border border-gray-400 text-black rounded-md text-sm"
                       />
-                      <ErrorMessage
-                        name="address"
-                        component="div"
-                        className="text-red-500 text-sm"
-                      />
+                      <ErrorMessage name="address" component="div" className="text-red-500 text-sm" />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
@@ -334,10 +285,7 @@ export default function RegisterPage() {
                         name="isMainAddress"
                         className="w-4 h-4 bg-white border border-gray-400 text-black rounded-sm accent-red-600"
                       />
-                      <label
-                        htmlFor="isMainAddress"
-                        className="text-gray-600 text-sm"
-                      >
+                      <label htmlFor="isMainAddress" className="text-gray-600 text-sm">
                         Jadikan alamat utama
                       </label>
                     </div>

@@ -1,19 +1,17 @@
-'use client';
+"use client";
 
-import authStore from '../../zustand/store';
-import { useRouter } from 'next/navigation';
+import authStore from "../../zustand/authStore";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
-  const setAuth = authStore((state) => state.setAuth);
+  const clearAuth = authStore((state) => state.clearAuth);
   const router = useRouter();
 
   const handleSignOut = () => {
-    setAuth({
-      _token: null,
-      _email: null,
-      _id: null,
-    });
-    router.push('/'); 
+    localStorage.removeItem("auth-storage"); // <- dari authStore
+    localStorage.removeItem("selectedStore");
+    clearAuth();
+    router.push("/login");
   };
 
   return (
