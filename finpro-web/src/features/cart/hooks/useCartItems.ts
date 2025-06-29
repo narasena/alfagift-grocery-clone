@@ -1,6 +1,6 @@
 import { ICartItem } from "@/types/carts/cartItem.type";
 import * as React from "react";
-import authStore from "@/zustand/store";
+import useAuthStore from "@/zustand/authStore";
 import { IAuthState } from "@/types/auth/auth.type";
 import { handleGetCartItems } from "../api/handleGetCartItems";
 import { deleteCartItem } from "../api/handleDeleteCartItems";
@@ -9,8 +9,7 @@ import { updateCartItemQuantity } from "../api/handleUpdateCartItemQuantity";
 import { toast } from "react-toastify";
 
 export default function useCartItems() {
-  const token = authStore((state: IAuthState) => state.token);
-
+  const token = useAuthStore((state) => state.token);
   const [cartItems, setCartItems] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
 

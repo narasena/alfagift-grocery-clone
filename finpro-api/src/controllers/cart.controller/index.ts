@@ -2,13 +2,6 @@ import { prisma } from "../../prisma";
 import { AppError } from "../../utils/app.error";
 import { Request, Response, NextFunction } from "express";
 
-// update? the qty backend or frontend?
-// calculate the total price backend or frontend?
-
-// disocunt belum
-
-// checkout
-
 export const createCartItems = async (req: Request, res: Response, next: NextFunction) => {
   try {
     //cari userId dulu
