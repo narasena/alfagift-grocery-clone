@@ -7,8 +7,8 @@ import cartRouter from "./routers/cart.router";
 import orderRouter from "./routers/order.router";
 import authRouter from "./routers/auth.router";
 import getMapRouter from "./routers/getMap.router";
-import storeRouter from './routers/store.router';
-import inventoryRouter from './routers/inventory.router';
+import storeRouter from "./routers/store.router";
+import inventoryRouter from "./routers/inventory.router";
 import discountRouter from "./routers/discount.router";
 import cloudinaryRouter from "./routers/cloudinary.router";
 import adminRouter from "./routers/admins.router";
@@ -52,7 +52,7 @@ export default class App {
     this.app.use((err: ICustomError, req: Request, res: Response, next: NextFunction) => {
       if (req.path.includes("/api/")) {
         console.error("Error : ", err);
-        
+
         // Check if error is exposed (safe to show to client)
         if (err.isExpose) {
           res.status(err.status || 400).json({
@@ -87,11 +87,11 @@ export default class App {
     this.app.use("/api", getMapRouter);
     this.app.use("/api/cart", cartRouter);
     this.app.use("/api/order", orderRouter);
-    this.app.use('/api/store', storeRouter)
-    this.app.use('/api/inventories', inventoryRouter)
-    this.app.use('/api/discounts', discountRouter)
-    this.app.use('/api/cloudinary', cloudinaryRouter)
-    this.app.use('/api',adminRouter)
+    this.app.use("/api/store", storeRouter);
+    this.app.use("/api/inventories", inventoryRouter);
+    this.app.use("/api/discounts", discountRouter);
+    this.app.use("/api/cloudinary", cloudinaryRouter);
+    this.app.use("/api/admins", adminRouter);
   }
 
   public start(): void {
