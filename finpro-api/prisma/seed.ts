@@ -1,3 +1,4 @@
+import generateCodeTenChars from '../src/utils/code.generator/codeGeneratorTenChars';
 import { productCategories } from '../src/data/products/productCategory';
 import { prisma } from '../src/prisma';
 
@@ -51,6 +52,51 @@ async function seedProductSubCategory() {
   }
 }
 
+
+async function seedReferralCodes() {
+  console.log('🌱 Seeding Referral Codes...')
+  try {
+    // Get all users and existing referral codes in one query
+    const [users, existingCodes] = await Promise.all([
+      prisma.user.findMany({ 
+        where: { deletedAt: null },
+        select: { id: true }
+      }),
+      prisma.user.findMany({
+        where: { 
+          deletedAt: null,
+          referralCode: { not: null }
+        },
+        select: { referralCode: true }
+      })
+    ]);
+
+    const existingCodesSet = new Set(existingCodes.map(u => u.referralCode));
+    const updates = [];
+
+    // Generate unique codes without DB queries
+    for (const user of users) {
+      let referralCode = generateCodeTenChars();
+      while (existingCodesSet.has(referralCode)) {
+        referralCode = generateCodeTenChars();
+      }
+      existingCodesSet.add(referralCode);
+      updates.push(
+        prisma.user.update({
+          where: { id: user.id },
+          data: { referralCode }
+        })
+      );
+    }
+
+    // Batch update all users
+    await Promise.all(updates);
+    console.log(`Seeding referral codes completed!`);
+  } catch (error) {
+    console.error(`Error seeding referral codes: ${error}`);
+  }
+}
+
 async function seedProductInventories() {
   console.log('🌱 Seeding Initial Product Inventories...')
   const stores = await prisma.store.findMany({ where: { deletedAt: null } });
@@ -76,9 +122,11 @@ async function seedProductInventories() {
 
 async function main() {
   console.log(`🌱🌱🌱 Seeding database...`);
-  await seedProductCategory();
-  await seedProductSubCategory();
-  await seedProductInventories();
+  // ⬇️⬇️⬇️ comment the line you don't want to seed to run!!
+  // await seedProductCategory();
+  // await seedProductSubCategory();
+  // await seedProductInventories();
+  // await seedReferralCodes();
   console.log(`🌱🌱 Seeding completed! 🌱🌱`);
 }
 
