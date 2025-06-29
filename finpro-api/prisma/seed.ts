@@ -53,49 +53,49 @@ async function seedProductSubCategory() {
 }
 
 
-async function seedReferralCodes() {
-  console.log('🌱 Seeding Referral Codes...')
-  try {
-    // Get all users and existing referral codes in one query
-    const [users, existingCodes] = await Promise.all([
-      prisma.user.findMany({ 
-        where: { deletedAt: null },
-        select: { id: true }
-      }),
-      prisma.user.findMany({
-        where: { 
-          deletedAt: null,
-          referralCode: { not: null }
-        },
-        select: { referralCode: true }
-      })
-    ]);
+// async function seedReferralCodes() {
+//   console.log('🌱 Seeding Referral Codes...')
+//   try {
+//     // Get all users and existing referral codes in one query
+//     const [users, existingCodes] = await Promise.all([
+//       prisma.user.findMany({ 
+//         where: { deletedAt: null },
+//         select: { id: true }
+//       }),
+//       prisma.user.findMany({
+//         where: { 
+//           deletedAt: null,
+//           referralCode: { not: null }
+//         },
+//         select: { referralCode: true }
+//       })
+//     ]);
 
-    const existingCodesSet = new Set(existingCodes.map(u => u.referralCode));
-    const updates = [];
+//     const existingCodesSet = new Set(existingCodes.map(u => u.referralCode));
+//     const updates = [];
 
-    // Generate unique codes without DB queries
-    for (const user of users) {
-      let referralCode = generateCodeTenChars();
-      while (existingCodesSet.has(referralCode)) {
-        referralCode = generateCodeTenChars();
-      }
-      existingCodesSet.add(referralCode);
-      updates.push(
-        prisma.user.update({
-          where: { id: user.id },
-          data: { referralCode }
-        })
-      );
-    }
+//     // Generate unique codes without DB queries
+//     for (const user of users) {
+//       let referralCode = generateCodeTenChars();
+//       while (existingCodesSet.has(referralCode)) {
+//         referralCode = generateCodeTenChars();
+//       }
+//       existingCodesSet.add(referralCode);
+//       updates.push(
+//         prisma.user.update({
+//           where: { id: user.id },
+//           data: { referralCode }
+//         })
+//       );
+//     }
 
-    // Batch update all users
-    await Promise.all(updates);
-    console.log(`Seeding referral codes completed!`);
-  } catch (error) {
-    console.error(`Error seeding referral codes: ${error}`);
-  }
-}
+//     // Batch update all users
+//     await Promise.all(updates);
+//     console.log(`Seeding referral codes completed!`);
+//   } catch (error) {
+//     console.error(`Error seeding referral codes: ${error}`);
+//   }
+// }
 
 async function seedProductInventories() {
   console.log('🌱 Seeding Initial Product Inventories...')
