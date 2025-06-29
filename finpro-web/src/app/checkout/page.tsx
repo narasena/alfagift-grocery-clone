@@ -3,10 +3,11 @@ import { BsStopwatch } from "react-icons/bs";
 import { CiCalendar } from "react-icons/ci";
 import { CiClock1 } from "react-icons/ci";
 import { useState } from "react";
+import useOrder from "@/features/order/hooks/useOrder";
 
 export default function CheckoutPage() {
-  const [isSummaryOpen, setIsSummaryOpen] = useState(false);
-
+  const { order, loading, isSummaryOpen, setIsSummaryOpen } = useOrder();
+  const subtotal = order?.orderItems?.reduce((acc: number, item: any) => acc + item.finalPrice, 0) || 0;
   return (
     <main className="min-h-screen bg-white flex flex-col items-center justify-between">
       <div className="w-full max-w-6xl md:px-5">
@@ -69,22 +70,29 @@ export default function CheckoutPage() {
               Pengiriman Instan
             </div>
             <ul className="space-y-4">
-              <li className="flex justify-between items-center border rounded p-4">
-                {/* Left: Item details */}
-                <div className="flex flex-col">
-                  <span className="text-black font-semibold">Item 1</span>
-                  <div className="flex items-center space-x-4 text-sm text-gray-500 mb-2">
-                    <span>Rp 10,000</span>
-                    <span>Quantity: 1</span>
+              {order?.orderItems?.map((item: any) => (
+                <li key={item.id} className="flex justify-between items-center border rounded p-4">
+                  {/* Left: Item details */}
+                  <div className="flex flex-col">
+                    <span className="text-black font-semibold">{item.productName}</span>
+                    <div className="flex items-center space-x-4 text-sm text-gray-500 mb-2">
+                      <span>Rp {item.productBasePrice.toLocaleString("id-ID")}</span>
+                      <span>Quantity: {item.quantity}</span>
+                    </div>
                   </div>
-                </div>
 
-                {/* Right: Subtotal */}
-                <div className="flex items-center space-x-4">
-                  <div className="text-red-600 font-bold min-w-[80px] text-right">Rp 10,000</div>
-                </div>
-              </li>
-              {/* <li className="text-black">Item 2</li> */}
+                  {/* Right: Subtotal */}
+                  <div className="flex items-center space-x-4">
+                    <div className="text-red-600 font-bold min-w-[80px] text-right">
+                      Rp {item.finalPrice.toLocaleString("id-ID")}
+                    </div>
+                  </div>
+                </li>
+              ))}
+
+              {(!order?.orderItems || order?.orderItems?.length === 0) && (
+                <p className="text-gray-500">Tidak ada item dalam pesanan.</p>
+              )}
             </ul>
           </div>
 
@@ -94,7 +102,7 @@ export default function CheckoutPage() {
             <div className="space-y-4 text-black">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>Rp 0</span>
+                <span>Rp {subtotal.toLocaleString("id-ID")}</span>
               </div>
               <div className="flex justify-between">
                 <span>Diskon</span>
@@ -111,7 +119,7 @@ export default function CheckoutPage() {
             <div className="text-black font-bold">
               <div className="flex justify-between">
                 <span>Total Belanja</span>
-                <span>Rp 0</span>
+                <span>Rp {subtotal.toLocaleString("id-ID")}</span>
               </div>
             </div>
             <button className="w-full mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition">
@@ -128,7 +136,7 @@ export default function CheckoutPage() {
                 <div className="space-y-4 text-black">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>Rp 0</span>
+                    <span>Rp {subtotal.toLocaleString("id-ID")}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Diskon</span>
@@ -145,7 +153,7 @@ export default function CheckoutPage() {
                 <div className="text-black font-bold">
                   <div className="flex justify-between">
                     <span>Total Belanja</span>
-                    <span>Rp 0</span>
+                    <span>Rp {subtotal.toLocaleString("id-ID")}</span>
                   </div>
                 </div>
               </div>
@@ -166,7 +174,7 @@ export default function CheckoutPage() {
                     </svg>
                     <div className="flex flex-col">
                       <div className="text-black font-semibold">Total</div>
-                      <div className="font-bold text-black">Rp {10000 * 2}</div>
+                      <div className="font-bold text-black">Rp {subtotal.toLocaleString("id-ID")}</div>
                     </div>
                   </div>
                 </div>

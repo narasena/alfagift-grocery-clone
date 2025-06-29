@@ -2,8 +2,6 @@ import { prisma } from "../../prisma";
 import { AppError } from "../../utils/app.error";
 import { Request, Response, NextFunction } from "express";
 
-// belum selesai
-
 export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId } = req.body.payload; // Adjust based on your auth middleware
@@ -145,6 +143,94 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
   } catch (error) {
     console.error("Checkout error:", error);
 
+    next(error);
+  }
+};
+
+export const getOrder = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { userId } = req.body.payload;
+
+    if (!userId) {
+      throw new AppError("User not authenticated.", 401);
+    }
+
+    // Fetch all orders for the authenticated user
+    const orders = await prisma.order.findMany({
+      where: {
+        userId,
+        deletedAt: null, // Only active orders
+      },
+      include: {
+        orderItems: {
+          include: {
+            productStock: {
+              select: {
+                product: {
+                  select: {
+                    name: true,
+                    price: true,
+                  },
+                },
+              },
+            },
+            productDiscount: {
+              select: {
+                id: true,
+                name: true,
+                startDate: true,
+                endDate: true,
+                productDiscountHistories: {
+                  select: {
+                    discountValue: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        store: {
+          select: {
+            name: true,
+          },
+        },
+        shippingAddress: true,
+        payment: true,
+      },
+    });
+
+    if (!orders || orders.length === 0) {
+      throw new AppError("No orders found.", 404);
+    }
+
+    // Format the order items (optional, but clearer for client)
+    const ordersWithDetails = orders.map((order) => ({
+      ...order,
+      orderItems: order.orderItems.map((item) => ({
+        id: item.id,
+        quantity: item.quantity,
+        originalPrice: item.originalPrice,
+        discountedPrice: item.discountedPrice,
+        finalPrice: item.finalPrice,
+        productName: item.productStock.product.name,
+        productBasePrice: item.productStock.product.price,
+        discount: item.productDiscount
+          ? {
+              id: item.productDiscount.id,
+              value: item.productDiscount.productDiscountHistories[0]?.discountValue || 0,
+              startDate: item.productDiscount.startDate,
+              endDate: item.productDiscount.endDate,
+            }
+          : null,
+      })),
+    }));
+
+    res.status(200).json({
+      success: true,
+      message: "Orders retrieved successfully.",
+      orders: ordersWithDetails,
+    });
+  } catch (error) {
     next(error);
   }
 };
