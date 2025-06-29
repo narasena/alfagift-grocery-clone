@@ -3,6 +3,9 @@ import { prisma } from "../../prisma";
 import { hashPassword } from "../../utils/hash.password";
 import { comparePassword } from "../../utils/compare.password";
 import { jwtSign, jwtSignAdmin } from "../../utils/jwt.sign";
+import generateCodeTenChars from "../../utils/code.generator/codeGeneratorTenChars";
+import { Prisma } from "@prisma/client";
+import { DiscountValueType, VoucherType } from "../../generated/prisma";
 import { transporter } from "../../utils/transporter.mailer";
 
 // Step 1: Register only with email
@@ -98,7 +101,9 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       latitude,
       longitude,
       isMainAddress,
+      appliedReferralCode,
     } = req.body;
+    console.log(req.body)
 
     // for already exist user
     const existingUser = await prisma.user.findUnique({
@@ -112,9 +117,84 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
         message: `user with email ${email} already exist`,
         data: null,
       });
+      return
     }
 
     const hashedPassword = await hashPassword(password);
+
+    // referral
+    let referralCode = generateCodeTenChars();
+    while (await prisma.user.findFirst({ where: { referralCode } })) {
+      referralCode = generateCodeTenChars();
+    }
+    const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+      const newUser = await prisma.user.create({
+        data: {
+          firstName,
+          lastName,
+          email,
+          password: hashedPassword,
+          phoneNumber,
+          gender,
+          dateOfBirth,
+          isEmailVerified: false, //for default
+          passwordResetCount: 0, //default
+          emailChangeCount: 0, //default
+          referralCode,
+          userAddress: {
+            create: {
+              address,
+              subDistrict,
+              district,
+              city,
+              province,
+              postalCode,
+              latitude,
+              longitude,
+              isMainAddress,
+            },
+          },
+        },
+        include: {
+          userAddress: true,
+        },
+      });
+
+      const newUserId = newUser.id;
+
+      
+      if (appliedReferralCode && appliedReferralCode !== "") {
+        const referrerId = (await prisma.user.findUnique({ where: { referralCode: appliedReferralCode } }))?.id;
+   
+        
+        if (!referrerId) {
+          throw new Error(`Invalid referral code: ${appliedReferralCode}`);
+        }
+        
+        const referral = await tx.referral.create({
+          data: {
+            referrerId: referrerId,
+            refereeId: newUserId,
+          },
+        });
+        console.log('Created referral:', referral.id);
+
+        const voucher = await tx.voucher.create({
+          data: {
+            name: `Referral Voucher [${appliedReferralCode}]`,
+            voucherType: VoucherType.REFERRAL,
+            discountValueType: DiscountValueType.PERCENTAGE,
+            discountValue: 10,
+            userId: newUserId,
+            referralId: referral.id,
+            expiredDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+          }
+        });
+        return { newUser, referral, voucher };
+      }
+
+      return { newUser };
+    });
 
     const newUser = await prisma.user.create({
       data: {
@@ -154,8 +234,8 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
     });
     res.status(201).json({
       success: true,
-      message: `user with email ${email} has been created`,
-      data: newUser,
+      message: `User with email ${email} has been created`,
+      newUser: result,
     });
   } catch (error) {
     next(error);

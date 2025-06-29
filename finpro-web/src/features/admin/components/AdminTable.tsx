@@ -79,7 +79,7 @@ export default function AdminTable<T extends Record<string, unknown>>(props: IAd
         )}
         <thead className="text-xs text-gray-700 uppercase bg-gray-200">
           <tr>
-            {withCheckbox && !noHeader ? (
+            {withCheckbox && !noHeader && (
               <th scope="col" className="p-4">
                 <div className="flex items-center">
                   <input
@@ -98,10 +98,6 @@ export default function AdminTable<T extends Record<string, unknown>>(props: IAd
                     checkbox
                   </label>
                 </div>
-              </th>
-            ) : (
-              <th scope="col" className="p-4">
-                <div></div>
               </th>
             )}
             {columns.map((col, index) => (
