@@ -1,5 +1,4 @@
 import * as React from "react";
-import authStore from "@/zustand/store";
 import { ICloudinaryResult } from "@/types/products/product.image.type";
 import { cloudinaryImageUpload } from "@/utils/products/product.image.helpers";
 import { CloudinaryUploadWidgetResults } from "next-cloudinary";

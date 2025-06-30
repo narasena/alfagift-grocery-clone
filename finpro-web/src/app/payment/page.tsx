@@ -4,7 +4,7 @@ import useOrder from "@/features/order/hooks/useOrder";
 
 export default function PaymentPage() {
   const { priceBreakdown, loading, selectedMethod, setSelectedMethod } = useOrder();
-  console.log("Price Breakdown:", priceBreakdown);
+  // console.log("Price Breakdown:", priceBreakdown);
 
   if (!priceBreakdown) {
     return (
@@ -61,6 +61,7 @@ export default function PaymentPage() {
           <span className="font-bold text-lg">Rp {priceBreakdown?.finalTotalAmount.toLocaleString()}</span>
         </div>
 
+        {/* udh ada backend nya buat create payment, blm implemented here */}
         <button
           disabled={!selectedMethod}
           className={`w-full py-3 rounded-4xl text-lg text-white font-bold ${
