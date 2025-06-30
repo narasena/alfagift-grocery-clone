@@ -38,15 +38,8 @@ export default function CartPage() {
     updateQuantity,
     incrementQuantity,
     decrementQuantity,
+    totalBelanja,
   } = useCartItems();
-
-  // const { quantity, setQuantity, handleQuantityChange } = useProductQuantity();
-
-  const totalBelanja =
-    cartItems?.reduce((total, item) => {
-      const price = item.product.price ?? 0;
-      return total + price * item.quantity;
-    }, 0) ?? 0;
 
   if (loading)
     return (

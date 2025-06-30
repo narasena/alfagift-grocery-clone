@@ -2,24 +2,11 @@
 import { BsStopwatch } from "react-icons/bs";
 import { CiCalendar } from "react-icons/ci";
 import { CiClock1 } from "react-icons/ci";
-import { useState } from "react";
-import useOrder from "@/features/order/hooks/useOrder";
 import useCartItems from "@/features/cart/hooks/useCartItems";
 
 export default function CheckoutPage() {
-  const { cartItems, mainAddress, user, loading, isSummaryOpen, setIsSummaryOpen } = useCartItems();
-  const totalBelanja =
-    cartItems?.reduce((total, item) => {
-      const price = item.product.price ?? 0;
-      return total + price * item.quantity;
-    }, 0) ?? 0;
-
-  const today = new Date().toLocaleDateString("id-ID", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  const { cartItems, mainAddress, user, loading, isSummaryOpen, setIsSummaryOpen, totalBelanja, today } =
+    useCartItems();
 
   if (loading)
     return (
@@ -28,14 +15,12 @@ export default function CheckoutPage() {
       </div>
     );
 
-  // console.log("Order:", order.data.orders);
-
   return (
     <main className="min-h-screen bg-white flex flex-col items-center justify-between">
       <div className="w-full max-w-6xl md:px-5">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Order Summary */}
-          <div className="md:col-span-2 bg-white border rounded-lg p-6 shadow-sm">
+          <div className="md:col-span-2 bg-white border rounded-lg p-6 shadow-sm self-start">
             <h1 className="text-2xl font-semibold text-gray-700 mb-5">Ringkasan Pesanan</h1>
 
             {/* Detail Penerima */}

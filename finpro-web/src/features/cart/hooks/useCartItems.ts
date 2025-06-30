@@ -139,6 +139,19 @@ export default function useCartItems() {
     }
   };
 
+  const totalBelanja =
+    cartItems?.reduce((total, item) => {
+      const price = item.product.price ?? 0;
+      return total + price * item.quantity;
+    }, 0) ?? 0;
+
+  const today = new Date().toLocaleDateString("id-ID", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   React.useEffect(() => {
     if (token) {
       handleDisplayCartItems();
@@ -167,5 +180,7 @@ export default function useCartItems() {
     updateQuantity,
     incrementQuantity,
     decrementQuantity,
+    totalBelanja,
+    today,
   };
 }
