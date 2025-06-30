@@ -3,10 +3,12 @@ import { BsStopwatch } from "react-icons/bs";
 import { CiCalendar } from "react-icons/ci";
 import { CiClock1 } from "react-icons/ci";
 import useCartItems from "@/features/cart/hooks/useCartItems";
+import useOrder from "@/features/order/hooks/useOrder";
 
 export default function CheckoutPage() {
   const { cartItems, mainAddress, user, loading, isSummaryOpen, setIsSummaryOpen, totalBelanja, today } =
     useCartItems();
+  const { order, handleCreateOrder } = useOrder();
 
   if (loading)
     return (
@@ -91,7 +93,7 @@ export default function CheckoutPage() {
                       <span className="text-black font-semibold">{item.product.name}</span>
                       <div className="flex items-center space-x-4 text-sm text-gray-500 mb-2">
                         <span>Rp {item.product.price?.toLocaleString("id-ID")}</span>
-                        <span>Quantity: {item.quantity}</span>
+                        <span>Jumlah beli: {item.quantity}</span>
                       </div>
                     </div>
 
@@ -135,7 +137,10 @@ export default function CheckoutPage() {
                 <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
               </div>
             </div>
-            <button className="w-full mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition">
+            <button
+              onClick={() => handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "")}
+              className="w-full mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition"
+            >
               Pilih Pembayaran
             </button>
           </div>

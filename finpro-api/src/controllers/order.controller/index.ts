@@ -102,6 +102,11 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
           orderItems: {
             create: orderItemsData,
           },
+          orderHistories: {
+            create: {
+              status: "WAITING_FOR_PAYMENT",
+            },
+          },
         },
       });
 
