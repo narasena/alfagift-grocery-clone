@@ -4,11 +4,13 @@ import { CiCalendar } from "react-icons/ci";
 import { CiClock1 } from "react-icons/ci";
 import useCartItems from "@/features/cart/hooks/useCartItems";
 import useOrder from "@/features/order/hooks/useOrder";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
-  const { cartItems, mainAddress, user, loading, isSummaryOpen, setIsSummaryOpen, totalBelanja, today } =
-    useCartItems();
-  const { order, handleCreateOrder } = useOrder();
+  const { cartItems, mainAddress, user, totalBelanja, today } = useCartItems();
+  const { order, handleCreateOrder, loading, isSummaryOpen, setIsSummaryOpen } = useOrder();
+  const router = useRouter();
+  // to navigate to payment page after order creation
 
   if (loading)
     return (
@@ -196,7 +198,10 @@ export default function CheckoutPage() {
                     </div>
                   </div>
                 </div>
-                <button className="bg-red-700 text-white text-lg p-2 rounded-lg hover:bg-red-800 transition">
+                <button
+                  onClick={() => handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "")}
+                  className="bg-red-700 text-white text-lg p-2 rounded-lg hover:bg-red-800 transition"
+                >
                   Pilih Pembayaran
                 </button>
               </div>

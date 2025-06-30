@@ -54,8 +54,8 @@ export default function useOrder() {
   return {
     order,
     loading,
-    // isSummaryOpen,
-    // setIsSummaryOpen,
+    isSummaryOpen,
+    setIsSummaryOpen,
     handleCreateOrder,
   };
 }

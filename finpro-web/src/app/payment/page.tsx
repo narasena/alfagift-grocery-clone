@@ -30,7 +30,7 @@ export default function PaymentPage() {
           }`}
         >
           <p className="font-medium">Payment Gateway</p>
-          <p className="text-sm text-gray-500">Bayar langsung lewat kartu atau e-wallet</p>
+          <p className="text-sm text-gray-500">Bayar melalui kartu atau e-wallet</p>
         </button>
       </div>
 
@@ -38,6 +38,14 @@ export default function PaymentPage() {
         <div className="flex justify-between mb-2">
           <span className="text-gray-600">Subtotal</span>
           <span className="font-medium">Rp {subtotal.toLocaleString()}</span>
+        </div>
+        <div className="flex justify-between mb-4">
+          <span className="text-gray-800 font-semibold">Biaya Kirim</span>
+          <span className="font-bold text-lg">Rp 0</span>
+        </div>
+        <div className="flex justify-between mb-4">
+          <span className="text-gray-800 font-semibold">Diskon</span>
+          <span className="font-bold text-lg">Rp 0</span>
         </div>
         <div className="flex justify-between mb-4">
           <span className="text-gray-800 font-semibold">Total</span>

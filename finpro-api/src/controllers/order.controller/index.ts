@@ -81,10 +81,17 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
       };
     });
 
-    // Shipping cost placeholder — replace with real logic
-    const shippingCost = 50_000;
-    const discountedShippingCost = shippingCost; // add logic if needed
-    const finalTotalAmount = totalAmount + discountedShippingCost;
+    // Example placeholder: replace with your logic
+    const shippingCost = 0; // Example flat shipping fee in IDR
+    const discountedShippingCost = 0; // Example shipping promo
+    const baseTotalAmount = totalAmount; // e.g. sum of cart items
+    const discountedTotalAmount = 0; // Example product discount
+
+    // Calculate final shipping cost (never negative)
+    const finalShippingCost = Math.max(shippingCost - discountedShippingCost, 0);
+
+    // Calculate final amount: (products - discounts) + shipping
+    const finalTotalAmount = Math.max(baseTotalAmount - discountedTotalAmount, 0) + finalShippingCost;
 
     // Transaction: create order, soft-delete cart items, update stock
     const order = await prisma.$transaction(async (tx) => {
@@ -93,12 +100,12 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
           userId,
           storeId,
           shippingAddressId,
-          totalAmount,
-          discountedTotalAmount: totalAmount,
+          totalAmount: baseTotalAmount,
+          discountedTotalAmount,
           finalTotalAmount,
           shippingCost,
           discountedShippingCost,
-          finalShippingCost: discountedShippingCost,
+          finalShippingCost,
           orderItems: {
             create: orderItemsData,
           },
@@ -152,90 +159,93 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-export const getOrder = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { userId } = req.body.payload;
+// display
 
-    if (!userId) {
-      throw new AppError("User not authenticated.", 401);
-    }
+// buat nampilin order
+// export const getOrder = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const { userId } = req.body.payload;
 
-    // Fetch all orders for the authenticated user
-    const orders = await prisma.order.findMany({
-      where: {
-        userId,
-        deletedAt: null, // Only active orders
-      },
-      include: {
-        orderItems: {
-          include: {
-            productStock: {
-              select: {
-                product: {
-                  select: {
-                    name: true,
-                    price: true,
-                  },
-                },
-              },
-            },
-            productDiscount: {
-              select: {
-                id: true,
-                name: true,
-                startDate: true,
-                endDate: true,
-                productDiscountHistories: {
-                  select: {
-                    discountValue: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        store: {
-          select: {
-            name: true,
-          },
-        },
-        shippingAddress: true,
-        payment: true,
-      },
-    });
+//     if (!userId) {
+//       throw new AppError("User not authenticated.", 401);
+//     }
 
-    if (!orders || orders.length === 0) {
-      throw new AppError("No orders found.", 404);
-    }
+//     // Fetch all orders for the authenticated user
+//     const orders = await prisma.order.findMany({
+//       where: {
+//         userId,
+//         deletedAt: null, // Only active orders
+//       },
+//       include: {
+//         orderItems: {
+//           include: {
+//             productStock: {
+//               select: {
+//                 product: {
+//                   select: {
+//                     name: true,
+//                     price: true,
+//                   },
+//                 },
+//               },
+//             },
+//             productDiscount: {
+//               select: {
+//                 id: true,
+//                 name: true,
+//                 startDate: true,
+//                 endDate: true,
+//                 productDiscountHistories: {
+//                   select: {
+//                     discountValue: true,
+//                   },
+//                 },
+//               },
+//             },
+//           },
+//         },
+//         store: {
+//           select: {
+//             name: true,
+//           },
+//         },
+//         shippingAddress: true,
+//         payment: true,
+//       },
+//     });
 
-    // Format the order items (optional, but clearer for client)
-    const ordersWithDetails = orders.map((order) => ({
-      ...order,
-      orderItems: order.orderItems.map((item) => ({
-        id: item.id,
-        quantity: item.quantity,
-        originalPrice: item.originalPrice,
-        discountedPrice: item.discountedPrice,
-        finalPrice: item.finalPrice,
-        productName: item.productStock.product.name,
-        productBasePrice: item.productStock.product.price,
-        discount: item.productDiscount
-          ? {
-              id: item.productDiscount.id,
-              value: item.productDiscount.productDiscountHistories[0]?.discountValue || 0,
-              startDate: item.productDiscount.startDate,
-              endDate: item.productDiscount.endDate,
-            }
-          : null,
-      })),
-    }));
+//     if (!orders || orders.length === 0) {
+//       throw new AppError("No orders found.", 404);
+//     }
 
-    res.status(200).json({
-      success: true,
-      message: "Orders retrieved successfully.",
-      ordersWithDetails,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+//     // Format the order items (optional, but clearer for client)
+//     const ordersWithDetails = orders.map((order) => ({
+//       ...order,
+//       orderItems: order.orderItems.map((item) => ({
+//         id: item.id,
+//         quantity: item.quantity,
+//         originalPrice: item.originalPrice,
+//         discountedPrice: item.discountedPrice,
+//         finalPrice: item.finalPrice,
+//         productName: item.productStock.product.name,
+//         productBasePrice: item.productStock.product.price,
+//         discount: item.productDiscount
+//           ? {
+//               id: item.productDiscount.id,
+//               value: item.productDiscount.productDiscountHistories[0]?.discountValue || 0,
+//               startDate: item.productDiscount.startDate,
+//               endDate: item.productDiscount.endDate,
+//             }
+//           : null,
+//       })),
+//     }));
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Orders retrieved successfully.",
+//       ordersWithDetails,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
