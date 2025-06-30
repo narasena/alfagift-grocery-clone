@@ -4,10 +4,22 @@ import { CiCalendar } from "react-icons/ci";
 import { CiClock1 } from "react-icons/ci";
 import { useState } from "react";
 import useOrder from "@/features/order/hooks/useOrder";
+import useCartItems from "@/features/cart/hooks/useCartItems";
 
 export default function CheckoutPage() {
-  const { order, loading, isSummaryOpen, setIsSummaryOpen } = useOrder();
-  const subtotal = order?.orderItems?.reduce((acc: number, item: any) => acc + item.finalPrice, 0) || 0;
+  const { cartItems, mainAddress, user, loading, isSummaryOpen, setIsSummaryOpen } = useCartItems();
+  const totalBelanja =
+    cartItems?.reduce((total, item) => {
+      const price = item.product.price ?? 0;
+      return total + price * item.quantity;
+    }, 0) ?? 0;
+
+  const today = new Date().toLocaleDateString("id-ID", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
 
   if (loading)
     return (
@@ -32,19 +44,25 @@ export default function CheckoutPage() {
               <div className="w-full h-[2px] bg-gray-100 my-3" />
 
               {/* Recipient Info */}
+
               <div className="space-y-1">
-                <p>
-                  <span className="">Label Alamat</span>
-                </p>
-                <p>
-                  <span className="">Nama Penerima & No. Handphone</span>
-                </p>
-                <p>
-                  <span className="">Jl. Contoh No.123, Jakarta</span>
-                </p>
-                <p>
-                  <span className="">Lokasi</span>
-                </p>
+                {mainAddress ? (
+                  <>
+                    <p>{mainAddress.address}</p>
+                    <p>
+                      {user?.firstName} - {user?.phoneNumber}
+                    </p>
+                    <p>
+                      {mainAddress.subDistrict}, {mainAddress.district}, {mainAddress.city}, {mainAddress.province}{" "}
+                      {mainAddress.postalCode}
+                    </p>
+                  </>
+                ) : (
+                  <p>
+                    <span className="font-semibold">Alamat Utama: </span>
+                    Tidak ada alamat utama
+                  </p>
+                )}
               </div>
             </div>
 
@@ -59,12 +77,12 @@ export default function CheckoutPage() {
               <div className="text-gray-500 space-y-1">
                 <div className="flex items-center gap-2 w-max">
                   <CiCalendar className="text-lg" />
-                  <h1 className="text-sm">Tanggal hari ini</h1>
+                  <h1 className="text-sm">{today}</h1>
                 </div>
                 {/* needs to be fixed */}
-                <div className="flex items-center gap-2 w-max">
-                  <CiClock1 className="text-lg" />
-                  <p className="text-sm w-[300px] whitespace-normal">
+                <div className="flex items-center gap-2 w-full">
+                  <CiClock1 className="text-lg shrink-0" />
+                  <p className="text-sm flex-1 whitespace-normal">
                     Maks. 1 jam setelah pembayaran selama jam operasional (Maks. 1 jam setelah pembayaran selama jam
                     operasional (07:00 - 21:00))
                   </p>
@@ -80,28 +98,28 @@ export default function CheckoutPage() {
               Pengiriman Instan
             </div>
             <ul className="space-y-4">
-              {order?.orderItems?.map((item: any) => (
-                <li key={item.id} className="flex justify-between items-center border rounded p-4">
-                  {/* Left: Item details */}
-                  <div className="flex flex-col">
-                    <span className="text-black font-semibold">{item.productName}</span>
-                    <div className="flex items-center space-x-4 text-sm text-gray-500 mb-2">
-                      <span>Rp {item.productBasePrice.toLocaleString("id-ID")}</span>
-                      <span>Quantity: {item.quantity}</span>
+              {cartItems && cartItems.length > 0 ? (
+                cartItems.map((item: any) => (
+                  <li key={item.id} className="flex justify-between items-center border rounded p-4">
+                    {/* Left: Item details */}
+                    <div className="flex flex-col">
+                      <span className="text-black font-semibold">{item.product.name}</span>
+                      <div className="flex items-center space-x-4 text-sm text-gray-500 mb-2">
+                        <span>Rp {item.product.price?.toLocaleString("id-ID")}</span>
+                        <span>Quantity: {item.quantity}</span>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Right: Subtotal */}
-                  <div className="flex items-center space-x-4">
-                    <div className="text-red-600 font-bold min-w-[80px] text-right">
-                      Rp {item.finalPrice.toLocaleString("id-ID")}
+                    {/* Right: Subtotal */}
+                    <div className="flex items-center space-x-4">
+                      <div className="text-red-600 font-bold min-w-[80px] text-right">
+                        Rp {(item.product.price * item.quantity).toLocaleString("id-ID")}
+                      </div>
                     </div>
-                  </div>
-                </li>
-              ))}
-
-              {(!order?.orderItems || order?.orderItems?.length === 0) && (
-                <p className="text-gray-500">Tidak ada item dalam pesanan.</p>
+                  </li>
+                ))
+              ) : (
+                <li className="text-gray-500">Tidak ada item dalam pesanan.</li>
               )}
             </ul>
           </div>
@@ -112,7 +130,7 @@ export default function CheckoutPage() {
             <div className="space-y-4 text-black">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>Rp {subtotal.toLocaleString("id-ID")}</span>
+                <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
               </div>
               <div className="flex justify-between">
                 <span>Diskon</span>
@@ -129,7 +147,7 @@ export default function CheckoutPage() {
             <div className="text-black font-bold">
               <div className="flex justify-between">
                 <span>Total Belanja</span>
-                <span>Rp {subtotal.toLocaleString("id-ID")}</span>
+                <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
               </div>
             </div>
             <button className="w-full mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition">
@@ -146,7 +164,7 @@ export default function CheckoutPage() {
                 <div className="space-y-4 text-black">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>Rp {subtotal.toLocaleString("id-ID")}</span>
+                    <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Diskon</span>
@@ -163,7 +181,7 @@ export default function CheckoutPage() {
                 <div className="text-black font-bold">
                   <div className="flex justify-between">
                     <span>Total Belanja</span>
-                    <span>Rp {subtotal.toLocaleString("id-ID")}</span>
+                    <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
                   </div>
                 </div>
               </div>
@@ -184,7 +202,7 @@ export default function CheckoutPage() {
                     </svg>
                     <div className="flex flex-col">
                       <div className="text-black font-semibold">Total</div>
-                      <div className="font-bold text-black">Rp {subtotal.toLocaleString("id-ID")}</div>
+                      <div className="font-bold text-black">Rp {totalBelanja.toLocaleString("id-ID")}</div>
                     </div>
                   </div>
                 </div>

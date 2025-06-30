@@ -96,8 +96,7 @@ export const createCartItems = async (req: Request, res: Response, next: NextFun
 export const getCartItems = async (req: Request, res: Response, next: NextFunction) => {
   try {
     //cari userId dulu
-    // const userId = req.body.userId
-    // console.log(req.body.payload);
+
     const { userId } = req.body.payload;
 
     if (!userId) {
@@ -119,6 +118,14 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
       where: {
         userId,
         isMainAddress: true,
+      },
+    });
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        firstName: true,
+        phoneNumber: true,
       },
     });
 
@@ -183,6 +190,7 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
       message: "Cart items retrieved successfully.",
       cartItems,
       mainAddress,
+      user,
     });
   } catch (error) {
     next(error);

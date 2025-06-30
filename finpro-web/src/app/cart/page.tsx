@@ -3,10 +3,9 @@ import { IoTrashOutline } from "react-icons/io5";
 import { BsStopwatch } from "react-icons/bs";
 import { FaLocationDot } from "react-icons/fa6";
 import useCartItems from "@/features/cart/hooks/useCartItems";
-import { useProductQuantity } from "@/features/(user)/p/hooks/useProductQuantity";
 import * as React from "react";
-
-import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi"; // top of file
+import Link from "next/link";
+import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";
 
 // refactoring:
 // kalo component global, dipake di semua page
@@ -260,9 +259,11 @@ export default function CartPage() {
                 <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
               </div>
             </div>
-            <button className="w-full mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition text-lg">
-              Checkout
-            </button>
+            <Link href="/checkout">
+              <button className="w-full mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition text-lg">
+                Checkout
+              </button>
+            </Link>
           </div>
 
           {/* Mobile Checkout Section */}
@@ -312,9 +313,11 @@ export default function CartPage() {
                     </div>
                   </div>
                 </div>
-                <button className="bg-red-700 text-white text-lg p-2 px-8 rounded-lg hover:bg-red-800 transition">
-                  Checkout
-                </button>
+                <Link href="/checkout">
+                  <button className="bg-red-700 text-white text-lg p-2 px-8 rounded-lg hover:bg-red-800 transition">
+                    Checkout
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

@@ -17,6 +17,7 @@ export default function useCartItems() {
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [itemToDelete, setItemToDelete] = React.useState<string | null>(null);
   const [mainAddress, setMainAddress] = React.useState<any>(null);
+  const [user, setUser] = React.useState<any>(null);
   // const handleInitialize = React.useRef(false);
 
   const handleDisplayCartItems = async () => {
@@ -31,6 +32,8 @@ export default function useCartItems() {
 
         console.log("Main address:", cartItems.data.mainAddress);
         setMainAddress(cartItems.data.mainAddress);
+
+        setUser(cartItems.data.user);
 
         toast.success("Berhasil menampilkan barang di keranjang");
         setLoading(false);
@@ -146,6 +149,7 @@ export default function useCartItems() {
   return {
     cartItems,
     mainAddress,
+    user,
     loading,
     token,
     isSummaryOpen,
