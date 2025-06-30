@@ -23,6 +23,7 @@ import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi"; // top of fi
 export default function CartPage() {
   const {
     cartItems,
+    mainAddress,
     loading,
     isSummaryOpen,
     setIsSummaryOpen,
@@ -123,8 +124,24 @@ export default function CartPage() {
             {/* Shipping Address (Mobile only) */}
             <div className="md:hidden mb-4 pb-4 border-b text-black flex items-center gap-2">
               <FaLocationDot />
-              <h3 className="font-semibold text-gray-700 text-sm">Kirim ke:</h3>
-              <p className="text-sm text-gray-600">Jl. Contoh No. 123, Jakarta</p>
+              {/* <h3 className="font-semibold text-gray-700 text-sm">Kirim ke:</h3>
+              <p className="text-sm text-gray-600">Jl. Contoh No. 123, Jakarta</p> */}
+              <div>
+                <h3 className="font-semibold text-gray-700 text-sm">Kirim ke:</h3>
+                {mainAddress ? (
+                  <div className="text-sm text-gray-600">
+                    <p>{mainAddress.address}</p>
+                    <p>
+                      {mainAddress.subDistrict}, {mainAddress.district}
+                    </p>
+                    <p>
+                      {mainAddress.city}, {mainAddress.province} {mainAddress.postalCode}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500">Belum ada alamat utama</p>
+                )}
+              </div>
             </div>
             {cartItems && cartItems.length > 0 ? (
               <>

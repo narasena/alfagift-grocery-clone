@@ -228,7 +228,7 @@ export const getOrder = async (req: Request, res: Response, next: NextFunction) 
     res.status(200).json({
       success: true,
       message: "Orders retrieved successfully.",
-      orders: ordersWithDetails,
+      ordersWithDetails,
     });
   } catch (error) {
     next(error);

@@ -8,6 +8,16 @@ import useOrder from "@/features/order/hooks/useOrder";
 export default function CheckoutPage() {
   const { order, loading, isSummaryOpen, setIsSummaryOpen } = useOrder();
   const subtotal = order?.orderItems?.reduce((acc: number, item: any) => acc + item.finalPrice, 0) || 0;
+
+  if (loading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
+
+  // console.log("Order:", order.data.orders);
+
   return (
     <main className="min-h-screen bg-white flex flex-col items-center justify-between">
       <div className="w-full max-w-6xl md:px-5">
@@ -131,7 +141,7 @@ export default function CheckoutPage() {
           <div className="md:hidden">
             {/* Order Summary Dropdown (appears above when open) */}
             {isSummaryOpen && (
-              <div className="fixed bottom-16 left-0 right-0 bg-white border-t p-6 max-h-[60vh] overflow-y-auto shadow-lg">
+              <div className=" bottom-16 left-0 right-0 bg-white border-t p-6 max-h-[60vh] overflow-y-auto shadow-lg">
                 <h2 className="text-xl font-semibold text-gray-700 mb-7">Ringkasan Pesanan</h2>
                 <div className="space-y-4 text-black">
                   <div className="flex justify-between">

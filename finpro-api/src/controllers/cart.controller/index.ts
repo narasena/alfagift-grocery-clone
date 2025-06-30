@@ -97,8 +97,8 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
   try {
     //cari userId dulu
     // const userId = req.body.userId
+    // console.log(req.body.payload);
     const { userId } = req.body.payload;
-    console.log(req.body.payload);
 
     if (!userId) {
       throw new AppError("User not authenticated.", 401);
@@ -113,6 +113,15 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
     if (!cartId) {
       throw new AppError("Cart not found.", 404);
     }
+
+    // Get user's main address
+    const mainAddress = await prisma.userAddress.findFirst({
+      where: {
+        userId,
+        isMainAddress: true,
+      },
+    });
+
     const activeDiscounts = await prisma.productDiscount.findMany({
       where: {
         startDate: { lte: new Date() },
@@ -173,6 +182,7 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
       success: true,
       message: "Cart items retrieved successfully.",
       cartItems,
+      mainAddress,
     });
   } catch (error) {
     next(error);

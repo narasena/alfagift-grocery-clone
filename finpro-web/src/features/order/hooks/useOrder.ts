@@ -1,6 +1,7 @@
 import * as React from "react";
 import useAuthStore from "@/zustand/authStore";
 import { toast } from "react-toastify";
+import { handleGetOrder } from "../api/handleGetOrder";
 
 export default function useOrder() {
   const token = useAuthStore((state) => state.token);
@@ -9,13 +10,15 @@ export default function useOrder() {
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
 
   // display order
-  const handleGetOrder = async (token: string) => {
+  const handleDisplayOrder = async (token: string) => {
     try {
+      console.log(">>>>");
+
       if (token) {
         setLoading(true);
-        const order = await handleGetOrder(token);
-        console.log("Order:", order);
-        setOrder(order);
+        const orderItems = await handleGetOrder(token);
+        console.log("Order:", orderItems.data.ordersWithDetails);
+        setOrder(orderItems.data.ordersWithDetails);
         toast.success("Berhasil menampilkan pesanan");
         setLoading(false);
       }
@@ -31,7 +34,7 @@ export default function useOrder() {
   // Call getOrder when page loads
   React.useEffect(() => {
     if (token) {
-      handleGetOrder(token);
+      handleDisplayOrder(token);
     }
   }, [token]);
 
