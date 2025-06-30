@@ -21,7 +21,7 @@ export default function AdminLoginPage() {
 
   const handleAdminLogin = async ({ email, password }: iHandleAuthLogin) => {
     try {
-      const response = await instance.post("/admin/login", {
+      const response = await instance.post("/admins/login", {
         email,
         password,
       });

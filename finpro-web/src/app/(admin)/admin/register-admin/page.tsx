@@ -66,7 +66,7 @@ export default function RegisterStoreAdminPage() {
     try {
       const token = authStore.getState().token;
 
-      const res = await instance.post("/admin/register-admin", values, {
+      const res = await instance.post("/admins/register-admin", values, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
