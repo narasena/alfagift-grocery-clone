@@ -1,6 +1,6 @@
 import { ICartItem } from "@/types/carts/cartItem.type";
 import * as React from "react";
-import authStore from "@/zustand/store";
+import useAuthStore from "@/zustand/authStore";
 import { IAuthState } from "@/types/auth/auth.type";
 import { handleGetCartItems } from "../api/handleGetCartItems";
 import { deleteCartItem } from "../api/handleDeleteCartItems";
@@ -9,14 +9,15 @@ import { updateCartItemQuantity } from "../api/handleUpdateCartItemQuantity";
 import { toast } from "react-toastify";
 
 export default function useCartItems() {
-  const token = authStore((state: IAuthState) => state.token);
-
+  const token = useAuthStore((state) => state.token);
   const [cartItems, setCartItems] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
 
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [itemToDelete, setItemToDelete] = React.useState<string | null>(null);
+  const [mainAddress, setMainAddress] = React.useState<any>(null);
+  const [user, setUser] = React.useState<any>(null);
   // const handleInitialize = React.useRef(false);
 
   const handleDisplayCartItems = async () => {
@@ -28,6 +29,12 @@ export default function useCartItems() {
         const cartItems = await handleGetCartItems(token);
         console.log("Cart items:", cartItems.data.cartItems);
         setCartItems(cartItems.data.cartItems);
+
+        console.log("Main address:", cartItems.data.mainAddress);
+        setMainAddress(cartItems.data.mainAddress);
+
+        setUser(cartItems.data.user);
+
         toast.success("Berhasil menampilkan barang di keranjang");
         setLoading(false);
       }
@@ -132,6 +139,19 @@ export default function useCartItems() {
     }
   };
 
+  const totalBelanja =
+    cartItems?.reduce((total, item) => {
+      const price = item.product.price ?? 0;
+      return total + price * item.quantity;
+    }, 0) ?? 0;
+
+  const today = new Date().toLocaleDateString("id-ID", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
   React.useEffect(() => {
     if (token) {
       handleDisplayCartItems();
@@ -141,6 +161,8 @@ export default function useCartItems() {
 
   return {
     cartItems,
+    mainAddress,
+    user,
     loading,
     token,
     isSummaryOpen,
@@ -158,5 +180,7 @@ export default function useCartItems() {
     updateQuantity,
     incrementQuantity,
     decrementQuantity,
+    totalBelanja,
+    today,
   };
 }
