@@ -159,7 +159,54 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-// display
+// display price breakdown
+export const getOrderPriceBreakdown = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { userId } = req.body.payload; // Adjust based on your auth middleware
+    // const { orderId } = req.params;
+
+    // if (!orderId) {
+    //   throw new AppError("Order ID is required", 400);
+    // }
+
+    // Find the order with status WAITING_FOR_PAYMENT
+    const order = await prisma.order.findFirst({
+      where: {
+        // id: orderId,
+        userId,
+        deletedAt: null,
+        orderHistories: {
+          some: {
+            status: "WAITING_FOR_PAYMENT",
+            deletedAt: null,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc", // Get the most recent order
+      },
+    });
+
+    if (!order) {
+      throw new AppError("Order not found or not in WAITING_FOR_PAYMENT", 404);
+    }
+
+    res.status(200).json({
+      success: true,
+      // data: {
+      //   subtotal: order.totalAmount,
+      //   discountedTotal: order.discountedTotalAmount,
+      //   finalTotal: order.finalTotalAmount,
+      //   shippingCost: order.shippingCost,
+      //   discountedShippingCost: order.discountedShippingCost,
+      //   finalShippingCost: order.finalShippingCost,
+      // },
+      order,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 // buat nampilin order
 // export const getOrder = async (req: Request, res: Response, next: NextFunction) => {

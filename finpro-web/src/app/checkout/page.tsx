@@ -140,7 +140,10 @@ export default function CheckoutPage() {
               </div>
             </div>
             <button
-              onClick={() => handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "")}
+              onClick={async () => {
+                await handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "");
+                router.push("/payment");
+              }}
               className="w-full mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition"
             >
               Pilih Pembayaran
@@ -199,7 +202,10 @@ export default function CheckoutPage() {
                   </div>
                 </div>
                 <button
-                  onClick={() => handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "")}
+                  onClick={async () => {
+                    await handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "");
+                    router.push("/payment");
+                  }}
                   className="bg-red-700 text-white text-lg p-2 rounded-lg hover:bg-red-800 transition"
                 >
                   Pilih Pembayaran

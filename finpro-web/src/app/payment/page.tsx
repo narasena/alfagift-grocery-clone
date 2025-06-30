@@ -1,12 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import useOrder from "@/features/order/hooks/useOrder";
 
 export default function PaymentPage() {
-  const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
+  const { priceBreakdown, loading, selectedMethod, setSelectedMethod } = useOrder();
+  console.log("Price Breakdown:", priceBreakdown);
 
-  const subtotal = 500_000; // Example value
-  const total = 500_000; // Example value
+  if (!priceBreakdown) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <span className="loading loading-spinner loading-lg"></span>{" "}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen max-w-md mx-auto px-4 py-6 bg-white">
@@ -34,27 +40,30 @@ export default function PaymentPage() {
         </button>
       </div>
 
-      <div className="mt-auto border-t pt-4">
+      <div className="mt-auto pt-4">
+        <h2 className="text-lg font-bold mb-4 text-gray-800">Ringkasan</h2>
+        <div className="w-full h-[2px] bg-gray-200 mb-4" />
+
         <div className="flex justify-between mb-2">
           <span className="text-gray-600">Subtotal</span>
-          <span className="font-medium">Rp {subtotal.toLocaleString()}</span>
+          <span className="font-medium">Rp {priceBreakdown?.totalAmount.toLocaleString()}</span>
         </div>
         <div className="flex justify-between mb-4">
-          <span className="text-gray-800 font-semibold">Biaya Kirim</span>
-          <span className="font-bold text-lg">Rp 0</span>
+          <span className="text-gray-600">Biaya Kirim</span>
+          <span className="font-medium">Rp {priceBreakdown?.shippingCost.toLocaleString()}</span>
         </div>
         <div className="flex justify-between mb-4">
-          <span className="text-gray-800 font-semibold">Diskon</span>
-          <span className="font-bold text-lg">Rp 0</span>
+          <span className="text-gray-600">Diskon</span>
+          <span className="font-medium">Rp {priceBreakdown?.discountedTotalAmount.toLocaleString()}</span>
         </div>
         <div className="flex justify-between mb-4">
-          <span className="text-gray-800 font-semibold">Total</span>
-          <span className="font-bold text-lg">Rp {total.toLocaleString()}</span>
+          <span className="text-gray-800 font-bold text-lg">Total</span>
+          <span className="font-bold text-lg">Rp {priceBreakdown?.finalTotalAmount.toLocaleString()}</span>
         </div>
 
         <button
           disabled={!selectedMethod}
-          className={`w-full py-3 rounded-3xl text-white font-bold ${
+          className={`w-full py-3 rounded-4xl text-lg text-white font-bold ${
             selectedMethod ? "bg-red-600" : "bg-gray-400 cursor-not-allowed"
           }`}
         >
