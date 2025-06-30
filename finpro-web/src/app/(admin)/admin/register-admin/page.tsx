@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import instance from "../../../../utils/axiosinstance";
 import { toast } from "react-toastify";
-import { registeValidationAdminSchema } from "../../../features/register/schemas/adminRegisterValidationSchema";
+import { registeValidationAdminSchema } from "../../../(user)/features/register/schemas/adminRegisterValidationSchema";
 import authStore from "../../../../zustand/authStore";
 import { useRouter } from "next/navigation";
 
@@ -49,7 +49,7 @@ export default function RegisterStoreAdminPage() {
             Authorization: `Bearer ${token}`,
           },
         });
-     
+
         setStores(res.data);
       } catch (error) {
         console.error("Failed to fetch stores", error);

@@ -1,6 +1,6 @@
 "use client";
 
-import authStore from "../../zustand/authStore";
+import authStore from "../../../zustand/authStore";
 import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {

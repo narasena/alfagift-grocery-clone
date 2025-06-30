@@ -14,7 +14,7 @@ import { useReferrals } from "@/features/register/hooks/useReferrals";
 import { MdOutlineQuestionMark } from "react-icons/md";
 import { AxiosError } from "axios";
 
-const MapPicker = dynamic(() => import("../../components/MapPicker"), {
+const MapPicker = dynamic(() => import("../../../components/MapPicker"), {
   ssr: false,
 });
 
