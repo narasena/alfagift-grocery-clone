@@ -1,7 +1,9 @@
-import { TDiscountType } from '../discounts/discount.type';
-import { IProductBrand } from './product.brand.type';
-import { IProductSubCategory } from './product.category.type';
-import { ICloudinaryResult, IProductImage } from './product.image.type';
+import { TDiscountType } from "../discounts/discount.type";
+import { EStockMovementType } from "../inventories/product.stock.type";
+import { IStore } from "../stores/store.type";
+import { IProductBrand } from "./product.brand.type";
+import { IProductSubCategory } from "./product.category.type";
+import { ICloudinaryResult, IProductImage } from "./product.image.type";
 
 export interface IAddProductField {
   name: string;
@@ -31,26 +33,55 @@ export interface IProductFormValues extends IProduct {
 }
 
 export interface IProductDiscountDetails {
-  name: string
-  description: string
-  type: TDiscountType
-  discountValue: number
-  discountedPrice: number
-
+  name: string;
+  description: string;
+  type: TDiscountType;
+  discountValue: number;
+  discountedPrice: number;
 }
 
 export interface IProductDetails extends IProduct {
-  productImage: IProductImage[]
-  productSubCategory: IProductSubCategory & { productCategory: IProductSubCategory }
-  productBrand: IProductBrand
-  stock: number
-  discount: IProductDiscountDetails
+  productImage: IProductImage[];
+  productSubCategory: IProductSubCategory & { productCategory: IProductSubCategory };
+  productBrand: IProductBrand;
+  stock: number;
+  discount: IProductDiscountDetails;
 }
 
 export interface IProductTable extends IProduct {
-  [key: string]: unknown
+  [key: string]: unknown;
 }
 
 export interface IProductDetailsTable extends IProductDetails {
-  [key: string]: unknown
+  [key: string]: unknown;
 }
+
+export interface IProductStockReport {
+  product: IProductDetails;
+  store: IStore;
+  productId: string;
+  storeId: string;
+}
+
+export interface IProductStockReportTotal extends IProductStockReport {
+  stock: number;
+  stockReportLength: number;
+  storeInQuantity: number;
+  storeOutQuantity: number;
+}
+
+export interface IProductStockReportMonthly extends IProductStockReport{
+  productStock: {
+    product: IProductDetails;
+    store: IStore;
+  }
+  type: EStockMovementType
+  quantity: number
+  createdAt: Date
+}
+
+export type TProductStockReport = IProductStockReportTotal | IProductStockReportMonthly;
+
+export type TProductStockReportTable = TProductStockReport & {
+  [key: string]: unknown;
+};
