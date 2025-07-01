@@ -1,15 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, useFormikContext, FormikHelpers } from "formik";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import dynamic from "next/dynamic";
 import { registerValidationSchema } from "../features/register/schemas/registerValidationSchema";
 import { toast } from "react-toastify";
 import apiInstance from "@/utils/api/apiInstance";
 import { useRouter } from "next/navigation";
+import { LuCheck } from "react-icons/lu";
+import { RxCross2 } from "react-icons/rx";
+import { useReferrals } from "@/features/register/hooks/useReferrals";
+import { MdOutlineQuestionMark } from "react-icons/md";
+import { AxiosError } from "axios";
 
-const MapPicker = dynamic(() => import("../../components/MapPicker"), {
+const MapPicker = dynamic(() => import("../../../components/MapPicker"), {
   ssr: false,
 });
 
@@ -56,52 +61,38 @@ export default function RegisterPage() {
     isMainAddress: false,
   };
 
-  const handleSubmit = async ({
-    firstName,
-    lastName,
-    email,
-    phoneNumber,
-    password,
-    gender,
-    dateOfBirth,
-    address,
-    subDistrict,
-    district,
-    city,
-    province,
-    postalCode,
-    latitude,
-    longitude,
-    isMainAddress,
-  }: IHandleRegisterUser) => {
+  const handleSubmit = async (values: IHandleRegisterUser, actions: FormikHelpers<IHandleRegisterUser>) => {
+    const { setSubmitting } = actions;
     try {
-      const response = await apiInstance.post("/user/register", {
-        firstName,
-        lastName,
-        email,
-        phoneNumber,
-        password,
-        gender,
-        dateOfBirth,
-        address,
-        subDistrict,
-        district,
-        city,
-        province,
-        postalCode,
-        latitude,
-        longitude,
-        isMainAddress,
-      });
-
-      toast.success(response.data.message);
-      setTimeout(() => {
-        router.push("/login");
-      }, 2000);
+      if (referralCode !== "" && referralFound) {
+        // Post with referral
+        const payload = { ...values, appliedReferralCode: referralCode };
+        const response = await apiInstance.post("/user/register", payload);
+        toast.success(response.data.message);
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
+      } else if (referralCode === "") {
+        // Post without referral
+        const response = await apiInstance.post("/user/register", values);
+        toast.success(response.data.message);
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
+      } else if (referralCode !== "" && !referralFound) {
+        // Show error message or prevent submit
+        alert("Invalid referral code. Please enter a valid code or remove it.");
+        setSubmitting(false);
+        return;
+      }
     } catch (error) {
-      console.log(error);
+      const errorResponse = error as AxiosError<{ message: string }>;
+      toast.error(errorResponse.response?.data.message);
+      setSubmitting(false);
     }
   };
+
+  const { checkReferral, referralCode, referralFound } = useReferrals();
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -118,9 +109,9 @@ export default function RegisterPage() {
           <Formik
             initialValues={initialValues}
             validationSchema={registerValidationSchema}
-            onSubmit={(values) => {
+            onSubmit={(values, actions) => {
               console.log("Submit berhasil, isi values:", values);
-              handleSubmit(values);
+              handleSubmit(values, actions);
             }}
           >
             {({ setFieldValue }) => (
@@ -209,6 +200,30 @@ export default function RegisterPage() {
                     className="w-full px-3 py-2 border border-gray-400 text-black  rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-300"
                   />
                   <ErrorMessage name="dateOfBirth" component="div" className="text-red-500 text-sm" />
+                </div>
+                {/* referral */}
+                <div className="pt-2">
+                  <label
+                    htmlFor="referralCode"
+                    className="text-sm font-semibold text-gray-400 block mb-1"
+                  >{`(Optional) Punya Referral Code?`}</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      name="referralCode"
+                      placeholder="Kosongkan jika tidak ada"
+                      className="w-full px-3 py-2 border border-gray-300 text-black  rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-gray-300"
+                      onChange={(e) => checkReferral(e)}
+                      value={referralCode}
+                    />
+                    <div
+                      className={`p-2 rounded-md text-white ${
+                        referralCode === "" ? "bg-gray-200" : referralFound ? "bg-green-500" : "bg-red-500"
+                      }`}
+                    >
+                      {referralCode === "" ? <MdOutlineQuestionMark /> : referralFound ? <LuCheck /> : <RxCross2 />}
+                    </div>
+                  </div>
                 </div>
 
                 {showAddressForm && (

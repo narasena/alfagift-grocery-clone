@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import instance from '../../utils/axiosinstance';
-import useStoreStore from '../../zustand/storeStore';
+import instance from '../../../utils/axiosinstance';
+import useStoreStore from '../../../zustand/storeStore';
 import { toast } from 'react-toastify';
 
 interface Address {

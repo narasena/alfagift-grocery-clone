@@ -2,7 +2,8 @@ import * as React from "react";
 import { ICartItem } from "@/types/carts/cartItem.type";
 import { IProduct, IProductDetails } from "@/types/products/product.type";
 import { toast } from "react-toastify";
-import authStore from "@/zustand/store";
+// import authStore from "@/zustand/store";
+import useAuthStore from "@/zustand/authStore";
 import { IAuthState } from "@/types/auth/auth.type";
 import { addProductToCart } from "../api/handleAddProductToCart";
 import { handleGetCartItems } from "@/features/cart/api/handleGetCartItems";
@@ -10,7 +11,7 @@ import { handleGetCartItems } from "@/features/cart/api/handleGetCartItems";
 export default function useCart() {
   const [cart, setCart] = React.useState<ICartItem[]>([]);
   // const { handleDisplayCartItems } = useCartItems();
-  const token = authStore((state: IAuthState) => state.token);
+  const token = useAuthStore((state) => state.token);
 
   const handleAddToCart = async (
     quantity: number = 1,

@@ -1,5 +1,3 @@
-import { IAuthState } from "@/types/auth/auth.type";
-import authStore from "@/zustand/store";
 import apiInstance from "@/utils/api/apiInstance";
 
 // load cart items from the database

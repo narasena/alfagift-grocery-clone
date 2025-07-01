@@ -1,7 +1,7 @@
-import { Prisma } from "@prisma/client";
+import { Prisma } from "../../generated/prisma/client";
 import { prisma } from "../../prisma";
 import { NextFunction, Request, Response } from "express";
-import { IProductStock, IProductStockHistory, IProductStockHistoryForm } from "@/types/product.stock.type";
+import { EStockMovementType, IProductStock, IProductStockHistory, IProductStockHistoryForm } from "@/types/product.stock.type";
 
 export const getAllStocks = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -368,6 +368,151 @@ export const updateProductStocksByStore = async (req: Request, res: Response, ne
       message: "Product stocks updated successfully",
       updateResult,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getStocksReport = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { reportType,month, storeId, type, page, limit, sortOrder, search } = req.query;
+    console.log(req.query);
+    if(reportType === 'total') {
+      
+      const where: Prisma.ProductStockWhereInput = { deletedAt: null };
+      
+      if (month) {
+        const year = new Date().getFullYear();
+        const monthNum = parseInt(month as string);
+        where.createdAt = {
+          gte: new Date(year, monthNum - 1, 1),
+          lte: new Date(year, monthNum, 0), // Last day of the month
+        };
+      }
+      
+      if (storeId) {
+        where.storeId = String(storeId);
+      }
+  
+      if (type) {
+        where.stockHistory = {}
+      }
+          
+      if (search) {
+        where.product = {
+          name: {
+            contains: String(search),
+            mode: 'insensitive'
+          }
+        }
+      }
+      const stocksReportLength = await prisma.productStock.count({
+        where
+      })
+      
+      const stocksReport = await prisma.productStock.findMany({
+        where,
+        include:{
+          product: { select: { name: true } },
+          store: { select: { name: true } }
+        },
+          
+        orderBy: {
+          createdAt: sortOrder === 'asc' ? 'asc' : 'desc',
+        },
+        skip: (Number(page) - 1) * Number(limit),
+        take: Number(limit),
+      })
+      const stocksReportQuantity = await prisma.productStockHistory.groupBy({
+        by: [ 'productId','storeId', 'type'],
+        where:{storeId: storeId as string},
+        _sum: {
+          quantity: true,
+        },
+        orderBy: {
+          productId:'asc'
+        }
+      });
+      
+      const transformedStocksReport = stocksReport.map((stock) => {
+        const storeInMatch = stocksReportQuantity.find(
+          (qty) => qty.productId === stock.productId && qty.storeId === stock.storeId && qty.type === "STORE_IN",
+        );
+        const storeOutMatch = stocksReportQuantity.find(
+          (qty) => qty.productId === stock.productId && qty.storeId === stock.storeId && qty.type === "STORE_OUT",
+        );
+        return {
+          ...stock,
+          storeInQuantity: storeInMatch ? storeInMatch._sum.quantity : 0,
+          storeOutQuantity: storeOutMatch ? storeOutMatch._sum.quantity : 0,
+        };
+      });
+      
+      res.status(200).json({
+        success: true,
+        message: "Stocks report generated successfully",
+        stocksReport:transformedStocksReport,
+        stocksReportLength
+      });
+    }else if (reportType === 'monthly') {
+      const where: Prisma.ProductStockHistoryWhereInput = { deletedAt: null };
+      
+      if (month) {
+        const year = new Date().getFullYear();
+        const monthNum = parseInt(month as string);
+        where.createdAt = {
+          gte: new Date(year, monthNum - 1, 1),
+          lte: new Date(year, monthNum, 0), // Last day of the month
+        };
+      }
+      
+      if (storeId) {
+        where.storeId = String(storeId);
+      }
+      
+      if (search) {
+        if (where.productStock) {
+          where.productStock.product = {
+            name: {
+              contains: String(search),
+              mode: 'insensitive'
+            }
+          }
+        }
+      }
+
+      if (type) {
+        where.type = type as EStockMovementType
+      }
+
+      const stocksReportLength = await prisma.productStockHistory.count({
+        where
+      })
+      
+      const stocksReport = await prisma.productStockHistory.findMany({
+        where,
+        include: {
+          productStock: {
+            select: {
+              product: { select: { name: true } },
+              store: { select: { name: true } }
+            }
+          }
+        },
+        orderBy: {
+          createdAt: sortOrder === 'asc' ? 'asc' : 'desc',
+        },
+        // skip: (Number(page) - 1) * Number(limit),
+        // take: Number(limit),
+      });
+      res.status(200).json({
+        success: true,
+        message: "Stocks report generated successfully",
+        stocksReport,
+        stocksReportLength
+      });
+        
+    }
   } catch (error) {
     next(error);
   }

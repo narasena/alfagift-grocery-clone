@@ -2,13 +2,6 @@ import { prisma } from "../../prisma";
 import { AppError } from "../../utils/app.error";
 import { Request, Response, NextFunction } from "express";
 
-// update? the qty backend or frontend?
-// calculate the total price backend or frontend?
-
-// disocunt belum
-
-// checkout
-
 export const createCartItems = async (req: Request, res: Response, next: NextFunction) => {
   try {
     //cari userId dulu
@@ -103,9 +96,8 @@ export const createCartItems = async (req: Request, res: Response, next: NextFun
 export const getCartItems = async (req: Request, res: Response, next: NextFunction) => {
   try {
     //cari userId dulu
-    // const userId = req.body.userId
+
     const { userId } = req.body.payload;
-    console.log(req.body.payload);
 
     if (!userId) {
       throw new AppError("User not authenticated.", 401);
@@ -120,6 +112,23 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
     if (!cartId) {
       throw new AppError("Cart not found.", 404);
     }
+
+    // Get user's main address
+    const mainAddress = await prisma.userAddress.findFirst({
+      where: {
+        userId,
+        isMainAddress: true,
+      },
+    });
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        firstName: true,
+        phoneNumber: true,
+      },
+    });
+
     const activeDiscounts = await prisma.productDiscount.findMany({
       where: {
         startDate: { lte: new Date() },
@@ -180,6 +189,8 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
       success: true,
       message: "Cart items retrieved successfully.",
       cartItems,
+      mainAddress,
+      user,
     });
   } catch (error) {
     next(error);

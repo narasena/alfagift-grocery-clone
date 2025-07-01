@@ -32,7 +32,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
       // Tentukan endpoint berdasarkan payload
       const endpoint = decoded.adminId
-        ? "/admin/session-login"
+        ? "/admins/session-login"
         : "/user/session-login";
 
       const response = await instance.get(endpoint, {
