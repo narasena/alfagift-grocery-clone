@@ -6,13 +6,15 @@ import { RiDiscountPercentFill } from "react-icons/ri";
 import { usePathname } from "next/navigation";
 import { FaUsersCog } from "react-icons/fa";
 import { IoSettings } from "react-icons/io5";
+import { MdInventory } from "react-icons/md";
 
 export const useAdminDashboardNavItems = () => {
   const bottomNav = [
     { name: "Home", href: "/dashboard", icon: <HiHome /> },
     { name: "Reports", href: "/reports", icon: <BiSolidReport /> },
     { name: "Products", href: "/products", icon: <AiFillProduct /> },
-    { name: "Promo", href: "/promos", icon: <RiDiscountPercentFill /> },
+    { name: "Inventories", href: "/inventories", icon: <MdInventory /> },
+    { name: "Discounts", href: "/discounts", icon: <RiDiscountPercentFill /> },
     { name: "Admin", href: "/admin", icon: <GrUserAdmin /> },
   ];
   const sideNav = [
