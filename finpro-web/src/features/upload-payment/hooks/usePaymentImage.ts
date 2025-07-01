@@ -38,6 +38,7 @@ export default function usePaymentImage() {
         const cldPublicId = uploadedImage.public_id;
         response = await handlePaymentUpload(token, String(paymentId), imageUrl, cldPublicId);
         console.log(response);
+        toast.success("Payment proof uploaded successfully! Please wait for confirmation.");
       }
     } catch (error) {
       const errRes = error as AxiosError<{ message: string }>;

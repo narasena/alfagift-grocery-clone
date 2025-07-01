@@ -3,10 +3,12 @@
 import useCheckout from "@/features/checkout/hooks/useCheckout";
 import usePayment from "@/features/payment/hooks/usePayment";
 import { EPaymentType } from "@/types/payment/payment.type";
+import { useRouter } from "next/navigation";
 
 export default function PaymentPage() {
   const { loading, handlePayment } = usePayment();
   const { priceBreakdown, selectedType, setSelectedType } = useCheckout();
+  const router = useRouter();
 
   if (!priceBreakdown) {
     return (
@@ -63,11 +65,13 @@ export default function PaymentPage() {
           <span className="font-bold text-lg">Rp {priceBreakdown?.finalTotalAmount.toLocaleString()}</span>
         </div>
 
-        {/* udh ada backend nya buat create payment, blm implemented here */}
+        {/* ke `/upload-payment/${paymentId}` */}
         <button
-          onClick={() => {
+          onClick={async () => {
             const paymentMethod = selectedType === EPaymentType.BANK_TRANSFER ? "Mobile Banking" : "GoPay";
-            handlePayment(selectedType as EPaymentType, paymentMethod);
+            const paymentId = await handlePayment(selectedType as EPaymentType, paymentMethod);
+
+            router.push(`/upload-payment/${paymentId}`);
           }}
           disabled={!selectedType}
           className={`w-full py-3 rounded-4xl text-lg text-white font-bold ${
