@@ -17,7 +17,7 @@ export const useProductDetails = () => {
       const productData = await getProductDetails(params.slug as string, storeId!);
       console.log(productData);
       setProduct(productData!);
-      setImageShowing(productData?.productImage.find((image: any) => image.isMainImage === true) || null);
+      setImageShowing(productData?.productImage[0]);
     } catch (error) {
       console.error("Error fetching product details:", error);
     }
