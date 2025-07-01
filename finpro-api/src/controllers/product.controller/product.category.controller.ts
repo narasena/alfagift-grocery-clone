@@ -152,6 +152,7 @@ export class ProductCategoryController {
               slug: true,
               product: {
                 select: {
+                  id: true,
                   name: true,
                   slug: true,
                   price: true,
@@ -213,6 +214,7 @@ export class ProductCategoryController {
           },
           product: {
             select: {
+              id: true, 
               name: true,
               slug: true,
               price: true,
