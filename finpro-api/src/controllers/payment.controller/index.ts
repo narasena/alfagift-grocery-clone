@@ -8,7 +8,9 @@ export const createPayment = async (req: Request, res: Response, next: NextFunct
     if (!userId) {
       throw new AppError("User not authenticated.", 401);
     }
-    const { orderId, paymentType, paymentMethod, paymentAmount, notes } = req.body;
+
+    const { paymentType, paymentMethod, paymentAmount, notes } = req.body;
+    const { orderId } = req.params;
 
     if (!orderId || !paymentType || !paymentMethod || !paymentAmount) {
       throw new AppError("Some fields are missing.", 400);

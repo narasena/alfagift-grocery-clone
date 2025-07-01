@@ -6,17 +6,14 @@ export const createPaymentRequest = async (
   orderId: string,
   paymentType: EPaymentType,
   paymentMethod: string,
-  paymentAmount: number,
-  notes: string
+  paymentAmount: number
 ) => {
   const response = await apiInstance.post(
-    "/payment/create",
+    `/payment/${orderId}/create`,
     {
-      orderId,
       paymentType,
       paymentMethod,
       paymentAmount,
-      notes,
     },
     {
       headers: {

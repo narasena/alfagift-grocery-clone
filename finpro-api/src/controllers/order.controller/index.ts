@@ -163,11 +163,6 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
 export const getOrderPriceBreakdown = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId } = req.body.payload; // Adjust based on your auth middleware
-    // const { orderId } = req.params;
-
-    // if (!orderId) {
-    //   throw new AppError("Order ID is required", 400);
-    // }
 
     // Find the order with status WAITING_FOR_PAYMENT
     const order = await prisma.order.findFirst({
@@ -193,15 +188,41 @@ export const getOrderPriceBreakdown = async (req: Request, res: Response, next: 
 
     res.status(200).json({
       success: true,
-      // data: {
-      //   subtotal: order.totalAmount,
-      //   discountedTotal: order.discountedTotalAmount,
-      //   finalTotal: order.finalTotalAmount,
-      //   shippingCost: order.shippingCost,
-      //   discountedShippingCost: order.discountedShippingCost,
-      //   finalShippingCost: order.finalShippingCost,
-      // },
       order,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// fetch orderid and finaltotalamount
+export const getOrderById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // const { userId } = req.body.payload; // Adjust based on your auth middleware
+    // if (!userId) {
+    //   throw new AppError("User not authenticated.", 401);
+    // }
+    const { orderId } = req.params;
+
+    if (!orderId) {
+      throw new AppError("Order ID is required.", 400);
+    }
+
+    const orderById = await prisma.order.findUnique({
+      where: { id: orderId },
+      select: {
+        id: true,
+        finalTotalAmount: true,
+      },
+    });
+
+    if (!orderById) {
+      throw new AppError("Order not found.", 404);
+    }
+
+    res.status(200).json({
+      success: true,
+      orderById,
     });
   } catch (error) {
     next(error);

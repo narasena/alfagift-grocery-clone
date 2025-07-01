@@ -7,7 +7,7 @@ export default function useCheckout() {
   const token = useAuthStore((state) => state.token);
   const [priceBreakdown, setPriceBreakdown] = React.useState<any>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [selectedMethod, setSelectedMethod] = React.useState<string | null>(null);
+  const [selectedType, setSelectedType] = React.useState<"BANK_TRANSFER" | "PAYMENT_GATEWAY" | null>(null);
 
   const handleGetOrderPriceBreakdown = async () => {
     try {
@@ -37,7 +37,7 @@ export default function useCheckout() {
   return {
     loading,
     priceBreakdown,
-    selectedMethod,
-    setSelectedMethod,
+    selectedType,
+    setSelectedType,
   };
 }

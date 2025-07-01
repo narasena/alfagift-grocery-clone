@@ -2,10 +2,11 @@
 
 import useCheckout from "@/features/checkout/hooks/useCheckout";
 import usePayment from "@/features/payment/hooks/usePayment";
+import { EPaymentType } from "@/types/payment/payment.type";
 
 export default function PaymentPage() {
-  const { createPayment, loading } = usePayment();
-  const { priceBreakdown, selectedMethod, setSelectedMethod } = useCheckout();
+  const { loading, handlePayment } = usePayment();
+  const { priceBreakdown, selectedType, setSelectedType } = useCheckout();
 
   if (!priceBreakdown) {
     return (
@@ -21,9 +22,9 @@ export default function PaymentPage() {
 
       <div className="space-y-4 mb-6">
         <button
-          onClick={() => setSelectedMethod("BANK_TRANSFER")}
+          onClick={() => setSelectedType("BANK_TRANSFER")}
           className={`w-full p-4 border rounded-xl text-left ${
-            selectedMethod === "manual" ? "border-red-600 bg-red-50" : "border-gray-300"
+            selectedType === "BANK_TRANSFER" ? "border-red-600 bg-red-50" : "border-gray-300"
           }`}
         >
           <p className="font-medium">Transfer Manual</p>
@@ -31,9 +32,9 @@ export default function PaymentPage() {
         </button>
 
         <button
-          onClick={() => setSelectedMethod("PAYMENT_GATEWAY")}
+          onClick={() => setSelectedType("PAYMENT_GATEWAY")}
           className={`w-full p-4 border rounded-xl text-left ${
-            selectedMethod === "gateway" ? "border-red-600 bg-red-50" : "border-gray-300"
+            selectedType === "PAYMENT_GATEWAY" ? "border-red-600 bg-red-50" : "border-gray-300"
           }`}
         >
           <p className="font-medium">Payment Gateway</p>
@@ -64,9 +65,13 @@ export default function PaymentPage() {
 
         {/* udh ada backend nya buat create payment, blm implemented here */}
         <button
-          disabled={!selectedMethod}
+          onClick={() => {
+            const paymentMethod = selectedType === EPaymentType.BANK_TRANSFER ? "Mobile Banking" : "GoPay";
+            handlePayment(selectedType as EPaymentType, paymentMethod);
+          }}
+          disabled={!selectedType}
           className={`w-full py-3 rounded-4xl text-lg text-white font-bold ${
-            selectedMethod ? "bg-red-600" : "bg-gray-400 cursor-not-allowed"
+            selectedType ? "bg-red-600 hover:bg-red-700 focus:bg-red-700" : "bg-gray-400 cursor-not-allowed"
           }`}
         >
           BAYAR

@@ -20,7 +20,7 @@ export default function CheckoutPage() {
     );
 
   return (
-    <main className="min-h-screen bg-white flex flex-col items-center justify-between">
+    <main className="min-h-screen bg-white flex flex-col items-center justify-between  mt-10">
       <div className="w-full max-w-6xl md:px-5">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Order Summary */}
