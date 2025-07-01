@@ -5,7 +5,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { authValidationSchema } from "../features/auth/schemas/authValidationSchema";
 import { toast } from "react-toastify";
-import authStore from "../../zustand/authStore";
+import authStore from "../../../zustand/authStore";
 import { useRouter } from "next/navigation";
 import apiInstance from "@/utils/api/apiInstance";
 

@@ -10,14 +10,25 @@ export class ProductController {
     try {
       const { name, price, productSubCategoryId, brandId, description, sku, barcode, weight, dimensions, images } =
         req.body;
+      console.log(req.body);
 
       const slug = name.toLowerCase().replace(/\s+/g, "-");
 
       if (!name || !productSubCategoryId || !price || images.length === 0) {
-        res.status(400).json({
+        throw {
+          isExpose: true,
+          status: 400,
           success: false,
           message: "Name, Price, Product Sub Category, and Product Images are required",
-        });
+        };
+      }
+
+      const existingProduct = await prisma.product.findUnique({
+        where: { slug, deletedAt: null },
+      });
+
+      if (existingProduct) {
+        throw { isExpose: true, status: 400, success: false, message: "Product with this name already exists" };
       }
 
       const newProduct = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
@@ -45,8 +56,19 @@ export class ProductController {
             cldPublicId: image.public_id,
             isMainImage: image.isMainImage,
           })),
-        }); 
-        return { product, productImages };
+        });
+
+        const storesIds = await tx.store.findMany({ where: { deletedAt: null }, select: { id: true } });
+
+        const productStocks = await tx.productStock.createMany({
+          data: storesIds.map((store: { id: string }) => ({
+            productId,
+            storeId: store.id,
+            stock: 0,
+          })),
+        });
+
+        return { product, productImages, productStocks };
       });
 
       res.status(201).json({
@@ -76,24 +98,32 @@ export class ProductController {
         editedExistingImages,
         newUploads,
       } = req.body;
+      console.log("editedExistingImages:", editedExistingImages);
+      console.log("newUploads:", newUploads);
 
       if (!name || !productSubCategoryId || !price) {
-        res.status(400).json({
+        throw {
+          isExpose: true,
+          status: 400,
           success: false,
           message: "Name, Price, and Product Sub Category are required",
-        });
+        };
       }
       if (!Array.isArray(editedExistingImages) || !Array.isArray(newUploads)) {
-        res.status(400).json({
+        throw {
+          isExpose: true,
+          status: 400,
           success: false,
           message: "editedExistingImages and newUploads should be arrays",
-        });
+        };
       }
-      if (editedExistingImages.length === 0 && newUploads.length === 0) {
-        res.status(400).json({
+      if ((editedExistingImages.length + newUploads.length) === 0) {
+        throw {
+          isExpose: true,
+          status: 400,
           success: false,
-          message: "editedExistingImages and newUploads should not be empty",
-        });
+          message: "Product must have at least one image",
+        };
       }
 
       const product = await prisma.product.findUnique({
@@ -103,10 +133,12 @@ export class ProductController {
       });
 
       if (!product) {
-        res.status(404).json({
+        throw {
+          isExpose: true,
+          status: 404,
           success: false,
           message: "Product not found",
-        });
+        };
       }
       const productId = product?.id;
 
@@ -114,10 +146,12 @@ export class ProductController {
       if (newSlug && newSlug !== slug) {
         const existing = await prisma.product.findUnique({ where: { slug: newSlug } });
         if (existing && existing.id !== productId) {
-          res.status(400).json({
+          throw {
+            isExpose: true,
+            status: 400,
             success: false,
             message: "Product slug already exists, please try changing the name a bit.",
-          });
+          };
         }
       }
 
@@ -202,6 +236,7 @@ export class ProductController {
             cldPublicId: img.public_id,
             imageUrl: img.secure_url,
           }));
+          await tx.productImage.createMany({ data: createdData });
         }
 
         const mainImageFromNewUploads = productImageService.mainImageFromNewUploads;
@@ -262,6 +297,9 @@ export class ProductController {
           },
           productBrand: { where: { deletedAt: null } },
         },
+        orderBy: {
+          updatedAt: "desc",
+        }
       });
       res.status(200).json({
         success: true,
@@ -296,6 +334,14 @@ export class ProductController {
           productBrand: true,
         },
       });
+      if (!product) {
+        throw {
+          isExpose: true,
+          status: 404,
+          success: false,
+          message: "Product not found",
+        };
+      }
       const stock = (
         await prisma.productStock.findUnique({
           where: {
@@ -324,8 +370,8 @@ export class ProductController {
         where: {
           storeId,
           discountId: activeDiscount?.id,
-        }
-      })
+        },
+      });
 
       let discount: {} | null = {};
 

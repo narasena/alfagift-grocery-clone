@@ -7,6 +7,7 @@ import useAuthStore from "@/zustand/authStore";
 import { IAuthState } from "@/types/auth/auth.type";
 import { addProductToCart } from "../api/handleAddProductToCart";
 import { handleGetCartItems } from "@/features/cart/api/handleGetCartItems";
+import { IProductDetailsCategoryResponse } from "@/types/products/product.category.type";
 
 export default function useCart() {
   const [cart, setCart] = React.useState<ICartItem[]>([]);
@@ -17,13 +18,22 @@ export default function useCart() {
     quantity: number = 1,
     productId: string,
     storeId: string,
-    product: IProductDetails
+    product: IProductDetails | IProductDetailsCategoryResponse
   ) => {
     const cartItem: ICartItem = {
       id: String(product.id),
       name: product.name,
-      price: product.discount ? product.discount.discountedPrice : product.price,
-      quantity,
+      price:
+        "discount" in product
+          ? product.discount
+            ? product.discount.discountedPrice
+            : product.price
+          : product.productDiscountHistories.length > 0
+          ? product.productDiscountHistories[0].discountValue > 100
+            ? product.price - product.productDiscountHistories[0].discountValue
+            : product.price * (1 - product.productDiscountHistories[0].discountValue / 100)
+          : product.price,
+      quantity: quantity,
       image: product.productImage?.[0]?.imageUrl ?? "",
     };
     try {

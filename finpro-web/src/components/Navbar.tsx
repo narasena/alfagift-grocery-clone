@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { FaShoppingCart, FaUser, FaSearch, FaBars, FaTimes } from 'react-icons/fa'
+import SelectCategory from './SelectCategory'
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -15,16 +16,10 @@ export default function Navbar() {
           {/* Logo and brand */}
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <Image 
-                src="/vercel.svg" 
-                alt="Grocery Logo" 
-                width={120} 
-                height={40} 
-                className="h-8 w-auto"
-              />
+              <Image src="/vercel.svg" alt="Grocery Logo" width={120} height={40} className="h-8 w-auto" />
             </Link>
           </div>
-          
+
           {/* Search bar - hidden on mobile */}
           <div className="hidden md:flex items-center flex-1 mx-8">
             <div className="w-full relative">
@@ -36,13 +31,11 @@ export default function Navbar() {
               <FaSearch className="absolute left-3 top-3 text-gray-400" />
             </div>
           </div>
-          
+
           {/* Navigation links - hidden on mobile */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/categories" className="text-gray-700 hover:text-red-600">
-              Categories
-            </Link>
-            <Link href="/deals" className="text-gray-700 hover:text-red-600">
+            <SelectCategory />
+            <Link href="/deals" className="text-gray-700 hover:text-green-600">
               Deals
             </Link>
             <Link href="/cart" className="relative text-gray-700 hover:text-red-600">
@@ -55,7 +48,7 @@ export default function Navbar() {
               <FaUser className="text-xl" />
             </Link>
           </div>
-          
+
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
             <button
@@ -67,7 +60,7 @@ export default function Navbar() {
           </div>
         </div>
       </div>
-      
+
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-white shadow-lg">
@@ -80,9 +73,7 @@ export default function Navbar() {
               />
               <FaSearch className="absolute left-7 top-[4.5rem] text-gray-400" />
             </div>
-            <Link href="/categories" className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
-              Categories
-            </Link>
+            <SelectCategory />
             <Link href="/deals" className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
               Deals
             </Link>
@@ -96,5 +87,5 @@ export default function Navbar() {
         </div>
       )}
     </nav>
-  )
+  );
 }
