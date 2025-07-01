@@ -12,7 +12,7 @@ export const useProductBreadcrumbs = () => {
           },
           {
             label: product?.productSubCategory.name,
-            href: `/c/${product?.productSubCategory.productCategory.slug}/${product?.productSubCategory.slug}`,
+            href: `/c/${product?.productSubCategory.slug}`,
           },
           { label: product?.name, href: `#` },
         ];
