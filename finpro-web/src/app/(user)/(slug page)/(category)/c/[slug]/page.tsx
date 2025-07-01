@@ -13,7 +13,7 @@ export default function CategorySlugPage(props: IAppProps) {
   const { category, breadcrumbLinks, products, storeId } = useCategory();
  
   return (
-    <div className="sm:max-w-[960px] mx-auto p-[15px]">
+    <div className="sm:max-w-[960px] lg:max-w-[1100px] mx-auto p-[15px]">
       {/* Breadcrumb */}
       <div className="hidden sm:flex sm:border sm:border-gray-100 items-center px-6 py-4 rounded-full w-full shadow-md my-2">
         {breadcrumbLinks.map((link, index) => (
@@ -43,9 +43,9 @@ export default function CategorySlugPage(props: IAppProps) {
         </div>
       </div>
       {/* cards */}
-      <div className="flex flex-wrap w-full">
+      <div className="md:flex md:flex-wrap w-full grid grid-cols-2 gap-2">
         {products.map((product) => (
-          <div className="sm:max-w-[16.667%] sm:max-h-[400px] sm:px-[15px]">
+          <div className="sm:max-w-[16.667%] sm:min-w-[160px] lg:max-w-[190px] md:max-h-[400px] md:px-[15px]">
             <Link href={`/p/${product.slug}`} className="block rounded-md shadow-md mb-6">
               <div className="flex flex-col ">
                 <div className="overflow-hidden centered">
