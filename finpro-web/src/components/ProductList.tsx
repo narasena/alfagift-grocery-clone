@@ -88,7 +88,7 @@ export default function DaftarProduk() {
   if (sedangMemuat) {
     return (
       <div className="flex justify-center items-center h-40">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
       </div>
     )
   }
@@ -98,7 +98,7 @@ export default function DaftarProduk() {
       <div className="text-center text-red-500 py-8">
         <p>{error}</p>
         <button
-          className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
           onClick={() => window.location.reload()}
         >
           Coba Lagi
@@ -111,7 +111,7 @@ export default function DaftarProduk() {
     <div className="mt-12">
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-2xl font-bold text-gray-800">Produk Unggulan</h2>
-        <Link href="/products" className="text-green-600 hover:text-green-700 text-sm font-medium">
+        <Link href="/products" className="text-black-600 hover:text-red-700 text-sm font-medium">
           Lihat Semua
         </Link>
       </div>
@@ -130,7 +130,7 @@ export default function DaftarProduk() {
                 />
                 <div className="absolute right-3 top-3 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
-                    className="bg-white text-green-600 p-2 rounded-full shadow-md hover:bg-green-600 hover:text-white transition-colors"
+                    className="bg-white text-red-600 p-2 rounded-full shadow-md hover:bg-red-600 hover:text-white transition-colors"
                     aria-label={`Tambahkan ${produk.name} ke keranjang`}
                   >
                     <FaShoppingCart size={16} />
@@ -144,7 +144,7 @@ export default function DaftarProduk() {
                 <h3 className="font-medium text-gray-800 text-sm sm:text-base mb-1 truncate">
                   {produk.name}
                 </h3>
-                <p className="font-bold text-green-600">
+                <p className="font-bold text-red-600">
                   Rp{produk.price.toLocaleString('id-ID')}
                 </p>
               </div>

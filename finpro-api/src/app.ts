@@ -12,7 +12,6 @@ import inventoryRouter from "./routers/inventory.router";
 import discountRouter from "./routers/discount.router";
 import cloudinaryRouter from "./routers/cloudinary.router";
 import adminRouter from "./routers/admins.router";
-import userRouter from "./routers/user.router";
 import referralRouter from "./routers/referral.router";
 import allStoresRouter from "./routers/all.stores.router";
 import shippingRouter from "./routers/shipping.router";
@@ -98,7 +97,6 @@ export default class App {
     this.app.use("/api/discounts", discountRouter);
     this.app.use("/api/cloudinary", cloudinaryRouter);
     this.app.use("/api/admins", adminRouter);
-    this.app.use('/api/users', userRouter)
     this.app.use('/api/referrals', referralRouter)
     this.app.use('/api/store', storeRouter)
     this.app.use('/api/inventories', inventoryRouter)
@@ -106,11 +104,9 @@ export default class App {
     this.app.use('/api/product-category', productCategoryRouter.getRouter());
     this.app.use('/api', getMapRouter)
     this.app.use('/api/admin', adminRouter)
-    this.app.use("/api/user", userRouter)
     this.app.use('/api/discounts', discountRouter)
     this.app.use('/api/cloudinary', cloudinaryRouter)
-    this.app.use('/api/user', userRouter)
-    this.app.use('api/shipping', shippingRouter)
+    this.app.use('/api/shipping', shippingRouter)
     this.app.use('/api/address', addressRouter)
   }
 

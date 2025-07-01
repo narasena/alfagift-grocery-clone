@@ -45,7 +45,7 @@ export class ProductController {
             cldPublicId: image.public_id,
             isMainImage: image.isMainImage,
           })),
-        });
+        }); 
         return { product, productImages };
       });
 

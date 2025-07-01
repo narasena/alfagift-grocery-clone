@@ -23,16 +23,21 @@ export default function SelectAddressPage() {
 
   const fetchUserAddresses = async () => {
     try {
-      const res = await instance.get("/user/addresses");
+      const res = await instance.get("/address/user-addresses");
       setAddresses(res.data);
-    } catch {
-      toast.error("Gagal mengambil alamat Anda");
+    } catch (err: any) {
+      if (err.response?.status === 404) {
+        toast.info("Kamu belum punya alamat. Silakan isi terlebih dahulu.");
+        router.push("/address-form"); // atau "/registrasi" sesuai kebutuhanmu
+      } else {
+        toast.error("Gagal mengambil alamat Anda");
+      }
     }
   };
 
   const handleAllowAccess = async () => {
     setShowAddresses(true);
-    await fetchUserAddresses();
+    await fetchUserAddresses(); // ini akan otomatis redirect kalau kosong
   };
 
   const handleDeclineAccess = async () => {

@@ -6,6 +6,7 @@ import { RiDiscountPercentFill } from "react-icons/ri";
 import { usePathname } from "next/navigation";
 import { FaUsersCog } from "react-icons/fa";
 import { IoSettings } from "react-icons/io5";
+import { FaStore } from "react-icons/fa";
 
 export const useAdminDashboardNavItems = () => {
   const bottomNav = [
@@ -14,6 +15,8 @@ export const useAdminDashboardNavItems = () => {
     { name: "Products", href: "/products", icon: <AiFillProduct /> },
     { name: "Promo", href: "/promos", icon: <RiDiscountPercentFill /> },
     { name: "Admin", href: "/admin", icon: <GrUserAdmin /> },
+    { name: "Store", href: "/store", icon: <FaStore /> }
+   
   ];
   const sideNav = [
     ...bottomNav,
