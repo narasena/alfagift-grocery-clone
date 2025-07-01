@@ -7,8 +7,8 @@ import useOrder from "@/features/order/hooks/useOrder";
 import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
-  const { cartItems, mainAddress, user, totalBelanja, today } = useCartItems();
-  const { order, handleCreateOrder, loading, isSummaryOpen, setIsSummaryOpen } = useOrder();
+  const { cartItems, loading, mainAddress, user, totalBelanja, today } = useCartItems();
+  const { handleCreateOrder, isSummaryOpen, setIsSummaryOpen } = useOrder();
   const router = useRouter();
   // to navigate to payment page after order creation
 

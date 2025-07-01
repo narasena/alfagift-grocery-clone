@@ -1,10 +1,11 @@
 "use client";
 
-import useOrder from "@/features/order/hooks/useOrder";
+import useCheckout from "@/features/checkout/hooks/useCheckout";
+import usePayment from "@/features/payment/hooks/usePayment";
 
 export default function PaymentPage() {
-  const { priceBreakdown, loading, selectedMethod, setSelectedMethod } = useOrder();
-  // console.log("Price Breakdown:", priceBreakdown);
+  const { createPayment, loading } = usePayment();
+  const { priceBreakdown, selectedMethod, setSelectedMethod } = useCheckout();
 
   if (!priceBreakdown) {
     return (
@@ -20,7 +21,7 @@ export default function PaymentPage() {
 
       <div className="space-y-4 mb-6">
         <button
-          onClick={() => setSelectedMethod("manual")}
+          onClick={() => setSelectedMethod("BANK_TRANSFER")}
           className={`w-full p-4 border rounded-xl text-left ${
             selectedMethod === "manual" ? "border-red-600 bg-red-50" : "border-gray-300"
           }`}
@@ -30,7 +31,7 @@ export default function PaymentPage() {
         </button>
 
         <button
-          onClick={() => setSelectedMethod("gateway")}
+          onClick={() => setSelectedMethod("PAYMENT_GATEWAY")}
           className={`w-full p-4 border rounded-xl text-left ${
             selectedMethod === "gateway" ? "border-red-600 bg-red-50" : "border-gray-300"
           }`}
