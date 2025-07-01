@@ -11,7 +11,7 @@ export default function StoreLocationPicker() {
 
   return (
     <div
-      className={`fixed top-0 left-0 m-4 z-50 hover:opacity-100 ${
+      className={`fixed top-15 left-0 m-4 z-[999] hover:opacity-100 ${
         miniButton && "opacity-50 transition duration-300 ease-in-out"
       }`}
       onMouseLeave={() =>

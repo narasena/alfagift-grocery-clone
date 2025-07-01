@@ -14,6 +14,9 @@ export class ProductCategoryRouter {
   private initializeRoutes(): void {
     this.router.get("/", this.productCategoryController.getProductCategories);
     this.router.get("/subcategories", this.productCategoryController.getProductSubCategories);
+    this.router.post("/create", this.productCategoryController.createProductCategory);
+    this.router.post("/subcategories/create", this.productCategoryController.createProductSubCategory);
+    this.router.get('/find/:slug/:storeId', this.productCategoryController.findProductCategory);
   }
 
   getRouter(): Router {

@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import dynamic from "next/dynamic";
 import instance from "../../../../utils/axiosinstance";
 import { toast } from "react-toastify";
-import { storeValidationSchema } from "../../../features/store/schemas/storeValidationSchema";
+import { storeValidationSchema } from "../../../(user)/features/store/schemas/storeValidationSchema";
 import { useRouter } from "next/navigation";
 import authStore from "../../../../zustand/authStore";
 import { useEffect } from "react";

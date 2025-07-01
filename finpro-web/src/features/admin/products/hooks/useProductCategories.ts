@@ -23,5 +23,6 @@ export const useProductCategories = () => {
   return {
     productCategories,
     productSubCategories,
+    refetch: handleGetProductCategories,
   };
 };
