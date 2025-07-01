@@ -3,10 +3,9 @@ import { IoTrashOutline } from "react-icons/io5";
 import { BsStopwatch } from "react-icons/bs";
 import { FaLocationDot } from "react-icons/fa6";
 import useCartItems from "@/features/cart/hooks/useCartItems";
-import { useProductQuantity } from "@/features/(user)/p/hooks/useProductQuantity";
 import * as React from "react";
-
-import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi"; // top of file
+import Link from "next/link";
+import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";
 
 // refactoring:
 // kalo component global, dipake di semua page
@@ -23,6 +22,7 @@ import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi"; // top of fi
 export default function CartPage() {
   const {
     cartItems,
+    mainAddress,
     loading,
     isSummaryOpen,
     setIsSummaryOpen,
@@ -38,15 +38,8 @@ export default function CartPage() {
     updateQuantity,
     incrementQuantity,
     decrementQuantity,
+    totalBelanja,
   } = useCartItems();
-
-  // const { quantity, setQuantity, handleQuantityChange } = useProductQuantity();
-
-  const totalBelanja =
-    cartItems?.reduce((total, item) => {
-      const price = item.product.price ?? 0;
-      return total + price * item.quantity;
-    }, 0) ?? 0;
 
   if (loading)
     return (
@@ -123,8 +116,24 @@ export default function CartPage() {
             {/* Shipping Address (Mobile only) */}
             <div className="md:hidden mb-4 pb-4 border-b text-black flex items-center gap-2">
               <FaLocationDot />
-              <h3 className="font-semibold text-gray-700 text-sm">Kirim ke:</h3>
-              <p className="text-sm text-gray-600">Jl. Contoh No. 123, Jakarta</p>
+              {/* <h3 className="font-semibold text-gray-700 text-sm">Kirim ke:</h3>
+              <p className="text-sm text-gray-600">Jl. Contoh No. 123, Jakarta</p> */}
+              <div>
+                <h3 className="font-semibold text-gray-700 text-sm">Kirim ke:</h3>
+                {mainAddress ? (
+                  <div className="text-sm text-gray-600">
+                    <p>{mainAddress.address}</p>
+                    <p>
+                      {mainAddress.subDistrict}, {mainAddress.district}
+                    </p>
+                    <p>
+                      {mainAddress.city}, {mainAddress.province} {mainAddress.postalCode}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500">Belum ada alamat utama</p>
+                )}
+              </div>
             </div>
             {cartItems && cartItems.length > 0 ? (
               <>
@@ -243,9 +252,11 @@ export default function CartPage() {
                 <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
               </div>
             </div>
-            <button className="w-full mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition text-lg">
-              Checkout
-            </button>
+            <Link href="/checkout">
+              <button className="w-full mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition text-lg">
+                Checkout
+              </button>
+            </Link>
           </div>
 
           {/* Mobile Checkout Section */}
@@ -295,9 +306,11 @@ export default function CartPage() {
                     </div>
                   </div>
                 </div>
-                <button className="bg-red-700 text-white text-lg p-2 px-8 rounded-lg hover:bg-red-800 transition">
-                  Checkout
-                </button>
+                <Link href="/checkout">
+                  <button className="bg-red-700 text-white text-lg p-2 px-8 rounded-lg hover:bg-red-800 transition">
+                    Checkout
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

@@ -1,3 +1,5 @@
+import { IProduct } from "./product.type";
+
 export interface IProductStockHistoryForm {
   productId: string;
   quantity: number;
@@ -10,7 +12,7 @@ export interface IProductStockHistory extends IProductStockHistoryForm {
     storeId: string
 }
 
-enum EStockMovementType {
+export enum EStockMovementType {
     STORE_IN = "STORE_IN",
     STORE_OUT = "STORE_OUT",
     SALE = "SALE",
@@ -21,7 +23,8 @@ export interface IProductStock {
     productId: string
     storeId: string
     stock: number
-    type: EStockMovementType
     createdAt: Date
     updatedAt: Date
 }
+
+
