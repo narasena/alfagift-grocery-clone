@@ -11,6 +11,7 @@ export const createCartItems = async (req: Request, res: Response, next: NextFun
     const { userId } = req.body.payload; // Adjust based on your auth middleware
     const { productId, quantity } = req.body; //storeId
     const { storeId } = req.params; // Assuming storeId is passed as a URL parameter
+    console.log(quantity);
 
     if (!userId || !productId || !storeId || !quantity || quantity < 1) {
       throw new AppError("Invalid input data.", 400);

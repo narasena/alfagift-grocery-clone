@@ -7,7 +7,7 @@ import { createOrder } from "../api/handleCreateOrder";
 export default function useOrder() {
   const token = useAuthStore((state) => state.token);
   const [order, setOrder] = React.useState<any>(null);
-  const [loading, setLoading] = React.useState<boolean>(false);
+
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
 
   // display order
@@ -44,16 +44,8 @@ export default function useOrder() {
     }
   };
 
-  // Call getOrder when page loads
-  // React.useEffect(() => {
-  //   if (token) {
-  //     handleDisplayOrder(token);
-  //   }
-  // }, [token]);
-
   return {
     order,
-    loading,
     isSummaryOpen,
     setIsSummaryOpen,
     handleCreateOrder,

@@ -7,8 +7,8 @@ import useOrder from "@/features/order/hooks/useOrder";
 import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
-  const { cartItems, mainAddress, user, totalBelanja, today } = useCartItems();
-  const { order, handleCreateOrder, loading, isSummaryOpen, setIsSummaryOpen } = useOrder();
+  const { cartItems, loading, mainAddress, user, totalBelanja, today } = useCartItems();
+  const { handleCreateOrder, isSummaryOpen, setIsSummaryOpen } = useOrder();
   const router = useRouter();
   // to navigate to payment page after order creation
 
@@ -20,7 +20,7 @@ export default function CheckoutPage() {
     );
 
   return (
-    <main className="min-h-screen bg-white flex flex-col items-center justify-between">
+    <main className="min-h-screen bg-white flex flex-col items-center justify-between  mt-10">
       <div className="w-full max-w-6xl md:px-5">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Order Summary */}
@@ -140,7 +140,10 @@ export default function CheckoutPage() {
               </div>
             </div>
             <button
-              onClick={() => handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "")}
+              onClick={async () => {
+                await handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "");
+                router.push("/payment");
+              }}
               className="w-full mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition"
             >
               Pilih Pembayaran
@@ -199,7 +202,10 @@ export default function CheckoutPage() {
                   </div>
                 </div>
                 <button
-                  onClick={() => handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "")}
+                  onClick={async () => {
+                    await handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "");
+                    router.push("/payment");
+                  }}
                   className="bg-red-700 text-white text-lg p-2 rounded-lg hover:bg-red-800 transition"
                 >
                   Pilih Pembayaran

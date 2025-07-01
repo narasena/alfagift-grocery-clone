@@ -6,12 +6,16 @@ import Link from "next/link";
 import { CldImage } from "next-cloudinary";
 import { IoStorefront } from "react-icons/io5";
 import { RiTimerFlashFill } from "react-icons/ri";
-
+import useCart from "@/features/(user)/p/hooks/useCart";
+import { IProductDetails } from "@/types/products/product.type";
+import { IProductDetailsCategoryResponse } from "@/types/products/product.category.type";
 export interface IAppProps {}
 
 export default function CategorySlugPage(props: IAppProps) {
   const { category, breadcrumbLinks, products, storeId } = useCategory();
- 
+  const { cart, handleAddToCart, openModal } = useCart();
+  console.log("Category Products:", products);
+
   return (
     <div className="sm:max-w-[960px] lg:max-w-[1100px] mx-auto p-[15px]">
       {/* Breadcrumb */}
@@ -46,8 +50,8 @@ export default function CategorySlugPage(props: IAppProps) {
       <div className="md:flex md:flex-wrap w-full grid grid-cols-2 gap-2">
         {products.map((product) => (
           <div className="sm:max-w-[16.667%] sm:min-w-[160px] lg:max-w-[190px] md:max-h-[400px] md:px-[15px]">
-            <Link href={`/p/${product.slug}`} className="block rounded-md shadow-md mb-6">
-              <div className="flex flex-col ">
+            <div className="block rounded-md shadow-md mb-6">
+              <Link href={`/p/${product.slug}`} className="flex flex-col ">
                 <div className="overflow-hidden centered">
                   <CldImage src={product.productImage[0].imageUrl} width={144} height={144} alt={product.name} />
                 </div>
@@ -67,9 +71,9 @@ export default function CategorySlugPage(props: IAppProps) {
                   <div>
                     <span className="font-bold text-base text-red-600">
                       {product.productDiscountHistories.length > 0
-                        ? (
-                            product.price *
-                            (1 - product.productDiscountHistories[0].discountValue / 100)
+                        ? (product.productDiscountHistories[0].discountValue > 100
+                            ? product.price - product.productDiscountHistories[0].discountValue
+                            : product.price * (1 - product.productDiscountHistories[0].discountValue / 100)
                           ).toLocaleString("id-ID", {
                             style: "currency",
                             currency: "IDR",
@@ -93,13 +97,17 @@ export default function CategorySlugPage(props: IAppProps) {
                     <span className="font-bold text-red-600">Pengiriman Instan</span>
                   </div>
                 </div>
-              </div>
-              <div className="p-2 border-t border-gray-300">
-                <button className="py-2 w-full bg-red-600 rounded-md font-medium text-white hover:bg-red-700">
+              </Link>
+              <div className="p-2 border-t border-gray-300 cursor-pointer">
+                <button
+                  type="button"
+                  onClick={() => handleAddToCart(1, product?.id, storeId!, product as IProductDetailsCategoryResponse)}
+                  className="py-2 w-full bg-red-600 rounded-md font-medium text-white hover:bg-red-700 cursor-pointer"
+                >
                   Beli
                 </button>
               </div>
-            </Link>
+            </div>
           </div>
         ))}
       </div>

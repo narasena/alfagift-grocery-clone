@@ -1,11 +1,11 @@
 export interface IProductCategory {
-    id: number
-    name: string
-    slug: string
-    description?: string
-    createdAt: Date
-    updatedAt: Date
-    deletedAt?: Date
+  id: number;
+  name: string;
+  slug: string;
+  description?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
 }
 
 export interface IProductSubCategory extends IProductCategory {
@@ -13,25 +13,26 @@ export interface IProductSubCategory extends IProductCategory {
 }
 
 interface IProductImage {
-  imageUrl: string
+  imageUrl: string;
 }
 
 interface IProductStock {
-  stock: number
+  stock: number;
 }
 
 interface IProductDiscountHistory {
-  discountValue: number
+  discountValue: number;
 }
 
 export interface IProductDetailsCategoryResponse {
-  name: string
-  slug: string
-  price: number
-  description: string | null
-  productImage: IProductImage[]
-  productStock: IProductStock[]
-  productDiscountHistories: IProductDiscountHistory[]
+  id: string;
+  name: string;
+  slug: string;
+  price: number;
+  description: string | null;
+  productImage: IProductImage[];
+  productStock: IProductStock[];
+  productDiscountHistories: IProductDiscountHistory[];
 }
 
 interface IProductSubCategoryWithProducts {
@@ -41,9 +42,9 @@ interface IProductSubCategoryWithProducts {
 }
 
 export interface IProductCategoryResponse {
-  name: string
-  slug: string
-  productSubCategory: IProductSubCategoryWithProducts[]
+  name: string;
+  slug: string;
+  productSubCategory: IProductSubCategoryWithProducts[];
 }
 
 export interface IProductSubCategoryResponse {
