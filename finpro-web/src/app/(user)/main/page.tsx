@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import authStore from "../../zustand/authStore";
+import authStore from "../../../zustand/authStore";
 
 export default function DashboardPage() {
   const email = authStore((state) => state.email);

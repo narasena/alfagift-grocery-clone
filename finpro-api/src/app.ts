@@ -11,7 +11,7 @@ import storeRouter from "./routers/store.router";
 import inventoryRouter from "./routers/inventory.router";
 import discountRouter from "./routers/discount.router";
 import cloudinaryRouter from "./routers/cloudinary.router";
-import adminRouter from "./routers/admins.router";
+import adminRouter from "./routers/admin.router";
 import userRouter from "./routers/user.router";
 import referralRouter from "./routers/referral.router";
 import allStoresRouter from "./routers/all.stores.router";

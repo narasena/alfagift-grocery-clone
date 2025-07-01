@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { authValidationSchema } from "../../../features/auth/schemas/authValidationSchema";
+import { authValidationSchema } from "../../../(user)/features/auth/schemas/authValidationSchema";
 import instance from "../../../../utils/axiosinstance";
 import { toast } from "react-toastify";
 import authStore from "../../../../zustand/authStore";
@@ -21,7 +21,7 @@ export default function AdminLoginPage() {
 
   const handleAdminLogin = async ({ email, password }: iHandleAuthLogin) => {
     try {
-      const response = await instance.post("/admin/login", {
+      const response = await instance.post("/admins/login", {
         email,
         password,
       });
@@ -32,7 +32,7 @@ export default function AdminLoginPage() {
         token: response.data.data.token,
         email: response.data.data.email,
         id: response.data.data.adminId,
-        role: response.data.data.role, 
+        role: response.data.data.role,
       });
 
       router.push("/admin/dashboard");

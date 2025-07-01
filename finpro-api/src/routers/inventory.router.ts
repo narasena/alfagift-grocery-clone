@@ -8,5 +8,6 @@ inventoryRouter.get('/store/:storeId', inventoryController.getStockByStoreId)
 inventoryRouter.put('/store/update-stocks/:storeId', inventoryController.updateProductStocksByStore)
 inventoryRouter.get('/product/:slug/:storeId', inventoryController.getProductStockDetail)
 inventoryRouter.put('/product/update-stock/:slug/:storeId', inventoryController.updateProductStockDetail)
+inventoryRouter.get('/report', inventoryController.getStocksReport)
 
 export default inventoryRouter;
