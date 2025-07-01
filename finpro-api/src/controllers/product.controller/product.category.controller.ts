@@ -137,8 +137,8 @@ export class ProductCategoryController {
 
   async findProductCategory(req: Request, res: Response, next: NextFunction) {
     try {
-      const { slug,storeId } = req.params
-      
+      const { slug, storeId } = req.params;
+
       const category = await prisma.productCategory.findUnique({
         where: {
           slug,
@@ -186,11 +186,11 @@ export class ProductCategoryController {
                             storeId,
                           },
                         },
-                        
                       },
-                    }, select: {
-                      discountValue: true
-                    }
+                    },
+                    select: {
+                      discountValue: true,
+                    },
                   },
                 },
               },
@@ -220,7 +220,7 @@ export class ProductCategoryController {
               price: true,
               description: true,
               productImage: {
-                take: 1,  
+                take: 1,
                 where: { isMainImage: true },
                 select: {
                   imageUrl: true,
@@ -259,7 +259,7 @@ export class ProductCategoryController {
         },
       });
 
-      if(!category && !subCategory) {
+      if (!category && !subCategory) {
         throw {
           isExpose: true,
           success: false,
@@ -268,14 +268,13 @@ export class ProductCategoryController {
         };
       }
 
-      const result = category || subCategory
+      const result = category || subCategory;
 
       res.status(200).json({
         success: true,
         message: "Get data successfull",
-        category: result
+        category: result,
       });
-
     } catch (error) {
       next(error);
     }

@@ -1,17 +1,22 @@
 import * as React from "react";
-import authStore from "@/zustand/store";
 import { ICloudinaryResult } from "@/types/products/product.image.type";
 import { cloudinaryImageUpload } from "@/utils/products/product.image.helpers";
 import { CloudinaryUploadWidgetResults } from "next-cloudinary";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { handlePaymentUpload } from "../api/handlePaymentUpload";
+import useAuthStore from "@/zustand/authStore";
+import { useParams } from "next/navigation";
+import { Axios, AxiosError } from "axios";
 
 export default function usePaymentImage() {
   const [file, setFile] = useState<File | null>(null);
-  const [uploadedImages, setUploadedImages] = useState<ICloudinaryResult[]>([]);
+  const [uploadedImage, setUploadedImage] = useState<ICloudinaryResult | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const token = useAuthStore((state) => state.token);
+  const { paymentId } = useParams();
 
-  console.log("Uploaded Images:", uploadedImages);
+  console.log("Uploaded Images:", uploadedImage);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -25,32 +30,29 @@ export default function usePaymentImage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!file) return alert("Please upload a file.");
-
-    const formData = new FormData();
-    formData.append("receipt", file);
-
-    // Replace with actual backend endpoint
-    const res = await fetch("/api/upload-receipt", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (res.ok) {
-      alert("Receipt uploaded successfully!");
-    } else {
-      alert("Failed to upload receipt.");
+  const handleSubmit = async () => {
+    try {
+      let response = {};
+      if (token && paymentId && uploadedImage) {
+        const imageUrl = uploadedImage.secure_url;
+        const cldPublicId = uploadedImage.public_id;
+        response = await handlePaymentUpload(token, String(paymentId), imageUrl, cldPublicId);
+        console.log(response);
+      }
+    } catch (error) {
+      const errRes = error as AxiosError<{ message: string }>;
+      toast.error(errRes.response?.data.message || "Failed to upload image");
+      console.error("Error uploading image:", errRes);
     }
   };
 
-  const handleImageUpload = (result: CloudinaryUploadWidgetResults) => {
+  const handleImageUpload = async (result: CloudinaryUploadWidgetResults) => {
     const newImage = cloudinaryImageUpload(result);
-    if (newImage) {
-      setUploadedImages((prevImages) => [...prevImages, newImage]);
+    const imageUrl = newImage?.secure_url!;
+    const cldPublicId = newImage?.public_id!;
 
-      toast.success(`Image uploaded successfully!`);
+    if (newImage) {
+      setUploadedImage(newImage);
     } else {
       toast.error("Error uploading image. Please try again.");
     }
@@ -60,5 +62,6 @@ export default function usePaymentImage() {
     handleFileChange,
     handleSubmit,
     handleImageUpload,
+    uploadedImage,
   };
 }
