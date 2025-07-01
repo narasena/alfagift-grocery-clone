@@ -141,8 +141,8 @@ export default function CheckoutPage() {
             </div>
             <button
               onClick={async () => {
-                await handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "");
-                router.push("/payment");
+                const orderId = await handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "");
+                router.push(`/payment/${orderId}`);
               }}
               className="w-full mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition"
             >
@@ -203,8 +203,8 @@ export default function CheckoutPage() {
                 </div>
                 <button
                   onClick={async () => {
-                    await handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "");
-                    router.push("/payment");
+                    const orderId = await handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "");
+                    router.push(`/payment/${orderId}`);
                   }}
                   className="bg-red-700 text-white text-lg p-2 rounded-lg hover:bg-red-800 transition"
                 >

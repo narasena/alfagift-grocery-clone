@@ -37,9 +37,9 @@ export default function usePayment() {
           paymentMethod,
           orderDetail?.finalTotalAmount!
         );
-        toast.success("Your payment is being processed");
+        // toast.success("Pembayaran");
         setLoading(false);
-        return response;
+        return response.payment.id; // return payment ID for further processing
       } catch (error) {
         console.log("Failed to process payment");
       }

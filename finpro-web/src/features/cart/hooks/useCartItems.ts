@@ -35,7 +35,6 @@ export default function useCartItems() {
 
         setUser(cartItems.data.user);
 
-        toast.success("Berhasil menampilkan barang di keranjang");
         setLoading(false);
       }
     } catch (error) {
@@ -50,7 +49,6 @@ export default function useCartItems() {
       if (token) {
         await deleteCartItem(token, cartItemId);
         setCartItems((prevItems) => prevItems.filter((item) => item.id !== cartItemId));
-        toast.success("Berhasil menghapus barang dari keranjang");
       }
     } catch (error) {
       console.error("Error deleting cart item:", error);
@@ -62,7 +60,6 @@ export default function useCartItems() {
       if (token) {
         await deleteAllCartItems(token);
         setCartItems([]); // Clear the cart items in local state
-        toast.success("Berhasil menghapus semua barang di keranjang");
       }
     } catch (error) {
       console.log("Error deleting all items:", error);

@@ -17,11 +17,9 @@ export default function useCheckout() {
         setPriceBreakdown(breakdown.order);
         console.log("Price Breakdown:", breakdown.order);
 
-        toast.success("Berhasil mendapatkan rincian harga pesanan");
         setLoading(false);
       }
     } catch (error) {
-      toast.error("Failed to get order price breakdown");
       console.log("Error getting order price breakdown:", error);
     } finally {
       setLoading(false);
