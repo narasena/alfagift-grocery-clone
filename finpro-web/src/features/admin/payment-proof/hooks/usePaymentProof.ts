@@ -9,6 +9,7 @@ export default function usePaymentProof() {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [paymentImage, setPaymentImage] = React.useState<[]>([]);
   const [actionLoading, setActionLoading] = React.useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const [currentPage, setCurrentPage] = React.useState(1);
   const ordersPerPage = 5;
@@ -25,16 +26,35 @@ export default function usePaymentProof() {
     }
   };
 
-  const handleGetPaymentProof = async (paymentId: string) => {
-    try {
-      const imageUrl = await getPaymentProof(paymentId);
-      console.log(imageUrl.paymentProofs);
+  const handleDetailClick = async (paymentId: string) => {
+    console.log("Clicked:", paymentId);
 
+    const imageUrl = await getPaymentProof(paymentId);
+    console.log(imageUrl.paymentProofs);
+
+    if (imageUrl.paymentProofs && imageUrl.paymentProofs.length > 0) {
       setPaymentImage(imageUrl.paymentProofs);
-    } catch (error) {
-      console.error("Failed to get image url:", error);
+      setIsModalOpen(true);
+    } else {
+      console.log("No payment proofs found");
     }
   };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setPaymentImage([]); // Optional: clear old proofs
+  };
+
+  //   const handleGetPaymentProof = async (paymentId: string) => {
+  //     try {
+  //       const imageUrl = await getPaymentProof(paymentId);
+  //       console.log(imageUrl.paymentProofs);
+
+  //       setPaymentImage(imageUrl.paymentProofs);
+  //     } catch (error) {
+  //       console.error("Failed to get image url:", error);
+  //     }
+  //   };
 
   const handleAcceptPayment = async (paymentId: string) => {
     setActionLoading(paymentId);
@@ -86,9 +106,12 @@ export default function usePaymentProof() {
     currentPage,
     paginatedOrders,
     paymentImage,
-    handleGetPaymentProof,
+    // handleGetPaymentProof,
+    handleDetailClick,
+    isModalOpen,
     handleAcceptPayment,
     handleRejectPayment,
     actionLoading,
+    closeModal,
   };
 }

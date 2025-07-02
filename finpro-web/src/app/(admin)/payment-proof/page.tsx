@@ -12,24 +12,15 @@ export default function PendingPaymentsPage() {
     totalPages,
     currentPage,
     loading,
-    handleGetPaymentProof,
+    // handleGetPaymentProof,
+    handleDetailClick,
     paymentImage,
     handleAcceptPayment,
     handleRejectPayment,
     actionLoading,
+    isModalOpen,
+    closeModal,
   } = usePaymentProof();
-
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-
-  const handleDetailClick = async (paymentId: string) => {
-    console.log("Clicked:", paymentId);
-    await handleGetPaymentProof(paymentId);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
 
   if (loading) {
     return <p className="p-4 text-gray-600">Loading pending payments...</p>;
