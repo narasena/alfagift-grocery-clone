@@ -19,7 +19,7 @@ interface DecodedToken {
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const token = authStore((state) => state.token);
   const setAuth = authStore((state) => state.setAuth);
-  const clearAuth = authStore((state) => state.clearAuth);
+  // const clearAuth = authStore((state) => state.clearAuth);
   const router = useRouter();
   const pathName = usePathname();
   const [isHandleSessionLoginDone, setIsHandleSessionLoginDone] =
@@ -86,11 +86,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       // console.log("isAdmin", isAdmin);
       
 
-      if (token && isPublicPath && isAdmin) {
-        router.push("/dashboard");
-      } else if (token && !isAdmin && isAdminPath) {
+      if (token && !isAdmin && isAdminPath) {
         router.push("/");
-      } else if (!token && (!isPublicPath || !isAdminPath)) {
+      } else if (!token && !isPublicPath) {
         router.push("/login");
       }
     }

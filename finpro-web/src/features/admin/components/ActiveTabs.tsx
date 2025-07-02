@@ -1,17 +1,16 @@
-import { extend } from "leaflet";
 import * as React from "react";
 
-export interface IActiveTabsProps<T extends Record<string, unknown>> {
+export interface IActiveTabsProps {
   tabHeaders: Array<{ key: string; label: string; icon: React.ReactNode }>;
   defaultTab?: string;
   onTabChange?: (activeTab: string) => void;
 }
 
-export default function ActiveTabs<T extends Record<string, unknown>>({
+export default function ActiveTabs({
   tabHeaders,
   defaultTab,
   onTabChange,
-}: IActiveTabsProps<T>) {
+}: IActiveTabsProps) {
   const [activeTab, setActiveTab] = React.useState(defaultTab || tabHeaders[0]?.key || "");
   
   const handleTabClick = (key: string) => {

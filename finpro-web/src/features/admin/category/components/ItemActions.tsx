@@ -2,13 +2,8 @@ import * as React from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { FaEdit } from "react-icons/fa";
 import { GrView } from "react-icons/gr";
-import { MdDeleteForever } from "react-icons/md";
-import { RiDeleteBin2Fill } from "react-icons/ri";
-import { text } from "stream/consumers";
 
-export interface IAppProps {}
-
-export default function ItemActions(props: IAppProps) {
+export default function ItemActions() {
   const actions = [
     {
       key: "view",

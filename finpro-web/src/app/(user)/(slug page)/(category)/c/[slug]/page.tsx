@@ -7,13 +7,11 @@ import { CldImage } from "next-cloudinary";
 import { IoStorefront } from "react-icons/io5";
 import { RiTimerFlashFill } from "react-icons/ri";
 import useCart from "@/features/(user)/p/hooks/useCart";
-import { IProductDetails } from "@/types/products/product.type";
 import { IProductDetailsCategoryResponse } from "@/types/products/product.category.type";
-export interface IAppProps {}
-
-export default function CategorySlugPage(props: IAppProps) {
+import { EDiscountType } from "@/types/discounts/discount.type";
+export default function CategorySlugPage() {
   const { category, breadcrumbLinks, products, storeId } = useCategory();
-  const { cart, handleAddToCart, openModal } = useCart();
+  const {  handleAddToCart,} = useCart();
   console.log("Category Products:", products);
 
   return (
@@ -48,8 +46,8 @@ export default function CategorySlugPage(props: IAppProps) {
       </div>
       {/* cards */}
       <div className="md:flex md:flex-wrap w-full grid grid-cols-2 gap-2">
-        {products.map((product) => (
-          <div className="sm:max-w-[16.667%] sm:min-w-[160px] lg:max-w-[190px] md:max-h-[400px] md:px-[15px]">
+        {products.map((product, index) => (
+          <div key={index} className="sm:max-w-[16.667%] sm:min-w-[160px] lg:max-w-[190px] md:max-h-[400px] md:px-[15px]">
             <div className="block rounded-md shadow-md mb-6">
               <Link href={`/p/${product.slug}`} className="flex flex-col ">
                 <div className="overflow-hidden centered">
@@ -58,20 +56,26 @@ export default function CategorySlugPage(props: IAppProps) {
                 <div className="px-2 text-sm h-[45px] overflow-hidden text-ellipsis">{product.name}</div>
                 <div className="p-2">
                   <div className="h-5 flex items-center">
-                    {product.productDiscountHistories.length > 0 && (
-                      <span className="text-[10px] h-max line-through text-[#999999]">
-                        {product.price.toLocaleString("id-ID", {
-                          style: "currency",
-                          currency: "IDR",
-                          minimumFractionDigits: 0,
-                        })}
-                      </span>
-                    )}
+                    {product.productDiscountHistories.length > 0 &&
+                      (product.productDiscountHistories[0].discount.discountType === EDiscountType.BUY1_GET1 ? (
+                        <span className="text-white bg-lime-500 py-0.5 px-1 rounded-sm font-bold text-[10px] h-max">
+                          Beli 1 Gratis 1
+                        </span>
+                      ) : (
+                        <span className="text-[10px] h-max line-through text-[#999999]">
+                          {product.price.toLocaleString("id-ID", {
+                            style: "currency",
+                            currency: "IDR",
+                            minimumFractionDigits: 0,
+                          })}
+                        </span>
+                      ))}
                   </div>
                   <div>
                     <span className="font-bold text-base text-red-600">
-                      {product.productDiscountHistories.length > 0
-                        ? (product.productDiscountHistories[0].discountValue > 100
+                      {product.productDiscountHistories.length > 0 &&
+                      product.productDiscountHistories[0].discount.discountType !== EDiscountType.BUY1_GET1
+                        ? (product.productDiscountHistories[0].discount.discountType === EDiscountType.FIXED_AMOUNT
                             ? product.price - product.productDiscountHistories[0].discountValue
                             : product.price * (1 - product.productDiscountHistories[0].discountValue / 100)
                           ).toLocaleString("id-ID", {

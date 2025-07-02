@@ -15,14 +15,18 @@ import { useProductBreadcrumbs } from "@/features/admin/products/hooks/useProduc
 
 import { HiOutlineShoppingCart } from "react-icons/hi";
 
-import { IProduct, IProductDetails } from "@/types/products/product.type";
+import {  IProductDetails } from "@/types/products/product.type";
 
 import useCart from "@/features/(user)/p/hooks/useCart";
 import usePickStoreId from "@/hooks/stores/usePickStoreId";
+import { ICartItem } from "@/types/carts/cartItem.type";
+import { IProductImage } from "@/types/products/product.image.type";
+import { EDiscountType } from "@/types/discounts/discount.type";
 
 // cari productId dr params slug
-export default function ProductSlugPage({ slug }: IProduct) {
+export default function ProductSlugPage() {
   const { product, imageShowing, handleImageClick } = useProductDetails();
+  console.log(product)
   const { quantity, setQuantity, handleQuantityChange } = useProductQuantity();
   const { breadcrumbLinks } = useProductBreadcrumbs();
   const { storeId } = usePickStoreId(); // ambil storeId dari hook
@@ -62,7 +66,7 @@ export default function ProductSlugPage({ slug }: IProduct) {
             <p className="text-gray-500">Keranjang masih kosong.</p>
           ) : (
             <div className="flex flex-col gap-4">
-              {cart.map((item: any) => (
+              {cart.map((item: ICartItem) => (
                 <div key={item.id} className="border-b pb-2 flex justify-between items-center">
                   <div>
                     <h4 className="font-medium">{item.name}</h4>
@@ -90,7 +94,7 @@ export default function ProductSlugPage({ slug }: IProduct) {
                 <span>Total</span>
                 <span>
                   {cart
-                    .reduce((acc: any, item: any) => acc + item.price * item.quantity, 0)
+                    .reduce((acc: number, item: ICartItem) => acc + item.price * item.quantity, 0)
                     .toLocaleString("id-ID", {
                       style: "currency",
                       currency: "IDR",
@@ -124,8 +128,13 @@ export default function ProductSlugPage({ slug }: IProduct) {
       <div className="lg:grid lg:grid-cols-[auto_1fr_auto] lg:w-full lg:my-10 lg:px-4 lg:[&>*]:px-2">
         {/* Product Images */}
         <div className="flex lg:flex-col justify-center mx-auto h-fit">
-          {imageShowing && "imageUrl" in imageShowing ? (
-            <CldImage width={400} height={400} src={imageShowing.imageUrl} alt={product?.name || "Product image"} />
+          {imageShowing ? (
+            <CldImage
+              width={400}
+              height={400}
+              src={(imageShowing as IProductImage).imageUrl}
+              alt={product?.name || "Product image"}
+            />
           ) : (
             <div className="size-[400px] bg-gray-100 flex items-center justify-center">
               <span className="text-gray-400">No image available</span>
@@ -165,37 +174,55 @@ export default function ProductSlugPage({ slug }: IProduct) {
             </div>
           </div>
           {/* Product Price */}
-          <div className="px-3">
+          <div className="px-3 flex items-center gap-5">
             <h1 className="text-2xl text-red-700 font-bold py-2">
-              {(product?.discount ? product?.discount?.discountedPrice ?? 0 : product?.price ?? 0).toLocaleString(
-                "id-ID",
-                {
-                  style: "currency",
-                  currency: "IDR",
-                  minimumFractionDigits: 0,
-                }
-              )}
+              {product &&
+              product?.productDiscountHistories.length > 0 &&
+              product.productDiscountHistories[0].discount.discountType !== EDiscountType.BUY1_GET1
+                ? (product.productDiscountHistories[0].discount.discountType === EDiscountType.FIXED_AMOUNT
+                    ? product.price - product.productDiscountHistories[0].discountValue
+                    : product.price * (1 - product.productDiscountHistories[0].discountValue / 100)
+                  ).toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    minimumFractionDigits: 0,
+                  })
+                : product?.price.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    minimumFractionDigits: 0,
+                  })}
             </h1>
+            {product &&
+            product.productDiscountHistories.length > 0 &&
+            product.productDiscountHistories[0].discount.discountType === EDiscountType.PERCENTAGE ? (
+              <span className="py-1 px-2 bg-amber-600 text-white rounded-md text-sm font-semibold">
+                {`${product.productDiscountHistories[0].discountValue}%`}
+              </span>
+            ) : (
+              product?.productDiscountHistories[0].discount.discountType === EDiscountType.FIXED_AMOUNT && (
+                <span className="py-1 px-2 bg-amber-600 text-white rounded-md text-xs italic font-semibold">{`- Rp ${product.productDiscountHistories[0].discountValue}`}</span>
+              )
+            )}
           </div>
           {/* Product Discount */}
-          {product?.discount && (
-            <div className="px-3 flex items-center gap-2">
-              <div className="px-2 py-1 size-max rounded-md bg-amber-600 font-medium text-sm text-white">
-                {product?.discount.type === "PERCENTAGE"
-                  ? `-${product?.discount.discountValue}%`
-                  : product?.discount.type === "FIXED_AMOUNT"
-                  ? `Rp ${product?.discount.discountValue}`
-                  : ""}
-              </div>
-              <div className="text-xs text-gray-600 line-through">
-                {Number(product?.price).toLocaleString("id-ID", {
-                  style: "currency",
-                  currency: "IDR",
-                  minimumFractionDigits: 0,
-                })}
-              </div>
-            </div>
-          )}
+          <div className="h-5 flex items-center px-3">
+            {product &&
+              product.productDiscountHistories.length > 0 &&
+              (product.productDiscountHistories[0].discount.discountType === EDiscountType.BUY1_GET1 ? (
+                <span className="text-white bg-lime-500 py-0.5 px-1 rounded-sm font-bold text-sm h-max">
+                  Beli 1 Gratis 1
+                </span>
+              ) : (
+                <span className="text-[10px] h-max line-through text-[#999999]">
+                  {product.price.toLocaleString("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    minimumFractionDigits: 0,
+                  })}
+                </span>
+              ))}
+          </div>
 
           {/* Line Divider */}
           <div className="px-3 my-6 border border-gray-200 w-full"></div>
@@ -264,7 +291,7 @@ export default function ProductSlugPage({ slug }: IProduct) {
               <div className="flex-1">
                 {/* store nya belum */}
                 <button
-                  onClick={() => handleAddToCart(quantity, product?.id!, storeId!, product as IProductDetails)}
+                  onClick={() => handleAddToCart(quantity, product?.id??"", storeId!, product as IProductDetails)}
                   className="w-full text-white font-medium text-lg py-2 rounded-md flex items-center justify-center bg-red-700 cursor-pointer active:ring-4 active:ring-blue-300"
                 >
                   {`+ Keranjang`}

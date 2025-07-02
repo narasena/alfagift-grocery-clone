@@ -1,4 +1,3 @@
-import { IProductDetails } from "@/types/products/product.type";
 import apiInstance from "@/utils/api/apiInstance";
 
 
