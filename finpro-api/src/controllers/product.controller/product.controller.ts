@@ -117,7 +117,7 @@ export class ProductController {
           message: "editedExistingImages and newUploads should be arrays",
         };
       }
-      if ((editedExistingImages.length + newUploads.length) === 0) {
+      if (editedExistingImages.length + newUploads.length === 0) {
         throw {
           isExpose: true,
           status: 400,
@@ -299,7 +299,7 @@ export class ProductController {
         },
         orderBy: {
           updatedAt: "desc",
-        }
+        },
       });
       res.status(200).json({
         success: true,
@@ -405,4 +405,103 @@ export class ProductController {
       next(error);
     }
   }
+
+  async getProductBySlug(req: Request, res: Response, next: NextFunction) {
+   try {
+     const { slug, storeId } = req.params;
+  
+     const product = await prisma.product.findUnique({
+       where: {
+         slug,
+         deletedAt: null,
+       },
+       select: {
+         id: true,
+         name: true,
+         slug: true,
+         price: true,
+         description: true,
+         productSubCategory: {
+           select: {
+             name: true,
+             slug: true,
+             productCategory: {
+               select: {
+                 name: true,
+                 slug: true,
+               },
+             },
+           },
+         },
+         productImage: {
+           take: 1,
+           where: { isMainImage: true },
+           select: {
+             imageUrl: true,
+           },
+         },
+         ...(storeId && {
+           productStock: {
+             where: {
+               storeId,
+             },
+             select: {
+               stock: true,
+             },
+           },
+           productDiscountHistories: {
+             where: {
+               discount: {
+                 startDate: {
+                   lte: new Date(),
+                 },
+                 endDate: {
+                   gte: new Date(),
+                 },
+                 storeDiscountHistories: {
+                   some: {
+                     storeId,
+                   },
+                 },
+               },
+             },
+             select: {
+               discountValue: true,
+               discount: {
+                 select: {
+                   discountType: true,
+                 },
+               },
+             },
+           },
+         }),
+       },
+     });
+     if (!product) {
+       throw {
+         isExpose: true,
+         status: 404,
+         success: false,
+         message: "Product not found",
+       };
+     }
+     if (!storeId) {
+       res.status(200).json({
+         success: true,
+         message: "No store selected, product details might not be available",
+         product
+       });
+     } else {
+       res.status(200).json({
+         success: true,
+         message: "Product fetched successfully",
+         product
+       });
+     }
+   } catch (error) {
+     next(error);
+   }
+  }
+
 }
+

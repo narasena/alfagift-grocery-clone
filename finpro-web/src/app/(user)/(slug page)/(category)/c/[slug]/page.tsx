@@ -8,6 +8,7 @@ import { IoStorefront } from "react-icons/io5";
 import { RiTimerFlashFill } from "react-icons/ri";
 import useCart from "@/features/(user)/p/hooks/useCart";
 import { IProductDetailsCategoryResponse } from "@/types/products/product.category.type";
+import { EDiscountType } from "@/types/discounts/discount.type";
 export default function CategorySlugPage() {
   const { category, breadcrumbLinks, products, storeId } = useCategory();
   const {  handleAddToCart,} = useCart();
@@ -55,20 +56,26 @@ export default function CategorySlugPage() {
                 <div className="px-2 text-sm h-[45px] overflow-hidden text-ellipsis">{product.name}</div>
                 <div className="p-2">
                   <div className="h-5 flex items-center">
-                    {product.productDiscountHistories.length > 0 && (
-                      <span className="text-[10px] h-max line-through text-[#999999]">
-                        {product.price.toLocaleString("id-ID", {
-                          style: "currency",
-                          currency: "IDR",
-                          minimumFractionDigits: 0,
-                        })}
-                      </span>
-                    )}
+                    {product.productDiscountHistories.length > 0 &&
+                      (product.productDiscountHistories[0].discount.discountType === EDiscountType.BUY1_GET1 ? (
+                        <span className="text-white bg-lime-500 py-0.5 px-1 rounded-sm font-bold text-[10px] h-max">
+                          Beli 1 Gratis 1
+                        </span>
+                      ) : (
+                        <span className="text-[10px] h-max line-through text-[#999999]">
+                          {product.price.toLocaleString("id-ID", {
+                            style: "currency",
+                            currency: "IDR",
+                            minimumFractionDigits: 0,
+                          })}
+                        </span>
+                      ))}
                   </div>
                   <div>
                     <span className="font-bold text-base text-red-600">
-                      {product.productDiscountHistories.length > 0
-                        ? (product.productDiscountHistories[0].discountValue > 100
+                      {product.productDiscountHistories.length > 0 &&
+                      product.productDiscountHistories[0].discount.discountType !== EDiscountType.BUY1_GET1
+                        ? (product.productDiscountHistories[0].discount.discountType === EDiscountType.FIXED_AMOUNT
                             ? product.price - product.productDiscountHistories[0].discountValue
                             : product.price * (1 - product.productDiscountHistories[0].discountValue / 100)
                           ).toLocaleString("id-ID", {

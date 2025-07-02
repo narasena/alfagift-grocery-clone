@@ -1,3 +1,5 @@
+import { EDiscountType } from "../discounts/discount.type";
+
 export interface IProductCategory {
   id: number;
   name: string;
@@ -22,6 +24,9 @@ interface IProductStock {
 
 interface IProductDiscountHistory {
   discountValue: number;
+  discount: {
+    discountType: EDiscountType
+  }
 }
 
 export interface IProductDetailsCategoryResponse {

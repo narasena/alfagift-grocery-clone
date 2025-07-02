@@ -18,13 +18,14 @@ export const useAdminReport = () => {
   const [stocksReportType, setStocksReportType] = React.useState<string>(searchParams.get("reportType") || "total");
   const stocksPagination = React.useRef(1);
 
+
   const handleStocsReportTypeChange = (type: string) => {
     setStocksReportType(type);
     console.log(type);
     stocksPagination.current = 1;
     updateFilters({ reportType: type, page: "1" });
   };
-  const handleGetStocksReport = async (filterParams = filters) => {
+  const handleGetStocksReport = React.useCallback(async (filterParams = filters) => {
     try {
       const params = new URLSearchParams();
       Object.entries(filterParams).forEach(([key, value]) => {
@@ -39,7 +40,7 @@ export const useAdminReport = () => {
       console.error(`Error fetching stocks report: `, error);
       toast.error(`Failed to fetch stocks report. Please try again later.`);
     }
-  };
+  }, []);
 
   React.useEffect(() => {
     handleGetStocksReport();
@@ -72,25 +73,41 @@ export const useAdminReport = () => {
     search: searchParams.get("search") || "",
   });
 
+  const [searchTerm, setSearchTerm] = React.useState(filters.search);
   React.useEffect(() => {
-    if (stocksReport.length > 0) {
-      stocksPagination.current = Math.ceil(stockLength / parseInt(filters.limit));
+    setSearchTerm(filters.search);
+  }, [filters.search]);
+
+  React.useEffect(() => {
+    const handle = setTimeout(() => {
+      updateFilters({ search: searchTerm, page: "1" });
+    }, 500);
+    return () => clearTimeout(handle);
+  }, [searchTerm]);
+
+  React.useEffect(() => {
+    const totalPages = Math.max(1, Math.ceil(stockLength / Number(filters.limit)));
+    stocksPagination.current = totalPages;
+    // if you want, also clamp the current page so it never exceeds totalPages:
+    if (Number(filters.page) > totalPages) {
+      updateFilters({ page: String(totalPages) });
     }
-  }, [stocksReport]);
+  }, [stockLength, filters.limit]);
+  
   // Update URL when filters change
   const updateFilters = (newFilters: Partial<typeof filters>) => {
-    const updatedFilters = { ...filters, ...newFilters };
-    setFilters(updatedFilters);
+    const merged = { ...filters, ...newFilters };
+    setFilters(merged);
 
-    const params = new URLSearchParams();
-    params.set("tab", activeTab);
-
-    Object.entries(updatedFilters).forEach(([key, value]) => {
-      if (value) params.set(key, value);
-    });
+    // const params = new URLSearchParams();
+    // params.set("tab", activeTab);
+    const params = new URLSearchParams({ tab: activeTab, ...merged });
+    // Object.entries(updatedFilters).forEach(([key, value]) => {
+    //   if (value) params.set(key, value);
+    // });
 
     router.push(`?${params.toString()}`);
-    handleGetStocksReport(updatedFilters);
+    handleGetStocksReport(merged);
   };
 
   // Update tab and URL
@@ -106,11 +123,33 @@ export const useAdminReport = () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
-      timerRef.current = setTimeout(() => {
-        updateFilters({ search: value });
+      timerRef.current = setTimeout(async () => {
+        const updatedFilters = { ...filters, search: value };
+        setFilters(updatedFilters);
+        
+        const params = new URLSearchParams();
+        params.set("tab", activeTab);
+        Object.entries(updatedFilters).forEach(([key, val]) => {
+          if (val) params.set(key, val);
+        });
+        router.push(`?${params.toString()}`);
+        
+        // Call API directly to avoid dependency issues
+        try {
+          const apiParams = new URLSearchParams();
+          Object.entries(updatedFilters).forEach(([key, value]) => {
+            if (value) apiParams.set(key, value);
+          });
+          const response = await apiInstance.get(`/inventories/report?${apiParams.toString()}`);
+          setStocksReport(response.data.stocksReport);
+          setStockLength(response.data.stocksReportLength);
+        } catch (error) {
+          console.error(`Error fetching stocks report: `, error);
+          toast.error(`Failed to fetch stocks report. Please try again later.`);
+        }
       }, 500);
     },
-    [updateFilters]
+    [filters, activeTab, router]
   );
   const stockTableTitles = React.useMemo(() => {
     const baseTitles = [
@@ -222,5 +261,7 @@ export const useAdminReport = () => {
     stocksReportType,
     handleStocsReportTypeChange,
     handleGetStocksReport,
+    searchTerm,
+    setSearchTerm
   };
 };

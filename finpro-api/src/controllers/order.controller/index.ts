@@ -1,6 +1,8 @@
+import { EOrderStatus } from "@/types/order.type";
 import { prisma } from "../../prisma";
 import { AppError } from "../../utils/app.error";
 import { Request, Response, NextFunction } from "express";
+import { $Enums } from "@/generated/prisma";
 
 export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -223,6 +225,65 @@ export const getOrderById = async (req: Request, res: Response, next: NextFuncti
     res.status(200).json({
       success: true,
       orderById,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getOrderHistoryByStatus = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { userId } = req.body.payload; // Adjust based on your auth middleware
+    const { status } = req.query;
+
+    if (!userId) {
+      throw new AppError("User not authenticated.", 401);
+    }
+
+    if (!status || typeof status !== "string") {
+      throw new AppError("Status query parameter is required and must be a string.", 400);
+    }
+    const statusEnumValue = status?.toUpperCase() as $Enums.OrderStatus;
+
+    const ordersByStatus = await prisma.order.findMany({
+      where: {
+        userId,
+        deletedAt: null,
+      },
+      select: {
+        id: true,
+        finalTotalAmount: true,
+        orderItems: {
+          select: { id: true }, // only need to count them
+        },
+        orderHistories: {
+          where: {
+            deletedAt: null,
+          },
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          select: { status: true },
+        },
+      },
+    });
+
+    const filteredOrders = ordersByStatus.filter((order) => order.orderHistories[0]?.status === statusEnumValue);
+
+    if (filteredOrders.length === 0) {
+      throw new AppError("No orders found for the specified status.", 404);
+    }
+
+    const ordersWithDetails = filteredOrders.map((ordersByStatus) => ({
+      id: ordersByStatus.id,
+      numberOfProducts: ordersByStatus.orderItems.length,
+      finalTotalAmount: ordersByStatus.finalTotalAmount,
+      latestStatus: ordersByStatus.orderHistories[0]?.status || null,
+    }));
+
+    res.status(200).json({
+      success: true,
+      message: `Orders with status ${status} retrieved successfully.`,
+      ordersWithDetails,
     });
   } catch (error) {
     next(error);

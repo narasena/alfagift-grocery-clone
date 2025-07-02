@@ -1,4 +1,4 @@
-import { TDiscountType } from "../discounts/discount.type";
+import { EDiscountType } from "../discounts/discount.type";
 import { EStockMovementType } from "../inventories/product.stock.type";
 import { IStore } from "../stores/store.type";
 import { IProductBrand } from "./product.brand.type";
@@ -32,20 +32,27 @@ export interface IProductFormValues extends IProduct {
   images: ICloudinaryResult[];
 }
 
-export interface IProductDiscountDetails {
+export interface IProductDiscountHistory {
   name: string;
   description: string;
-  type: TDiscountType;
   discountValue: number;
   discountedPrice: number;
+  discount: {
+    id: string;
+    name: string;
+    discountType: EDiscountType;
+  }
 }
 
 export interface IProductDetails extends IProduct {
   productImage: IProductImage[];
   productSubCategory: IProductSubCategory & { productCategory: IProductSubCategory };
   productBrand: IProductBrand;
-  stock: number;
-  discount: IProductDiscountDetails;
+  productStock: {
+    storeId: string;
+    stock: number;
+  };
+  productDiscountHistories: IProductDiscountHistory[];
 }
 
 export interface IProductTable extends IProduct {
@@ -70,14 +77,14 @@ export interface IProductStockReportTotal extends IProductStockReport {
   storeOutQuantity: number;
 }
 
-export interface IProductStockReportMonthly extends IProductStockReport{
+export interface IProductStockReportMonthly extends IProductStockReport {
   productStock: {
     product: IProductDetails;
     store: IStore;
-  }
-  type: EStockMovementType
-  quantity: number
-  createdAt: Date
+  };
+  type: EStockMovementType;
+  quantity: number;
+  createdAt: Date;
 }
 
 export type TProductStockReport = IProductStockReportTotal | IProductStockReportMonthly;

@@ -5,9 +5,12 @@ import { CiClock1 } from "react-icons/ci";
 import useCartItems from "@/features/cart/hooks/useCartItems";
 import useOrder from "@/features/order/hooks/useOrder";
 import { useRouter } from "next/navigation";
+import { EDiscountType } from "@/types/discounts/discount.type";
+import { ICartItemResponse } from "@/types/carts/cartItem.type";
 
 export default function CheckoutPage() {
-  const { cartItems, loading, mainAddress, user, totalBelanja, today } = useCartItems();
+  const { cartItems, loading, mainAddress, user, today, subTotal, discountInPrice, shippingCost, finalPriceOrder } =
+    useCartItems();
   const { handleCreateOrder, isSummaryOpen, setIsSummaryOpen } = useOrder();
   const router = useRouter();
   // to navigate to payment page after order creation
@@ -88,13 +91,64 @@ export default function CheckoutPage() {
             </div>
             <ul className="space-y-4">
               {cartItems && cartItems.length > 0 ? (
-                cartItems.map((item: any) => (
+                cartItems.map((item: ICartItemResponse) => (
                   <li key={item.id} className="flex justify-between items-center border rounded p-4">
                     {/* Left: Item details */}
                     <div className="flex flex-col">
                       <span className="text-black font-semibold">{item.product.name}</span>
                       <div className="flex items-center space-x-4 text-sm text-gray-500 mb-2">
-                        <span>Rp {item.product.price?.toLocaleString("id-ID")}</span>
+                        <div>
+                          <div className="h-5 flex items-center px-">
+                            {item.product.productDiscountHistories.length > 0 &&
+                              (item.product.productDiscountHistories[0].discount.discountType ===
+                              EDiscountType.BUY1_GET1 ? (
+                                <span className="text-white bg-lime-500 py-0.5 px-1 rounded-md font-bold text-sm h-max">
+                                  Beli 1 Gratis 1
+                                </span>
+                              ) : (
+                                <span className="text-xs h-max line-through text-[#999999]">
+                                  {item.product.price.toLocaleString("id-ID", {
+                                    style: "currency",
+                                    currency: "IDR",
+                                    minimumFractionDigits: 0,
+                                  })}
+                                </span>
+                              ))}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {item.product.productDiscountHistories.length > 0 &&
+                            item.product.productDiscountHistories[0].discount.discountType ===
+                              EDiscountType.PERCENTAGE ? (
+                              <span className="py-0.5 px-1.5 bg-amber-600 text-white rounded-md text-xs font-semibold">
+                                {`${item.product.productDiscountHistories[0].discountValue}%`}
+                              </span>
+                            ) : (
+                              item.product?.productDiscountHistories[0].discount.discountType ===
+                                EDiscountType.FIXED_AMOUNT && (
+                                <span className="py-0.5 px-1.5 bg-orange-500 text-white rounded-md text-xs italic font-semibold">{`- Rp ${item.product.productDiscountHistories[0].discountValue}`}</span>
+                              )
+                            )}
+                            <p className="text-gray-700 text-base mb-2">
+                              {item.product?.productDiscountHistories.length > 0 &&
+                              item.product.productDiscountHistories[0].discount.discountType !== EDiscountType.BUY1_GET1
+                                ? (item.product.productDiscountHistories[0].discount.discountType ===
+                                  EDiscountType.FIXED_AMOUNT
+                                    ? item.product.price - item.product.productDiscountHistories[0].discountValue
+                                    : item.product.price *
+                                      (1 - item.product.productDiscountHistories[0].discountValue / 100)
+                                  ).toLocaleString("id-ID", {
+                                    style: "currency",
+                                    currency: "IDR",
+                                    minimumFractionDigits: 0,
+                                  })
+                                : item.product?.price.toLocaleString("id-ID", {
+                                    style: "currency",
+                                    currency: "IDR",
+                                    minimumFractionDigits: 0,
+                                  })}
+                            </p>
+                          </div>
+                        </div>
                         <span>Jumlah beli: {item.quantity}</span>
                       </div>
                     </div>
@@ -102,7 +156,7 @@ export default function CheckoutPage() {
                     {/* Right: Subtotal */}
                     <div className="flex items-center space-x-4">
                       <div className="text-red-600 font-bold min-w-[80px] text-right">
-                        Rp {(item.product.price * item.quantity).toLocaleString("id-ID")}
+                        Rp {item.finalPrice.toLocaleString("id-ID")}
                       </div>
                     </div>
                   </li>
@@ -119,15 +173,15 @@ export default function CheckoutPage() {
             <div className="space-y-4 text-black">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
+                <span>Rp {subTotal.toLocaleString("id-ID")}</span>
               </div>
               <div className="flex justify-between">
                 <span>Diskon</span>
-                <span>Rp 0</span>
+                <span>Rp {discountInPrice.toLocaleString("id-ID")}</span>
               </div>
               <div className="flex justify-between">
                 <span>Ongkos Kirim</span>
-                <span>Rp 0</span>
+                <span>Rp {shippingCost.toLocaleString("id-ID")}</span>
               </div>
             </div>
             {/* Line */}
@@ -136,7 +190,7 @@ export default function CheckoutPage() {
             <div className="text-black font-bold">
               <div className="flex justify-between">
                 <span>Total Belanja</span>
-                <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
+                <span>Rp {finalPriceOrder.toLocaleString("id-ID")}</span>
               </div>
             </div>
             <button
@@ -159,15 +213,15 @@ export default function CheckoutPage() {
                 <div className="space-y-4 text-black">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
+                    <span>Rp {subTotal.toLocaleString("id-ID")}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Diskon</span>
-                    <span>Rp 0</span>
+                    <span>Rp {discountInPrice.toLocaleString("id-ID")}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Ongkos Kirim</span>
-                    <span>Rp 0</span>
+                    <span>Rp {shippingCost.toLocaleString("id-ID")}</span>
                   </div>
                 </div>
                 {/* Line */}
@@ -176,7 +230,7 @@ export default function CheckoutPage() {
                 <div className="text-black font-bold">
                   <div className="flex justify-between">
                     <span>Total Belanja</span>
-                    <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
+                    <span>Rp {finalPriceOrder.toLocaleString("id-ID")}</span>
                   </div>
                 </div>
               </div>
@@ -197,7 +251,7 @@ export default function CheckoutPage() {
                     </svg>
                     <div className="flex flex-col">
                       <div className="text-black font-semibold">Total</div>
-                      <div className="font-bold text-black">Rp {totalBelanja.toLocaleString("id-ID")}</div>
+                      <div className="font-bold text-black">Rp {finalPriceOrder.toLocaleString("id-ID")}</div>
                     </div>
                   </div>
                 </div>

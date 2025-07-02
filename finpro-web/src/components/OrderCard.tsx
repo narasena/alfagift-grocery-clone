@@ -2,10 +2,20 @@
 
 import { TbCalendarTime } from "react-icons/tb";
 import { RiEBike2Line } from "react-icons/ri";
+import { IOrderCards } from "@/types/orders/orders.type";
 
-export default function OrderDonePage() {
+
+export default function OrderCard({
+  orderId,
+  createdAt,
+  latestStatus,
+  firstName,
+  lastName,
+  numberOfProducts,
+  finalTotalAmount
+}: IOrderCards) {
   const openModal = () => {
-    const modal = document.getElementById("my_modal_1") as HTMLDialogElement | null;
+    const modal = document.getElementById(`modal-${orderId}`) as HTMLDialogElement | null;
     if (modal) {
       modal.showModal();
     }
@@ -16,8 +26,10 @@ export default function OrderDonePage() {
       {/* Date and status */}
       <div className="flex items-center space-x-2">
         <TbCalendarTime className="text-lg text-gray-400" />
-        <span className="text-sm text-gray-400">11 Mei 2025 - 13:31 WIB</span>
-        <span className="badge bg-green-100 text-green-400 border-0 font-semibold px-4 py-2 rounded-xl">Selesai</span>
+        <span className="text-sm text-gray-400">{createdAt}</span>
+        <span className="badge bg-green-100 text-green-400 border-0 font-semibold px-4 py-2 rounded-xl">
+          {latestStatus}
+        </span>
       </div>
 
       {/* Order details */}
@@ -25,16 +37,16 @@ export default function OrderDonePage() {
         <div className="flex items-center space-x-3">
           <RiEBike2Line className="text-4xl" />
           <div>
-            <h1>Nama Pengguna</h1>
-            <h1 className="text-sm text-gray-500">No. Ref:</h1>
+            <h1>{firstName+" "+lastName}</h1>
+            <h1 className="text-sm text-gray-500">No. Ref: {orderId}</h1>
           </div>
         </div>
 
-        {/* Right side: total belanja */}
+        {/* Right side: total */}
         <div className="text-right">
           <p className="text-sm text-gray-500">Total Belanja</p>
-          <p className="text-sm font-semibold">6 Produk</p>
-          <p className="text-lg font-bold text-red-600">Rp 142.600</p>
+          <p className="text-sm font-semibold">{numberOfProducts} Produk</p>
+          <p className="text-lg font-bold text-red-600">Rp {finalTotalAmount.toLocaleString()}</p>
         </div>
       </div>
 
@@ -49,8 +61,8 @@ export default function OrderDonePage() {
         </button>
       </div>
 
-      {/* Your modal */}
-      <dialog id="my_modal_1" className="modal">
+      {/* Modal */}
+      <dialog id={`modal-${orderId}`} className="modal">
         <div className="modal-box bg-white rounded-lg p-6 text-black relative">
           <form method="dialog">
             <button
@@ -69,7 +81,7 @@ export default function OrderDonePage() {
             <div className="flex items-center justify-between w-full">
               <h1 className="font-semibold">Kirim ke Alamat</h1>
               <span className="badge bg-green-100 text-green-400 border-0 font-semibold rounded-xl">
-                Pesanan Selesai
+                Pesanan {status}
               </span>
             </div>
           </div>
@@ -77,11 +89,11 @@ export default function OrderDonePage() {
           <div className="space-y-4 mt-5">
             <div className="flex items-center justify-between text-sm">
               <h1 className="text-gray-500">No. Pesanan</h1>
-              <h1 className="text-red-600 font-bold">O-250519-AGBZZFX</h1>
+              <h1 className="text-red-600 font-bold">{orderId}</h1>
             </div>
             <div className="flex items-center justify-between text-sm">
               <h1 className="text-gray-500">Tanggal Pembelian</h1>
-              <h1 className="text-gray-800">11 Mei 2025 - 13:31 WIB</h1>
+              <h1 className="text-gray-800">{createdAt}</h1>
             </div>
           </div>
 
