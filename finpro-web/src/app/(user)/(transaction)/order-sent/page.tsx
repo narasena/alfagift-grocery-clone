@@ -3,8 +3,8 @@
 import OrderCard from "@/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
 
-export default function OrderDonePage() {
-  const { orderHistory } = useOrder("CONFIRMED");
+export default function OrderSentPage() {
+  const { orderHistory } = useOrder("DELIVERING");
 
   return (
     <div>

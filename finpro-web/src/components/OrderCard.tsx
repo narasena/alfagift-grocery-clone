@@ -3,6 +3,9 @@
 import { TbCalendarTime } from "react-icons/tb";
 import { RiEBike2Line } from "react-icons/ri";
 import { OrderCardProps } from "@/types/orders/orders.type";
+import { getStatusLabel } from "@/utils/order/statusLabes";
+import { format, parseISO } from "date-fns";
+import { id as idLocale } from "date-fns/locale";
 
 export default function OrderCard({
   orderId,
@@ -20,14 +23,25 @@ export default function OrderCard({
     }
   };
 
+  const prettyStatus = getStatusLabel(latestStatus);
+
+  let formattedCreatedAt = createdAt;
+  try {
+    formattedCreatedAt = format(parseISO(createdAt), "dd MMMM yyyy - HH:mm 'WIB'", {
+      locale: idLocale,
+    });
+  } catch (error) {
+    console.error("Invalid date:", createdAt);
+  }
+
   return (
     <div className="rounded-lg border border-gray-200 p-5 text-black mb-4">
       {/* Date and status */}
       <div className="flex items-center space-x-2">
         <TbCalendarTime className="text-lg text-gray-400" />
-        <span className="text-sm text-gray-400">{createdAt}</span>
+        <span className="text-sm text-gray-400">{formattedCreatedAt}</span>
         <span className="badge bg-green-100 text-green-400 border-0 font-semibold px-4 py-2 rounded-xl">
-          {latestStatus}
+          {prettyStatus}
         </span>
       </div>
 

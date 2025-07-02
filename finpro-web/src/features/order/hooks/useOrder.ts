@@ -1,15 +1,24 @@
 import * as React from "react";
 import useAuthStore from "@/zustand/authStore";
 import { toast } from "react-toastify";
-import { handleGetOrder } from "../api/handleGetOrder";
 import { createOrder } from "../api/handleCreateOrder";
 import { getOrderByStatus } from "../api/handleGetOrderByStatus";
+import { useSearchParams } from "next/navigation";
+import { handleGetOrder } from "../api/handleGetOrder";
 
 export default function useOrder(statusForPage?: string) {
   const token = useAuthStore((state) => state.token);
+  const searchParams = useSearchParams();
+
   const [order, setOrder] = React.useState<any>(null);
   const [orderHistory, setOrderHistory] = React.useState<any[]>([]);
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
+
+  // const [filters, setFilters] = React.useState({
+  //   page: searchParams.get("page") || "1",
+  //   limit: searchParams.get("limit") || "5",
+  //   sortOrder: searchParams.get("sortOrder") || "desc",
+  // });
 
   // create order
   const handleCreateOrder = async (shippingAddressId: string, storeId: string) => {

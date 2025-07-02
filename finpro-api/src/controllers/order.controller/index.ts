@@ -252,7 +252,14 @@ export const getOrderHistoryByStatus = async (req: Request, res: Response, next:
       },
       select: {
         id: true,
+        createdAt: true,
         finalTotalAmount: true,
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
         orderItems: {
           select: { id: true }, // only need to count them
         },
@@ -273,11 +280,14 @@ export const getOrderHistoryByStatus = async (req: Request, res: Response, next:
       throw new AppError("No orders found for the specified status.", 404);
     }
 
-    const ordersWithDetails = filteredOrders.map((ordersByStatus) => ({
-      id: ordersByStatus.id,
-      numberOfProducts: ordersByStatus.orderItems.length,
-      finalTotalAmount: ordersByStatus.finalTotalAmount,
-      latestStatus: ordersByStatus.orderHistories[0]?.status || null,
+    const ordersWithDetails = filteredOrders.map((order) => ({
+      id: order.id,
+      createdAt: order.createdAt,
+      firstName: order.user.firstName,
+      lastName: order.user.lastName,
+      numberOfProducts: order.orderItems.length,
+      finalTotalAmount: order.finalTotalAmount,
+      latestStatus: order.orderHistories[0]?.status || null,
     }));
 
     res.status(200).json({

@@ -4,7 +4,7 @@ import OrderCard from "@/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
 
 export default function OrderDonePage() {
-  const { orderHistory } = useOrder("CONFIRMED");
+  const { orderHistory } = useOrder("CANCELED");
 
   return (
     <div>
