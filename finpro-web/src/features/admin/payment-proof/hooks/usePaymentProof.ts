@@ -2,11 +2,14 @@ import * as React from "react";
 import { getPendingPayments } from "../api/handleGetPendingPayment";
 import { IPendingPayment } from "@/types/payment/payment.type";
 import { getPaymentProof } from "../api/handleGetPaymentProof";
+import { verifyPaymentProof } from "../api/handleVerifyPaymentProof";
 
 export default function usePaymentProof() {
   const [pendingUsers, setPendingUsers] = React.useState<IPendingPayment[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [paymentImage, setPaymentImage] = React.useState<[]>([]);
+  const [actionLoading, setActionLoading] = React.useState<string | null>(null);
+
   const [currentPage, setCurrentPage] = React.useState(1);
   const ordersPerPage = 5;
 
@@ -30,6 +33,30 @@ export default function usePaymentProof() {
       setPaymentImage(imageUrl.paymentProofs);
     } catch (error) {
       console.error("Failed to get image url:", error);
+    }
+  };
+
+  const handleAcceptPayment = async (paymentId: string) => {
+    setActionLoading(paymentId);
+    try {
+      await verifyPaymentProof(paymentId, "ACCEPT");
+      await handleGetPendingPayment(); // refresh list
+    } catch (error) {
+      console.error("Failed to accept payment:", error);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleRejectPayment = async (paymentId: string) => {
+    setActionLoading(paymentId);
+    try {
+      await verifyPaymentProof(paymentId, "REJECT");
+      await handleGetPendingPayment(); // refresh list
+    } catch (error) {
+      console.error("Failed to reject payment:", error);
+    } finally {
+      setActionLoading(null);
     }
   };
 
@@ -60,5 +87,7 @@ export default function usePaymentProof() {
     paginatedOrders,
     paymentImage,
     handleGetPaymentProof,
+    handleAcceptPayment,
+    handleRejectPayment,
   };
 }

@@ -106,31 +106,32 @@ export const createPaymentImage = async (req: Request, res: Response, next: Next
 // display users with pending payment
 export const getPendingPayments = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const pendingPaymentHistories = await prisma.paymentHistory.findMany({
+    const payments = await prisma.payment.findMany({
       where: {
-        paymentStatus: "PENDING",
-        payment: {
-          paymentType: "BANK_TRANSFER",
-        },
+        paymentType: "BANK_TRANSFER",
       },
       select: {
-        payment: {
+        id: true,
+        paymentHistory: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
           select: {
-            order: {
+            paymentStatus: true,
+          },
+        },
+        order: {
+          select: {
+            id: true,
+            finalTotalAmount: true,
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+              },
+            },
+            orderItems: {
               select: {
                 id: true,
-                finalTotalAmount: true,
-                user: {
-                  select: {
-                    firstName: true,
-                    lastName: true,
-                  },
-                },
-                orderItems: {
-                  select: {
-                    id: true, // only need id to count
-                  },
-                },
               },
             },
           },
@@ -138,9 +139,11 @@ export const getPendingPayments = async (req: Request, res: Response, next: Next
       },
     });
 
-    // transform results
-    const result = pendingPaymentHistories.map((ph) => {
-      const order = ph.payment?.order;
+    // 2️⃣ Keep only payments whose latest history is PENDING
+    const pendingPayments = payments.filter((p) => p.paymentHistory[0]?.paymentStatus === "PENDING");
+
+    const result = pendingPayments.map((p) => {
+      const order = p.order;
       return {
         firstName: order?.user.firstName,
         lastName: order?.user.lastName,
@@ -151,7 +154,7 @@ export const getPendingPayments = async (req: Request, res: Response, next: Next
     });
 
     res.status(200).json({
-      message: "Pending users fetched successfully.",
+      message: "Pending payments fetched successfully.",
       data: result,
     });
   } catch (error) {
@@ -189,6 +192,71 @@ export const getPaymentImageUrl = async (req: Request, res: Response, next: Next
 };
 
 export const acceptOrRejectPayment = async (req: Request, res: Response, next: NextFunction) => {
+  const { paymentId } = req.params;
+  const { action } = req.body; // still keep `action` in body: "ACCEPT" | "REJECT"
+
+  if (!paymentId || !action) {
+    throw new AppError("Missing paymentId or action.", 400);
+  }
+
   try {
-  } catch (error) {}
+    // 1️⃣ Get payment and order
+    const payment = await prisma.payment.findUnique({
+      where: { id: paymentId },
+      include: { order: true },
+    });
+
+    if (!payment) {
+      throw new AppError("Payment not found", 404);
+    }
+
+    let paymentStatus;
+    let orderStatus;
+
+    if (action === "ACCEPT") {
+      paymentStatus = "SUCCESS";
+      orderStatus = "PROCESSING";
+    } else if (action === "REJECT") {
+      paymentStatus = "FAILED";
+      orderStatus = "WAITING_FOR_PAYMENT";
+    } else {
+      throw new AppError("Invalid action.", 400);
+    }
+
+    // 2️⃣ Create PaymentHistory
+    await prisma.paymentHistory.create({
+      data: {
+        paymentId: payment.id,
+        paymentStatus: paymentStatus as any,
+      },
+    });
+
+    // 3️⃣ Update Payment
+    await prisma.payment.update({
+      where: { id: payment.id },
+      data: {
+        isVerified: action === "ACCEPT",
+      },
+    });
+
+    // 4️⃣ Update Order: create new OrderHistory with updated status
+    await prisma.$transaction([
+      prisma.order.update({
+        where: { id: payment.orderId },
+        data: {
+          orderHistories: {
+            create: {
+              status: orderStatus as any,
+            },
+          },
+        },
+      }),
+    ]);
+
+    res.status(200).json({
+      message: `Payment ${action === "ACCEPT" ? "accepted" : "rejected"} successfully.`,
+    });
+  } catch (error) {
+    next(error);
+  }
 };

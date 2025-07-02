@@ -1,4 +1,5 @@
 import {
+  acceptOrRejectPayment,
   createPayment,
   createPaymentImage,
   getPaymentImageUrl,
@@ -13,5 +14,6 @@ paymentRouter.post("/:orderId/create", jwtDecode, createPayment);
 paymentRouter.post("/create-image", jwtDecode, createPaymentImage);
 paymentRouter.get("/pending-users", getPendingPayments);
 paymentRouter.get("/:paymentId/proof-url", getPaymentImageUrl);
+paymentRouter.post("/:paymentId/verify", acceptOrRejectPayment);
 
 export default paymentRouter;
