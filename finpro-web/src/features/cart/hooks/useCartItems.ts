@@ -10,18 +10,22 @@ import { IAddress } from "@/types/address/address.type";
 import { AxiosError } from "axios";
 import usePickStoreId from "@/hooks/stores/usePickStoreId";
 import { ICartItemResponse } from "@/types/carts/cartItem.type";
+import useUserVoucher from "@/features/checkout/hooks/useUserVoucher";
+import { EDiscountValueType, EVoucherType, IVoucher } from "@/types/vouchers/voucher.type";
 
 export default function useCartItems() {
   const token = useAuthStore((state) => state.token);
   const [cartItems, setCartItems] = React.useState<ICartItemResponse[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const { storeId } = usePickStoreId()
-  const shippingCost = React.useRef<number>(32020); //cuma dummy aja yee
+  const shippingCost = React.useRef<number>(21000); //cuma dummy aja yee
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [itemToDelete, setItemToDelete] = React.useState<string | null>(null);
   const [mainAddress, setMainAddress] = React.useState<IAddress|null>(null);
-  const [user, setUser] = React.useState<IUser|null>(null);
+  const [user, setUser] = React.useState<IUser | null>(null);
+  const { vouchers } = useUserVoucher();
+  const [appliedVoucher, setAppliedVoucher] = React.useState<IVoucher | null>(null);
   // const handleInitialize = React.useRef(false);
 
   const handleDisplayCartItems = async () => {
@@ -138,6 +142,14 @@ export default function useCartItems() {
     }
   };
 
+  const handleApplyVoucher = (voucher: IVoucher | null) => {
+    if (appliedVoucher && voucher === appliedVoucher) {
+      setAppliedVoucher(null); // cancel voucher
+    } else {
+      setAppliedVoucher(voucher);
+    }
+  };
+
   const subTotal = React.useMemo(() => 
     cartItems?.reduce((total, item) => {
       return total + item.subTotal
@@ -147,13 +159,40 @@ export default function useCartItems() {
     cartItems?.reduce((total, item) => {
       return total + item.discountInPrice
     }, 0) ?? 0, [cartItems]);
+  
+  const voucherAmountOff = React.useMemo(() =>
+  {
+    if (appliedVoucher) {
+      
+      return appliedVoucher?.voucherType !== EVoucherType.FREE_SHIPPING ?
+        appliedVoucher?.discountValueType === EDiscountValueType.PERCENTAGE ? (subTotal - discountInPrice) * ((appliedVoucher?.discountValue ??0)/ 100) :
+          (subTotal - discountInPrice - (appliedVoucher?.discountValue ?? 0)) : 0
+    }
+    return 0
+  }
+    , [appliedVoucher]);
+  
+  const voucherShippingOff = React.useMemo(() => {
+    if (appliedVoucher) {
+      return appliedVoucher?.voucherType === EVoucherType.FREE_SHIPPING ? (shippingCost.current - (appliedVoucher?.discountValue ?? 0)) : 0
+    }
+    return 0
+  }
+    , [appliedVoucher]);
+  
+  const shippingCostOrder = React.useMemo(() =>
+    appliedVoucher?.voucherType === EVoucherType.FREE_SHIPPING ? shippingCost.current -voucherShippingOff : shippingCost.current
+    , [appliedVoucher]);
+  
     const finalPrice = React.useMemo(
       () => subTotal - discountInPrice ,
       [subTotal, discountInPrice]
     );
     
-  const finalPriceOrder = React.useMemo(() => 
-    subTotal - discountInPrice + shippingCost.current, [subTotal, discountInPrice]);
+  const finalPriceOrder = React.useMemo(
+    () => subTotal - discountInPrice - voucherAmountOff + (shippingCost.current - voucherShippingOff),
+    [subTotal, discountInPrice, appliedVoucher, voucherAmountOff, shippingCostOrder, appliedVoucher,]
+  );
 
   
 
@@ -192,11 +231,18 @@ export default function useCartItems() {
     updateQuantity,
     incrementQuantity,
     decrementQuantity,
+    vouchers,
     subTotal,
     discountInPrice,
     finalPrice,
     finalPriceOrder,
-    shippingCost: shippingCost.current,
+    shippingCost,
+    shippingCostOrder,
+    voucherAmountOff,
+    voucherShippingOff,
+    appliedVoucher,
+    setAppliedVoucher,
+    handleApplyVoucher,
     today,
   };
 }
