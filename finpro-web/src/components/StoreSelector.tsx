@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import useStoreStore from "../zustand/storeStore";
-import {  useState } from "react";
 import instance from "../utils/axiosinstance";
 import { toast } from "react-toastify";
 import { FaLocationDot } from "react-icons/fa6";
@@ -12,36 +11,36 @@ export default function StoreSelector() {
   // const [checkingLocation, setCheckingLocation] = useState(false);
   const router = useRouter();
 
-  const handleLocationPermission = async () => {
-    // setCheckingLocation(true);
+  // const handleLocationPermission = async () => {
+  //   // setCheckingLocation(true);
 
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          try {
-            const res = await instance.get(
-              `/store/nearest-store?lat=${position.coords.latitude}&lon=${position.coords.longitude}`
-            );
-            setSelectedStore(res.data);
-            toast.success("Toko ditemukan berdasarkan lokasi Anda");
-          } catch (err) {
-            console.error("Gagal mencari toko dari lokasi", err);
-            toast.error("Gagal mencari toko dari lokasi");
-          } finally {
-            // setCheckingLocation(false);
-          }
-        },
-        () => {
-          toast.error("Akses lokasi ditolak, diarahkan ke toko utama");
-          router.push("/store/main");
-          // setCheckingLocation(false);
-        }
-      );
-    } else {
-      toast.warn("Geolocation tidak tersedia di perangkat Anda");
-      // setCheckingLocation(false);
-    }
-  };
+  //   if ("geolocation" in navigator) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       async (position) => {
+  //         try {
+  //           const res = await instance.get(
+  //             `/store/nearest-store?lat=${position.coords.latitude}&lon=${position.coords.longitude}`
+  //           );
+  //           setSelectedStore(res.data);
+  //           toast.success("Toko ditemukan berdasarkan lokasi Anda");
+  //         } catch (err) {
+  //           console.error("Gagal mencari toko dari lokasi", err);
+  //           toast.error("Gagal mencari toko dari lokasi");
+  //         } finally {
+  //           // setCheckingLocation(false);
+  //         }
+  //       },
+  //       () => {
+  //         toast.error("Akses lokasi ditolak, diarahkan ke toko utama");
+  //         router.push("/store/main");
+  //         // setCheckingLocation(false);
+  //       }
+  //     );
+  //   } else {
+  //     toast.warn("Geolocation tidak tersedia di perangkat Anda");
+  //     // setCheckingLocation(false);
+  //   }
+  // };
 
   const handleChangeAddress = () => {
     router.push("/address-select");

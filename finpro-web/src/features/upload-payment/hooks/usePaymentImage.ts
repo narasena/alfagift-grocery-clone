@@ -49,8 +49,8 @@ export default function usePaymentImage() {
 
   const handleImageUpload = async (result: CloudinaryUploadWidgetResults) => {
     const newImage = cloudinaryImageUpload(result);
-    const imageUrl = newImage?.secure_url;
-    const cldPublicId = newImage?.public_id;
+    // const imageUrl = newImage?.secure_url;
+    // const cldPublicId = newImage?.public_id;
 
     if (newImage) {
       setUploadedImage(newImage);

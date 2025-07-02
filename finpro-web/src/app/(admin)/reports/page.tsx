@@ -20,7 +20,6 @@ export default function AdminReportPage() {
     stores,
     filters,
     stocksPagination,
-    stockLength,
     updateSearachFiltersDebounced,
     months,
     stocksReportType,
@@ -129,7 +128,7 @@ export default function AdminReportPage() {
         <ul className="inline-flex -space-x-px text-sm">
           <li className="pagination-item">Previous</li>
           {Array.from({ length: Math.max(1, stocksPagination.current) }, (_, index) => (
-            <li key={index} className="pagination-item" onClick={(num) => updateFilters({ page: String(index + 1) })}>
+            <li key={index} className="pagination-item" onClick={() => updateFilters({ page: String(index + 1) })}>
               {index + 1}
             </li>
           ))}

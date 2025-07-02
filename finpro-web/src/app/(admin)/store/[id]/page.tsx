@@ -26,6 +26,7 @@ export default async function StoreDetailPage({ params }: StoreDetailPageProps) 
     const res = await instance.get(`/store/${params.id}`);
     store = res.data;
   } catch (error) {
+    console.error(error);
     return notFound();
   }
 

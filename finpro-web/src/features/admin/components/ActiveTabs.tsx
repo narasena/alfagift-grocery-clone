@@ -1,4 +1,3 @@
-import { extend } from "leaflet";
 import * as React from "react";
 
 export interface IActiveTabsProps {

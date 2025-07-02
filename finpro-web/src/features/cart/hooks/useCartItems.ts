@@ -1,6 +1,5 @@
 import * as React from "react";
 import useAuthStore from "@/zustand/authStore";
-import { IAuthState } from "@/types/auth/auth.type";
 import { handleGetCartItems } from "../api/handleGetCartItems";
 import { deleteCartItem } from "../api/handleDeleteCartItems";
 import { deleteAllCartItems } from "../api/handleDeleteAllCartItems";
@@ -9,7 +8,6 @@ import { toast } from "react-toastify";
 import { IUser } from "@/types/users/user.type";
 import { IAddress } from "@/types/address/address.type";
 import { AxiosError } from "axios";
-import { ICartItem } from "@/types/carts/cartItem.type";
 
 export default function useCartItems() {
   const token = useAuthStore((state) => state.token);
