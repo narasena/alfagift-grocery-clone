@@ -226,7 +226,7 @@ export default function CheckoutPage() {
               ) : (
                 <div className="text-gray-500 flex flex-col justify-center items-center gap-2">
                   <TbTicketOff className="text-7xl text-gray-500" />
-                  <span>You don't have any voucher yet</span>
+                    <span>{`You don't have any voucher yet`}</span>
                 </div>
               )}
             </div>
