@@ -6,7 +6,7 @@ import { EPaymentType } from "@/types/payment/payment.type";
 import { useRouter } from "next/navigation";
 
 export default function PaymentPage() {
-  const {  handlePayment } = usePayment();
+  const { handlePayment } = usePayment();
   const { priceBreakdown, selectedType, setSelectedType } = useCheckout();
   const router = useRouter();
 
@@ -58,6 +58,10 @@ export default function PaymentPage() {
         </div>
         <div className="flex justify-between mb-4">
           <span className="text-gray-600">Diskon</span>
+          <span className="font-medium">Rp {priceBreakdown?.discountedTotalAmount.toLocaleString()}</span>
+        </div>
+        <div className="flex justify-between mb-4">
+          <span className="text-gray-600">Diskon Ongkos Kirim</span>
           <span className="font-medium">Rp {priceBreakdown?.discountedTotalAmount.toLocaleString()}</span>
         </div>
         <div className="flex justify-between mb-4">
