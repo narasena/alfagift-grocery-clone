@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { handlePaymentUpload } from "../api/handlePaymentUpload";
 import useAuthStore from "@/zustand/authStore";
 import { useParams } from "next/navigation";
-import {  AxiosError } from "axios";
+import { AxiosError } from "axios";
 
 export default function usePaymentImage() {
   // const [file, setFile] = useState<File | null>(null);
@@ -48,6 +48,10 @@ export default function usePaymentImage() {
   };
 
   const handleImageUpload = async (result: CloudinaryUploadWidgetResults) => {
+    if (uploadedImage) {
+      toast.error("You have already uploaded a proof image.");
+      return;
+    }
     const newImage = cloudinaryImageUpload(result);
     // const imageUrl = newImage?.secure_url;
     // const cldPublicId = newImage?.public_id;

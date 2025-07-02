@@ -158,3 +158,32 @@ export const getPendingPayments = async (req: Request, res: Response, next: Next
     next(error);
   }
 };
+
+export const getPaymentImageUrl = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { paymentId } = req.params;
+    console.log(paymentId);
+
+    if (!paymentId) {
+      throw new AppError("paymentId parameter is required.", 400);
+    }
+
+    const paymentProofs = await prisma.paymentProof.findMany({
+      where: {
+        paymentId,
+      },
+      select: {
+        id: true,
+        imageUrl: true,
+        status: true,
+      },
+    });
+
+    res.status(200).json({
+      message: "Payment proofs fetched successfully.",
+      paymentProofs,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

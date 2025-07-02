@@ -1,10 +1,12 @@
 import * as React from "react";
 import { getPendingPayments } from "../api/handleGetPendingPayment";
 import { IPendingPayment } from "@/types/payment/payment.type";
+import { getPaymentProof } from "../api/handleGetPaymentProof";
 
 export default function usePaymentProof() {
   const [pendingUsers, setPendingUsers] = React.useState<IPendingPayment[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [paymentImage, setPaymentImage] = React.useState<[]>([]);
   const [currentPage, setCurrentPage] = React.useState(1);
   const ordersPerPage = 5;
 
@@ -17,6 +19,17 @@ export default function usePaymentProof() {
       console.log("Error loading");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGetPaymentProof = async (paymentId: string) => {
+    try {
+      const imageUrl = await getPaymentProof(paymentId);
+      console.log(imageUrl.paymentProofs);
+
+      setPaymentImage(imageUrl.paymentProofs);
+    } catch (error) {
+      console.error("Failed to get image url:", error);
     }
   };
 
@@ -45,5 +58,7 @@ export default function usePaymentProof() {
     totalPages,
     currentPage,
     paginatedOrders,
+    paymentImage,
+    handleGetPaymentProof,
   };
 }
