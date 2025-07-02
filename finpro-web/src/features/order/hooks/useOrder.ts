@@ -4,12 +4,19 @@ import { toast } from "react-toastify";
 import { createOrder } from "../api/handleCreateOrder";
 import { getOrderByStatus } from "../api/handleGetOrderByStatus";
 import { IOrder, IOrderCards } from "@/types/orders/orders.type";
+import { useSearchParams } from "next/navigation";
+import { getOrderDetails } from "../api/handleGetOrderDetails";
 
 export default function useOrder(statusForPage?: string) {
   const token = useAuthStore((state) => state.token);
+  const searchParams = useSearchParams();
+  const status = searchParams.get("status") || "WAITING_FOR_PAYMENT";
   const [order, setOrder] = React.useState<IOrder | null>(null);
   const [orderHistory, setOrderHistory] = React.useState<IOrderCards[]>([]);
+  const [orderDetails, setOrderDetails] = React.useState<[]>([]);
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const ordersPerPage = 5;
 
   // create order
   const handleCreateOrder = async (shippingAddressId: string, storeId: string, voucherId?: string) => {
@@ -72,29 +79,46 @@ export default function useOrder(statusForPage?: string) {
     }
   }, [statusForPage, token]);
 
-  // display order
-  // const handleDisplayOrder = async (token: string) => {
-  //   try {
-  //     if (token) {
-  //       // setLoading(true);
-  //       const orderItems = await handleGetOrder(token);
-  //       console.log("Order:", orderItems.data.ordersWithDetails);
-  //       setOrder(orderItems.data.ordersWithDetails);
-  //       toast.success("Berhasil menampilkan pesanan");
-  //       // setLoading(false);
-  //     }
-  //   } catch (error) {
-  //     console.log("Error displaying order:", error);
-  //   } finally {
-  //     // setLoading(false);
-  //   }
-  // };
+  const paginatedOrders = orderHistory.slice((currentPage - 1) * ordersPerPage, currentPage * ordersPerPage);
+  const totalPages = Math.ceil(orderHistory.length / ordersPerPage);
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // display order details
+  const handleGetOrderDetails = async (orderId: string) => {
+    try {
+      if (token) {
+        const data = await getOrderDetails(token, orderId);
+        setOrderDetails(data);
+      }
+    } catch (error) {
+      console.error("Failed to get order details:", error);
+    }
+  };
 
   return {
+    orderDetails,
+    status,
+    totalPages,
+    currentPage,
+    paginatedOrders,
+    handleNext,
+    handlePrevious,
     orderHistory,
     order,
     isSummaryOpen,
     setIsSummaryOpen,
     handleCreateOrder,
+    handleGetOrderDetails,
   };
 }

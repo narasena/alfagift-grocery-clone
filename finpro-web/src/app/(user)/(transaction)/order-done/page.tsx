@@ -1,98 +1,57 @@
 "use client";
 
-import { TbCalendarTime } from "react-icons/tb";
-import { RiEBike2Line } from "react-icons/ri";
+import OrderCard from "@/features/order/components/OrderCard";
+import useOrder from "@/features/order/hooks/useOrder";
 
 export default function OrderDonePage() {
-  const openModal = () => {
-    const modal = document.getElementById("my_modal_1") as HTMLDialogElement | null;
-    if (modal) {
-      modal.showModal();
-    }
-  };
+  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage } = useOrder("CONFIRMED");
 
   return (
-    <div className="rounded-lg border border-gray-200 p-5 text-black mb-4">
-      {/* Date and status */}
-      <div className="flex items-center space-x-2">
-        <TbCalendarTime className="text-lg text-gray-400" />
-        <span className="text-sm text-gray-400">11 Mei 2025 - 13:31 WIB</span>
-        <span className="badge bg-green-100 text-green-400 border-0 font-semibold px-4 py-2 rounded-xl">Selesai</span>
-      </div>
+    <div className="space-y-4">
+      {paginatedOrders && paginatedOrders.length > 0 ? (
+        <>
+          {paginatedOrders.map((order: any) => (
+            <OrderCard
+              key={order.id}
+              orderId={order.id}
+              createdAt={order.createdAt}
+              latestStatus={order.latestStatus}
+              firstName={order.firstName}
+              lastName={order.lastName}
+              numberOfProducts={order.numberOfProducts}
+              finalTotalAmount={order.finalTotalAmount}
+            />
+          ))}
 
-      {/* Order details */}
-      <div className="mt-7 flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <RiEBike2Line className="text-4xl" />
-          <div>
-            <h1>Nama Pengguna</h1>
-            <h1 className="text-sm text-gray-500">No. Ref:</h1>
-          </div>
-        </div>
-
-        {/* Right side: total belanja */}
-        <div className="text-right">
-          <p className="text-sm text-gray-500">Total Belanja</p>
-          <p className="text-sm font-semibold">6 Produk</p>
-          <p className="text-lg font-bold text-red-600">Rp 142.600</p>
-        </div>
-      </div>
-
-      <hr className="border-t border-gray-200 my-4" />
-
-      <div className="text-right">
-        <button
-          className="bg-white text-red-600 border border-red-600 hover:bg-red-50 font-semibold px-4 py-2 rounded-lg"
-          onClick={openModal}
-        >
-          Lihat Detail
-        </button>
-      </div>
-
-      {/* Your modal */}
-      <dialog id="my_modal_1" className="modal">
-        <div className="modal-box bg-white rounded-lg p-6 text-black relative">
-          <form method="dialog">
+          <div className="flex justify-between items-center mt-4">
             <button
-              className="absolute right-4 top-4 text-gray-500 hover:text-red-500 text-xl font-bold"
-              aria-label="Close"
+              onClick={handlePrevious}
+              disabled={currentPage === 1}
+              className="px-4 py-2 border rounded transition 
+                   disabled:opacity-50 disabled:cursor-not-allowed
+                   hover:bg-gray-100"
             >
-              ✕
+              Previous
             </button>
-          </form>
 
-          <h3 className="font-bold text-xl text-center">Detail Transaksi</h3>
-          <hr className="border-t border-gray-200 my-4 -mx-6" />
+            <span className="text-sm text-gray-600">
+              Page {currentPage} of {totalPages}
+            </span>
 
-          <div className="text-black flex items-center space-x-3">
-            <RiEBike2Line className="text-4xl" />
-            <div className="flex items-center justify-between w-full">
-              <h1 className="font-semibold">Kirim ke Alamat</h1>
-              <span className="badge bg-green-100 text-green-400 border-0 font-semibold rounded-xl">
-                Pesanan Selesai
-              </span>
-            </div>
+            <button
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 border rounded transition
+                   disabled:opacity-50 disabled:cursor-not-allowed
+                   hover:bg-gray-100"
+            >
+              Next
+            </button>
           </div>
-
-          <div className="space-y-4 mt-5">
-            <div className="flex items-center justify-between text-sm">
-              <h1 className="text-gray-500">No. Pesanan</h1>
-              <h1 className="text-red-600 font-bold">O-250519-AGBZZFX</h1>
-            </div>
-            <div className="flex items-center justify-between text-sm">
-              <h1 className="text-gray-500">Tanggal Pembelian</h1>
-              <h1 className="text-gray-800">11 Mei 2025 - 13:31 WIB</h1>
-            </div>
-          </div>
-
-          <hr className="border-t border-8 border-gray-100 mt-7 -mx-6" />
-
-          <div className="mt-5">
-            <h1 className="font-semibold">Detail Pesanan</h1>
-            {/* Add more detail content here */}
-          </div>
-        </div>
-      </dialog>
+        </>
+      ) : (
+        <p>Tidak ada pesanan.</p>
+      )}
     </div>
   );
 }

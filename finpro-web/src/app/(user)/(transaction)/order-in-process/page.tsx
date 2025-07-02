@@ -3,12 +3,11 @@ import * as React from "react";
 
 import OrderCard from "@/features/order/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
-import { IOrderCards } from "@/types/orders/orders.type";
 import OrderDetailsModal from "@/features/order/components/OrderDetailsModal";
 
-export default function WaitingForPaymentPage() {
+export default function ProcessingOrderPage() {
   const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails, orderDetails } =
-    useOrder("WAITING_FOR_PAYMENT");
+    useOrder("PROCESSING");
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
@@ -44,8 +43,8 @@ export default function WaitingForPaymentPage() {
               onClick={handlePrevious}
               disabled={currentPage === 1}
               className="px-4 py-2 border rounded transition 
-               disabled:opacity-50 disabled:cursor-not-allowed
-               hover:bg-gray-100"
+                   disabled:opacity-50 disabled:cursor-not-allowed
+                   hover:bg-gray-100"
             >
               Previous
             </button>
@@ -58,14 +57,13 @@ export default function WaitingForPaymentPage() {
               onClick={handleNext}
               disabled={currentPage === totalPages}
               className="px-4 py-2 border rounded transition
-               disabled:opacity-50 disabled:cursor-not-allowed
-               hover:bg-gray-100"
+                   disabled:opacity-50 disabled:cursor-not-allowed
+                   hover:bg-gray-100"
             >
               Next
             </button>
-
-            <OrderDetailsModal isOpen={isModalOpen} onClose={closeModal} orderDetails={orderDetails} />
           </div>
+          <OrderDetailsModal isOpen={isModalOpen} onClose={closeModal} orderDetails={orderDetails} />
         </>
       ) : (
         <p>Tidak ada pesanan.</p>

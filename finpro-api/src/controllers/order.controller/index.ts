@@ -374,7 +374,14 @@ export const getOrderHistoryByStatus = async (req: Request, res: Response, next:
       },
       select: {
         id: true,
+        createdAt: true,
         finalTotalAmount: true,
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
         orderItems: {
           select: { id: true }, // only need to count them
         },
@@ -395,11 +402,14 @@ export const getOrderHistoryByStatus = async (req: Request, res: Response, next:
       throw new AppError("No orders found for the specified status.", 404);
     }
 
-    const ordersWithDetails = filteredOrders.map((ordersByStatus) => ({
-      id: ordersByStatus.id,
-      numberOfProducts: ordersByStatus.orderItems.length,
-      finalTotalAmount: ordersByStatus.finalTotalAmount,
-      latestStatus: ordersByStatus.orderHistories[0]?.status || null,
+    const ordersWithDetails = filteredOrders.map((order) => ({
+      id: order.id,
+      createdAt: order.createdAt,
+      firstName: order.user.firstName,
+      lastName: order.user.lastName,
+      numberOfProducts: order.orderItems.length,
+      finalTotalAmount: order.finalTotalAmount,
+      latestStatus: order.orderHistories[0]?.status || null,
     }));
 
     res.status(200).json({
@@ -412,91 +422,102 @@ export const getOrderHistoryByStatus = async (req: Request, res: Response, next:
   }
 };
 
-// buat nampilin order
-// export const getOrder = async (req: Request, res: Response, next: NextFunction) => {
-//   try {
-//     const { userId } = req.body.payload;
+export const getOrderDetails = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { orderId } = req.params;
+    if (!orderId) {
+      throw new AppError("Order ID is required.", 400);
+    }
 
-//     if (!userId) {
-//       throw new AppError("User not authenticated.", 401);
-//     }
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      select: {
+        id: true,
+        createdAt: true,
+        totalAmount: true,
+        discountedTotalAmount: true,
+        finalTotalAmount: true,
+        shippingCost: true,
+        discountedShippingCost: true,
+        finalShippingCost: true,
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            phoneNumber: true,
+          },
+        },
+        store: {
+          select: {
+            name: true,
+            phoneNumber: true,
+          },
+        },
+        shippingAddress: {
+          select: {
+            address: true,
+            subDistrict: true,
+            district: true,
+            city: true,
+            province: true,
+            postalCode: true,
+          },
+        },
+        orderItems: {
+          select: {
+            id: true,
+            quantity: true,
+            originalPrice: true,
+            discountedPrice: true,
+            finalPrice: true,
+            productStock: {
+              select: {
+                productId: true,
+                product: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
 
-//     // Fetch all orders for the authenticated user
-//     const orders = await prisma.order.findMany({
-//       where: {
-//         userId,
-//         deletedAt: null, // Only active orders
-//       },
-//       include: {
-//         orderItems: {
-//           include: {
-//             productStock: {
-//               select: {
-//                 product: {
-//                   select: {
-//                     name: true,
-//                     price: true,
-//                   },
-//                 },
-//               },
-//             },
-//             productDiscount: {
-//               select: {
-//                 id: true,
-//                 name: true,
-//                 startDate: true,
-//                 endDate: true,
-//                 productDiscountHistories: {
-//                   select: {
-//                     discountValue: true,
-//                   },
-//                 },
-//               },
-//             },
-//           },
-//         },
-//         store: {
-//           select: {
-//             name: true,
-//           },
-//         },
-//         shippingAddress: true,
-//         payment: true,
-//       },
-//     });
+    if (!order) {
+      throw new AppError("Order not found.", 404);
+    }
 
-//     if (!orders || orders.length === 0) {
-//       throw new AppError("No orders found.", 404);
-//     }
+    const shippingAddressFull = `${order.shippingAddress.address} ${order.shippingAddress.postalCode}`;
 
-//     // Format the order items (optional, but clearer for client)
-//     const ordersWithDetails = orders.map((order) => ({
-//       ...order,
-//       orderItems: order.orderItems.map((item) => ({
-//         id: item.id,
-//         quantity: item.quantity,
-//         originalPrice: item.originalPrice,
-//         discountedPrice: item.discountedPrice,
-//         finalPrice: item.finalPrice,
-//         productName: item.productStock.product.name,
-//         productBasePrice: item.productStock.product.price,
-//         discount: item.productDiscount
-//           ? {
-//               id: item.productDiscount.id,
-//               value: item.productDiscount.productDiscountHistories[0]?.discountValue || 0,
-//               startDate: item.productDiscount.startDate,
-//               endDate: item.productDiscount.endDate,
-//             }
-//           : null,
-//       })),
-//     }));
-
-//     res.status(200).json({
-//       success: true,
-//       message: "Orders retrieved successfully.",
-//       ordersWithDetails,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    res.status(200).json({
+      orderId: order.id,
+      createdAt: order.createdAt,
+      orderItems: order.orderItems.map((item) => ({
+        id: item.id,
+        quantity: item.quantity,
+        originalPrice: item.originalPrice,
+        discountedPrice: item.discountedPrice,
+        finalPrice: item.finalPrice,
+        productName: item.productStock.product.name,
+      })),
+      store: {
+        name: order.store.name,
+        phoneNumber: order.store.phoneNumber,
+      },
+      user: {
+        firstName: order.user.firstName,
+        lastName: order.user.lastName,
+        phoneNumber: order.user.phoneNumber,
+      },
+      shippingAddress: shippingAddressFull,
+      totalAmount: order.totalAmount,
+      totalDiscount: order.discountedTotalAmount,
+      totalShippingCost: order.finalShippingCost,
+      totalToBePaid: order.finalTotalAmount + order.finalShippingCost,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

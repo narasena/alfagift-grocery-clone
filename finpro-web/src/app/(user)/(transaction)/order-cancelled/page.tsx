@@ -1,25 +1,11 @@
 "use client";
-import * as React from "react";
 
 import OrderCard from "@/features/order/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
-import { IOrderCards } from "@/types/orders/orders.type";
-import OrderDetailsModal from "@/features/order/components/OrderDetailsModal";
 
-export default function WaitingForPaymentPage() {
-  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails, orderDetails } =
-    useOrder("WAITING_FOR_PAYMENT");
-
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
-
-  const handleDetailClick = async (orderId: string) => {
-    await handleGetOrderDetails(orderId);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
+export default function OrderDonePage() {
+  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails } =
+    useOrder("CANCELED");
 
   return (
     <div className="space-y-4">
@@ -35,7 +21,7 @@ export default function WaitingForPaymentPage() {
               lastName={order.lastName}
               numberOfProducts={order.numberOfProducts}
               finalTotalAmount={order.finalTotalAmount}
-              onDetailClick={handleDetailClick}
+              onDetailClick={handleGetOrderDetails}
             />
           ))}
 
@@ -44,8 +30,8 @@ export default function WaitingForPaymentPage() {
               onClick={handlePrevious}
               disabled={currentPage === 1}
               className="px-4 py-2 border rounded transition 
-               disabled:opacity-50 disabled:cursor-not-allowed
-               hover:bg-gray-100"
+                   disabled:opacity-50 disabled:cursor-not-allowed
+                   hover:bg-gray-100"
             >
               Previous
             </button>
@@ -58,13 +44,11 @@ export default function WaitingForPaymentPage() {
               onClick={handleNext}
               disabled={currentPage === totalPages}
               className="px-4 py-2 border rounded transition
-               disabled:opacity-50 disabled:cursor-not-allowed
-               hover:bg-gray-100"
+                   disabled:opacity-50 disabled:cursor-not-allowed
+                   hover:bg-gray-100"
             >
               Next
             </button>
-
-            <OrderDetailsModal isOpen={isModalOpen} onClose={closeModal} orderDetails={orderDetails} />
           </div>
         </>
       ) : (
