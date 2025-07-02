@@ -52,6 +52,7 @@ export default function AdminInventoryPage() {
         });
         setAdmins(res.data.admins);
       } catch (err) {
+        console.error(err);
         toast.error("Gagal memuat data admin");
       } finally {
         setLoading(false);

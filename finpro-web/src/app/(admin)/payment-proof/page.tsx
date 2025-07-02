@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import usePaymentProof from "@/features/admin/payment-proof/hooks/usePaymentProof";
+import { IPendingPayment } from "@/types/payment/payment.type";
 
 export default function PendingPaymentsPage() {
   const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, loading } = usePaymentProof();
@@ -16,7 +17,7 @@ export default function PendingPaymentsPage() {
 
       {paginatedOrders && paginatedOrders.length > 0 ? (
         <>
-          {paginatedOrders.map((user: any) => (
+          {paginatedOrders.map((user: IPendingPayment) => (
             <div key={user.orderId} className="rounded-lg border border-gray-200 p-5 shadow-sm mb-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">

@@ -27,6 +27,7 @@ const carouselItems = [
 export default function HeroCarousel() {
   // Auto-scroll (opsional, bisa dihapus kalau ingin manual saja)
   const [current, setCurrent] = useState(0);
+  console.log(current);
 
   useEffect(() => {
     const interval = setInterval(() => {

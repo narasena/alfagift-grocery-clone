@@ -6,7 +6,7 @@ import authStore from "../../../zustand/authStore";
 
 export default function AdminDashboardPage() {
   const email = authStore((state) => state.email);
-  const role = authStore((state) => state.role);
+  // const role = authStore((state) => state.role);
   const clearAuth = authStore((state) => state.clearAuth);
   const router = useRouter();
 

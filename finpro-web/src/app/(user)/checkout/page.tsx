@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import { BsStopwatch } from "react-icons/bs";
 import { CiCalendar } from "react-icons/ci";
 import { CiClock1 } from "react-icons/ci";
@@ -11,7 +12,7 @@ import { TbSquareCheckFilled, TbTicketOff } from "react-icons/tb";
 import { IVoucher } from "@/types/vouchers/voucher.type";
 import { HiMiniReceiptPercent } from "react-icons/hi2";
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const {
     cartItems,
     loading,
@@ -346,5 +347,13 @@ export default function CheckoutPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center h-screen"><span className="loading loading-spinner loading-lg"></span></div>}>
+      <CheckoutContent />
+    </Suspense>
   );
 }

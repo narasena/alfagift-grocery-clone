@@ -1,19 +1,21 @@
 "use client";
 
+import { Suspense } from "react";
 import OrderCard from "@/features/order/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
+import { IOrderCards } from "@/types/orders/orders.type";
 
-export default function OrderDonePage() {
+function OrderDoneContent() {
   const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage } = useOrder("CONFIRMED");
 
   return (
     <div className="space-y-4">
       {paginatedOrders && paginatedOrders.length > 0 ? (
         <>
-          {paginatedOrders.map((order: any) => (
+          {paginatedOrders.map((order: IOrderCards) => (
             <OrderCard
-              key={order.id}
-              orderId={order.id}
+              key={order.orderId}
+              orderId={order.orderId}
               createdAt={order.createdAt}
               latestStatus={order.latestStatus}
               firstName={order.firstName}
@@ -53,5 +55,13 @@ export default function OrderDonePage() {
         <p>Tidak ada pesanan.</p>
       )}
     </div>
+  );
+}
+
+export default function OrderDonePage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center h-screen"><span className="loading loading-spinner loading-lg"></span></div>}>
+      <OrderDoneContent />
+    </Suspense>
   );
 }
