@@ -166,7 +166,7 @@ export default function CartPage() {
                         {/* Product Name + Price */}
                         <div className="flex-1">
                           <p className="text-black font-semibold">{item.product.name}</p>
-                          <div className="h-5 flex items-center px-1">
+                          <div className="h-5 flex items-center px-">
                             {item.product.productDiscountHistories.length > 0 &&
                               (item.product.productDiscountHistories[0].discount.discountType ===
                               EDiscountType.BUY1_GET1 ? (

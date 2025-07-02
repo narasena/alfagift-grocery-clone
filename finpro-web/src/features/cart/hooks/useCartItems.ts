@@ -16,7 +16,7 @@ export default function useCartItems() {
   const [cartItems, setCartItems] = React.useState<ICartItemResponse[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const { storeId } = usePickStoreId()
-
+  const shippingCost = React.useRef<number>(32020); //cuma dummy aja yee
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [itemToDelete, setItemToDelete] = React.useState<string | null>(null);
@@ -147,9 +147,13 @@ export default function useCartItems() {
     cartItems?.reduce((total, item) => {
       return total + item.discountInPrice
     }, 0) ?? 0, [cartItems]);
+    const finalPrice = React.useMemo(
+      () => subTotal - discountInPrice ,
+      [subTotal, discountInPrice]
+    );
     
-  const finalPrice = React.useMemo(() => 
-    subTotal - discountInPrice, [subTotal, discountInPrice]);
+  const finalPriceOrder = React.useMemo(() => 
+    subTotal - discountInPrice + shippingCost.current, [subTotal, discountInPrice]);
 
   
 
@@ -191,6 +195,8 @@ export default function useCartItems() {
     subTotal,
     discountInPrice,
     finalPrice,
+    finalPriceOrder,
+    shippingCost: shippingCost.current,
     today,
   };
 }
