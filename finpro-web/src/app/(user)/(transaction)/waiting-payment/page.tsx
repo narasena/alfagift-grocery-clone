@@ -6,25 +6,6 @@ import useOrder from "@/features/order/hooks/useOrder";
 import OrderDetailsModal from "@/components/OrderDetailsModal";
 
 export default function WaitingForPaymentPage() {
-  // const orders = [
-  //   {
-  //     id: "O-250519-AGBZZFX",
-  //     createdAt: "11 Mei 2025 - 13:31 WIB",
-  //     status: "Menunggu Pembayaran",
-  //     userName: "Nama Pengguna",
-  //     numberOfProducts: 3,
-  //     finalTotalAmount: 142600,
-  //   },
-  //   {
-  //     id: "O-250520-XYZ123",
-  //     createdAt: "12 Mei 2025 - 10:20 WIB",
-  //     status: "Menunggu Pembayaran",
-  //     userName: "Nama Pengguna",
-  //     numberOfProducts: 1,
-  //     finalTotalAmount: 56000,
-  //   },
-  // ];
-
   const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails, orderDetails } =
     useOrder("WAITING_FOR_PAYMENT");
 
