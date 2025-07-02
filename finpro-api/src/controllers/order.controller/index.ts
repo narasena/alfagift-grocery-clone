@@ -300,6 +300,106 @@ export const getOrderHistoryByStatus = async (req: Request, res: Response, next:
   }
 };
 
+export const getOrderDetails = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { orderId } = req.params;
+    if (!orderId) {
+      throw new AppError("Order ID is required.", 400);
+    }
+
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      select: {
+        id: true,
+        createdAt: true,
+        totalAmount: true,
+        discountedTotalAmount: true,
+        finalTotalAmount: true,
+        shippingCost: true,
+        discountedShippingCost: true,
+        finalShippingCost: true,
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            phoneNumber: true,
+          },
+        },
+        store: {
+          select: {
+            name: true,
+            phoneNumber: true,
+          },
+        },
+        shippingAddress: {
+          select: {
+            address: true,
+            subDistrict: true,
+            district: true,
+            city: true,
+            province: true,
+            postalCode: true,
+          },
+        },
+        orderItems: {
+          select: {
+            id: true,
+            quantity: true,
+            originalPrice: true,
+            discountedPrice: true,
+            finalPrice: true,
+            productStock: {
+              select: {
+                productId: true,
+                product: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!order) {
+      throw new AppError("Order not found.", 404);
+    }
+
+    const shippingAddressFull = `${order.shippingAddress.address} ${order.shippingAddress.postalCode}`;
+
+    res.status(200).json({
+      orderId: order.id,
+      createdAt: order.createdAt,
+      orderItems: order.orderItems.map((item) => ({
+        id: item.id,
+        quantity: item.quantity,
+        originalPrice: item.originalPrice,
+        discountedPrice: item.discountedPrice,
+        finalPrice: item.finalPrice,
+        productName: item.productStock.product.name,
+      })),
+      store: {
+        name: order.store.name,
+        phoneNumber: order.store.phoneNumber,
+      },
+      user: {
+        firstName: order.user.firstName,
+        lastName: order.user.lastName,
+        phoneNumber: order.user.phoneNumber,
+      },
+      shippingAddress: shippingAddressFull,
+      totalAmount: order.totalAmount,
+      totalDiscount: order.discountedTotalAmount,
+      totalShippingCost: order.finalShippingCost,
+      totalToBePaid: order.finalTotalAmount + order.finalShippingCost,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // buat nampilin order
 // export const getOrder = async (req: Request, res: Response, next: NextFunction) => {
 //   try {

@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { createOrder } from "../api/handleCreateOrder";
 import { getOrderByStatus } from "../api/handleGetOrderByStatus";
 import { useSearchParams } from "next/navigation";
-import { handleGetOrder } from "../api/handleGetOrder";
+import { getOrderDetails } from "../api/handleGetOrderDetails";
 
 export default function useOrder(statusForPage?: string) {
   const token = useAuthStore((state) => state.token);
@@ -12,15 +12,10 @@ export default function useOrder(statusForPage?: string) {
   const status = searchParams.get("status") || "WAITING_FOR_PAYMENT";
   const [order, setOrder] = React.useState<any>(null);
   const [orderHistory, setOrderHistory] = React.useState<any[]>([]);
+  const [orderDetails, setOrderDetails] = React.useState<[]>([]);
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1);
   const ordersPerPage = 5;
-
-  // const [filters, setFilters] = React.useState({
-  //   page: searchParams.get("page") || "1",
-  //   limit: searchParams.get("limit") || "5",
-  //   sortOrder: searchParams.get("sortOrder") || "desc",
-  // });
 
   // create order
   const handleCreateOrder = async (shippingAddressId: string, storeId: string) => {
@@ -72,25 +67,21 @@ export default function useOrder(statusForPage?: string) {
       setCurrentPage(currentPage + 1);
     }
   };
-  // display order
-  // const handleDisplayOrder = async (token: string) => {
-  //   try {
-  //     if (token) {
-  //       // setLoading(true);
-  //       const orderItems = await handleGetOrder(token);
-  //       console.log("Order:", orderItems.data.ordersWithDetails);
-  //       setOrder(orderItems.data.ordersWithDetails);
-  //       toast.success("Berhasil menampilkan pesanan");
-  //       // setLoading(false);
-  //     }
-  //   } catch (error) {
-  //     console.log("Error displaying order:", error);
-  //   } finally {
-  //     // setLoading(false);
-  //   }
-  // };
+
+  // display order details
+  const handleGetOrderDetails = async (orderId: string) => {
+    try {
+      if (token) {
+        const data = await getOrderDetails(token, orderId);
+        setOrderDetails(data);
+      }
+    } catch (error) {
+      console.error("Failed to get order details:", error);
+    }
+  };
 
   return {
+    orderDetails,
     status,
     totalPages,
     currentPage,
@@ -102,5 +93,6 @@ export default function useOrder(statusForPage?: string) {
     isSummaryOpen,
     setIsSummaryOpen,
     handleCreateOrder,
+    handleGetOrderDetails,
   };
 }

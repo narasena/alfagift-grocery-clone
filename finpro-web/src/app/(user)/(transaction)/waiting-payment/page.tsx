@@ -1,7 +1,9 @@
 "use client";
+import * as React from "react";
 
 import OrderCard from "@/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
+import OrderDetailsModal from "@/components/OrderDetailsModal";
 
 export default function WaitingForPaymentPage() {
   // const orders = [
@@ -23,27 +25,21 @@ export default function WaitingForPaymentPage() {
   //   },
   // ];
 
-  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage } = useOrder("WAITING_FOR_PAYMENT");
+  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails, orderDetails } =
+    useOrder("WAITING_FOR_PAYMENT");
+
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const handleDetailClick = async (orderId: string) => {
+    await handleGetOrderDetails(orderId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
-    // <div>
-    //   {orderHistory && orderHistory.length > 0 ? (
-    //     orderHistory.map((order: any) => (
-    //       <OrderCard
-    //         key={order.id}
-    //         orderId={order.id}
-    //         createdAt={order.createdAt}
-    //         latestStatus={order.latestStatus}
-    //         firstName={order.firstName}
-    //         lastName={order.lastName}
-    //         numberOfProducts={order.numberOfProducts}
-    //         finalTotalAmount={order.finalTotalAmount}
-    //       />
-    //     ))
-    //   ) : (
-    //     <p>Tidak ada pesanan.</p>
-    //   )}
-    // </div>
     <div className="space-y-4">
       {paginatedOrders && paginatedOrders.length > 0 ? (
         <>
@@ -57,6 +53,7 @@ export default function WaitingForPaymentPage() {
               lastName={order.lastName}
               numberOfProducts={order.numberOfProducts}
               finalTotalAmount={order.finalTotalAmount}
+              onDetailClick={handleDetailClick}
             />
           ))}
 
@@ -84,6 +81,8 @@ export default function WaitingForPaymentPage() {
             >
               Next
             </button>
+
+            <OrderDetailsModal isOpen={isModalOpen} onClose={closeModal} orderDetails={orderDetails} />
           </div>
         </>
       ) : (

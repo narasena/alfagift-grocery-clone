@@ -4,7 +4,8 @@ import OrderCard from "@/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
 
 export default function OrderDonePage() {
-  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage } = useOrder("CANCELED");
+  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails } =
+    useOrder("CANCELED");
 
   return (
     <div className="space-y-4">
@@ -20,6 +21,7 @@ export default function OrderDonePage() {
               lastName={order.lastName}
               numberOfProducts={order.numberOfProducts}
               finalTotalAmount={order.finalTotalAmount}
+              onDetailClick={handleGetOrderDetails}
             />
           ))}
 
