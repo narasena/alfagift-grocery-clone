@@ -190,8 +190,13 @@ export class ProductCategoryController {
                     },
                     select: {
                       discountValue: true,
+                      discount: {
+                        select: {
+                          discountType:true
+                        }
+                      }
                     },
-                  },
+                  }, 
                 },
               },
             },
@@ -214,7 +219,7 @@ export class ProductCategoryController {
           },
           product: {
             select: {
-              id: true,
+              id: true, 
               name: true,
               slug: true,
               price: true,
@@ -252,6 +257,9 @@ export class ProductCategoryController {
                 },
                 select: {
                   discountValue: true,
+                  discount: {
+                    select:{discountType: true}
+                  }
                 },
               },
             },

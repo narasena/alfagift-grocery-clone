@@ -6,16 +6,21 @@ import * as Yup from "yup";
 import { CldImage } from "next-cloudinary";
 import { TbArrowBigLeftLinesFilled, TbArrowBigRightLinesFilled } from "react-icons/tb";
 import { IProductFormValues } from "@/types/products/product.type";
-import { useProductImagesUpload } from "@/features/admin/products/add/hooks/useProductImagesUpload";
 import { useCreateProduct } from "@/features/admin/products/add/hooks/useCreateProduct";
 import ProductInputFields from "@/features/admin/products/components/ProductInputFields";
 import ProductImageUploadWidget from "@/features/admin/products/components/ProductImageUploadWidget";
 import AdminPageTitle from "@/features/admin/components/AdminPageTitle";
 
 export default function AddProductPage() {
-  const { imageShowing, handleImageClick, uploadedImages, handleSwapImage, handleSetAsMainImage, handleImageUpload } =
-    useProductImagesUpload();
-  const {  handleCreateProduct } = useCreateProduct();
+  const {
+    imageShowing,
+    handleImageClick,
+    uploadedImages,
+    handleSwapImage,
+    handleSetAsMainImage,
+    handleImageUpload,
+    handleCreateProduct,
+  } = useCreateProduct();
 
   return (
     <div className="bg-red-400">
@@ -147,17 +152,19 @@ export default function AddProductPage() {
                 }
               }}
             >
-              <Form>
-                <ProductInputFields />
-                <div className="px-3 w-full">
-                  <button
-                    type="submit"
-                    className="w-full mt-4 px-4 py-2 bg-red-800 text-white font-semibold text-2xl rounded-md "
-                  >
-                    Add Product
-                  </button>
-                </div>
-              </Form>
+              {({ resetForm }) => (
+                <Form>
+                  <ProductInputFields resetForm={resetForm} />
+                  <div className="px-3 w-full">
+                    <button
+                      type="submit"
+                      className="w-full mt-4 px-4 py-2 bg-red-800 text-white font-semibold text-2xl rounded-md "
+                    >
+                      Add Product
+                    </button>
+                  </div>
+                </Form>
+              )}
             </Formik>
           </div>
         </div>

@@ -1,3 +1,6 @@
+import { IProductDetails } from "../products/product.type";
+import { IStore } from "../stores/store.type";
+
 export enum EDiscountType {
   PERCENTAGE = "PERCENTAGE",
   FIXED_AMOUNT = "FIXED_AMOUNT",
@@ -77,4 +80,40 @@ export enum EVoucherType {
 export enum EDiscountValueType {
   PERCENTAGE = "PERCENTAGE",
   FIXED_AMOUNT = "FIXED_AMOUNT",
+}
+
+export interface IDiscountResponse {
+  id: string;
+  name: string;
+  description?: string;
+  discountType: EDiscountType;
+  minPurchaseValue?: number;
+  startDate: Date;
+  endDate: Date;
+  isActive?: boolean;
+  isGlobalStore: boolean;
+  isGlobalProduct: boolean;
+  usageLimitPerTransaction?: number;
+  productDiscountHistories: IProductDiscountHistory[];
+  storeDiscountHistories: IStoreDiscountHistory[];
+}
+
+export interface IProductDiscountHistory {
+  id: string;
+  productId: string;
+  discountId: string;
+  discountValue: number;
+  product: IProductDetails
+}
+
+export interface IStoreDiscountHistory {
+  id: string;
+  storeId: string;
+  discountId: string;
+  discountValue: number;
+  store:IStore
+}
+
+export interface IDiscountResponseTable extends IDiscountResponse {
+  [key: string]: unknown;
 }

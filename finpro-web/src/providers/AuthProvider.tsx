@@ -86,11 +86,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       // console.log("isAdmin", isAdmin);
       
 
-      if (token && isPublicPath && isAdmin) {
-        router.push("/dashboard");
-      } else if (token && !isAdmin && isAdminPath) {
+      if (token && !isAdmin && isAdminPath) {
         router.push("/");
-      } else if (!token && (!isPublicPath || !isAdminPath)) {
+      } else if (!token && !isPublicPath) {
         router.push("/login");
       }
     }

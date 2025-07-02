@@ -20,10 +20,10 @@ export default function AdminReportPage() {
     stores,
     filters,
     stocksPagination,
-    updateSearachFiltersDebounced,
     months,
     stocksReportType,
     handleStocsReportTypeChange,
+    searchTerm,setSearchTerm
   } = useAdminReport();
   
   console.log('Current filters:', filters);
@@ -36,7 +36,7 @@ export default function AdminReportPage() {
       {/* filter bar */}
       <div className="p-4 border-gray-600 rounded-lg shadow-md flex items-center justify-start gap-3">
         {/* searchbar */}
-        <SearchBar value={filters.search} onChange={(value) => updateSearachFiltersDebounced(value)} />
+        <SearchBar value={searchTerm} onChange={(value) => setSearchTerm(value)} />
         {/* store */}
         <div>
           <label className="block text-sm font-medium text-gray-700">Store</label>
@@ -45,7 +45,7 @@ export default function AdminReportPage() {
               updateFilters({ storeId: e.target.value });
               console.log(e.target.value);
             }}
-            value={filters.storeId || ""}
+            value={filters.storeId}
             className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
             <option value="">All</option>
@@ -64,7 +64,7 @@ export default function AdminReportPage() {
               updateFilters({ type: e.target.value });
               console.log(e.target.value);
             }}
-            value={filters.storeId || ""}
+            value={filters.storeId}
             className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
             <option value="">Select Movement Type</option>
@@ -80,7 +80,7 @@ export default function AdminReportPage() {
           <label className="block text-sm font-medium text-gray-700">Month</label>
           <select
             onChange={(e) => updateFilters({ month: e.target.value })}
-            value={filters.month || ""}
+            value={filters.month}
             className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
             <option value="">All</option>

@@ -17,3 +17,24 @@ export interface ICartItem {
   };
   store?: IStore;
 }
+
+export interface ICartItemResponse {
+  id: string;
+  cartId: string;
+  productId: string;
+  storeId: string;
+  quantity: number;
+  status: ECartItemStatus;
+  product: IProductDetails;
+  productStock: IProductStock;
+  subTotal: number;
+  discountInPrice: number;
+  finalPrice: number;
+
+}
+
+export enum ECartItemStatus {
+  ACTIVE = "ACTIVE",
+  ORDERED = "ORDERED",
+  REMOVED = "REMOVED"
+}

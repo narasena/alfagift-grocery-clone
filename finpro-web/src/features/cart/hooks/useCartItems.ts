@@ -8,12 +8,15 @@ import { toast } from "react-toastify";
 import { IUser } from "@/types/users/user.type";
 import { IAddress } from "@/types/address/address.type";
 import { AxiosError } from "axios";
+import usePickStoreId from "@/hooks/stores/usePickStoreId";
+import { ICartItemResponse } from "@/types/carts/cartItem.type";
 
 export default function useCartItems() {
   const token = useAuthStore((state) => state.token);
-  const [cartItems, setCartItems] = React.useState<any[]>([]);
+  const [cartItems, setCartItems] = React.useState<ICartItemResponse[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
-
+  const { storeId } = usePickStoreId()
+  const shippingCost = React.useRef<number>(32020); //cuma dummy aja yee
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [itemToDelete, setItemToDelete] = React.useState<string | null>(null);
@@ -23,12 +26,11 @@ export default function useCartItems() {
 
   const handleDisplayCartItems = async () => {
     try {
-      // console.log(token);
 
-      if (token) {
+      if (token && storeId) {
         setLoading(true);
-        const cartItems = await handleGetCartItems(token);
-        console.log("Cart items:", cartItems.data.cartItems);
+        const cartItems = await handleGetCartItems(token, storeId);
+        // console.log("Cart items:", cartItems.data.cartItems);
         setCartItems(cartItems.data.cartItems);
 
         console.log("Main address:", cartItems.data.mainAddress);
@@ -98,10 +100,8 @@ export default function useCartItems() {
         // Call API to update quantity
         await updateCartItemQuantity(token, cartItemId, newQuantity, productId, storeId);
 
-        // Update local state
-        setCartItems((prev) =>
-          prev.map((item) => (item.id === cartItemId ? { ...item, quantity: newQuantity } : item))
-        );
+        // Refetch cart items to get updated calculations from backend
+        await handleDisplayCartItems();
       } catch (error) {
         const errorResponse = error as AxiosError<{ message: string }>;
         // console.error("Failed to update quantity:", error);
@@ -138,11 +138,24 @@ export default function useCartItems() {
     }
   };
 
-  const totalBelanja =
+  const subTotal = React.useMemo(() => 
     cartItems?.reduce((total, item) => {
-      const price = item.product.price ?? 0;
-      return total + price * item.quantity;
-    }, 0) ?? 0;
+      return total + item.subTotal
+    }, 0) ?? 0, [cartItems]);
+    
+  const discountInPrice = React.useMemo(() => 
+    cartItems?.reduce((total, item) => {
+      return total + item.discountInPrice
+    }, 0) ?? 0, [cartItems]);
+    const finalPrice = React.useMemo(
+      () => subTotal - discountInPrice ,
+      [subTotal, discountInPrice]
+    );
+    
+  const finalPriceOrder = React.useMemo(() => 
+    subTotal - discountInPrice + shippingCost.current, [subTotal, discountInPrice]);
+
+  
 
   const today = new Date().toLocaleDateString("id-ID", {
     weekday: "long",
@@ -152,11 +165,11 @@ export default function useCartItems() {
   });
 
   React.useEffect(() => {
-    if (token) {
+    if (token && storeId) {
       handleDisplayCartItems();
     }
     // handleInitialize.current = true;
-  }, [token]);
+  }, [token, storeId]);
 
   return {
     cartItems,
@@ -179,7 +192,11 @@ export default function useCartItems() {
     updateQuantity,
     incrementQuantity,
     decrementQuantity,
-    totalBelanja,
+    subTotal,
+    discountInPrice,
+    finalPrice,
+    finalPriceOrder,
+    shippingCost: shippingCost.current,
     today,
   };
 }

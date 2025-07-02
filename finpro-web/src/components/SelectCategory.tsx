@@ -65,11 +65,11 @@ export default function SelectCategory() {
         <ul className="py-2 text-sm text-gray-700 shadow-md" aria-labelledby="multiLevelDropdownButton">
           {productCategories.map((category, catIndex) => (
             <li key={catIndex} className={`relative ${isDesktop ? 'group' : ''}`}>
-              <Link href={category.slug} className="block px-4 py-2 hover:bg-gray-100 ">
+              <Link href={`/c/${category.slug}`} className="block px-4 py-2 hover:bg-gray-100 ">
                 {category.name}
               </Link>
 
-              <ul className={`absolute left-[-176px] top-0 w-44 bg-white divide-y divide-gray-100 rounded-lg shadow-md py-2 text-sm text-gray-700 hidden ${isDesktop ? 'group-hover:block' : ''}`}>
+              <ul className={`absolute left-[-180px] mr-2 top-0 w-44 bg-white divide-y divide-gray-100 rounded-lg shadow-md py-2 text-sm text-gray-700 hidden ${isDesktop ? 'group-hover:block' : ''}`}>
                 {productSubCategories
                   .filter((subCategory) => subCategory.productCategoryId === category.id)
                   .map((subCategory, subIndex) => (

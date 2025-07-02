@@ -6,6 +6,7 @@ import useCartItems from "@/features/cart/hooks/useCartItems";
 import * as React from "react";
 import Link from "next/link";
 import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";
+import { EDiscountType } from "@/types/discounts/discount.type";
 
 // refactoring:
 // kalo component global, dipake di semua page
@@ -38,8 +39,11 @@ export default function CartPage() {
     updateQuantity,
     incrementQuantity,
     decrementQuantity,
-    totalBelanja,
+    subTotal,
+    discountInPrice,
+    finalPrice,
   } = useCartItems();
+  console.log(cartItems);
 
   if (loading)
     return (
@@ -162,7 +166,55 @@ export default function CartPage() {
                         {/* Product Name + Price */}
                         <div className="flex-1">
                           <p className="text-black font-semibold">{item.product.name}</p>
-                          <p className="text-gray-500 text-md mb-2">Rp {item.product.price.toLocaleString("id-ID")}</p>
+                          <div className="h-5 flex items-center px-">
+                            {item.product.productDiscountHistories.length > 0 &&
+                              (item.product.productDiscountHistories[0].discount.discountType ===
+                              EDiscountType.BUY1_GET1 ? (
+                                <span className="text-white bg-lime-500 py-0.5 px-1 rounded-md font-bold text-sm h-max">
+                                  Beli 1 Gratis 1
+                                </span>
+                              ) : (
+                                <span className="text-xs h-max line-through text-[#999999]">
+                                  {item.product.price.toLocaleString("id-ID", {
+                                    style: "currency",
+                                    currency: "IDR",
+                                    minimumFractionDigits: 0,
+                                  })}
+                                </span>
+                              ))}
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {
+                                        item.product.productDiscountHistories.length > 0 &&
+                                        item.product.productDiscountHistories[0].discount.discountType === EDiscountType.PERCENTAGE ? (
+                                          <span className="py-0.5 px-1.5 bg-amber-600 text-white rounded-md text-xs font-semibold">
+                                            {`${item.product.productDiscountHistories[0].discountValue}%`}
+                                          </span>
+                                        ) : (
+                                          item.product?.productDiscountHistories[0].discount.discountType === EDiscountType.FIXED_AMOUNT && (
+                                            <span className="py-0.5 px-1.5 bg-orange-500 text-white rounded-md text-xs italic font-semibold">{`- Rp ${item.product.productDiscountHistories[0].discountValue}`}</span>
+                                          )
+                                        )}
+                          <p className="text-gray-700 text-base mb-2">
+                            {item.product?.productDiscountHistories.length > 0 &&
+                            item.product.productDiscountHistories[0].discount.discountType !== EDiscountType.BUY1_GET1
+                              ? (item.product.productDiscountHistories[0].discount.discountType ===
+                                EDiscountType.FIXED_AMOUNT
+                                  ? item.product.price - item.product.productDiscountHistories[0].discountValue
+                                  : item.product.price *
+                                    (1 - item.product.productDiscountHistories[0].discountValue / 100)
+                                ).toLocaleString("id-ID", {
+                                  style: "currency",
+                                  currency: "IDR",
+                                  minimumFractionDigits: 0,
+                                })
+                              : item.product?.price.toLocaleString("id-ID", {
+                                  style: "currency",
+                                  currency: "IDR",
+                                  minimumFractionDigits: 0,
+                                })}
+                          </p>
+                          </div>
                         </div>
 
                         {/* Quantity Controls */}
@@ -209,7 +261,7 @@ export default function CartPage() {
                         {/* Price + Delete Button */}
                         <div className="flex items-center justify-between md:justify-end gap-4 md:gap-6 min-w-[140px]">
                           <div className="text-red-700 font-bold text-md text-right">
-                            Rp {((item.product.price ?? 0) * item.quantity).toLocaleString("id-ID")}
+                            Rp {item.finalPrice.toLocaleString("id-ID")}
                           </div>
                           <button
                             className="flex justify-between items-center bg-white text-blue-600 transition"
@@ -237,11 +289,11 @@ export default function CartPage() {
             <div className="space-y-4 text-black">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
+                <span>Rp {subTotal.toLocaleString("id-ID")}</span>
               </div>
               <div className="flex justify-between">
                 <span>Diskon</span>
-                <span>Rp 0</span>
+                <span>Rp {discountInPrice.toLocaleString("id-ID")}</span>
               </div>
             </div>
             {/* Line */}
@@ -250,7 +302,7 @@ export default function CartPage() {
             <div className="text-black font-bold">
               <div className="flex justify-between">
                 <span>Total Belanja</span>
-                <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
+                <span>Rp {finalPrice.toLocaleString("id-ID")}</span>
               </div>
             </div>
             <Link href="/checkout">
@@ -269,11 +321,11 @@ export default function CartPage() {
                 <div className="space-y-4 text-black">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
+                    <span>Rp {subTotal.toLocaleString("id-ID")}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Diskon</span>
-                    <span>Rp 0</span>
+                    <span>Rp {discountInPrice.toLocaleString("id-ID")}</span>
                   </div>
                 </div>
                 {/* Line */}
@@ -282,7 +334,7 @@ export default function CartPage() {
                 <div className="text-black font-bold">
                   <div className="flex justify-between">
                     <span>Total Belanja</span>
-                    <span>Rp {totalBelanja.toLocaleString("id-ID")}</span>
+                    <span>Rp {finalPrice.toLocaleString("id-ID")}</span>
                   </div>
                 </div>
               </div>
@@ -303,7 +355,7 @@ export default function CartPage() {
                     </svg>
                     <div className="flex flex-col">
                       <div className="text-black font-semibold">Total Belanja</div>
-                      <div className="font-bold text-black">Rp {totalBelanja.toLocaleString("id-ID")}</div>
+                      <div className="font-bold text-black">Rp {subTotal.toLocaleString("id-ID")}</div>
                     </div>
                   </div>
                 </div>

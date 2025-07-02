@@ -1,3 +1,4 @@
+import { EDiscountType } from "../../types/discount.type";
 import { prisma } from "../../prisma";
 import { AppError } from "../../utils/app.error";
 import { Request, Response, NextFunction } from "express";
@@ -97,7 +98,7 @@ export const createCartItems = async (req: Request, res: Response, next: NextFun
 export const getCartItems = async (req: Request, res: Response, next: NextFunction) => {
   try {
     //cari userId dulu
-
+    const {storeId} =req.params
     const { userId } = req.body.payload;
 
     if (!userId) {
@@ -130,15 +131,6 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
       },
     });
 
-    const activeDiscounts = await prisma.productDiscount.findMany({
-      where: {
-        startDate: { lte: new Date() },
-        endDate: { gte: new Date() },
-      },
-    });
-
-    const activeDiscountIds = activeDiscounts.map((discount) => discount.id);
-
     const cartItemsRaw = await prisma.cartItem.findMany({
       where: {
         cartId,
@@ -151,15 +143,27 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
             price: true,
             productDiscountHistories: {
               where: {
-                discountId: {
-                  in: activeDiscountIds,
+                discount: {
+                  startDate: {
+                    lte: new Date(),
+                  },
+                  endDate: {
+                    gte: new Date(),
+                  },
+                  storeDiscountHistories: {
+                    some: {
+                      storeId,
+                    },
+                  },
                 },
               },
               select: {
-                id: true,
-                discountId: true,
                 discountValue: true,
-                discount: true,
+                discount: {
+                  select: {
+                    discountType: true,
+                  },
+                },
               },
             },
           },
@@ -177,11 +181,26 @@ export const getCartItems = async (req: Request, res: Response, next: NextFuncti
     }
 
     const cartItems = cartItemsRaw.map((item) => {
+      const discountType = item?.product.productDiscountHistories[0]?.discount.discountType
+      let discountInPrice: number = 0
       const discountValue = item.product.productDiscountHistories[0]?.discountValue ?? 0;
-      const finalPrice = item.product.price - discountValue;
-
+      
+      if (discountType === EDiscountType.PERCENTAGE) {
+        discountInPrice = item.product.price * (discountValue / 100)
+      } else if (discountType === EDiscountType.FIXED_AMOUNT) {
+        discountInPrice = discountValue
+      } else if (discountType === EDiscountType.BUY1_GET1) {
+        // For BOGO: every 2 items, you get 1 free (50% off total for those pairs)
+        const freeItems = Math.floor(item.quantity / 2)
+        discountInPrice = freeItems * item.product.price
+      }
+      const subTotal = item.product.price * item.quantity;
+      const totalDiscountInPrice = discountInPrice * item.quantity;
+      const finalPrice = subTotal - totalDiscountInPrice;
       return {
         ...item,
+        subTotal,
+        discountInPrice: totalDiscountInPrice,
         finalPrice,
       };
     });

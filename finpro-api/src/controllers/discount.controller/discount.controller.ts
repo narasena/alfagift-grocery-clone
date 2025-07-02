@@ -1,7 +1,7 @@
 import { prisma } from "../../prisma";
 import { NextFunction, Request, Response } from "express";
 import {IPriceCutSelectedProduct, TDiscountType} from "../../types/discount.type";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "../../generated/prisma/client";
 
 export async function createDiscount(req: Request, res: Response, next: NextFunction) {
     try {
@@ -81,7 +81,7 @@ export async function createDiscount(req: Request, res: Response, next: NextFunc
           // Store Discount History
           const storeIds = isGlobalStore ? (await tx.store.findMany()).map((store: { id: string }) => store.id) : selectedStores;
 
-          let appliedStores: [] = [];
+          let appliedStores: any = null;
           if (storeIds.length > 0) {
             appliedStores = await tx.storeDiscountHistory.createMany({
               data: storeIds.map((storeId: string) => ({
@@ -92,7 +92,7 @@ export async function createDiscount(req: Request, res: Response, next: NextFunc
           }
 
           // Product Discount History
-          let discountedProducts: []= [];
+          let discountedProducts: any = null;
           if (["PERCENTAGE", "FIXED_AMOUNT", "BUY1_GET1"].includes(discountType)) {
             const productData = isGlobalProduct
               ? (await tx.product.findMany()).map((product: { id: string }) => ({
@@ -129,4 +129,49 @@ export async function createDiscount(req: Request, res: Response, next: NextFunc
     } catch (error) {
         next(error);
     }
+}
+
+export async function getDiscounts(req: Request, res: Response, next: NextFunction) {
+  try {
+    const discounts = await prisma.productDiscount.findMany({
+      include: {
+        productDiscountHistories: {
+          select: {
+            product: {
+              select: {
+                id: true,
+                name: true,
+                price: true,
+                productImage: {
+                  take: 1,
+                  where: { isMainImage: true },
+                  select: {
+                    imageUrl: true,
+                  },
+                },
+              }
+            }
+          }
+        },
+        storeDiscountHistories: {
+          select: {
+            store: {
+              select: {
+                id: true,
+                name: true,
+                address: true,
+              }
+            }
+          }
+        }
+      }
+    })
+    res.status(200).json({
+      success: true,
+      message: "Get discounts successfull",
+      discounts
+    });
+  } catch (error) {
+    next(error);
+  }
 }
