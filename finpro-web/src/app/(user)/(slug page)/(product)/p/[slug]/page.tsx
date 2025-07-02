@@ -15,13 +15,14 @@ import { useProductBreadcrumbs } from "@/features/admin/products/hooks/useProduc
 
 import { HiOutlineShoppingCart } from "react-icons/hi";
 
-import { IProduct, IProductDetails } from "@/types/products/product.type";
+import {  IProductDetails } from "@/types/products/product.type";
 
 import useCart from "@/features/(user)/p/hooks/useCart";
 import usePickStoreId from "@/hooks/stores/usePickStoreId";
+import { ICartItem } from "@/types/carts/cartItem.type";
 
 // cari productId dr params slug
-export default function ProductSlugPage({ slug }: IProduct) {
+export default function ProductSlugPage() {
   const { product, imageShowing, handleImageClick } = useProductDetails();
   const { quantity, setQuantity, handleQuantityChange } = useProductQuantity();
   const { breadcrumbLinks } = useProductBreadcrumbs();
@@ -62,7 +63,7 @@ export default function ProductSlugPage({ slug }: IProduct) {
             <p className="text-gray-500">Keranjang masih kosong.</p>
           ) : (
             <div className="flex flex-col gap-4">
-              {cart.map((item: any) => (
+              {cart.map((item: ICartItem) => (
                 <div key={item.id} className="border-b pb-2 flex justify-between items-center">
                   <div>
                     <h4 className="font-medium">{item.name}</h4>
@@ -90,7 +91,7 @@ export default function ProductSlugPage({ slug }: IProduct) {
                 <span>Total</span>
                 <span>
                   {cart
-                    .reduce((acc: any, item: any) => acc + item.price * item.quantity, 0)
+                    .reduce((acc: number, item: ICartItem) => acc + item.price * item.quantity, 0)
                     .toLocaleString("id-ID", {
                       style: "currency",
                       currency: "IDR",
@@ -264,7 +265,7 @@ export default function ProductSlugPage({ slug }: IProduct) {
               <div className="flex-1">
                 {/* store nya belum */}
                 <button
-                  onClick={() => handleAddToCart(quantity, product?.id!, storeId!, product as IProductDetails)}
+                  onClick={() => handleAddToCart(quantity, product?.id??"", storeId!, product as IProductDetails)}
                   className="w-full text-white font-medium text-lg py-2 rounded-md flex items-center justify-center bg-red-700 cursor-pointer active:ring-4 active:ring-blue-300"
                 >
                   {`+ Keranjang`}

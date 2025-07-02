@@ -6,7 +6,6 @@ import HeroCarousel from "../components/HeroCarousel"
 import Navbar from "../components/Navbar"
 import ProductList from "../components/ProductList"
 import StoreSelector from "../components/StoreSelector";
-import Image from "next/image";
 
 export default function HomePage() {
   return (

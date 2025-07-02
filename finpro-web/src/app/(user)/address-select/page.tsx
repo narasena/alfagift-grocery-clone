@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import useStoreStore from "@/zustand/storeStore";
 import instance from "@/utils/axiosinstance";
+import { AxiosError } from "axios";
 
 interface Address {
   id: string;
@@ -25,8 +26,9 @@ export default function SelectAddressPage() {
     try {
       const res = await instance.get("/address/user-addresses");
       setAddresses(res.data);
-    } catch (err: any) {
-      if (err.response?.status === 404) {
+    } catch (err) {
+      const errResponse = err as AxiosError<{ message: string }>
+      if (errResponse.response?.status === 404) {
         toast.info("Kamu belum punya alamat. Silakan isi terlebih dahulu.");
         router.push("/address-form"); // atau "/registrasi" sesuai kebutuhanmu
       } else {

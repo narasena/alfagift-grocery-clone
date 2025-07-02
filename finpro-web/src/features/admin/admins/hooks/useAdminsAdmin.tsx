@@ -4,7 +4,6 @@ import { HiUserGroup } from "react-icons/hi";
 import { RiAdminFill } from "react-icons/ri";
 import { useAllAdmins } from "./useAllAdmins";
 import { useAllStores } from "@/hooks/stores/useAllStores";
-import AdminTable from "../../components/AdminTable";
 import { useAllUsers } from "./useAllUsers";
 import { IUser } from "@/types/users/user.type";
 
@@ -23,8 +22,8 @@ export const useAdminsAdmin = () => {
   ];
   const [activeTab, setActiveTab] = React.useState<(typeof tabHeaders)[number]["key"]>("admins");
 
-  const { admins, refetch } = useAllAdmins();
-  const { users, refecthUsers } = useAllUsers();
+  const { admins } = useAllAdmins();
+  const { users } = useAllUsers();
   const { stores } = useAllStores();
 
   const adminTableTitles = [

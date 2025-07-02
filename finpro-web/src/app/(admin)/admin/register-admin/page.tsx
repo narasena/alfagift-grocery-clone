@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { registeValidationAdminSchema } from "../../../(user)/features/register/schemas/adminRegisterValidationSchema";
 import authStore from "../../../../zustand/authStore";
 import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
 
 interface Store {
   id: string;
@@ -72,8 +73,9 @@ export default function RegisterStoreAdminPage() {
         },
       });
       toast.success(res.data.message);
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Registration failed");
+    } catch (error) {
+      const errResponse = error as AxiosError<{ message: string }>
+      toast.error(errResponse.response?.data?.message || "Registration failed");
     }
   };
 

@@ -6,7 +6,7 @@ import { EPaymentType } from "@/types/payment/payment.type";
 import { useRouter } from "next/navigation";
 
 export default function PaymentPage() {
-  const { loading, handlePayment } = usePayment();
+  const {  handlePayment } = usePayment();
   const { priceBreakdown, selectedType, setSelectedType } = useCheckout();
   const router = useRouter();
 

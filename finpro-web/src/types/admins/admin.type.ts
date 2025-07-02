@@ -1,14 +1,14 @@
 export interface IAdmin {
-  id: String;
-  firstName: String;
-  lastName?: String;
-  email: String;
-  password: String;
-  phoneNumber: String;
+  id: string;
+  firstName: string;
+  lastName?: string;
+  email: string;
+  password: string;
+  phoneNumber: string;
   role: EAdminRole;
-  avatarImgUrl?: String;
-  cldPublicId?: String;
-  storeId?: String;
+  avatarImgUrl?: string;
+  cldPublicId?: string;
+  storeId?: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt?: Date;
