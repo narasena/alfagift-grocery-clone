@@ -74,7 +74,7 @@ export default function RegisterVerifyEmailPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-red-500 text-white py-3 rounded hover:bg-red-600"
+                className="w-full bg-red-600 text-white py-3 rounded hover:bg-red-700"
               >
                 {loading ? "Mengirim..." : "Kirim Link Verifikasi"}
               </button>

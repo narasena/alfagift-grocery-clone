@@ -26,3 +26,7 @@ export async function getAllAdmins(req: Request, res: Response, next: NextFuncti
     next(error);
   }
 }
+
+export function assignAdminToStore(arg0: string, jwtDecode: (req: Request, res: Response, next: NextFunction) => void, requireSuperAdmin: (req: Request, res: Response, next: NextFunction) => void, assignAdminToStore: any) {
+    throw new Error("Function not implemented.");
+}

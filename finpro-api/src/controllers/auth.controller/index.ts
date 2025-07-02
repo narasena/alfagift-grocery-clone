@@ -92,6 +92,7 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
+
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {
@@ -244,7 +245,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
 
       res.status(200).json({
         success: true,
-        message: "Login success (user)",
+        message: `Login sukses, selamat datang ${findUser.firstName}`,
         data: { token, role, userId: findUser.id, email: findUser.email },
       });
     }
@@ -294,6 +295,51 @@ export const sessionLoginUser = async (req: Request, res: Response, next: NextFu
         email: user.email,
       },
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const sendResetPasswordEmail = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email } = req.body;
+    if (!email) throw new Error("Email wajib diisi");
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) throw new Error("User tidak ditemukan");
+
+    const resetLink = `http://localhost:3000/reset-password/confirm?email=${encodeURIComponent(email)}`;
+
+    await transporter.sendMail({
+      from: `"Support" <${process.env.TRANSPORTER_MAILER_USER}>`,
+      to: email,
+      subject: "Reset Password",
+      html: `<p>Silakan klik link berikut untuk mengatur ulang password Anda:</p>
+             <a href="${resetLink}">${resetLink}</a>`,
+    });
+
+    res.status(200).json({ success: true, message: "Link reset password berhasil dikirim ke email Anda" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const confirmResetPassword = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email, newPassword } = req.body;
+    if (!email || !newPassword) throw new Error("Email dan password baru wajib diisi");
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) throw new Error("User tidak ditemukan");
+
+    const hashedPassword = await hashPassword(newPassword);
+
+    await prisma.user.update({
+      where: { email },
+      data: { password: hashedPassword },
+    });
+
+    res.status(200).json({ success: true, message: "Password berhasil diperbarui" });
   } catch (error) {
     next(error);
   }
