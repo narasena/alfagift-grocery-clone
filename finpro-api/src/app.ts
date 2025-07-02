@@ -17,6 +17,7 @@ import allStoresRouter from "./routers/all.stores.router";
 import paymentRouter from "./routers/payment.router";
 import shippingRouter from "./routers/shipping.router";
 import addressRouter from "./routers/address.router";
+import voucherRouter from "./routers/voucher.router";
 
 interface ICustomError extends Error {
   isExpose?: boolean;
@@ -82,14 +83,15 @@ export default class App {
     const productRouter = new ProductRouter();
 
     this.app.get("/api", (req: Request, res: Response) => {
-      res.send(`<h1>Hello, This is FINPRO-JCWD3202 API!</h1>`);
+      res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+      res.send(`<h1>Hello Bro, This is FINPRO-JCWD3202 API! ${new Date().toISOString()}</h1>`);
     });
 
     //tambahin router di sini
     this.app.use("/api/product", productRouter.getRouter());
     this.app.use("/api/product-category", productCategoryRouter.getRouter());
     this.app.use("/api/user", authRouter);
-    this.app.use("/api", getMapRouter);
+    this.app.use("/api/geocode", getMapRouter);
     this.app.use("/api/cart", cartRouter);
     this.app.use("/api/order", orderRouter);
     this.app.use("/api/payment", paymentRouter);
@@ -103,12 +105,14 @@ export default class App {
     this.app.use("/api/admin", adminRouter);
     this.app.use("/api/shipping", shippingRouter);
     this.app.use("/api/address", addressRouter);
+    this.app.use("/api/vouchers", voucherRouter);
   }
 
   public start(): void {
     if (process.env.NODE_ENV !== "production") {
       this.app.listen(PORT, () => {
-        console.log(`  🖥️ [API] Local:   http://localhost:${PORT}/`);
+        console.log(`  ⚙️  Starting FINPRO API at http://localhost:${PORT}`)
+        console.log(`  ⚙️  Server running ${new Date().toISOString()}`);
       });
     }
   }

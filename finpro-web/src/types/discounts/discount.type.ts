@@ -44,33 +44,6 @@ export interface IDiscount extends IDiscountForm {
   deletedAt?: Date;
 }
 
-export interface IVoucherForm {
-  name: string;
-  description?: string;
-  code?: string;
-  voucherType: EVoucherType;
-  discountId?: string;
-  discountValue?: number;
-  discountValueType?: EDiscountValueType;
-  maxTotalDiscountValue?: number;
-  userId?: string;
-  generatorOrderId?: string;
-  storeId?: string;
-  referrerId?: string;
-  referreeId?: string;
-  expiredDate: Date;
-  minTransactionTimes?: number;
-  usageLimitPerUser?: number;
-  totalUsageLimit?: number;
-}
-
-export interface IVoucher extends IVoucherForm {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt?: Date;
-}
-
 export enum EVoucherType {
   PRICE_CUT = "PRICE_CUT",
   FREE_SHIPPING = "FREE_SHIPPING",

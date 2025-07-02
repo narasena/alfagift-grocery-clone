@@ -7,16 +7,16 @@ import { IOrder, IOrderCards } from "@/types/orders/orders.type";
 
 export default function useOrder(statusForPage?: string) {
   const token = useAuthStore((state) => state.token);
-  const [order, setOrder] = React.useState<IOrder|null>(null);
+  const [order, setOrder] = React.useState<IOrder | null>(null);
   const [orderHistory, setOrderHistory] = React.useState<IOrderCards[]>([]);
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
 
   // create order
-  const handleCreateOrder = async (shippingAddressId: string, storeId: string) => {
+  const handleCreateOrder = async (shippingAddressId: string, storeId: string, voucherId?: string) => {
     try {
       if (token) {
         // setLoading(true);
-        const response = await createOrder(token, shippingAddressId, storeId);
+        const response = await createOrder(token, shippingAddressId, storeId, voucherId);
         setOrder(response.data);
         toast.success(`Barang berhasil dipesan!`);
         return response.data.id;
@@ -41,6 +41,30 @@ export default function useOrder(statusForPage?: string) {
       toast.error("Gagal menampilkan pesanan berdasarkan status.");
     }
   };
+
+  // const handleApplyVoucher = (voucher: IVoucher) => {
+  //   if (order) {
+  //     setAppliedVoucher(voucher);
+  //     setOrderWithVoucher((prevOrder: IOrder | null) => {
+  //       if (!prevOrder) return null;
+  //       const newDiscountedTotalAmount = voucher.voucherType !== EVoucherType.FREE_SHIPPING ?
+  //         voucher.discountValueType === EDiscountValueType.PERCENTAGE ? voucher?.discountValue ?? 0 * (prevOrder.discountedTotalAmount / 100) :
+  //           (prevOrder.discountedTotalAmount - (voucher.discountValue ?? 0)):0
+  //       const newDiscounteShippingCost = voucher.voucherType === EVoucherType.FREE_SHIPPING ? prevOrder.discountedshippingCost - (voucher.discountValue??0) : 0;
+
+  //       const newOrder = {
+  //         ...prevOrder,
+  //         discountedTotalAmount: newDiscountedTotalAmount,
+  //         discountedshippingCost: newDiscounteShippingCost,
+  //         finalTotalAmount: prevOrder.totalAmount - newDiscountedTotalAmount,
+  //         finalShippingCost: prevOrder.shippingCost - newDiscounteShippingCost,
+  //       };
+  //       return newOrder;
+
+  //     })
+
+  //   }
+  // };
 
   React.useEffect(() => {
     if (statusForPage) {
