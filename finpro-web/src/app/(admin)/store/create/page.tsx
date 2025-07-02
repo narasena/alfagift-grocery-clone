@@ -72,6 +72,7 @@ export default function CreateStorePage() {
       };
 
       const res = await instance.post("/store", payload);
+      console.log(res.data);
       toast.success("Store berhasil dibuat");
       router.push("/store/store-list");
     } catch (error) {

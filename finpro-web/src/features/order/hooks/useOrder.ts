@@ -3,7 +3,7 @@ import useAuthStore from "@/zustand/authStore";
 import { toast } from "react-toastify";
 import { createOrder } from "../api/handleCreateOrder";
 import { getOrderByStatus } from "../api/handleGetOrderByStatus";
-import { IOrder, IOrderCards } from "@/types/orders/orders.type";
+import { IOrder, IOrderCards, IOrderDetailsResponse } from "@/types/orders/orders.type";
 import { useSearchParams } from "next/navigation";
 import { getOrderDetails } from "../api/handleGetOrderDetails";
 
@@ -13,7 +13,7 @@ export default function useOrder(statusForPage?: string) {
   const status = searchParams.get("status") || "WAITING_FOR_PAYMENT";
   const [order, setOrder] = React.useState<IOrder | null>(null);
   const [orderHistory, setOrderHistory] = React.useState<IOrderCards[]>([]);
-  const [orderDetails, setOrderDetails] = React.useState<[]>([]);
+  const [orderDetails, setOrderDetails] = React.useState<IOrderDetailsResponse|null>(null);
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1);
   const ordersPerPage = 5;

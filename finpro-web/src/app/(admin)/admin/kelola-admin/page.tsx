@@ -5,6 +5,7 @@ import instance from "@/utils/axiosinstance";
 import authStore from "@/zustand/authStore";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 interface Store {
   id: string;
@@ -60,6 +61,7 @@ export default function KelolaAdminPage() {
         });
         setStores(Array.from(storeMap.values()));
       } catch (err) {
+        console.error(err);
         toast.error("Gagal memuat data admin/store");
       } finally {
         setLoading(false);
@@ -86,8 +88,9 @@ export default function KelolaAdminPage() {
       );
       toast.success("Store berhasil diperbarui");
       window.location.reload();
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Gagal update store");
+    } catch (err) {
+      const errResponse = err as AxiosError<{ message: string }>
+      toast.error(errResponse?.response?.data?.message || "Gagal update store");
     }
   };
 

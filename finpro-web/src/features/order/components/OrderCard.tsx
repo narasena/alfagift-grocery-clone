@@ -2,10 +2,10 @@
 
 import { TbCalendarTime } from "react-icons/tb";
 import { RiEBike2Line } from "react-icons/ri";
-import { OrderCardProps } from "@/types/orders/orders.type";
 import { getStatusLabel } from "@/utils/order/statusLabes";
 import { format, parseISO } from "date-fns";
 import { id as idLocale } from "date-fns/locale";
+import { IOrderCards } from "@/types/orders/orders.type";
 
 export default function OrderCard({
   orderId,
@@ -16,7 +16,7 @@ export default function OrderCard({
   numberOfProducts,
   finalTotalAmount,
   onDetailClick,
-}: OrderCardProps) {
+}: IOrderCards) {
   const openModal = () => {
     if (onDetailClick) {
       onDetailClick(orderId);
@@ -36,6 +36,7 @@ export default function OrderCard({
       locale: idLocale,
     });
   } catch (error) {
+    console.error("Error formatting date:", error);
     console.error("Invalid date:", createdAt);
   }
 
