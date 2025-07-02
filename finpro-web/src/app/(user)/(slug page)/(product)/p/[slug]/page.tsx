@@ -26,6 +26,7 @@ import { EDiscountType } from "@/types/discounts/discount.type";
 // cari productId dr params slug
 export default function ProductSlugPage() {
   const { product, imageShowing, handleImageClick } = useProductDetails();
+  console.log(product)
   const { quantity, setQuantity, handleQuantityChange } = useProductQuantity();
   const { breadcrumbLinks } = useProductBreadcrumbs();
   const { storeId } = usePickStoreId(); // ambil storeId dari hook
