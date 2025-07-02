@@ -16,14 +16,15 @@ interface Store {
 }
 
 interface StoreDetailPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function StoreDetailPage({ params }: StoreDetailPageProps) {
+  const { id } = await params;
   let store: Store;
 
   try {
-    const res = await instance.get(`/store/${params.id}`);
+    const res = await instance.get(`/store/${id}`);
     store = res.data;
   } catch (error) {
     console.error(error);

@@ -83,7 +83,7 @@ export const useAdminReport = () => {
       updateFilters({ search: searchTerm, page: "1" });
     }, 500);
     return () => clearTimeout(handle);
-  }, [searchTerm]);508
+  }, [searchTerm]);
 
   React.useEffect(() => {
     const totalPages = Math.max(1, Math.ceil(stockLength / Number(filters.limit)));

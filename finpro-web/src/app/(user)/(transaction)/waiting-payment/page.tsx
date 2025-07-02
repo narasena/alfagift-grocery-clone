@@ -2,6 +2,7 @@
 
 import OrderCard from "@/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
+import { IOrderCards } from "@/types/orders/orders.type";
 
 export default function WaitingForPaymentPage() {
   // const orders = [
@@ -28,13 +29,14 @@ export default function WaitingForPaymentPage() {
   return (
     <div>
       {orderHistory && orderHistory.length > 0 ? (
-        orderHistory.map((order: any) => (
+        orderHistory.map((order: IOrderCards,index) => (
           <OrderCard
-            key={order.id}
-            orderId={order.id}
+            key={index}
+            orderId={order.orderId}
             createdAt={order.createdAt}
             latestStatus={order.latestStatus}
             firstName={order.firstName}
+            lastName={order.lastName}
             numberOfProducts={order.numberOfProducts}
             finalTotalAmount={order.finalTotalAmount}
           />

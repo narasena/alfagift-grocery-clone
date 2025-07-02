@@ -1,14 +1,13 @@
 import { EDiscountType, IDiscountResponse } from "@/types/discounts/discount.type";
 import apiInstance from "@/utils/api/apiInstance";
-import { Axios, AxiosError } from "axios";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import {  AxiosError } from "axios";
+// import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
 import { toast } from "react-toastify";
 
 export const useAdminDiscount = () => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  // const searchParams = useSearchParams();
+  // const router = useRouter();
 
   const [discounts, setDiscounts] = React.useState<IDiscountResponse[]>([]);
 

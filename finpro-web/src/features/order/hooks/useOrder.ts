@@ -1,14 +1,14 @@
 import * as React from "react";
 import useAuthStore from "@/zustand/authStore";
 import { toast } from "react-toastify";
-import { handleGetOrder } from "../api/handleGetOrder";
 import { createOrder } from "../api/handleCreateOrder";
 import { getOrderByStatus } from "../api/handleGetOrderByStatus";
+import { IOrder, IOrderCards } from "@/types/orders/orders.type";
 
 export default function useOrder(statusForPage?: string) {
   const token = useAuthStore((state) => state.token);
-  const [order, setOrder] = React.useState<any>(null);
-  const [orderHistory, setOrderHistory] = React.useState<any[]>([]);
+  const [order, setOrder] = React.useState<IOrder|null>(null);
+  const [orderHistory, setOrderHistory] = React.useState<IOrderCards[]>([]);
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
 
   // create order
