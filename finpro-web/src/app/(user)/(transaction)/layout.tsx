@@ -13,7 +13,7 @@ export default function TransactionLayout({ children }: { children: React.ReactN
       <TransactionSidebar />
 
       <main className="flex flex-col px-5 py-5">
-        <TransactionStatusTabs active={activeStatus} />
+        <TransactionStatusTabs active="Menunggu Pembayaran" />
         <div className="mt-4">{children}</div>
       </main>
     </div>

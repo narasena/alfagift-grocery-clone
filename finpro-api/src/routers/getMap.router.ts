@@ -3,6 +3,6 @@ import { getMapHandler } from "../controllers/map.controller";
 
 const getMapRouter = express.Router();
 
-getMapRouter.get("/geocode", getMapHandler);
+getMapRouter.get("/", getMapHandler);
 
 export default getMapRouter;

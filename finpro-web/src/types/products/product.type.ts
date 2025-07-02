@@ -1,4 +1,4 @@
-import { EDiscountType, TDiscountType } from "../discounts/discount.type";
+import { EDiscountType } from "../discounts/discount.type";
 import { EStockMovementType } from "../inventories/product.stock.type";
 import { IStore } from "../stores/store.type";
 import { IProductBrand } from "./product.brand.type";

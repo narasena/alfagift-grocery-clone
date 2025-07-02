@@ -1,14 +1,15 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { FaShoppingCart, FaUser, FaSearch, FaBars, FaTimes } from 'react-icons/fa'
-import SelectCategory from './SelectCategory'
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { FaShoppingCart, FaUser, FaSearch, FaBars, FaTimes } from "react-icons/fa";
+import SelectCategory from "./SelectCategory";
+import ProfileDropdown from "./ProfileDropdown";
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -16,7 +17,7 @@ export default function Navbar() {
           {/* Logo and brand */}
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <Image src="/vercel.svg" alt="Grocery Logo" width={120} height={40} className="h-8 w-auto" />
+              <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmWWSU4u5wGIVkwL2LxKb6c_p0X8BAued88g&s" alt="Grocery Logo" width={120} height={40} className="h-8 w-auto" />
             </Link>
           </div>
 
@@ -26,17 +27,17 @@ export default function Navbar() {
               <input
                 type="text"
                 placeholder="Search for products..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500"
+                className="w-150 pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
               <FaSearch className="absolute left-3 top-3 text-gray-400" />
             </div>
           </div>
 
           {/* Navigation links - hidden on mobile */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-5">
             <SelectCategory />
-            <Link href="/deals" className="text-gray-700 hover:text-green-600">
-              Deals
+            <Link href="/deals" className="text-gray-700 hover:text-red-600">
+              Promo
             </Link>
             <Link href="/cart" className="relative text-gray-700 hover:text-red-600">
               <FaShoppingCart className="text-xl" />
@@ -44,9 +45,9 @@ export default function Navbar() {
                 0
               </span>
             </Link>
-            <Link href="/profile" className="text-gray-700 hover:text-red-600">
-              <FaUser className="text-xl" />
-            </Link>
+            <div className="text-gray-700 hover:text-red-600">
+              <ProfileDropdown />
+            </div>
           </div>
 
           {/* Mobile menu button */}
@@ -73,6 +74,7 @@ export default function Navbar() {
               />
               <FaSearch className="absolute left-7 top-[4.5rem] text-gray-400" />
             </div>
+            <div></div>
             <SelectCategory />
             <Link href="/deals" className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
               Deals
@@ -80,9 +82,7 @@ export default function Navbar() {
             <Link href="/cart" className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
               Cart
             </Link>
-            <Link href="/profile" className="block px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
-              Profile
-            </Link>
+            <ProfileDropdown mobile />
           </div>
         </div>
       )}

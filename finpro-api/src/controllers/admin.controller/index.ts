@@ -3,7 +3,7 @@ import { prisma } from "../../prisma";
 import { jwtSignAdmin } from "../../utils/jwt.sign";
 import { hashPassword } from "../../utils/hash.password";
 import { comparePassword } from "../../utils/compare.password";
-import jwt from "jsonwebtoken";
+
 
 export enum AdminRole {
   SuperAdmin = "SuperAdmin",
@@ -176,3 +176,74 @@ export const sessionLoginAdmin = async (req: Request, res: Response, next: NextF
   }
 };
 
+export async function getAllAdmins(req: Request, res: Response, next: NextFunction) {
+  try {
+    const admins = await prisma.admin.findMany({
+      where: { deletedAt: null },
+      include: {
+        store: {
+          select: {
+            name: true,
+            city: true,
+          },
+        },
+      },
+    });
+
+    if (!admins || admins.length === 0) {
+      throw {
+        isExpose: true,
+        status: 404,
+        success: false,
+        message: "Belum ada admin yang terdaftar",
+      };
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Berhasil mengambil data admin",
+      admins,
+    });
+  } catch (error) {
+    return next(error);
+  }
+}
+
+export const updateAdminStore = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { adminId } = req.params;
+    const { storeId } = req.body;
+
+    const admin = await prisma.admin.findUnique({ where: { id: adminId } });
+
+    if (!admin) {
+      throw { status: 404, isExpose: true, message: "Admin tidak ditemukan" };
+    }
+
+    if (admin.storeId === storeId) {
+      throw {
+        status: 400,
+        isExpose: true,
+        message: "Admin sudah ditempatkan di store tersebut",
+      };
+    }
+
+    const store = await prisma.store.findUnique({ where: { id: storeId } });
+    if (!store) {
+      throw { status: 404, isExpose: true, message: "Store tidak ditemukan" };
+    }
+
+    const updated = await prisma.admin.update({
+      where: { id: adminId },
+      data: { storeId },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Penempatan Admin berhasil diubah",
+      data: updated,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -7,6 +7,9 @@ import {
   setMainAddress,
   getUserAddresses,
   selectUserAddresses,
+  getAddressById,
+  updateAddressById,
+  
 } from "../controllers/address.controller";
 import { jwtDecode } from "../middlewares/jwt.decode";
 
@@ -17,7 +20,8 @@ addressRouter.get("/:userId", getUserAddresses);
 addressRouter.post("/", createUserAddress);
 addressRouter.put("/:id", updateUserAddress);
 addressRouter.delete("/:id", deleteUserAddress);
-addressRouter.patch("/set-main/:id", setMainAddress);
+addressRouter.put("/:id", getAddressById);
+addressRouter.put("/:id", updateAddressById);
 
 
 export default addressRouter;

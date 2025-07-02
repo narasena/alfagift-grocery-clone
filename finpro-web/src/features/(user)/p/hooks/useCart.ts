@@ -38,7 +38,7 @@ export default function useCart() {
     try {
       if (token) {
         await addProductToCart(productId, quantity, storeId, token);
-        const updatedCartItems = await handleGetCartItems(token);
+        const updatedCartItems = await handleGetCartItems(token,storeId);
         console.log("Updated cart items:", updatedCartItems.data.cartItems);
         // setCart(updatedCartItems.data.cart.cartItems);
         // await handleGetCartItems(token);

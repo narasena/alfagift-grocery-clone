@@ -33,12 +33,18 @@ export const useAdminAddDiscounts = (setFieldValue?: (field: string, value: stri
   const storeColumnTitles = [{ key: "name", label: "Store Name" }];
   const productColumnTitles = [{ key: "name", label: "Product Name" }];
   const getStoreNameCellValue = (row: IStore, key: string) => {
-    return row.name || "—";
-  };
+    switch (key) {
+      case "name":
+        return row.name || "—";
+    }
+  }
 
   const getProductNameCellValue = (row: IProductDetails, key: string) => {
-    return row.name || "—";
-  };
+    switch (key) {
+      case "name":
+        return row.name || "—";
+    };
+  }
 
   const handlePriceCutProductCheckbox = (
     newSelectedProducts: string[],
@@ -116,4 +122,4 @@ export const useAdminAddDiscounts = (setFieldValue?: (field: string, value: stri
     addDiscountInitialValues,
     handleCreateDiscount,
   };
-};
+}

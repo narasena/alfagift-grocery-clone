@@ -7,8 +7,9 @@ import { useAdminReport } from "@/features/admin/reports/hooks/useAdminReport";
 import { EStockMovementType } from "@/types/inventories/product.stock.type";
 import { TProductStockReportTable } from "@/types/products/product.type";
 import * as React from "react";
+import { Suspense } from "react";
 
-export default function AdminReportPage() {
+function AdminReportPageContent() {
   const {
     activeTab,
     setActiveTab,
@@ -136,5 +137,13 @@ export default function AdminReportPage() {
         </ul>
       </nav>
     </div>
+  );
+}
+
+export default function AdminReportPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AdminReportPageContent />
+    </Suspense>
   );
 }

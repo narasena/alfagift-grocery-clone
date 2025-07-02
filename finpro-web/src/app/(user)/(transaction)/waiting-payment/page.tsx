@@ -3,6 +3,7 @@ import * as React from "react";
 
 import OrderCard from "@/features/order/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
+import { IOrderCards } from "@/types/orders/orders.type";
 import OrderDetailsModal from "@/features/order/components/OrderDetailsModal";
 
 export default function WaitingForPaymentPage() {

@@ -1,5 +1,3 @@
-// zustand/authStore.ts
-
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -17,6 +15,7 @@ interface AuthState {
     role: UserRole;
   }) => void;
   clearAuth: () => void;
+  setEmail: (email: string | null) => void; // ✅ tambahkan ke interface untuk handle edit email
 }
 
 const useAuthStore = create<AuthState>()(
@@ -40,6 +39,7 @@ const useAuthStore = create<AuthState>()(
           id: null,
           role: null,
         })),
+      setEmail: (email) => set(() => ({ email })), // ✅ tambahkan implementasi setEmail
     }),
     {
       name: "auth-storage",

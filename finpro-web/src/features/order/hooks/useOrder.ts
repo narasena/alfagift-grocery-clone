@@ -3,6 +3,7 @@ import useAuthStore from "@/zustand/authStore";
 import { toast } from "react-toastify";
 import { createOrder } from "../api/handleCreateOrder";
 import { getOrderByStatus } from "../api/handleGetOrderByStatus";
+import { IOrder, IOrderCards } from "@/types/orders/orders.type";
 import { useSearchParams } from "next/navigation";
 import { getOrderDetails } from "../api/handleGetOrderDetails";
 
@@ -10,19 +11,19 @@ export default function useOrder(statusForPage?: string) {
   const token = useAuthStore((state) => state.token);
   const searchParams = useSearchParams();
   const status = searchParams.get("status") || "WAITING_FOR_PAYMENT";
-  const [order, setOrder] = React.useState<any>(null);
-  const [orderHistory, setOrderHistory] = React.useState<any[]>([]);
+  const [order, setOrder] = React.useState<IOrder | null>(null);
+  const [orderHistory, setOrderHistory] = React.useState<IOrderCards[]>([]);
   const [orderDetails, setOrderDetails] = React.useState<[]>([]);
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(1);
   const ordersPerPage = 5;
 
   // create order
-  const handleCreateOrder = async (shippingAddressId: string, storeId: string) => {
+  const handleCreateOrder = async (shippingAddressId: string, storeId: string, voucherId?: string) => {
     try {
       if (token) {
         // setLoading(true);
-        const response = await createOrder(token, shippingAddressId, storeId);
+        const response = await createOrder(token, shippingAddressId, storeId, voucherId);
         setOrder(response.data);
         toast.success(`Barang berhasil dipesan!`);
         return response.data.id;
@@ -44,8 +45,33 @@ export default function useOrder(statusForPage?: string) {
       }
     } catch (error) {
       console.error("Failed to fetch orders by status:", error);
+      toast.error("Gagal menampilkan pesanan berdasarkan status.");
     }
   };
+
+  // const handleApplyVoucher = (voucher: IVoucher) => {
+  //   if (order) {
+  //     setAppliedVoucher(voucher);
+  //     setOrderWithVoucher((prevOrder: IOrder | null) => {
+  //       if (!prevOrder) return null;
+  //       const newDiscountedTotalAmount = voucher.voucherType !== EVoucherType.FREE_SHIPPING ?
+  //         voucher.discountValueType === EDiscountValueType.PERCENTAGE ? voucher?.discountValue ?? 0 * (prevOrder.discountedTotalAmount / 100) :
+  //           (prevOrder.discountedTotalAmount - (voucher.discountValue ?? 0)):0
+  //       const newDiscounteShippingCost = voucher.voucherType === EVoucherType.FREE_SHIPPING ? prevOrder.discountedshippingCost - (voucher.discountValue??0) : 0;
+
+  //       const newOrder = {
+  //         ...prevOrder,
+  //         discountedTotalAmount: newDiscountedTotalAmount,
+  //         discountedshippingCost: newDiscounteShippingCost,
+  //         finalTotalAmount: prevOrder.totalAmount - newDiscountedTotalAmount,
+  //         finalShippingCost: prevOrder.shippingCost - newDiscounteShippingCost,
+  //       };
+  //       return newOrder;
+
+  //     })
+
+  //   }
+  // };
 
   React.useEffect(() => {
     if (statusForPage) {

@@ -4,7 +4,6 @@ import * as React from "react";
 import { useProductImageShowing } from "./useProductImageShowing";
 import { getProductDetails } from "@/features/user/slug pages/product/getProductDetails";
 import storeLocationStore from "@/zustand/storeLocation.store";
-import { IProductImage } from "@/types/products/product.image.type";
 
 export const useProductDetails = () => {
   const params = useParams();
