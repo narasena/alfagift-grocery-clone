@@ -2,17 +2,18 @@
 
 import { TbCalendarTime } from "react-icons/tb";
 import { RiEBike2Line } from "react-icons/ri";
-import { OrderCardProps } from "@/types/orders/orders.type";
+import { IOrderCards } from "@/types/orders/orders.type";
+
 
 export default function OrderCard({
   orderId,
   createdAt,
   latestStatus,
   firstName,
+  lastName,
   numberOfProducts,
-  finalTotalAmount,
-  onDetailClick,
-}: OrderCardProps) {
+  finalTotalAmount
+}: IOrderCards) {
   const openModal = () => {
     const modal = document.getElementById(`modal-${orderId}`) as HTMLDialogElement | null;
     if (modal) {
@@ -36,7 +37,7 @@ export default function OrderCard({
         <div className="flex items-center space-x-3">
           <RiEBike2Line className="text-4xl" />
           <div>
-            <h1>{firstName}</h1>
+            <h1>{firstName+" "+lastName}</h1>
             <h1 className="text-sm text-gray-500">No. Ref: {orderId}</h1>
           </div>
         </div>

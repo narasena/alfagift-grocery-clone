@@ -6,7 +6,7 @@ import useCartItems from "@/features/cart/hooks/useCartItems";
 import useOrder from "@/features/order/hooks/useOrder";
 import { useRouter } from "next/navigation";
 import { EDiscountType } from "@/types/discounts/discount.type";
-import { ICartItem, ICartItemResponse } from "@/types/carts/cartItem.type";
+import { ICartItemResponse } from "@/types/carts/cartItem.type";
 
 export default function CheckoutPage() {
   const { cartItems, loading, mainAddress, user, today, subTotal, discountInPrice, shippingCost, finalPriceOrder } =

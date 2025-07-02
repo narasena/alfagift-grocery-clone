@@ -11,11 +11,7 @@ export interface IProductFieldsGroup {
 
 type TGroupedProductFields = "basic" | "category" | "details" | "price" | "inventory" | "physical" | "others";
 
-interface ProductInputFieldsProps {
-  resetForm?: () => void;
-}
-
-export default function ProductInputFields({ resetForm }: ProductInputFieldsProps) {
+export default function ProductInputFields() {
   const { productCategories, productSubCategories } = useProductCategories();
   const addProductFields: IAddProductField[] = [
     { name: "name", title: "Product Name", type: "text" },

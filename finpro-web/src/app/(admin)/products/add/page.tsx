@@ -152,9 +152,9 @@ export default function AddProductPage() {
                 }
               }}
             >
-              {({ resetForm }) => (
+              {() => (
                 <Form>
-                  <ProductInputFields resetForm={resetForm} />
+                  <ProductInputFields />
                   <div className="px-3 w-full">
                     <button
                       type="submit"
