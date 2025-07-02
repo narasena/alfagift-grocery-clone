@@ -14,13 +14,15 @@ export default function PendingPaymentsPage() {
     loading,
     handleGetPaymentProof,
     paymentImage,
+    handleAcceptPayment,
+    handleRejectPayment,
+    actionLoading,
   } = usePaymentProof();
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const handleDetailClick = async (paymentId: string) => {
-    console.log("Clicked:", paymentId); // ✅ Add this
-
+    console.log("Clicked:", paymentId);
     await handleGetPaymentProof(paymentId);
     setIsModalOpen(true);
   };
@@ -60,12 +62,28 @@ export default function PendingPaymentsPage() {
 
               <hr className="border-t border-gray-200 my-4" />
 
-              <div className="text-right">
+              <div className="flex flex-wrap justify-end items-center gap-2">
                 <button
                   className="bg-white text-red-600 border border-red-600 hover:bg-red-50 font-semibold px-4 py-2 rounded-lg"
                   onClick={() => handleDetailClick(user.paymentId)}
                 >
                   Lihat Bukti Pembayaran
+                </button>
+
+                <button
+                  onClick={() => handleAcceptPayment(user.paymentId)}
+                  disabled={actionLoading === user.paymentId}
+                  className="bg-green-600 text-white hover:bg-green-700 px-4 py-2 rounded-lg disabled:opacity-50"
+                >
+                  {actionLoading === user.paymentId ? "Processing..." : "Accept"}
+                </button>
+
+                <button
+                  onClick={() => handleRejectPayment(user.paymentId)}
+                  disabled={actionLoading === user.paymentId}
+                  className="bg-red-600 text-white hover:bg-red-700 px-4 py-2 rounded-lg disabled:opacity-50"
+                >
+                  {actionLoading === user.paymentId ? "Processing..." : "Reject"}
                 </button>
               </div>
             </div>

@@ -89,5 +89,6 @@ export default function usePaymentProof() {
     handleGetPaymentProof,
     handleAcceptPayment,
     handleRejectPayment,
+    actionLoading,
   };
 }

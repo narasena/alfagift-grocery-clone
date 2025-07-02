@@ -111,7 +111,7 @@ export const getPendingPayments = async (req: Request, res: Response, next: Next
         paymentType: "BANK_TRANSFER",
       },
       select: {
-        id: true,
+        id: true, // paymentId
         paymentHistory: {
           orderBy: { createdAt: "desc" },
           take: 1,
@@ -139,12 +139,14 @@ export const getPendingPayments = async (req: Request, res: Response, next: Next
       },
     });
 
-    // 2️⃣ Keep only payments whose latest history is PENDING
+    // 2️⃣ Filter only payments whose latest PaymentHistory is PENDING
     const pendingPayments = payments.filter((p) => p.paymentHistory[0]?.paymentStatus === "PENDING");
 
+    // 3️⃣ Transform to desired output
     const result = pendingPayments.map((p) => {
       const order = p.order;
       return {
+        paymentId: p.id, // ✅ so buttons work
         firstName: order?.user.firstName,
         lastName: order?.user.lastName,
         numberOfProducts: order?.orderItems.length,
