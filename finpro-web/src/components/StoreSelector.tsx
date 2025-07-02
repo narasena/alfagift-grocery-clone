@@ -2,12 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import useStoreStore from "../zustand/storeStore";
-import instance from "../utils/axiosinstance";
-import { toast } from "react-toastify";
 import { FaLocationDot } from "react-icons/fa6";
 
 export default function StoreSelector() {
-  const { selectedStore, setSelectedStore } = useStoreStore();
+  const { selectedStore } = useStoreStore();
   // const [checkingLocation, setCheckingLocation] = useState(false);
   const router = useRouter();
 
