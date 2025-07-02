@@ -1,13 +1,13 @@
+"use client";
+
+import { useSearchParams } from "next/navigation";
 import TransactionSidebar from "@/components/TransactionSidebar";
 import TransactionStatusTabs from "@/components/TransactionStatusTabs";
 
-export default function TransactionLayout({
-  children,
-  activeStatus = "Selesai",
-}: {
-  children: React.ReactNode;
-  activeStatus?: string;
-}) {
+export default function TransactionLayout({ children }: { children: React.ReactNode }) {
+  const searchParams = useSearchParams();
+  const activeStatus = searchParams.get("status") || "WAITING_FOR_PAYMENT";
+
   return (
     <div className="grid grid-cols-[280px_1fr] h-screen max-h-full">
       <TransactionSidebar />
