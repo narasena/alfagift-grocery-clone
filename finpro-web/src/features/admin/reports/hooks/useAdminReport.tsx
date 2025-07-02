@@ -14,6 +14,7 @@ export const useAdminReport = () => {
 
   const { stores } = useAllStores();
   const [stocksReport, setStocksReport] = React.useState<IProductStockReport[]>([]);
+  const [salesReport, setSalesReport] = React.useState<any[]>([]);
   const [stockLength, setStockLength] = React.useState(0);
   const [stocksReportType, setStocksReportType] = React.useState<string>(searchParams.get("reportType") || "total");
   const stocksPagination = React.useRef(1);
