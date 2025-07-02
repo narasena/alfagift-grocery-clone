@@ -12,10 +12,11 @@ import inventoryRouter from "./routers/inventory.router";
 import discountRouter from "./routers/discount.router";
 import cloudinaryRouter from "./routers/cloudinary.router";
 import adminRouter from "./routers/admin.router";
-import userRouter from "./routers/user.router";
 import referralRouter from "./routers/referral.router";
 import allStoresRouter from "./routers/all.stores.router";
 import paymentRouter from "./routers/payment.router";
+import shippingRouter from "./routers/shipping.router";
+import addressRouter from "./routers/address.router";
 
 interface ICustomError extends Error {
   isExpose?: boolean;
@@ -98,8 +99,10 @@ export default class App {
     this.app.use("/api/discounts", discountRouter);
     this.app.use("/api/cloudinary", cloudinaryRouter);
     this.app.use("/api/admins", adminRouter);
-    this.app.use("/api/users", userRouter);
     this.app.use("/api/referrals", referralRouter);
+    this.app.use("/api/admin", adminRouter);
+    this.app.use("/api/shipping", shippingRouter);
+    this.app.use("/api/address", addressRouter);
   }
 
   public start(): void {

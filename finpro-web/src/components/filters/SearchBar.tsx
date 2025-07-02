@@ -1,5 +1,4 @@
 import * as React from "react";
-import { IoMdSearch } from "react-icons/io";
 import { LuSearch } from "react-icons/lu";
 
 export interface ISearchBarProps {

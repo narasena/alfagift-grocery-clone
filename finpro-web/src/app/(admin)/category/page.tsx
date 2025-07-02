@@ -4,18 +4,13 @@ import { useAdminsCategory } from "@/features/admin/category/hooks/useAdminsCate
 import AdminPageTitle from "@/features/admin/components/AdminPageTitle";
 import * as React from "react";
 import { BiSolidDownArrow, BiSolidUpArrow } from "react-icons/bi";
-import { GrView } from "react-icons/gr";
-import * as Yup from "yup";
 
 
 
 export default function AdminCategoryPage() {
   const {
     formData,
-    setFormData,
     errors,
-    setErrors,
-    categorySchema,
     productCategories,
     productSubCategories,
     toggleTab,

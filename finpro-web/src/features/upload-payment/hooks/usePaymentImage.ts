@@ -7,10 +7,10 @@ import { toast } from "react-toastify";
 import { handlePaymentUpload } from "../api/handlePaymentUpload";
 import useAuthStore from "@/zustand/authStore";
 import { useParams } from "next/navigation";
-import { Axios, AxiosError } from "axios";
+import {  AxiosError } from "axios";
 
 export default function usePaymentImage() {
-  const [file, setFile] = useState<File | null>(null);
+  // const [file, setFile] = useState<File | null>(null);
   const [uploadedImage, setUploadedImage] = useState<ICloudinaryResult | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const token = useAuthStore((state) => state.token);
@@ -21,7 +21,7 @@ export default function usePaymentImage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      setFile(selectedFile);
+      // setFile(selectedFile);
       if (selectedFile.type.startsWith("image/")) {
         setPreviewUrl(URL.createObjectURL(selectedFile));
       } else {
@@ -38,6 +38,7 @@ export default function usePaymentImage() {
         const cldPublicId = uploadedImage.public_id;
         response = await handlePaymentUpload(token, String(paymentId), imageUrl, cldPublicId);
         console.log(response);
+        toast.success("Payment proof uploaded successfully! Please wait for confirmation.");
       }
     } catch (error) {
       const errRes = error as AxiosError<{ message: string }>;
@@ -48,8 +49,8 @@ export default function usePaymentImage() {
 
   const handleImageUpload = async (result: CloudinaryUploadWidgetResults) => {
     const newImage = cloudinaryImageUpload(result);
-    const imageUrl = newImage?.secure_url!;
-    const cldPublicId = newImage?.public_id!;
+    // const imageUrl = newImage?.secure_url;
+    // const cldPublicId = newImage?.public_id;
 
     if (newImage) {
       setUploadedImage(newImage);

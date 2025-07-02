@@ -3,9 +3,8 @@ import Link from "next/link";
 import * as React from "react";
 import { BiCategory } from "react-icons/bi";
 
-export interface IAppProps {}
 
-export default function SelectCategory(props: IAppProps) {
+export default function SelectCategory() {
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [isDesktop, setIsDesktop] = React.useState(false);
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);

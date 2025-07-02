@@ -1,4 +1,4 @@
-import { EStockMovementType, IProductStock } from "@/types/inventories/product.stock.type";
+import { EStockMovementType } from "@/types/inventories/product.stock.type";
 import * as React from "react";
 import { FaMoneyBills } from "react-icons/fa6";
 import { MdInventory } from "react-icons/md";
@@ -7,7 +7,6 @@ import { useAllStores } from "@/hooks/stores/useAllStores";
 import apiInstance from "@/utils/api/apiInstance";
 import { toast } from "react-toastify";
 import { IProductStockReport, IProductStockReportMonthly, TProductStockReport } from "@/types/products/product.type";
-import { report } from "process";
 
 export const useAdminReport = () => {
   const searchParams = useSearchParams();

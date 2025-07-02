@@ -1,5 +1,4 @@
 import * as React from "react";
-import { toast } from "react-toastify";
 import { EPaymentType } from "@/types/payment/payment.type";
 import { createPaymentRequest } from "../api/handleCreatePayment";
 import useAuthStore from "@/zustand/authStore";
@@ -32,16 +31,16 @@ export default function usePayment() {
         setLoading(true);
         const response = await createPaymentRequest(
           token,
-          orderDetail?.id!,
+          orderDetail?.id??"",
           paymentType,
           paymentMethod,
-          orderDetail?.finalTotalAmount!
+          orderDetail?.finalTotalAmount??0
         );
-        toast.success("Your payment is being processed");
+        // toast.success("Pembayaran");
         setLoading(false);
-        return response;
+        return response.payment.id; // return payment ID for further processing
       } catch (error) {
-        console.log("Failed to process payment");
+        console.error("Failed to process payment",error);
       }
     }
   };

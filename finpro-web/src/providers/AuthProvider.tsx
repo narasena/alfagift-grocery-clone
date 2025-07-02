@@ -19,7 +19,7 @@ interface DecodedToken {
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const token = authStore((state) => state.token);
   const setAuth = authStore((state) => state.setAuth);
-  const clearAuth = authStore((state) => state.clearAuth);
+  // const clearAuth = authStore((state) => state.clearAuth);
   const router = useRouter();
   const pathName = usePathname();
   const [isHandleSessionLoginDone, setIsHandleSessionLoginDone] =

@@ -1,12 +1,13 @@
-import { ICartItem } from "@/types/carts/cartItem.type";
 import * as React from "react";
 import useAuthStore from "@/zustand/authStore";
-import { IAuthState } from "@/types/auth/auth.type";
 import { handleGetCartItems } from "../api/handleGetCartItems";
 import { deleteCartItem } from "../api/handleDeleteCartItems";
 import { deleteAllCartItems } from "../api/handleDeleteAllCartItems";
 import { updateCartItemQuantity } from "../api/handleUpdateCartItemQuantity";
 import { toast } from "react-toastify";
+import { IUser } from "@/types/users/user.type";
+import { IAddress } from "@/types/address/address.type";
+import { AxiosError } from "axios";
 
 export default function useCartItems() {
   const token = useAuthStore((state) => state.token);
@@ -16,8 +17,8 @@ export default function useCartItems() {
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [itemToDelete, setItemToDelete] = React.useState<string | null>(null);
-  const [mainAddress, setMainAddress] = React.useState<any>(null);
-  const [user, setUser] = React.useState<any>(null);
+  const [mainAddress, setMainAddress] = React.useState<IAddress|null>(null);
+  const [user, setUser] = React.useState<IUser|null>(null);
   // const handleInitialize = React.useRef(false);
 
   const handleDisplayCartItems = async () => {
@@ -35,7 +36,6 @@ export default function useCartItems() {
 
         setUser(cartItems.data.user);
 
-        toast.success("Berhasil menampilkan barang di keranjang");
         setLoading(false);
       }
     } catch (error) {
@@ -50,7 +50,6 @@ export default function useCartItems() {
       if (token) {
         await deleteCartItem(token, cartItemId);
         setCartItems((prevItems) => prevItems.filter((item) => item.id !== cartItemId));
-        toast.success("Berhasil menghapus barang dari keranjang");
       }
     } catch (error) {
       console.error("Error deleting cart item:", error);
@@ -62,7 +61,6 @@ export default function useCartItems() {
       if (token) {
         await deleteAllCartItems(token);
         setCartItems([]); // Clear the cart items in local state
-        toast.success("Berhasil menghapus semua barang di keranjang");
       }
     } catch (error) {
       console.log("Error deleting all items:", error);
@@ -104,11 +102,12 @@ export default function useCartItems() {
         setCartItems((prev) =>
           prev.map((item) => (item.id === cartItemId ? { ...item, quantity: newQuantity } : item))
         );
-      } catch (error: any) {
+      } catch (error) {
+        const errorResponse = error as AxiosError<{ message: string }>;
         // console.error("Failed to update quantity:", error);
         // // You might want to show an error toast here
         // toast.error("Gagal memperbarui jumlah barang.");
-        const message = error?.response?.data?.message || error.message;
+        const message = errorResponse?.response?.data?.message
 
         // if (message.includes("out of stock")) {
         //   toast.error("Produk habis, stok tidak mencukupi!");

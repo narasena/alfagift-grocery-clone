@@ -35,7 +35,7 @@ export default function AdminInputField(props: TAdminInputFieldProps) {
         {props.label}
       </label>
       <Field name={props.name}>
-        {({ field, meta }: FieldProps) => 
+        {({ field }: FieldProps) => 
           props.as === "textarea" ? (
             <textarea
               {...field}

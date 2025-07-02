@@ -1,5 +1,5 @@
 import * as React from "react";
-import { EDiscountType, IAddDiscountForm } from "@/types/discounts/discount.type";
+import { EDiscountType, IAddDiscountForm, IPriceCutSelectedProduct } from "@/types/discounts/discount.type";
 import { useAllStores } from "@/hooks/stores/useAllStores";
 import { useAllProducts } from "@/features/admin/products/hooks/useAllProducts";
 import { IStore } from "@/types/stores/store.type";
@@ -7,7 +7,7 @@ import { IProductDetails } from "@/types/products/product.type";
 import apiInstance from "@/utils/api/apiInstance";
 import { toast } from "react-toastify";
 
-export const useAdminAddDiscounts = (setFieldValue?: (field: string, value: any) => void) => {
+export const useAdminAddDiscounts = (setFieldValue?: (field: string, value: string[] | IPriceCutSelectedProduct[] | string | number | boolean) => void) => {
   const discountTypes = Object.keys(EDiscountType);
   const { stores } = useAllStores();
   const { products } = useAllProducts();
@@ -43,7 +43,7 @@ export const useAdminAddDiscounts = (setFieldValue?: (field: string, value: any)
   const handlePriceCutProductCheckbox = (
     newSelectedProducts: string[],
     discountIndex: number,
-    currentProducts: any[]
+    currentProducts: IPriceCutSelectedProduct[]
   ) => {
     const updated = [...currentProducts];
     const currentGroup = updated[discountIndex];

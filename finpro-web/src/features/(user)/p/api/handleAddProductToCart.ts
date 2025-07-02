@@ -1,6 +1,6 @@
 import apiInstance from "@/utils/api/apiInstance";
 
-export const addProductToCart = async (productId: string, quantity: number, storeId: string, token: String) => {
+export const addProductToCart = async (productId: string, quantity: number, storeId: string, token: string) => {
   const response = await apiInstance.post(
     `/cart/${storeId}/add`,
     {

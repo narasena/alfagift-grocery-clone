@@ -1,6 +1,6 @@
 import * as React from "react";
 import useAuthStore from "@/zustand/authStore";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { getPriceBreakdown } from "../../checkout/api/handleGetOrderPriceBreakdown";
 
 export default function useCheckout() {
@@ -17,11 +17,9 @@ export default function useCheckout() {
         setPriceBreakdown(breakdown.order);
         console.log("Price Breakdown:", breakdown.order);
 
-        toast.success("Berhasil mendapatkan rincian harga pesanan");
         setLoading(false);
       }
     } catch (error) {
-      toast.error("Failed to get order price breakdown");
       console.log("Error getting order price breakdown:", error);
     } finally {
       setLoading(false);

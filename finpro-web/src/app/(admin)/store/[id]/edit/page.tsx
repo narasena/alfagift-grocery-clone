@@ -92,7 +92,7 @@ export default function EditStorePage() {
           }
         }}
       >
-        {({ values, handleChange, handleSubmit, setFieldValue, errors, touched }) => (
+        {({ values, handleSubmit, setFieldValue, errors, touched }) => (
           <Form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block font-semibold">Nama Store</label>

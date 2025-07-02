@@ -5,6 +5,7 @@ import * as React from 'react'
 import { useProductImageShowing } from './useProductImageShowing';
 import { getProductDetails } from '@/features/user/slug pages/product/getProductDetails';
 import storeLocationStore from '@/zustand/storeLocation.store';
+import { IProductImage } from '@/types/products/product.image.type';
 
 export const useProductDetails = () => {
   const params = useParams();
@@ -17,7 +18,7 @@ export const useProductDetails = () => {
     try {
       const productData = await getProductDetails(params.slug as string, storeId!);
       setProduct(productData!);
-      setImageShowing(productData?.productImage.find((image:any) => image.isMainImage === true) || null);
+      setImageShowing(productData?.productImage.find((image:IProductImage) => image.isMainImage === true) || null);
     } catch (error) {
       console.error("Error fetching product details:", error);
     }

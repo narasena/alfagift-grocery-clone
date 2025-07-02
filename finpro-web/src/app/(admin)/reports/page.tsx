@@ -20,7 +20,6 @@ export default function AdminReportPage() {
     stores,
     filters,
     stocksPagination,
-    stockLength,
     updateSearachFiltersDebounced,
     months,
     stocksReportType,

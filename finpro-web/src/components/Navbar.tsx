@@ -26,7 +26,7 @@ export default function Navbar() {
               <input
                 type="text"
                 placeholder="Search for products..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
               <FaSearch className="absolute left-3 top-3 text-gray-400" />
             </div>
@@ -38,13 +38,13 @@ export default function Navbar() {
             <Link href="/deals" className="text-gray-700 hover:text-green-600">
               Deals
             </Link>
-            <Link href="/cart" className="relative text-gray-700 hover:text-green-600">
+            <Link href="/cart" className="relative text-gray-700 hover:text-red-600">
               <FaShoppingCart className="text-xl" />
-              <span className="absolute -top-2 -right-2 bg-green-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
                 0
               </span>
             </Link>
-            <Link href="/profile" className="text-gray-700 hover:text-green-600">
+            <Link href="/profile" className="text-gray-700 hover:text-red-600">
               <FaUser className="text-xl" />
             </Link>
           </div>
@@ -53,7 +53,7 @@ export default function Navbar() {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-700 hover:text-green-600 focus:outline-none"
+              className="text-gray-700 hover:text-red-600 focus:outline-none"
             >
               {isMenuOpen ? <FaTimes className="text-xl" /> : <FaBars className="text-xl" />}
             </button>
@@ -69,7 +69,7 @@ export default function Navbar() {
               <input
                 type="text"
                 placeholder="Search for products..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
               <FaSearch className="absolute left-7 top-[4.5rem] text-gray-400" />
             </div>

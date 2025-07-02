@@ -35,7 +35,8 @@ export default function useOrder() {
         // setLoading(true);
         const response = await createOrder(token, shippingAddressId, storeId);
         setOrder(response.data);
-        toast.success(`Berhasil membuat pesanan!`);
+        toast.success(`Barang berhasil dipesan!`);
+        return response.data.id;
       }
     } catch (error) {
       console.error("Failed to create order:", error);

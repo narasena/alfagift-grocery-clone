@@ -6,6 +6,91 @@ import { jwtSign, jwtSignAdmin } from "../../utils/jwt.sign";
 import generateCodeTenChars from "../../utils/code.generator/codeGeneratorTenChars";
 import { Prisma } from "@prisma/client";
 import { DiscountValueType, VoucherType } from "../../generated/prisma";
+import { transporter } from "../../utils/transporter.mailer";
+
+// Step 1: Register only with email
+export const registerWithEmailOnly = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      res.status(400).json({ message: "Email dan password wajib diisi" });
+    }
+
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      res.status(400).json({
+        success: false,
+        message: "Email sudah terdaftar",
+      });
+    }
+
+    const hashedPassword = await hashPassword(password);
+
+      await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        firstName: "",
+        isEmailVerified: false,
+        passwordResetCount: 0,
+        emailChangeCount: 0,
+        referralCode: generateCodeTenChars(),
+      },
+    });
+
+    const verificationLink = `${process.env.API_URL}/api/user/verify-email?email=${email}`;
+
+    // Kirim email verifikasi
+    await transporter.sendMail({
+      to: email,
+      subject: "Verifikasi Email Anda",
+      html: `
+        <p>Halo,</p>
+        <p>Klik tombol di bawah untuk memverifikasi email Anda:</p>
+        <a href="${verificationLink}" style="padding: 10px 20px; background: #4CAF50; color: white; text-decoration: none;">Verifikasi Email</a>
+      `,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Link verifikasi telah dikirim ke email Anda.",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Step 2: Verifikasi email saat link diklik
+export const verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email } = req.query as { email?: string };
+
+    if (!email || typeof email !== "string") {
+      res.status(400).json({ success: false, message: "Email tidak valid." });
+    }
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      res.status(404).json({ success: false, message: "User tidak ditemukan." });
+    }
+
+    if (user?.isEmailVerified) {
+      // Sudah diverifikasi sebelumnya
+      res.redirect(`${process.env.CLIENT_URL}/register-verify-email?email=${email}&status=verified`);
+    }
+
+    // Update user menjadi verified
+    await prisma.user.update({
+      where: { email },
+      data: { isEmailVerified: true },
+    });
+
+    res.redirect(`${process.env.CLIENT_URL}/register-verify-email?email=${email}&status=verified`);
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -28,43 +113,38 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       isMainAddress,
       appliedReferralCode,
     } = req.body;
-    console.log(req.body)
 
-    // for already exist user
+    // Cek user berdasarkan email (harus sudah terdaftar)
     const existingUser = await prisma.user.findUnique({
-      where: {
-        email,
-      },
+      where: { email },
     });
-    if (existingUser) {
-      res.status(400).json({
-        success: false,
-        message: `user with email ${email} already exist`,
-        data: null,
-      });
-      return
+
+    if (!existingUser) {
+      throw {
+        isExpose: true,
+        status: 404,
+        message: "User not found",
+      };
     }
 
     const hashedPassword = await hashPassword(password);
 
-    // referral
-    let referralCode = generateCodeTenChars();
+    // Generate referralCode baru hanya jika belum ada
+    let referralCode = existingUser.referralCode || generateCodeTenChars();
     while (await prisma.user.findFirst({ where: { referralCode } })) {
       referralCode = generateCodeTenChars();
     }
+
     const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
-      const newUser = await prisma.user.create({
+      const updatedUser = await tx.user.update({
+        where: { email },
         data: {
           firstName,
           lastName,
-          email,
           password: hashedPassword,
           phoneNumber,
           gender,
           dateOfBirth,
-          isEmailVerified: false, //for default
-          passwordResetCount: 0, //default
-          emailChangeCount: 0, //default
           referralCode,
           userAddress: {
             create: {
@@ -85,24 +165,22 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
         },
       });
 
-      const newUserId = newUser.id;
+      const userId = updatedUser.id;
 
-      
+      // Jika ada kode referral yang diterapkan
       if (appliedReferralCode && appliedReferralCode !== "") {
-        const referrerId = (await prisma.user.findUnique({ where: { referralCode: appliedReferralCode } }))?.id;
-   
-        
+        const referrerId = (await tx.user.findUnique({ where: { referralCode: appliedReferralCode } }))?.id;
+
         if (!referrerId) {
           throw new Error(`Invalid referral code: ${appliedReferralCode}`);
         }
-        
+
         const referral = await tx.referral.create({
           data: {
-            referrerId: referrerId,
-            refereeId: newUserId,
+            referrerId,
+            refereeId: userId,
           },
         });
-        console.log('Created referral:', referral.id);
 
         const voucher = await tx.voucher.create({
           data: {
@@ -110,21 +188,29 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
             voucherType: VoucherType.REFERRAL,
             discountValueType: DiscountValueType.PERCENTAGE,
             discountValue: 10,
-            userId: newUserId,
+            userId,
             referralId: referral.id,
             expiredDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-          }
+          },
         });
-        return { newUser, referral, voucher };
+
+        return { updatedUser, referral, voucher };
       }
 
-      return { newUser };
+      return { updatedUser };
     });
 
-    res.status(201).json({
+    // Kirim email konfirmasi selesai
+    await transporter.sendMail({
+      to: email,
+      subject: `Verifikasi Email Anda`,
+      text: `Halo ${firstName}, Terima kasih telah melengkapi pendaftaran di Alfagift!`,
+    });
+
+    res.status(200).json({
       success: true,
-      message: `User with email ${email} has been created`,
-      newUser: result,
+      message: `User dengan email ${email} berhasil diperbarui.`,
+      data: result,
     });
   } catch (error) {
     next(error);

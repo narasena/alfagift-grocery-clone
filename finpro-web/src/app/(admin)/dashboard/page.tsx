@@ -6,7 +6,6 @@ import { useEffect } from "react";
 
 
 export default function AdminDashboardPage() {
-  const setAuth = authStore((state) => state.setAuth);
   const email = authStore((state) => state.email);
   const router = useRouter();
   const clearAuth = authStore((state) => state.clearAuth);
