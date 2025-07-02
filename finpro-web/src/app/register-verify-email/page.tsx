@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import instance from "@/utils/axiosinstance";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Format email salah").required("Email wajib diisi"),
@@ -27,8 +28,9 @@ export default function RegisterVerifyEmailPage() {
       setEmailSent(true);
       setUserEmail(email);
       setUserPassword(password);
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Gagal mengirim email.");
+    } catch (err) {
+      const errResponse = err as AxiosError<{ message: string }>
+      toast.error(errResponse?.response?.data?.message || "Gagal mengirim email.");
     } finally {
       setLoading(false);
     }

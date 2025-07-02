@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { addressValidationSchema } from "@/app/features/address/schemas/addressValidationSchema";
 import instance from "@/utils/axiosinstance";
 import { useRouter } from "next/navigation"; // ← Tambahkan ini
-import { useEffect } from "react";
+import { AxiosError } from "axios";
 
 const MapPicker = dynamic(() => import("../components/MapPicker"), { ssr: false });
 
@@ -48,9 +48,10 @@ export default function AddressForm({ userId }: AddressFormProps) {
       setTimeout(() => {
         router.push("/address-select"); 
       }, 1500);
-    } catch (error: any) {
+    } catch (error) {
+      const errResponse = error as AxiosError<{ message: string }>
       console.error("Gagal menyimpan alamat:", error);
-      toast.error(error?.response?.data?.message || "Terjadi kesalahan saat menyimpan alamat.");
+      toast.error(errResponse?.response?.data?.message || "Terjadi kesalahan saat menyimpan alamat.");
     }
   };
 

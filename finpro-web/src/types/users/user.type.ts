@@ -15,3 +15,4 @@ export interface IUser {
 export interface IUserTable extends IUser {
   [key:string]: unknown;
 }
+

@@ -8,6 +8,7 @@ import { storeValidationSchema } from "../../../(user)/features/store/schemas/st
 import { useRouter } from "next/navigation";
 import authStore from "../../../../zustand/authStore";
 import { useEffect } from "react";
+import { AxiosError } from "axios";
 
 const MapPicker = dynamic(() => import("../../../../components/MapPicker"), { ssr: false });
 
@@ -83,9 +84,10 @@ export default function CreateStorePage() {
 
       // Router setelah isi form setelah berhasil
       router.push("/store/store-list");
-    } catch (error: any) {
-      console.error("Error detail:", error.response?.data || error.message);
-      toast.error(error.response?.data?.message || "Gagal membuat store. Silakan coba lagi.");
+    } catch (error) {
+      const errResponse = error as AxiosError<{ message: string }>;
+      console.error("Error detail:", error || errResponse.message);
+      toast.error(errResponse.response?.data?.message || "Gagal membuat store. Silakan coba lagi.");
     }
   };
 

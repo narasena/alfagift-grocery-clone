@@ -7,13 +7,10 @@ import { CldImage } from "next-cloudinary";
 import { IoStorefront } from "react-icons/io5";
 import { RiTimerFlashFill } from "react-icons/ri";
 import useCart from "@/features/(user)/p/hooks/useCart";
-import { IProductDetails } from "@/types/products/product.type";
 import { IProductDetailsCategoryResponse } from "@/types/products/product.category.type";
-export interface IAppProps {}
-
-export default function CategorySlugPage(props: IAppProps) {
+export default function CategorySlugPage() {
   const { category, breadcrumbLinks, products, storeId } = useCategory();
-  const { cart, handleAddToCart, openModal } = useCart();
+  const {  handleAddToCart,} = useCart();
   console.log("Category Products:", products);
 
   return (
@@ -48,8 +45,8 @@ export default function CategorySlugPage(props: IAppProps) {
       </div>
       {/* cards */}
       <div className="md:flex md:flex-wrap w-full grid grid-cols-2 gap-2">
-        {products.map((product) => (
-          <div className="sm:max-w-[16.667%] sm:min-w-[160px] lg:max-w-[190px] md:max-h-[400px] md:px-[15px]">
+        {products.map((product, index) => (
+          <div key={index} className="sm:max-w-[16.667%] sm:min-w-[160px] lg:max-w-[190px] md:max-h-[400px] md:px-[15px]">
             <div className="block rounded-md shadow-md mb-6">
               <Link href={`/p/${product.slug}`} className="flex flex-col ">
                 <div className="overflow-hidden centered">

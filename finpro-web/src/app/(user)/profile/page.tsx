@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ICloudinaryResult } from "@/types/products/product.image.type";
 import { cloudinaryImageUpload } from "@/utils/products/product.image.helpers";
-import { CloudinaryUploadWidget, CloudinaryUploadWidgetResults } from "@cloudinary-util/types";
+import {  CloudinaryUploadWidgetResults } from "@cloudinary-util/types";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import useAuthStore from "@/zustand/authStore";

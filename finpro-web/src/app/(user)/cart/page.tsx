@@ -190,6 +190,7 @@ export default function CartPage() {
                                   try {
                                     await updateQuantity(item.id, value, item.productId, item.storeId);
                                   } catch (error) {
+                                    console.error(error);
                                     e.target.value = item.quantity.toString();
                                   }
                                 }

@@ -1,6 +1,6 @@
 import apiInstance from "@/utils/api/apiInstance";
 
-export const deleteCartItem = async (token: String, cartItemId: String) => {
+export const deleteCartItem = async (token: string, cartItemId: string) => {
   const cartItem = await apiInstance.put(
     `/cart/${cartItemId}/delete`,
     {},

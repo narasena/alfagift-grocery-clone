@@ -5,10 +5,10 @@ import AdminInputFieldAsCheckbox from "@/features/admin/discounts/add/components
 import AdminInputFieldAsSelect from "@/features/admin/discounts/add/components/AdminInputFieldAsSelect";
 import { useAdminAddDiscounts } from "@/features/admin/discounts/add/hooks/useAdminAddDiscounts";
 import addDiscountSchema from "@/features/admin/discounts/add/schemas/addDiscountsSchema";
-import { EDiscountType, IPriceCutSelectedProduct, TDiscountType } from "@/types/discounts/discount.type";
+import { TDiscountType } from "@/types/discounts/discount.type";
 import { IProductDetailsTable } from "@/types/products/product.type";
-import { IStore, IStoreTable } from "@/types/stores/store.type";
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import {  IStoreTable } from "@/types/stores/store.type";
+import { ErrorMessage, Form, Formik } from "formik";
 import * as React from "react";
 import { FaSquareCaretDown, FaSquareCaretUp } from "react-icons/fa6";
 import { RiMenuAddLine } from "react-icons/ri";
@@ -37,7 +37,7 @@ export default function AdminAddDiscountPage() {
       initialValues={addDiscountInitialValues}
       validationSchema={addDiscountSchema}
       enableReinitialize={true}
-      onSubmit={(values, { setSubmitting, resetForm }) => {
+      onSubmit={(values, { setSubmitting }) => {
         console.log("Form Values:", values);
         console.log("Is Valid:", addDiscountSchema.isValidSync(values));
         try {

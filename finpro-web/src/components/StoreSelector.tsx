@@ -2,18 +2,18 @@
 
 import { useRouter } from "next/navigation";
 import useStoreStore from "../zustand/storeStore";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import instance from "../utils/axiosinstance";
 import { toast } from "react-toastify";
 import { FaLocationDot } from "react-icons/fa6";
 
 export default function StoreSelector() {
   const { selectedStore, setSelectedStore } = useStoreStore();
-  const [checkingLocation, setCheckingLocation] = useState(false);
+  // const [checkingLocation, setCheckingLocation] = useState(false);
   const router = useRouter();
 
   const handleLocationPermission = async () => {
-    setCheckingLocation(true);
+    // setCheckingLocation(true);
 
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -25,20 +25,21 @@ export default function StoreSelector() {
             setSelectedStore(res.data);
             toast.success("Toko ditemukan berdasarkan lokasi Anda");
           } catch (err) {
+            console.error("Gagal mencari toko dari lokasi", err);
             toast.error("Gagal mencari toko dari lokasi");
           } finally {
-            setCheckingLocation(false);
+            // setCheckingLocation(false);
           }
         },
         () => {
           toast.error("Akses lokasi ditolak, diarahkan ke toko utama");
           router.push("/store/main");
-          setCheckingLocation(false);
+          // setCheckingLocation(false);
         }
       );
     } else {
       toast.warn("Geolocation tidak tersedia di perangkat Anda");
-      setCheckingLocation(false);
+      // setCheckingLocation(false);
     }
   };
 

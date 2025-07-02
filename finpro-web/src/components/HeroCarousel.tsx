@@ -26,7 +26,7 @@ const carouselItems = [
 
 export default function HeroCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // const [currentIndex, setCurrentIndex] = useState(0);
 
   // Auto-advance carousel
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function HeroCarousel() {
             key={index}
             onClick={() => {
               goToSlide(index);
-              setCurrentIndex(index);
+              // setCurrentIndex(index);
             }}
             className={`w-3 h-3 rounded-full ${index === currentSlide ? "bg-white" : "bg-white bg-opacity-50"}`}
             aria-label={`Go to slide ${index + 1}`}

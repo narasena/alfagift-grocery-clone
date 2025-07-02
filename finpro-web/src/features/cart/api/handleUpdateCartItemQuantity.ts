@@ -1,11 +1,11 @@
 import apiInstance from "@/utils/api/apiInstance";
 
 export const updateCartItemQuantity = async (
-  token: String,
-  cartItemId: String,
-  quantity: Number,
-  productId: String,
-  storeId: String
+  token: string,
+  cartItemId: string,
+  quantity: number,
+  productId: string,
+  storeId: string
 ) => {
   const response = await apiInstance.put(
     `/cart/item/${cartItemId}/product/${productId}/store/${storeId}/update-qty`,
