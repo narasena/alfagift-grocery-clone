@@ -259,7 +259,6 @@ export const getOrderHistoryByStatus = async (req: Request, res: Response, next:
         orderHistories: {
           where: {
             deletedAt: null,
-            // status: statusEnumValue,
           },
           orderBy: { createdAt: "desc" },
           take: 1,
@@ -267,10 +266,6 @@ export const getOrderHistoryByStatus = async (req: Request, res: Response, next:
         },
       },
     });
-
-    // if (!ordersByStatus || ordersByStatus.length === 0) {
-    //   throw new AppError("No orders found for the specified status.", 404);
-    // }
 
     const filteredOrders = ordersByStatus.filter((order) => order.orderHistories[0]?.status === statusEnumValue);
 
@@ -288,7 +283,7 @@ export const getOrderHistoryByStatus = async (req: Request, res: Response, next:
     res.status(200).json({
       success: true,
       message: `Orders with status ${status} retrieved successfully.`,
-      orders: ordersWithDetails,
+      ordersWithDetails,
     });
   } catch (error) {
     next(error);
