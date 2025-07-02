@@ -6,7 +6,6 @@ import * as Yup from "yup";
 import { CldImage } from "next-cloudinary";
 import { TbArrowBigLeftLinesFilled, TbArrowBigRightLinesFilled } from "react-icons/tb";
 import { IProductFormValues } from "@/types/products/product.type";
-import { useProductImagesUpload } from "@/features/admin/products/add/hooks/useProductImagesUpload";
 import { useCreateProduct } from "@/features/admin/products/add/hooks/useCreateProduct";
 import ProductInputFields from "@/features/admin/products/components/ProductInputFields";
 import ProductImageUploadWidget from "@/features/admin/products/components/ProductImageUploadWidget";
@@ -20,7 +19,6 @@ export default function AddProductPage() {
     handleSwapImage,
     handleSetAsMainImage,
     handleImageUpload,
-    handleDeleteImage,
     handleCreateProduct,
   } = useCreateProduct();
 
