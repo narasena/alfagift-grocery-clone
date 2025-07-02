@@ -22,10 +22,7 @@ export default function PendingPaymentsPage() {
     console.log("Clicked:", paymentId); // ✅ Add this
 
     await handleGetPaymentProof(paymentId);
-    const modal = document.getElementById(`payment-proof-modal`) as HTMLDialogElement | null;
-    if (modal) {
-      modal.showModal();
-    }
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {

@@ -187,3 +187,8 @@ export const getPaymentImageUrl = async (req: Request, res: Response, next: Next
     next(error);
   }
 };
+
+export const acceptOrRejectPayment = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+  } catch (error) {}
+};

@@ -1,12 +1,22 @@
 "use client";
-
+import * as React from "react";
 import OrderCard from "@/features/order/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
+import OrderDetailsModal from "@/features/order/components/OrderDetailsModal";
 
 export default function OrderDonePage() {
-  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails } =
+  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails, orderDetails } =
     useOrder("CANCELED");
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
+  const handleDetailClick = async (orderId: string) => {
+    await handleGetOrderDetails(orderId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div className="space-y-4">
       {paginatedOrders && paginatedOrders.length > 0 ? (
@@ -49,6 +59,7 @@ export default function OrderDonePage() {
             >
               Next
             </button>
+            <OrderDetailsModal isOpen={isModalOpen} onClose={closeModal} orderDetails={orderDetails} />
           </div>
         </>
       ) : (
