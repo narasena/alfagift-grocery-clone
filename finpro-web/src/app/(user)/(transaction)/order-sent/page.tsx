@@ -1,6 +1,6 @@
 "use client";
 
-import OrderCard from "@/components/OrderCard";
+import OrderCard from "@/features/order/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
 
 export default function OrderSentPage() {

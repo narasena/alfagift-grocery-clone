@@ -1,10 +1,24 @@
 "use client";
+import * as React from "react";
 
-import OrderCard from "@/components/OrderCard";
+import OrderCard from "@/features/order/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
+import OrderDetailsModal from "@/features/order/components/OrderDetailsModal";
 
 export default function ProcessingOrderPage() {
-  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage } = useOrder("PROCESSING");
+  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails, orderDetails } =
+    useOrder("PROCESSING");
+
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const handleDetailClick = async (orderId: string) => {
+    await handleGetOrderDetails(orderId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="space-y-4">
@@ -20,6 +34,7 @@ export default function ProcessingOrderPage() {
               lastName={order.lastName}
               numberOfProducts={order.numberOfProducts}
               finalTotalAmount={order.finalTotalAmount}
+              onDetailClick={handleDetailClick}
             />
           ))}
 
@@ -48,6 +63,7 @@ export default function ProcessingOrderPage() {
               Next
             </button>
           </div>
+          <OrderDetailsModal isOpen={isModalOpen} onClose={closeModal} orderDetails={orderDetails} />
         </>
       ) : (
         <p>Tidak ada pesanan.</p>

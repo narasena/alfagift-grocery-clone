@@ -69,19 +69,90 @@ export const createPaymentImage = async (req: Request, res: Response, next: Next
       throw new AppError("Payment not found.", 404);
     }
 
-    // Create the payment proof
-    const paymentProof = await prisma.paymentProof.create({
-      data: {
-        paymentId,
-        imageUrl,
-        cldPublicId,
-        status: "PENDING", // default status
-      },
+    // Make sure the payment has an orderId
+    if (!payment.orderId) {
+      throw new AppError("Payment is not linked to any order.", 400);
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      // Create the payment proof
+      const paymentProof = await tx.paymentProof.create({
+        data: {
+          paymentId,
+          imageUrl,
+          cldPublicId,
+          status: "PENDING", // default status
+        },
+      });
+      // Create new OrderHistory entry
+      const orderHistory = await tx.orderHistory.create({
+        data: {
+          orderId: payment.orderId,
+          status: "WAITING_FOR_CONFIRMATION",
+        },
+      });
+      return { paymentProof, orderHistory };
     });
 
     res.status(201).json({
       message: "Payment proof uploaded successfully.",
-      paymentProof,
+      paymentProof: result.paymentProof,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// display users with pending payment
+export const getPendingPayments = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const pendingPaymentHistories = await prisma.paymentHistory.findMany({
+      where: {
+        paymentStatus: "PENDING",
+        payment: {
+          paymentType: "BANK_TRANSFER",
+        },
+      },
+      select: {
+        payment: {
+          select: {
+            order: {
+              select: {
+                id: true,
+                finalTotalAmount: true,
+                user: {
+                  select: {
+                    firstName: true,
+                    lastName: true,
+                  },
+                },
+                orderItems: {
+                  select: {
+                    id: true, // only need id to count
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // transform results
+    const result = pendingPaymentHistories.map((ph) => {
+      const order = ph.payment?.order;
+      return {
+        firstName: order?.user.firstName,
+        lastName: order?.user.lastName,
+        numberOfProducts: order?.orderItems.length,
+        totalAmount: order?.finalTotalAmount,
+        orderId: order?.id,
+      };
+    });
+
+    res.status(200).json({
+      message: "Pending users fetched successfully.",
+      data: result,
     });
   } catch (error) {
     next(error);

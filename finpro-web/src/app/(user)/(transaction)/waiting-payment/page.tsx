@@ -1,9 +1,9 @@
 "use client";
 import * as React from "react";
 
-import OrderCard from "@/components/OrderCard";
+import OrderCard from "@/features/order/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
-import OrderDetailsModal from "@/components/OrderDetailsModal";
+import OrderDetailsModal from "@/features/order/components/OrderDetailsModal";
 
 export default function WaitingForPaymentPage() {
   const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails, orderDetails } =
