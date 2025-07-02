@@ -15,7 +15,7 @@ export const useAdminDashboardNavItems = () => {
     { name: "Products", href: "/products", icon: <AiFillProduct /> },
     { name: "Promo", href: "/promos", icon: <RiDiscountPercentFill /> },
     { name: "Admin", href: "/admin", icon: <GrUserAdmin /> },
-    { name: "Store", href: "/store", icon: <FaStore /> }
+    { name: "Store", href: "/store/store-list", icon: <FaStore /> }
    
   ];
   const sideNav = [

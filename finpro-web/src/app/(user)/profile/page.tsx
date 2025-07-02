@@ -1,50 +1,35 @@
 "use client";
 
-import ImageUploadWidget from "@/features/admin/components/ImageUploadWidget";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ICloudinaryResult } from "@/types/products/product.image.type";
-import { cloudinaryImageUpload } from "@/utils/products/product.image.helpers";
-import {  CloudinaryUploadWidgetResults } from "@cloudinary-util/types";
-import { toast } from "react-toastify";
-import Image from "next/image";
+import ProfileSidebar from "../../../components/ProfileSidebar";
+import ProfileInfo from "../../../components/ProfileInfo";
+import ResetPassword from "../reset-password/page";
 import useAuthStore from "@/zustand/authStore";
 
 export default function ProfilePage() {
-  const clearAuth = useAuthStore((state) => state.clearAuth);
-  const router = useRouter();
+  const [activeTab, setActiveTab] = useState("profile");
+  const { token, email, id, role } = useAuthStore();
 
-  const handleSignOut = () => {
-    localStorage.removeItem("auth-storage"); // <- dari authStore
-    localStorage.removeItem("selectedStore");
-    clearAuth();
-    router.push("/login");
-  };
-  const [uploadedImage, setUploadedImage] = useState<ICloudinaryResult|null>(null);
-  const handleImageUpload = (result: CloudinaryUploadWidgetResults) => {
-    const newImage = cloudinaryImageUpload(result);
-    if(newImage){
-      setUploadedImage(newImage);
-      toast.success("Image uploaded successfully");
-    }else{
-      toast.error("Image upload failed");
-    }
-
-  } 
+  if (!token) {
+    return <div className="p-4">Harap login terlebih dahulu</div>;
+  }
 
   return (
-    <div className="p-4">
-      <h1 className="text-black text-xl mb-4">Profile</h1>
-      <button onClick={handleSignOut} className="btn btn-primary">
-        Logout
-      </button>
-      <Image src={uploadedImage?.secure_url ?? ""} alt="Profile Picture" width={200} height={200} className="mt-4 rounded-full mx-auto" />
-      <ImageUploadWidget 
-      uploadPreset="profile-upload"
-      onSuccess={handleImageUpload}
-      maxFiles={1}
-      buttonText="Upload Profile Picture"
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
+      {/* Sidebar */}
+      <ProfileSidebar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        email={email}
       />
+
+      {/* Konten */}
+      <div className="flex-1 p-4 md:p-6">
+        {activeTab === "profile" && (
+          <ProfileInfo userEmail={email} userId={id} userRole={role} />
+        )}
+        {activeTab === "reset-password" && <ResetPassword />}
+      </div>
     </div>
   );
 }

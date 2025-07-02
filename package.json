@@ -27,6 +27,7 @@
     "bcrypt": "^6.0.0",
     "express-validator": "^7.2.1",
     "leaflet": "^1.9.4",
+    "lodash.debounce": "^4.0.8",
     "next-auth": "^4.24.11",
     "react-leaflet": "^5.0.0"
   }

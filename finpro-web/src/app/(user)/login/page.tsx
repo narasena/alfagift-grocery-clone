@@ -8,11 +8,13 @@ import { toast } from "react-toastify";
 import authStore from "../../../zustand/authStore";
 import { useRouter } from "next/navigation";
 import apiInstance from "@/utils/api/apiInstance";
+import Link from "next/link";
 
 interface iHandleAuthLogin {
   email: string;
   password: string;
 }
+
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const setAuth = authStore((state) => state.setAuth);
@@ -28,41 +30,52 @@ export default function LoginPage() {
       toast.success(response.data.message);
       setAuth({
         token: response.data.data.token,
-        email: response.data.data.user,
+        email: response.data.data.email,
         id: response.data.data.userId,
         role: null,
       });
 
       router.push("/");
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error.response) {
+        const status = error.response.status;
+        const message = error.response.data?.message || "Terjadi kesalahan";
+
+        if (status === 404) {
+          toast.error("Email Anda salah atau belum terdaftar");
+        } else if (status === 401) {
+          toast.error("Password Anda salah");
+        } else {
+          toast.error(message);
+        }
+      } else {
+        toast.error("Terjadi kesalahan pada jaringan");
+        console.error("Error:", error);
+      }
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white">
-      <div className="w-full max-w-sm border h-auto border-gray-400 rounded-lg p-7">
-        <h2 className="text-center text-black text-lg font-medium">Masuk</h2>
+    <div className="flex items-center justify-center min-h-screen bg-white px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md border border-gray-300 rounded-lg p-6 sm:p-7 bg-white shadow-md">
+        <h2 className="text-center text-gray-800 text-xl font-semibold">Masuk</h2>
         <p className="text-center text-gray-600 text-sm mt-3">
           Belum punya akun Alfagift?{" "}
-          <a href="#" className="text-blue-600 font-semibold">
+          <Link href="/register-verify-email" className="text-blue-600 font-semibold">
             Daftar
-          </a>
+          </Link>
         </p>
 
         <Formik
           initialValues={{ email: "", password: "" }}
           validationSchema={authValidationSchema}
           onSubmit={(values) => {
-            handleAuthLogin({
-              email: values.email,
-              password: values.password,
-            });
+            handleAuthLogin(values);
           }}
         >
           <Form className="space-y-3 pt-6">
-            <div className="pt-2">
-              <label className="text-sm font-semibold text-gray-700 block mb-1">Email/No. Handphone</label>
+            <div>
+              <label className="text-sm font-medium text-gray-700 block mb-1">Email/No. Handphone</label>
               <Field
                 name="email"
                 type="text"
@@ -72,8 +85,8 @@ export default function LoginPage() {
               <ErrorMessage name="email" component="div" className="text-red-500 text-sm pt-1" />
             </div>
 
-            <div className="pt-2">
-              <label className="text-sm font-semibold text-gray-700 block mb-1">Password</label>
+            <div>
+              <label className="text-sm font-medium text-gray-700 block mb-1">Password</label>
               <div className="relative">
                 <Field
                   name="password"
@@ -92,20 +105,20 @@ export default function LoginPage() {
               <ErrorMessage name="password" component="div" className="text-red-500 text-sm pt-1" />
             </div>
 
-            <div className="flex items-center gap-2 text-sm pt-2">
+            <div className="flex items-center gap-2 text-sm">
               <input
                 id="remember"
                 type="checkbox"
                 className="w-4 h-4 bg-white border border-gray-400 rounded-sm accent-red-600 focus:ring-2 focus:ring-red-500"
               />
-              <label htmlFor="remember" className="text-gray-400">
+              <label htmlFor="remember" className="text-gray-500">
                 Ingat saya
               </label>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-md text-sm font-semibold transition mt-4"
+              className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-md text-sm font-semibold transition"
             >
               Masuk
             </button>

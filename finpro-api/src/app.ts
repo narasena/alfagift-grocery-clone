@@ -17,6 +17,7 @@ import allStoresRouter from "./routers/all.stores.router";
 import paymentRouter from "./routers/payment.router";
 import shippingRouter from "./routers/shipping.router";
 import addressRouter from "./routers/address.router";
+import userRouter from "./routers/user.router";
 
 interface ICustomError extends Error {
   isExpose?: boolean;
@@ -103,6 +104,7 @@ export default class App {
     this.app.use("/api/admin", adminRouter);
     this.app.use("/api/shipping", shippingRouter);
     this.app.use("/api/address", addressRouter);
+    this.app.use("/api/user", userRouter);
   }
 
   public start(): void {
