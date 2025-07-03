@@ -7,6 +7,7 @@ import { BiCategory } from "react-icons/bi";
 export default function SelectCategory() {
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [isDesktop, setIsDesktop] = React.useState(false);
+  const [selectedCategory, setSelectedCategory] = React.useState<number | null>(null);
   const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
   const { productCategories, productSubCategories } = useProductCategories();
 
@@ -32,6 +33,16 @@ export default function SelectCategory() {
 
   const handleSelectCategoryClick = () => {
     setIsDropdownOpen(!isDropdownOpen)
+  }
+
+  const handleCategoryClick = (categoryId: number) => {
+    if (!isDesktop) {
+      setSelectedCategory(categoryId);
+    }
+  }
+
+  const handleBackClick = () => {
+    setSelectedCategory(null);
   }
 
   return (
@@ -63,25 +74,59 @@ export default function SelectCategory() {
         })}
       >
         <ul className="py-2 text-sm text-gray-700 shadow-md" aria-labelledby="multiLevelDropdownButton">
-          {productCategories.map((category, catIndex) => (
-            <li key={catIndex} className={`relative ${isDesktop ? 'group' : ''}`}>
-              <Link href={`/c/${category.slug}`} className="block px-4 py-2 hover:bg-gray-100 ">
-                {category.name}
-              </Link>
+          {!isDesktop && selectedCategory ? (
+            // Mobile subcategory view
+            <>
+              <li>
+                <button 
+                  onClick={handleBackClick}
+                  className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-blue-600"
+                >
+                  ← Back to Categories
+                </button>
+              </li>
+              {productSubCategories
+                .filter((subCategory) => subCategory.productCategoryId === selectedCategory)
+                .map((subCategory, subIndex) => (
+                  <li key={subIndex}>
+                    <Link href={`/c/${subCategory.slug}`} className="block px-4 py-2 hover:bg-gray-100">
+                      {subCategory.name}
+                    </Link>
+                  </li>
+                ))}
+            </>
+          ) : (
+            // Desktop hover view or mobile category view
+            productCategories.map((category, catIndex) => (
+              <li key={catIndex} className={`relative ${isDesktop ? 'group' : ''}`}>
+                {isDesktop ? (
+                  <Link href={`/c/${category.slug}`} className="block px-4 py-2 hover:bg-gray-100">
+                    {category.name}
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => handleCategoryClick(category.id)}
+                    className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                  >
+                    {category.name} →
+                  </button>
+                )}
 
-              <ul className={`absolute left-[-180px] mr-2 top-0 w-44 bg-white divide-y divide-gray-100 rounded-lg shadow-md py-2 text-sm text-gray-700 hidden ${isDesktop ? 'group-hover:block' : ''}`}>
-                {productSubCategories
-                  .filter((subCategory) => subCategory.productCategoryId === category.id)
-                  .map((subCategory, subIndex) => (
-                    <li key={subIndex}>
-                      <Link href={`/c/${subCategory.slug}`} className="block px-4 py-2 hover:bg-gray-100 ">
-                        {subCategory.name}
-                      </Link>
-                    </li>
-                  ))}
-              </ul>
-            </li>
-          ))}
+                {/* Desktop subcategory hover */}
+                <ul className={`absolute left-[-180px] mr-2 top-0 w-44 bg-white divide-y divide-gray-100 rounded-lg shadow-md py-2 text-sm text-gray-700 hidden ${isDesktop ? 'group-hover:block' : ''}`}>
+                  {productSubCategories
+                    .filter((subCategory) => subCategory.productCategoryId === category.id)
+                    .map((subCategory, subIndex) => (
+                      <li key={subIndex}>
+                        <Link href={`/c/${subCategory.slug}`} className="block px-4 py-2 hover:bg-gray-100">
+                          {subCategory.name}
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
+              </li>
+            ))
+          )}
         </ul>
       </div>
     </div>
