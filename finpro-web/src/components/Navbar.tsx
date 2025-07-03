@@ -18,7 +18,7 @@ export default function Navbar() {
           {/* Logo and brand */}
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmWWSU4u5wGIVkwL2LxKb6c_p0X8BAued88g&s" alt="Grocery Logo" width={120} height={40} className="h-8 w-auto" />
+              <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmWWSU4u5wGIVkwL2LxKb6c_p0X8BAued88g&s" alt="Grocery Logo" width={120} height={40} className="h-8 w-auto" unoptimized />
             </Link>
           </div>
 

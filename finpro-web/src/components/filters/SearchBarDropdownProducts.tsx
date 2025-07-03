@@ -51,23 +51,31 @@ export default function SearchBarDropdownProducts({ onProductSelect }: SearchBar
                 setIsOpen(false);
               }}
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b last:border-b-0"
-              >
-                  <div className="flex items-center gap-4">
-                      <div>
-                          <CldImage width={48} height={48} src={product.productImage.find((image) => image.isMainImage)?.imageUrl} alt={product.name} />
-                      </div>
-                      <div>
-                          
-              <div className="font-medium">{product.name}</div>
-              <div className="text-sm font-medium text-red-600">
-                {product.price.toLocaleString("id-ID", {
-                  style: "currency",
-                  currency: "IDR",
-                  minimumFractionDigits: 0,
-                })}
-              </div>
-                      </div>
+            >
+              <div className="flex items-center gap-4">
+                <div>
+                  {products ? (
+                    <CldImage
+                      width={48}
+                      height={48}
+                      src={product?.productImage.find((image) => image.isMainImage)?.imageUrl ?? "/"}
+                      alt={product.name}
+                    />
+                  ) : (
+                    <div className="w-12 h-12 bg-gray-200 animate-pulse rounded-md"></div>
+                  )}
+                </div>
+                <div>
+                  <div className="font-medium">{product.name}</div>
+                  <div className="text-sm font-medium text-red-600">
+                    {product.price.toLocaleString("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumFractionDigits: 0,
+                    })}
                   </div>
+                </div>
+              </div>
             </div>
           ))}
         </div>
