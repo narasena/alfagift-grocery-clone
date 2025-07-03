@@ -1,3 +1,5 @@
+import { IAddress } from "../address/address.type";
+
 export interface IOrderCards {
   orderId: string;
   createdAt: string;
@@ -6,7 +8,7 @@ export interface IOrderCards {
   lastName: string;
   numberOfProducts: number;
   finalTotalAmount: number;
-  onDetailClick?: () => void; // optional, or you can handle inside
+  onDetailClick?: (orderId: string) => void; // optional, or you can handle inside
 }
 
 export interface IOrder {
@@ -59,4 +61,39 @@ export enum EOrderStatus {
   DELIVERING = "DELIVERING",
   CONFIRMED = "CONFIRMED",
   CANCELED = "CANCELED",
+}
+
+export interface OrderDetailsModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  orderDetails: IOrderDetailsResponse | null; // ideally type this properly!
+}
+
+export interface IOrderDetailsResponse {
+  orderId: string;
+  createdAt: Date;
+  orderItems: IOrderItemsDetailsResponse[];
+  store: {
+    name: string;
+    phoneNumber: string;
+  };
+  user: {
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+  };
+  shippingAddress: IAddress; // Type for shippingAddressFull would need to be defined
+  totalAmount: number;
+  totalDiscount: number;
+  totalShippingCost: number;
+  totalToBePaid: number;
+}
+
+export interface IOrderItemsDetailsResponse {
+  id: string;
+  quantity: number;
+  originalPrice: number;
+  discountedPrice: number;
+  finalPrice: number;
+  productName: string;
 }

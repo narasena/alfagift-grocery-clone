@@ -10,7 +10,7 @@ import useCart from "@/features/(user)/p/hooks/useCart";
 import { IProductDetailsCategoryResponse } from "@/types/products/product.category.type";
 import { EDiscountType } from "@/types/discounts/discount.type";
 export default function CategorySlugPage() {
-  const { category, breadcrumbLinks, products, storeId } = useCategory();
+  const { category, breadcrumbLinks, products, storeId, totalProducts, currentPage, totalPages, handlePageChange } = useCategory();
   const {  handleAddToCart,} = useCart();
   console.log("Category Products:", products);
 
@@ -41,7 +41,7 @@ export default function CategorySlugPage() {
           <span className="text-xl tracking-tight font-bold text-gray-800">{category?.name}</span>
         </div>
         <div className="mb-4 text-xs text-[#999999]">
-          <span>{`Menampilkan ${products.length} produk`}</span>
+          <span>{`Menampilkan ${products.length} dari ${totalProducts} produk`}</span>
         </div>
       </div>
       {/* cards */}
@@ -115,6 +115,44 @@ export default function CategorySlugPage() {
           </div>
         ))}
       </div>
+      
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-8">
+          <nav className="flex items-center space-x-2">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              Previous
+            </button>
+            
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                disabled={currentPage === page}
+                className={`px-3 py-2 text-sm border rounded-md cursor-pointer ${
+                  currentPage === page
+                    ? 'bg-red-600 text-white border-red-600'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                {page}
+              </button>
+            ))}
+            
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-3 py-2 text-sm bg-white border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              Next
+            </button>
+          </nav>
+        </div>
+      )}
     </div>
   );
 }

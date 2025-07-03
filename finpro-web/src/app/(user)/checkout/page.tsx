@@ -1,4 +1,5 @@
 "use client";
+import { Suspense } from "react";
 import { BsStopwatch } from "react-icons/bs";
 import { CiCalendar } from "react-icons/ci";
 import { CiClock1 } from "react-icons/ci";
@@ -7,11 +8,33 @@ import useOrder from "@/features/order/hooks/useOrder";
 import { useRouter } from "next/navigation";
 import { EDiscountType } from "@/types/discounts/discount.type";
 import { ICartItemResponse } from "@/types/carts/cartItem.type";
+import { TbSquareCheckFilled, TbTicketOff } from "react-icons/tb";
+import { IVoucher } from "@/types/vouchers/voucher.type";
+import { HiMiniReceiptPercent } from "react-icons/hi2";
 
-export default function CheckoutPage() {
-  const { cartItems, loading, mainAddress, user, today, subTotal, discountInPrice, shippingCost, finalPriceOrder } =
-    useCartItems();
+function CheckoutContent() {
+  const {
+    cartItems,
+    loading,
+    mainAddress,
+    user,
+    today,
+    subTotal,
+    discountInPrice,
+    shippingCostOrder,
+    voucherAmountOff,
+    voucherShippingOff,
+    finalPriceOrder,
+    vouchers,
+    appliedVoucher,
+    handleApplyVoucher
+  } = useCartItems();
+  // console.log("Vouchers:", vouchers);
+  console.log("Discount in Price:", discountInPrice)
+  console.log("Voucher Amount Off:", voucherAmountOff)
+  console.log("Voucher Shipping Off:", voucherShippingOff);
   const { handleCreateOrder, isSummaryOpen, setIsSummaryOpen } = useOrder();
+
   const router = useRouter();
   // to navigate to payment page after order creation
 
@@ -169,19 +192,67 @@ export default function CheckoutPage() {
 
           {/* Order Summary */}
           <div className="hidden md:block bg-white border rounded-lg p-6 shadow-sm">
+            {/* Vouchers */}
+            <div>
+              <h1 className="text-xl font-semibold text-gray-700 mb-3">Vouchers Available</h1>
+              {vouchers && vouchers.length > 0 ? (
+  vouchers.map((voucher: IVoucher, index: number) => (
+    <div
+      className="grid grid-cols-[auto_1fr_auto] gap-4 p-3 rounded-lg bg-white border border-emerald-200 text-gray-700 shadow-sm hover:shadow-md transition-all cursor-pointer mb-3"
+      key={index}
+      onClick={() => handleApplyVoucher(voucher)}
+    >
+      <div className="flex items-center justify-center">
+        <HiMiniReceiptPercent className="text-3xl text-emerald-600" />
+      </div>
+      <div className="flex flex-col space-y-1">
+        <p className="font-semibold text-sm text-emerald-700">
+          {`${voucher.discountValue}% OFF`}
+        </p>
+        <span className="font-medium text-sm text-gray-900">{voucher.name}</span>
+        <p className="text-xs text-gray-500">
+          {`Valid until ${new Date(voucher.expiredDate).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long", 
+            year: "numeric"
+          })}`}
+        </p>
+      </div>
+      {appliedVoucher?.id === voucher.id && (
+        <div className="flex items-center justify-center">
+          <TbSquareCheckFilled className="text-2xl text-emerald-600" />
+        </div>
+      )}
+    </div>
+  ))
+) : (
+  <div className="text-gray-500 flex flex-col justify-center items-center gap-2">
+    <TbTicketOff className="text-7xl text-gray-500" />
+    <span>{`You don't have any voucher yet`}</span>
+  </div>
+)}            </div>
+            {/* Line */}
+            <div className="w-full h-[2px] bg-gray-200 my-5" />
+            {/* Subtotal, Discount, Shipping, Total */}
             <h2 className="text-xl font-semibold text-gray-700 mb-7">Ringkasan Pesanan</h2>
             <div className="space-y-4 text-black">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>Rp {subTotal.toLocaleString("id-ID")}</span>
+                <span>Rp {subTotal.toLocaleString("id-ID", { minimumFractionDigits: 0 })}</span>
               </div>
               <div className="flex justify-between">
                 <span>Diskon</span>
-                <span>Rp {discountInPrice.toLocaleString("id-ID")}</span>
+                <span>
+                  Rp {(discountInPrice + voucherAmountOff).toLocaleString("id-ID", { minimumFractionDigits: 0 })}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span>Ongkos Kirim</span>
-                <span>Rp {shippingCost.toLocaleString("id-ID")}</span>
+                <span>Rp {shippingCostOrder.toLocaleString("id-ID", { minimumFractionDigits: 0 })}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Diskon Ongkir</span>
+                <span>Rp {voucherShippingOff.toLocaleString("id-ID", { minimumFractionDigits: 0 })}</span>
               </div>
             </div>
             {/* Line */}
@@ -190,7 +261,7 @@ export default function CheckoutPage() {
             <div className="text-black font-bold">
               <div className="flex justify-between">
                 <span>Total Belanja</span>
-                <span>Rp {finalPriceOrder.toLocaleString("id-ID")}</span>
+                <span>Rp {finalPriceOrder.toLocaleString("id-ID", { minimumFractionDigits: 0 })}</span>
               </div>
             </div>
             <button
@@ -213,15 +284,21 @@ export default function CheckoutPage() {
                 <div className="space-y-4 text-black">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
-                    <span>Rp {subTotal.toLocaleString("id-ID")}</span>
+                    <span>Rp {subTotal.toLocaleString("id-ID", { minimumFractionDigits: 0 })}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Diskon</span>
-                    <span>Rp {discountInPrice.toLocaleString("id-ID")}</span>
+                    <span>
+                      Rp {(discountInPrice + voucherAmountOff).toLocaleString("id-ID", { minimumFractionDigits: 0 })}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Ongkos Kirim</span>
-                    <span>Rp {shippingCost.toLocaleString("id-ID")}</span>
+                    <span>Rp {shippingCostOrder.toLocaleString("id-ID", { minimumFractionDigits: 0 })}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Ongkos Kirim</span>
+                    <span>Rp {voucherShippingOff.toLocaleString("id-ID", { minimumFractionDigits: 0 })}</span>
                   </div>
                 </div>
                 {/* Line */}
@@ -230,7 +307,7 @@ export default function CheckoutPage() {
                 <div className="text-black font-bold">
                   <div className="flex justify-between">
                     <span>Total Belanja</span>
-                    <span>Rp {finalPriceOrder.toLocaleString("id-ID")}</span>
+                    <span>Rp {finalPriceOrder.toLocaleString("id-ID", { minimumFractionDigits: 0 })}</span>
                   </div>
                 </div>
               </div>
@@ -270,5 +347,13 @@ export default function CheckoutPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center h-screen"><span className="loading loading-spinner loading-lg"></span></div>}>
+      <CheckoutContent />
+    </Suspense>
   );
 }

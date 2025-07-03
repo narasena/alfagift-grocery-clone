@@ -69,20 +69,309 @@ export const createPaymentImage = async (req: Request, res: Response, next: Next
       throw new AppError("Payment not found.", 404);
     }
 
-    // Create the payment proof
-    const paymentProof = await prisma.paymentProof.create({
-      data: {
-        paymentId,
-        imageUrl,
-        cldPublicId,
-        status: "PENDING", // default status
-      },
+    // Make sure the payment has an orderId
+    if (!payment.orderId) {
+      throw new AppError("Payment is not linked to any order.", 400);
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      // Create the payment proof
+      const paymentProof = await tx.paymentProof.create({
+        data: {
+          paymentId,
+          imageUrl,
+          cldPublicId,
+          status: "PENDING", // default status
+        },
+      });
+      // Create new OrderHistory entry
+      const orderHistory = await tx.orderHistory.create({
+        data: {
+          orderId: payment.orderId,
+          status: "WAITING_FOR_CONFIRMATION",
+        },
+      });
+      return { paymentProof, orderHistory };
     });
 
     res.status(201).json({
       message: "Payment proof uploaded successfully.",
-      paymentProof,
+      paymentProof: result.paymentProof,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// display users with pending payment
+export const getPendingPayments = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const payments = await prisma.payment.findMany({
+      where: {
+        paymentType: "BANK_TRANSFER",
+      },
+      select: {
+        id: true, // paymentId
+        paymentHistory: {
+          orderBy: { createdAt: "desc" },
+          take: 1,
+          select: {
+            paymentStatus: true,
+          },
+        },
+        order: {
+          select: {
+            id: true,
+            finalTotalAmount: true,
+            user: {
+              select: {
+                firstName: true,
+                lastName: true,
+              },
+            },
+            orderItems: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // 2️⃣ Filter only payments whose latest PaymentHistory is PENDING
+    const pendingPayments = payments.filter((p) => p.paymentHistory[0]?.paymentStatus === "PENDING");
+
+    // 3️⃣ Transform to desired output
+    const result = pendingPayments.map((p) => {
+      const order = p.order;
+      return {
+        paymentId: p.id, // ✅ so buttons work
+        firstName: order?.user.firstName,
+        lastName: order?.user.lastName,
+        numberOfProducts: order?.orderItems.length,
+        totalAmount: order?.finalTotalAmount,
+        orderId: order?.id,
+      };
+    });
+
+    res.status(200).json({
+      message: "Pending payments fetched successfully.",
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getPaymentImageUrl = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { paymentId } = req.params;
+    console.log(paymentId);
+
+    if (!paymentId) {
+      throw new AppError("paymentId parameter is required.", 400);
+    }
+
+    const paymentProofs = await prisma.paymentProof.findMany({
+      where: {
+        paymentId,
+      },
+      select: {
+        id: true,
+        imageUrl: true,
+        status: true,
+      },
+    });
+
+    res.status(200).json({
+      message: "Payment proofs fetched successfully.",
+      paymentProofs,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const acceptOrRejectPayment = async (req: Request, res: Response, next: NextFunction) => {
+  const { paymentId } = req.params;
+  const { action } = req.body; // still keep `action` in body: "ACCEPT" | "REJECT"
+
+  if (!paymentId || !action) {
+    throw new AppError("Missing paymentId or action.", 400);
+  }
+
+  try {
+    // 1️⃣ Get payment and order
+    const payment = await prisma.payment.findUnique({
+      where: { id: paymentId },
+      include: { order: true },
+    });
+
+    if (!payment) {
+      throw new AppError("Payment not found", 404);
+    }
+
+    let paymentStatus;
+    let orderStatus;
+
+    if (action === "ACCEPT") {
+      paymentStatus = "SUCCESS";
+      orderStatus = "PROCESSING";
+    } else if (action === "REJECT") {
+      paymentStatus = "FAILED";
+      orderStatus = "WAITING_FOR_PAYMENT";
+    } else {
+      throw new AppError("Invalid action.", 400);
+    }
+
+    // 2️⃣ Create PaymentHistory
+    await prisma.paymentHistory.create({
+      data: {
+        paymentId: payment.id,
+        paymentStatus: paymentStatus as any,
+      },
+    });
+
+    // 3️⃣ Update Payment
+    await prisma.payment.update({
+      where: { id: payment.id },
+      data: {
+        isVerified: action === "ACCEPT",
+      },
+    });
+
+    // 4️⃣ Update Order: create new OrderHistory with updated status
+    await prisma.$transaction([
+      prisma.order.update({
+        where: { id: payment.orderId },
+        data: {
+          orderHistories: {
+            create: {
+              status: orderStatus as any,
+            },
+          },
+        },
+      }),
+    ]);
+
+    res.status(200).json({
+      message: `Payment ${action === "ACCEPT" ? "accepted" : "rejected"} successfully.`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getSalesReport = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { month, storeId, paymentStatus = "SUCCESS", reportType = "total", page = "1", limit = "10", search = "" } = req.query;
+    
+    const skip = (Number(page) - 1) * Number(limit);
+    const take = Number(limit);
+
+    const whereClause: any = {
+      payment: {
+        paymentHistory: {
+          some: {
+            paymentStatus: paymentStatus as string,
+          },
+        },
+      },
+    };
+
+    if (storeId) {
+      whereClause.storeId = storeId as string;
+    }
+
+    if (month) {
+      const monthNum = Number(month);
+      const year = new Date().getFullYear();
+      whereClause.createdAt = {
+        gte: new Date(year, monthNum - 1, 1),
+        lt: new Date(year, monthNum, 1),
+      };
+    }
+
+    if (search) {
+      whereClause.OR = [
+        { store: { name: { contains: search as string, mode: "insensitive" } } },
+        { orderItems: { some: { productStock: { product: { name: { contains: search as string, mode: "insensitive" } } } } } },
+      ];
+    }
+
+    if (reportType === "total") {
+      // Aggregated monthly sales
+      const salesData = await prisma.order.groupBy({
+        by: ["storeId"],
+        where: whereClause,
+        _sum: {
+          finalTotalAmount: true,
+        },
+        _count: {
+          id: true,
+        },
+      });
+
+      const salesReport = await Promise.all(
+        salesData.map(async (sale) => {
+          const store = await prisma.store.findUnique({
+            where: { id: sale.storeId },
+            select: { name: true },
+          });
+          
+          return {
+            id: `${sale.storeId}-${month || "all"}`,
+            month: month ? new Date(2024, Number(month) - 1).toLocaleString("default", { month: "long" }) : "All",
+            year: new Date().getFullYear(),
+            totalSales: sale._sum.finalTotalAmount || 0,
+            totalOrders: sale._count.id,
+            storeName: store?.name,
+          };
+        })
+      );
+
+      res.status(200).json({
+        message: "Sales report fetched successfully.",
+        salesReport,
+        salesReportLength: salesReport.length,
+      });
+    } else {
+      // Individual transactions
+      const orders = await prisma.order.findMany({
+        where: whereClause,
+        include: {
+          store: { select: { name: true } },
+          payment: {
+            include: {
+              paymentHistory: {
+                orderBy: { createdAt: "desc" },
+                take: 1,
+              },
+            },
+          },
+        },
+        skip,
+        take,
+        orderBy: { createdAt: "desc" },
+      });
+
+      const totalCount = await prisma.order.count({ where: whereClause });
+
+      const salesReport = orders.map((order) => ({
+        orderId: order.id,
+        orderDate: order.createdAt.toISOString(),
+        totalAmount: order.finalTotalAmount,
+        storeName: order.store.name,
+        paymentStatus: order.payment?.paymentHistory[0]?.paymentStatus || "PENDING",
+      }));
+
+      res.status(200).json({
+        message: "Sales report fetched successfully.",
+        salesReport,
+        salesReportLength: totalCount,
+      });
+    }
   } catch (error) {
     next(error);
   }

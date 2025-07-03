@@ -1,13 +1,13 @@
-import { EOrderStatus } from "@/types/order.type";
+
 import { prisma } from "../../prisma";
 import { AppError } from "../../utils/app.error";
 import { Request, Response, NextFunction } from "express";
-import { $Enums } from "@/generated/prisma";
+import { $Enums } from "../../generated/prisma";
 
 export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { userId } = req.body.payload; // Adjust based on your auth middleware
-    const { shippingAddressId, storeId } = req.body;
+    const { shippingAddressId, storeId, voucherId } = req.body;
 
     if (!userId || !shippingAddressId || !storeId) {
       throw new AppError("Missing required checkout fields", 400);
@@ -16,19 +16,49 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     // Get user's cart and active items
     const cart = await prisma.cart.findUnique({
       where: { userId },
-      include: {
+      select: {
+        id: true,
         cartItems: {
           where: {
             status: "ACTIVE",
             deletedAt: null,
             storeId, // only checkout for this store
           },
-          include: {
-            productStock: {
-              include: {
-                product: {
-                  include: {
-                    productDiscountHistories: true,
+          select: {
+            quantity: true,
+            product: {
+              select: {
+                price: true,
+                id: true,
+                name: true,
+                productStock: {
+                  where: {
+                    storeId,
+                  },
+                  select: {
+                    stock: true,
+                  },
+                },
+                productDiscountHistories: {
+                  where: {
+                    discount: {
+                      startDate: { lte: new Date() },
+                      endDate: { gte: new Date() },
+                      storeDiscountHistories: {
+                        some: {
+                          storeId,
+                        },
+                      },
+                    },
+                  },
+                  select: {
+                    discountValue: true,
+                    discount: {
+                      select: {
+                        id: true,
+                        discountType: true,
+                      },
+                    },
                   },
                 },
               },
@@ -42,59 +72,109 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
       throw new AppError("No items in cart for this store to checkout.", 400);
     }
 
-    // Get currently active discounts
-    const activeDiscounts = await prisma.productDiscount.findMany({
-      where: {
-        startDate: { lte: new Date() },
-        endDate: { gte: new Date() },
-      },
-    });
-
-    const activeDiscountIds = activeDiscounts.map((discount) => discount.id);
-
     // Build order items + total
     let totalAmount = 0;
 
     const orderItemsData = cart.cartItems.map((item) => {
-      const product = item.productStock.product;
+      const product = item.product;
 
-      const activeDiscountHistory = product.productDiscountHistories.find((history) =>
-        activeDiscountIds.includes(history.discountId),
-      );
-
-      const discountValue = activeDiscountHistory?.discountValue ?? 0;
+      let discountValue = 0;
+      if (product.productDiscountHistories.length > 0) {
+        const discountType = product.productDiscountHistories[0]?.discount.discountType;
+        if (discountType === $Enums.DiscountType.PERCENTAGE) {
+          discountValue = product.price * ((product.productDiscountHistories[0]?.discountValue ?? 0) / 100);
+        } else if (discountType === $Enums.DiscountType.FIXED_AMOUNT) {
+          discountValue = product.productDiscountHistories[0]?.discountValue ?? 0;
+        } else if (discountType === $Enums.DiscountType.BUY1_GET1) {
+          const freeItems = Math.floor(item.quantity / 2);
+          discountValue = product.price * freeItems;
+        }
+      }
       const originalPrice = product.price;
       const finalPrice = originalPrice - discountValue;
 
-      if (item.quantity > item.productStock.stock) {
-        throw new AppError(`Insufficient stock for product ID ${item.productId}`, 400);
+      if (item.quantity > item.product.productStock[0]?.stock) {
+        throw new AppError(`Insufficient stock for product ${item.product.name}`, 400);
       }
 
       totalAmount += finalPrice * item.quantity;
 
       return {
-        productId: item.productId,
+        productId: item.product.id,
         storeId: storeId,
         quantity: item.quantity,
         originalPrice: originalPrice,
-        discountedPrice: finalPrice,
+        discountedPrice: discountValue,
         finalPrice: finalPrice,
-        discountId: activeDiscountHistory?.discountId ?? null,
+        discountId: item.product.productDiscountHistories[0]?.discount.id,
       };
     });
 
-    // Example placeholder: replace with your logic
+        // Example placeholder: replace with your logic
     const shippingCost = 0; // Example flat shipping fee in IDR
     const discountedShippingCost = 0; // Example shipping promo
     const baseTotalAmount = totalAmount; // e.g. sum of cart items
-    const discountedTotalAmount = 0; // Example product discount
+    let discountedTotalAmount = 0; // Example product discount
 
+    const voucherApplied = await prisma.voucher.findUnique({
+      where: {
+        id: voucherId,
+      },
+    });
+    if (voucherId && !voucherApplied) {
+      throw new AppError("Voucher not found", 400);
+    }
+
+    let voucherAmountOff = 0
+    let voucherShippingOff = 0
+    if (voucherApplied) {
+      if(voucherApplied?.voucherType === $Enums.VoucherType.PRICE_CUT) {
+        if(voucherApplied?.discountValueType === $Enums.DiscountValueType.PERCENTAGE) {
+          voucherAmountOff = ((voucherApplied?.discountValue??0)/100)*baseTotalAmount
+        } else {
+          voucherAmountOff = voucherApplied?.discountValue??0
+        }
+      } else if (voucherApplied?.voucherType === $Enums.VoucherType.REFERRAL) {
+        voucherAmountOff = ((voucherApplied?.discountValue??0)/100)*baseTotalAmount
+      } else if (voucherApplied?.voucherType === $Enums.VoucherType.FREE_SHIPPING) {
+        voucherShippingOff = voucherApplied?.discountValue??0
+      }
+    }
+    
+    
     // Calculate final shipping cost (never negative)
-    const finalShippingCost = Math.max(shippingCost - discountedShippingCost, 0);
-
+    const finalShippingCost = Math.max(shippingCost - discountedShippingCost - voucherShippingOff, 0);
+    
     // Calculate final amount: (products - discounts) + shipping
-    const finalTotalAmount = Math.max(baseTotalAmount - discountedTotalAmount, 0) + finalShippingCost;
+    const finalTotalAmount = Math.max(baseTotalAmount - discountedTotalAmount - voucherAmountOff, 0) + finalShippingCost;
+    
+    const activeMinPurchaseDiscount = await prisma.productDiscount.findFirst({
+      where: {
+        discountType: $Enums.DiscountType.MIN_PURCHASE,
+        startDate: { lte: new Date() },
+        endDate: { gte: new Date() },
+        OR: [
+          {
+            isGlobalStore: true, // Global discount applies to all stores
+          },
+          {
+            storeDiscountHistories: {
+              some: {
+                storeId, // Store-specific discount
+              },
+            },
+          },
+        ],
+      },
+    });
 
+    let nextShippingCostOffVouchers = 0
+    if(activeMinPurchaseDiscount) {
+      const minPurchaseValue = activeMinPurchaseDiscount.minPurchaseValue??0;
+      if (baseTotalAmount >= minPurchaseValue) {
+        nextShippingCostOffVouchers = Math.floor((baseTotalAmount - (minPurchaseValue))/minPurchaseValue)
+      }
+    }
     // Transaction: create order, soft-delete cart items, update stock
     const order = await prisma.$transaction(async (tx) => {
       const createdOrder = await tx.order.create({
@@ -136,8 +216,8 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
         await tx.productStock.update({
           where: {
             productId_storeId: {
-              productId: item.productId,
-              storeId: item.storeId,
+              productId: item.product.id,
+              storeId
             },
           },
           data: {
@@ -145,14 +225,56 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
           },
         });
       }
+      if (voucherApplied || activeMinPurchaseDiscount) {
+        let voucherUsage;
+        let newVouchers;
 
-      return createdOrder;
-    });
+        if (voucherApplied) {
+          voucherUsage = await tx.voucherUsage.create({
+            data: {
+              voucherId,
+              orderId: createdOrder.id,
+              userId,
+              discountedAmount: voucherAmountOff
+            }
+          })
+        }
+
+        if (activeMinPurchaseDiscount) {
+          newVouchers = await Promise.all(
+            Array(nextShippingCostOffVouchers).fill(0).map(async () => {
+              return await tx.voucher.create({
+                data: {
+                  generatorOrderId: createdOrder.id,
+                  name: `Gratis Ongkir Max. Rp 15.000`,
+                  description: `Transaksi Order-${createdOrder.id} mendapatkan gratis ongkir max. Rp 15.000`,
+                  discountId: activeMinPurchaseDiscount.id,
+                  voucherType: $Enums.VoucherType.FREE_SHIPPING,
+                  discountValueType: $Enums.DiscountValueType.FIXED_AMOUNT,
+                  discountValue: 15000,
+                  userId,
+                  expiredDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+                }
+              })
+            })
+          )
+        }
+
+        return {
+          order: createdOrder,
+          ...(voucherUsage && { voucherUsage }),
+          ...(newVouchers && { newVouchers })
+        }
+      }
+
+      return {
+        order: createdOrder
+      }    });
 
     res.status(201).json({
       success: true,
       message: "Order successfully created.",
-      data: order,
+      order,
     });
   } catch (error) {
     console.error("Checkout error:", error);
@@ -252,7 +374,14 @@ export const getOrderHistoryByStatus = async (req: Request, res: Response, next:
       },
       select: {
         id: true,
+        createdAt: true,
         finalTotalAmount: true,
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+          },
+        },
         orderItems: {
           select: { id: true }, // only need to count them
         },
@@ -273,11 +402,14 @@ export const getOrderHistoryByStatus = async (req: Request, res: Response, next:
       throw new AppError("No orders found for the specified status.", 404);
     }
 
-    const ordersWithDetails = filteredOrders.map((ordersByStatus) => ({
-      id: ordersByStatus.id,
-      numberOfProducts: ordersByStatus.orderItems.length,
-      finalTotalAmount: ordersByStatus.finalTotalAmount,
-      latestStatus: ordersByStatus.orderHistories[0]?.status || null,
+    const ordersWithDetails = filteredOrders.map((order) => ({
+      id: order.id,
+      createdAt: order.createdAt,
+      firstName: order.user.firstName,
+      lastName: order.user.lastName,
+      numberOfProducts: order.orderItems.length,
+      finalTotalAmount: order.finalTotalAmount,
+      latestStatus: order.orderHistories[0]?.status || null,
     }));
 
     res.status(200).json({
@@ -290,91 +422,102 @@ export const getOrderHistoryByStatus = async (req: Request, res: Response, next:
   }
 };
 
-// buat nampilin order
-// export const getOrder = async (req: Request, res: Response, next: NextFunction) => {
-//   try {
-//     const { userId } = req.body.payload;
+export const getOrderDetails = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { orderId } = req.params;
+    if (!orderId) {
+      throw new AppError("Order ID is required.", 400);
+    }
 
-//     if (!userId) {
-//       throw new AppError("User not authenticated.", 401);
-//     }
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      select: {
+        id: true,
+        createdAt: true,
+        totalAmount: true,
+        discountedTotalAmount: true,
+        finalTotalAmount: true,
+        shippingCost: true,
+        discountedShippingCost: true,
+        finalShippingCost: true,
+        user: {
+          select: {
+            firstName: true,
+            lastName: true,
+            phoneNumber: true,
+          },
+        },
+        store: {
+          select: {
+            name: true,
+            phoneNumber: true,
+          },
+        },
+        shippingAddress: {
+          select: {
+            address: true,
+            subDistrict: true,
+            district: true,
+            city: true,
+            province: true,
+            postalCode: true,
+          },
+        },
+        orderItems: {
+          select: {
+            id: true,
+            quantity: true,
+            originalPrice: true,
+            discountedPrice: true,
+            finalPrice: true,
+            productStock: {
+              select: {
+                productId: true,
+                product: {
+                  select: {
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
 
-//     // Fetch all orders for the authenticated user
-//     const orders = await prisma.order.findMany({
-//       where: {
-//         userId,
-//         deletedAt: null, // Only active orders
-//       },
-//       include: {
-//         orderItems: {
-//           include: {
-//             productStock: {
-//               select: {
-//                 product: {
-//                   select: {
-//                     name: true,
-//                     price: true,
-//                   },
-//                 },
-//               },
-//             },
-//             productDiscount: {
-//               select: {
-//                 id: true,
-//                 name: true,
-//                 startDate: true,
-//                 endDate: true,
-//                 productDiscountHistories: {
-//                   select: {
-//                     discountValue: true,
-//                   },
-//                 },
-//               },
-//             },
-//           },
-//         },
-//         store: {
-//           select: {
-//             name: true,
-//           },
-//         },
-//         shippingAddress: true,
-//         payment: true,
-//       },
-//     });
+    if (!order) {
+      throw new AppError("Order not found.", 404);
+    }
 
-//     if (!orders || orders.length === 0) {
-//       throw new AppError("No orders found.", 404);
-//     }
+    const shippingAddressFull = `${order.shippingAddress.address} ${order.shippingAddress.postalCode}`;
 
-//     // Format the order items (optional, but clearer for client)
-//     const ordersWithDetails = orders.map((order) => ({
-//       ...order,
-//       orderItems: order.orderItems.map((item) => ({
-//         id: item.id,
-//         quantity: item.quantity,
-//         originalPrice: item.originalPrice,
-//         discountedPrice: item.discountedPrice,
-//         finalPrice: item.finalPrice,
-//         productName: item.productStock.product.name,
-//         productBasePrice: item.productStock.product.price,
-//         discount: item.productDiscount
-//           ? {
-//               id: item.productDiscount.id,
-//               value: item.productDiscount.productDiscountHistories[0]?.discountValue || 0,
-//               startDate: item.productDiscount.startDate,
-//               endDate: item.productDiscount.endDate,
-//             }
-//           : null,
-//       })),
-//     }));
-
-//     res.status(200).json({
-//       success: true,
-//       message: "Orders retrieved successfully.",
-//       ordersWithDetails,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+    res.status(200).json({
+      orderId: order.id,
+      createdAt: order.createdAt,
+      orderItems: order.orderItems.map((item) => ({
+        id: item.id,
+        quantity: item.quantity,
+        originalPrice: item.originalPrice,
+        discountedPrice: item.discountedPrice,
+        finalPrice: item.finalPrice,
+        productName: item.productStock.product.name,
+      })),
+      store: {
+        name: order.store.name,
+        phoneNumber: order.store.phoneNumber,
+      },
+      user: {
+        firstName: order.user.firstName,
+        lastName: order.user.lastName,
+        phoneNumber: order.user.phoneNumber,
+      },
+      shippingAddress: shippingAddressFull,
+      totalAmount: order.totalAmount,
+      totalDiscount: order.discountedTotalAmount,
+      totalShippingCost: order.finalShippingCost,
+      totalToBePaid: order.finalTotalAmount + order.finalShippingCost,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

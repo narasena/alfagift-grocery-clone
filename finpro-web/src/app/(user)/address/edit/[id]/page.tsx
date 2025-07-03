@@ -54,6 +54,7 @@ export default function EditAddressPage() {
         const res = await instance.get(`/address/${id}`);
         setAddressData(res.data);
       } catch (err) {
+        console.log(err);
         toast.error("Gagal mengambil data alamat.");
         router.push("/select-address");
       }

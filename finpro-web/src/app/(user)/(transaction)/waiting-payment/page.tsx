@@ -1,49 +1,85 @@
 "use client";
+import * as React from "react";
+import { Suspense } from "react";
 
-import OrderCard from "@/components/OrderCard";
+import OrderCard from "@/features/order/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
 import { IOrderCards } from "@/types/orders/orders.type";
+import OrderDetailsModal from "@/features/order/components/OrderDetailsModal";
 
-export default function WaitingForPaymentPage() {
-  // const orders = [
-  //   {
-  //     id: "O-250519-AGBZZFX",
-  //     createdAt: "11 Mei 2025 - 13:31 WIB",
-  //     status: "Menunggu Pembayaran",
-  //     userName: "Nama Pengguna",
-  //     numberOfProducts: 3,
-  //     finalTotalAmount: 142600,
-  //   },
-  //   {
-  //     id: "O-250520-XYZ123",
-  //     createdAt: "12 Mei 2025 - 10:20 WIB",
-  //     status: "Menunggu Pembayaran",
-  //     userName: "Nama Pengguna",
-  //     numberOfProducts: 1,
-  //     finalTotalAmount: 56000,
-  //   },
-  // ];
+function WaitingForPaymentContent() {
+  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails, orderDetails } =
+    useOrder("WAITING_FOR_PAYMENT");
 
-  const { orderHistory } = useOrder("WAITING_FOR_PAYMENT");
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const handleDetailClick = async (orderId: string) => {
+    await handleGetOrderDetails(orderId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
-    <div>
-      {orderHistory && orderHistory.length > 0 ? (
-        orderHistory.map((order: IOrderCards,index) => (
-          <OrderCard
-            key={index}
-            orderId={order.orderId}
-            createdAt={order.createdAt}
-            latestStatus={order.latestStatus}
-            firstName={order.firstName}
-            lastName={order.lastName}
-            numberOfProducts={order.numberOfProducts}
-            finalTotalAmount={order.finalTotalAmount}
-          />
-        ))
+    <div className="space-y-4">
+      {paginatedOrders && paginatedOrders.length > 0 ? (
+        <>
+          {paginatedOrders.map((order: IOrderCards) => (
+            <OrderCard
+              key={order.orderId}
+              orderId={order.orderId}
+              createdAt={order.createdAt}
+              latestStatus={order.latestStatus}
+              firstName={order.firstName}
+              lastName={order.lastName}
+              numberOfProducts={order.numberOfProducts}
+              finalTotalAmount={order.finalTotalAmount}
+              onDetailClick={handleDetailClick}
+            />
+          ))}
+
+          <div className="flex justify-between items-center mt-4">
+            <button
+              onClick={handlePrevious}
+              disabled={currentPage === 1}
+              className="px-4 py-2 border rounded transition 
+               disabled:opacity-50 disabled:cursor-not-allowed
+               hover:bg-gray-100"
+            >
+              Previous
+            </button>
+
+            <span className="text-sm text-gray-600">
+              Page {currentPage} of {totalPages}
+            </span>
+
+            <button
+              onClick={handleNext}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 border rounded transition
+               disabled:opacity-50 disabled:cursor-not-allowed
+               hover:bg-gray-100"
+            >
+              Next
+            </button>
+            {orderDetails && (
+              <OrderDetailsModal isOpen={isModalOpen} onClose={closeModal} orderDetails={orderDetails} />
+            )}
+          </div>
+        </>
       ) : (
         <p>Tidak ada pesanan.</p>
       )}
     </div>
+  );
+}
+
+export default function WaitingForPaymentPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center h-screen"><span className="loading loading-spinner loading-lg"></span></div>}>
+      <WaitingForPaymentContent />
+    </Suspense>
   );
 }

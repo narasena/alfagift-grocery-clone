@@ -11,7 +11,7 @@ export default function usePayment() {
   const { orderId } = useParams();
   const [orderDetail, setOrderDetail] = React.useState<{ id: string; finalTotalAmount: number } | null>(null);
 
-  const handleGetOrderDetail = async (token: string) => {
+  const handleGetOrderById = async (token: string) => {
     if (token) {
       try {
         const response = await getOrderById(token, orderId as string);
@@ -31,98 +31,29 @@ export default function usePayment() {
         setLoading(true);
         const response = await createPaymentRequest(
           token,
-          orderDetail?.id??"",
+          orderDetail?.id ?? "",
           paymentType,
           paymentMethod,
-          orderDetail?.finalTotalAmount??0
+          orderDetail?.finalTotalAmount ?? 0
         );
         // toast.success("Pembayaran");
         setLoading(false);
         return response.payment.id; // return payment ID for further processing
       } catch (error) {
-        console.error("Failed to process payment",error);
+        console.error("Failed to process payment", error);
       }
     }
   };
 
   React.useEffect(() => {
     if (token) {
-      handleGetOrderDetail(token);
+      handleGetOrderById(token);
     }
   }, [token, orderId]);
 
-  // const createPayment = async ({
-  //   token,
-  //   orderId,
-  //   paymentType,
-  //   paymentMethod,
-  //   paymentAmount,
-  //   notes,
-  // }: {
-  //   token: string;
-  //   orderId: string;
-  //   paymentType: EPaymentType;
-  //   paymentMethod: string;
-  //   paymentAmount: number;
-  //   notes?: string;
-  // }) => {
-  //   setLoading(true);
-
-  //   try {
-  //     const result = await createPaymentRequest(token, orderId, paymentType, paymentMethod, paymentAmount, notes || "");
-
-  //     toast.success("Payment created! Status: PENDING");
-  //     return result;
-  //   } catch (error: any) {
-  //     console.error(error);
-  //     toast.error(error?.response?.data?.message || "Failed to create payment.");
-  //     throw error; // in case caller wants to handle it too
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const handlePayment = async ({
-  //   orderId,
-  //   paymentType,
-  //   paymentMethod,
-  //   paymentAmount,
-  //   notes,
-  // }: {
-  //   orderId: string;
-  //   paymentType: EPaymentType;
-  //   paymentMethod: string;
-  //   paymentAmount: number;
-  //   notes?: string;
-  // }) => {
-  //   if (token) {
-  //     setLoading(true);
-
-  //     try {
-  //       const result = await createPaymentRequest(
-  //         token,
-  //         orderId,
-  //         paymentType,
-  //         paymentMethod,
-  //         paymentAmount,
-  //         notes || ""
-  //       );
-  //       toast.success("Payment created! Status: PENDING");
-  //       setLoading(false);
-  //       return result;
-  //     } catch (error: any) {
-  //       toast.error(error?.response?.data?.message || "Failed to create payment.");
-  //       throw error;
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-  // };
-
   return {
-    // createPayment,
     handlePayment,
-    handleGetOrderDetail,
+    handleGetOrderById,
     loading,
   };
 }
