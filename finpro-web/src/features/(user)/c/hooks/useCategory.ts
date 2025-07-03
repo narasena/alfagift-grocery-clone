@@ -9,39 +9,41 @@ import usePickStoreId from "@/hooks/stores/usePickStoreId";
 export const useCategory = () => {
   const [category, setCategory] = React.useState<IProductCategoryResponse | IProductSubCategoryResponse | null>(null);
   const [products, setProducts] = React.useState<IProductDetailsCategoryResponse[]>([]);
+  const [totalProducts, setTotalProducts] = React.useState(0);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
   const { slug } = useParams()
   const {storeId} = usePickStoreId()
+  const limit = 10;
 
-  const handleGetCategory = React.useCallback(async () => {
+  const handleGetCategory = React.useCallback(async (page = 1) => {
     try {
       console.log(storeId);
-      const response = await apiInstance.get(`/product-category/find/${slug}/${storeId}`);
+      const response = await apiInstance.get(`/product-category/find/${slug}/${storeId}?page=${page}&limit=${limit}`);
       const categoryData = response.data.category;
+      const { products: paginatedProducts, totalProducts: total, totalPages: pages } = response.data;
+      
       console.log(categoryData)
       setCategory(categoryData);
-
-      
-      if ('productSubCategory' in categoryData) {
-        // Category response - flatten all products from subcategories
-        const allProducts = categoryData.productSubCategory.flatMap((sub: IProductSubCategoryResponse) => sub.product);
-        setProducts(allProducts);
-      } else {
-        // Subcategory response - use products directly
-        setProducts(categoryData.product);
-      }
+      setProducts(paginatedProducts);
+      setTotalProducts(total);
+      setTotalPages(pages);
+      setCurrentPage(page);
     } catch (error) {
       const errResponse = error as AxiosError<{ message: string }>;
       toast.error(errResponse.response?.data.message);
     }
-  }, [slug, storeId]);
+  }, [slug, storeId, limit]);
   
   React.useEffect(() => {
     if (storeId) {
-      
-      handleGetCategory();
+      handleGetCategory(1);
     }
+  }, [storeId, handleGetCategory]);
 
-  }, [storeId]);
+  const handlePageChange = (page: number) => {
+    handleGetCategory(page);
+  };
 
   const breadcrumbLinks = React.useMemo(() => {
     if (!category) return [{ label: "Home", href: "/" }];
@@ -73,5 +75,14 @@ export const useCategory = () => {
     }
   }, [category]);
 
-  return { category, breadcrumbLinks, products, storeId };
+  return { 
+    category, 
+    breadcrumbLinks, 
+    products, 
+    storeId, 
+    totalProducts, 
+    currentPage, 
+    totalPages, 
+    handlePageChange 
+  };
 };
