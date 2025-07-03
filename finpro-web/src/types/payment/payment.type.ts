@@ -9,4 +9,5 @@ export interface IPendingPayment {
   orderId: string;
   numberOfProducts: number;
   totalAmount: number;
+  paymentId: string;
 }
