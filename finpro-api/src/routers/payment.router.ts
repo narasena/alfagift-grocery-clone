@@ -4,6 +4,7 @@ import {
   createPaymentImage,
   getPaymentImageUrl,
   getPendingPayments,
+  getSalesReport,
 } from "../controllers/payment.controller";
 import { jwtDecode } from "../middlewares/jwt.decode";
 import { Router } from "express";
