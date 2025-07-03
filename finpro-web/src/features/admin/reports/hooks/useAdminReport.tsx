@@ -38,7 +38,7 @@ export const useAdminReport = () => {
   const { stores } = useAllStores();
   const [stocksReport, setStocksReport] = React.useState<IProductStockReport[]>([]);
   const [salesReport, setSalesReport] = React.useState<ISalesReport[]>([]);
-  const [salesLength, setSalesLength] = React.useState(0);
+  // const [salesLength, setSalesLength] = React.useState(0);
   const [salesPagination, setSalesPagination] = React.useState({ current: 1, total: 0 });
   const [stockLength, setStockLength] = React.useState(0);
   const [stocksReportType, setStocksReportType] = React.useState<string>(searchParams.get("reportType") || "total");
@@ -78,7 +78,7 @@ export const useAdminReport = () => {
 
       const response = await apiInstance.get(`/payment/sales-report?${params.toString()}`);
       setSalesReport(response.data.salesReport);
-      setSalesLength(response.data.salesReportLength);
+      // setSalesLength(response.data.salesReportLength);
       setSalesPagination({
         current: Math.ceil(response.data.salesReportLength / Number(filterParams.limit)),
         total: response.data.salesReportLength,
@@ -201,7 +201,7 @@ export const useAdminReport = () => {
           } else if (activeTab === "sales") {
             const response = await apiInstance.get(`/payments/sales-report?${apiParams.toString()}`);
             setSalesReport(response.data.salesReport);
-            setSalesLength(response.data.salesReportLength);
+            // setSalesLength(response.data.salesReportLength);
           }
         } catch (error) {
           console.error(`Error fetching stocks report: `, error);

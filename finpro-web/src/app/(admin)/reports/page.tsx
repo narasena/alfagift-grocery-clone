@@ -4,10 +4,24 @@ import ActiveTabs from "@/features/admin/components/ActiveTabs";
 import AdminPageTitle from "@/features/admin/components/AdminPageTitle";
 import AdminTable from "@/features/admin/components/AdminTable";
 import { useAdminReport } from "@/features/admin/reports/hooks/useAdminReport";
-import { EStockMovementType } from "@/types/inventories/product.stock.type";
 import { TProductStockReportTable } from "@/types/products/product.type";
 import * as React from "react";
 import { Suspense } from "react";
+
+type TSalesReportData = {
+  id: string;
+  month: string;
+  year: number;
+  totalSales: number;
+  totalOrders: number;
+  storeName?: string;
+} | {
+  orderId: string;
+  orderDate: string;
+  totalAmount: number;
+  storeName: string;
+  paymentStatus: string;
+};
 
 function AdminReportPageContent() {
   const {
@@ -28,8 +42,7 @@ function AdminReportPageContent() {
     setSearchTerm,
     salesReport,
     salesTableTitles,
-    renderSalesCell,
-    salesPagination,
+    renderSalesCell
   } = useAdminReport();
 
   console.log("Current filters:", filters);
@@ -121,7 +134,7 @@ function AdminReportPageContent() {
           <div>{salesReport.length} sales records</div>
           <AdminTable
             columns={salesTableTitles}
-            data={salesReport as any[]}
+            data={salesReport as TSalesReportData[]}
             renderCell={renderSalesCell}
           />
         </div>
