@@ -19,9 +19,12 @@ export const getAllStores = async (req: Request, res: Response, next: NextFuncti
         id: true,
         name: true,
         city: true,
+        province: true,
       },
       orderBy: { createdAt: "desc" },
-      where: { deletedAt: null }, // Hanya toko aktif
+      where: { 
+        deletedAt: null 
+      },
     });
 
     res.status(200).json(stores);
@@ -171,10 +174,20 @@ export const deleteStore = async (req: Request, res: Response, next: NextFunctio
   try {
     const { id } = req.params;
 
-    await prisma.store.delete({ where: { id } });
+    // Soft delete dengan mengisi deletedAt
+    const deletedStore = await prisma.store.update({
+      where: { id },
+      data: {
+        deletedAt: new Date()  // Mengisi timestamp saat ini
+      }
+    });
 
-    res.status(200).json({ message: "Store berhasil dihapus" });
+    res.status(200).json({ 
+      message: "Store berhasil dihapus",
+      data: deletedStore
+    });
   } catch (error) {
+    console.error("Error saat menghapus store:", error);
     next(error);
   }
 };

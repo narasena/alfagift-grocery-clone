@@ -82,7 +82,10 @@ export const createUserAddress = async (req: Request, res: Response) => {
 
 export const updateUserAddress = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const updated = await prisma.userAddress.update({ where: { id }, data: req.body });
+  const updated = await prisma.userAddress.update({
+    where: { id },
+    data: req.body,
+  });
   res.json(updated);
 };
 
@@ -111,4 +114,62 @@ export const setMainAddress = async (req: Request, res: Response) => {
   });
 
   res.json(updated);
+};
+
+export const getAddressById = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const address = await prisma.userAddress.findUnique({
+      where: { id, deletedAt: null },
+    });
+    if (!address) {
+       res.status(404).json({ message: "Alamat tidak ditemukan" });
+    }
+    res.json(address);
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+export const updateAddressById = async (req: Request, res: Response, next: NextFunction) => {
+  const addressId = req.params.id;
+  const {
+    address,
+    subDistrict,
+    district,
+    city,
+    province,
+    postalCode,
+    latitude,
+    longitude,
+    isMainAddress,
+  } = req.body;
+
+  try {
+    const existingAddress = await prisma.userAddress.findUnique({ where: { id: addressId } });
+    if (!existingAddress) {
+      res.status(404).json({ message: "Alamat tidak ditemukan." });
+    }
+
+    const updatedAddress = await prisma.userAddress.update({
+      where: { id: addressId },
+      data: {
+        address,
+        subDistrict,
+        district,
+        city,
+        province,
+        postalCode,
+        latitude,
+        longitude,
+        isMainAddress,
+      },
+    });
+
+    res.status(200).json(updatedAddress);
+  } catch (err) {
+    console.error("Update address error:", err);
+    res.status(500).json({ message: "Gagal memperbarui alamat." });
+  }
 };

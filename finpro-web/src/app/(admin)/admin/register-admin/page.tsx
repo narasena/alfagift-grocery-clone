@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import instance from "../../../../utils/axiosinstance";
@@ -7,12 +8,13 @@ import { registeValidationAdminSchema } from "../../../(user)/features/register/
 import authStore from "../../../../zustand/authStore";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
+import Link from "next/link";
+import { FaArrowLeft } from "react-icons/fa";
 
 interface Store {
   id: string;
   name: string;
   city: string;
-  // Add other store properties if needed
 }
 
 interface FormValues {
@@ -29,7 +31,6 @@ interface FormValues {
 export default function RegisterStoreAdminPage() {
   const router = useRouter();
   const role = authStore.getState().role;
-
   const [stores, setStores] = useState<Store[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -73,15 +74,27 @@ export default function RegisterStoreAdminPage() {
         },
       });
       toast.success(res.data.message);
+      router.push("/admin");
     } catch (error) {
-      const errResponse = error as AxiosError<{ message: string }>
+      const errResponse = error as AxiosError<{ message: string }>;
       toast.error(errResponse.response?.data?.message || "Registration failed");
     }
   };
 
   return (
-    <div className="max-w-md mx-auto py-10 text-black">
-      <h1 className="text-xl font-semibold mb-4">Register Store Admin</h1>
+    <div className="max-w-screen-sm mx-auto px-4 py-8 text-black">
+      {/* Tombol Back */}
+      <div className="mb-4">
+        <Link
+          href="/admin"
+          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:underline"
+        >
+          <FaArrowLeft /> Kembali ke Data Admin
+        </Link>
+      </div>
+
+      <h1 className="text-xl font-semibold mb-6">Register Store Admin</h1>
+
       <Formik
         initialValues={{
           firstName: "",
@@ -127,7 +140,7 @@ export default function RegisterStoreAdminPage() {
               <Field
                 as="select"
                 name="role"
-                className="select select-bordered w-full px-4 py-2 border-black rounded-md bg-white"
+                className="w-full px-4 py-2 border rounded-md bg-white"
               >
                 <option value="" disabled>
                   Select Employee Role
@@ -140,7 +153,7 @@ export default function RegisterStoreAdminPage() {
 
             <div>
               <label className="block mb-1">Phone Number</label>
-              <Field name="phoneNumber" type="phoneNumber" className="w-full px-4 py-2 border rounded-md" />
+              <Field name="phoneNumber" className="w-full px-4 py-2 border rounded-md" />
               <ErrorMessage name="phoneNumber" component="div" className="text-red-500 text-sm mt-1" />
             </div>
 
@@ -151,7 +164,7 @@ export default function RegisterStoreAdminPage() {
               ) : (
                 <>
                   <Field as="select" name="storeId" className="w-full px-4 py-2 border rounded-md">
-                    <option value="fb">Select Store</option>
+                    <option value="">Select Store</option>
                     {stores.map((store) => (
                       <option key={store.id} value={store.id}>
                         {store.name} - {store.city}
@@ -165,7 +178,7 @@ export default function RegisterStoreAdminPage() {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+              className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition"
               disabled={isSubmitting || loading}
             >
               {isSubmitting ? "Registering..." : "Register"}

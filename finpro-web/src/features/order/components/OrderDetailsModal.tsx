@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { OrderDetailsModalProps } from "@/types/orders/orders.type";
+import {  IOrderItemsDetailsResponse, OrderDetailsModalProps } from "@/types/orders/orders.type";
 
 export default function OrderDetailsModal({ isOpen, onClose, orderDetails }: OrderDetailsModalProps) {
   const [isItemsOpen, setIsItemsOpen] = React.useState(false);
@@ -69,7 +69,7 @@ export default function OrderDetailsModal({ isOpen, onClose, orderDetails }: Ord
         {/* Items */}
         {isItemsOpen && (
           <ul className="space-y-3 border-t pt-4 mb-6">
-            {orderDetails.orderItems.map((item: any, index: any) => (
+            {orderDetails.orderItems.map((item: IOrderItemsDetailsResponse, index: number) => (
               <li key={index} className="flex justify-between items-start border rounded-lg p-3">
                 <div>
                   <p className="font-medium text-black text-sm mb-1">{item.productName}</p>
@@ -103,7 +103,11 @@ export default function OrderDetailsModal({ isOpen, onClose, orderDetails }: Ord
             {orderDetails.user?.firstName} {orderDetails.user?.lastName}
           </p>
           <p className="font-semibold">{orderDetails.user?.phoneNumber}</p>
-          <p className="text-gray-700">{orderDetails.shippingAddress}</p>
+          <p className="text-gray-700">
+            {orderDetails.shippingAddress.address},{orderDetails.shippingAddress.subDistrict},
+            {orderDetails.shippingAddress.district},{orderDetails.shippingAddress.city},
+            {orderDetails.shippingAddress.province},{orderDetails.shippingAddress.postalCode}
+          </p>
         </div>
 
         {/* Ringkasan */}

@@ -9,6 +9,8 @@ import dynamic from "next/dynamic";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import authStore from "@/zustand/authStore";
+import Link from "next/link";
+import { FaArrowLeft } from "react-icons/fa";
 
 interface Store {
   id: string;
@@ -63,8 +65,19 @@ export default function EditStorePage() {
   if (!store) return <div className="p-6 text-black">Memuat data toko...</div>;
 
   return (
-    <div className="p-6 text-black max-w-xl mx-auto">
+    <div className="max-w-screen-sm mx-auto px-4 py-6 text-black">
       <ToastContainer position="top-right" autoClose={3000} />
+
+      {/* Tombol Back */}
+      <div className="mb-4">
+        <Link
+          href={`/store/${id}`}
+          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:underline"
+        >
+          <FaArrowLeft /> Kembali ke Detail Store
+        </Link>
+      </div>
+
       <h1 className="text-2xl font-bold mb-4">Edit Store</h1>
 
       <Formik
@@ -85,7 +98,7 @@ export default function EditStorePage() {
             toast.success("Detail store berhasil diperbarui!");
             setTimeout(() => {
               router.push(`/store/${id}`);
-            }, 2000); // delay sedikit agar toast sempat muncul
+            }, 2000);
           } catch (err) {
             console.error("Gagal update store", err);
             toast.error("Gagal memperbarui detail store!");
@@ -106,16 +119,17 @@ export default function EditStorePage() {
               {touched.address && errors.address && <p className="text-red-500 text-sm">{errors.address}</p>}
             </div>
 
-            <div>
-              <label className="block font-semibold">Kota</label>
-              <Field name="city" className="w-full border px-3 py-2 rounded-md" />
-              {touched.city && errors.city && <p className="text-red-500 text-sm">{errors.city}</p>}
-            </div>
-
-            <div>
-              <label className="block font-semibold">Provinsi</label>
-              <Field name="province" className="w-full border px-3 py-2 rounded-md" />
-              {touched.province && errors.province && <p className="text-red-500 text-sm">{errors.province}</p>}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block font-semibold">Kota</label>
+                <Field name="city" className="w-full border px-3 py-2 rounded-md" />
+                {touched.city && errors.city && <p className="text-red-500 text-sm">{errors.city}</p>}
+              </div>
+              <div>
+                <label className="block font-semibold">Provinsi</label>
+                <Field name="province" className="w-full border px-3 py-2 rounded-md" />
+                {touched.province && errors.province && <p className="text-red-500 text-sm">{errors.province}</p>}
+              </div>
             </div>
 
             <div>
@@ -132,34 +146,43 @@ export default function EditStorePage() {
               )}
             </div>
 
-            <div>
-              <label className="block font-semibold">Latitude</label>
-              <input
-                name="latitude"
-                value={values.latitude ?? ""}
-                readOnly
-                className="w-full border px-3 py-2 rounded-md bg-gray-100"
-              />
-            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block font-semibold">Latitude</label>
+                <input
+                  name="latitude"
+                  value={values.latitude ?? ""}
+                  readOnly
+                  className="w-full border px-3 py-2 rounded-md bg-gray-100"
+                />
+              </div>
 
-            <div>
-              <label className="block font-semibold">Longitude</label>
-              <input
-                name="longitude"
-                value={values.longitude ?? ""}
-                readOnly
-                className="w-full border px-3 py-2 rounded-md bg-gray-100"
-              />
+              <div>
+                <label className="block font-semibold">Longitude</label>
+                <input
+                  name="longitude"
+                  value={values.longitude ?? ""}
+                  readOnly
+                  className="w-full border px-3 py-2 rounded-md bg-gray-100"
+                />
+              </div>
             </div>
 
             <div className="pt-2">
-              <label className="text-sm font-semibold text-gray-700 block mb-1">Pilih Lokasi di Peta (Opsional)</label>
+              <label className="text-sm font-semibold text-gray-700 block mb-1">
+                Pilih Lokasi di Peta (Opsional)
+              </label>
               <MapPicker setFieldValue={setFieldValue} />
             </div>
 
-            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-              Simpan Perubahan
-            </button>
+            <div className="pt-4">
+              <button
+                type="submit"
+                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto"
+              >
+                Simpan Perubahan
+              </button>
+            </div>
           </Form>
         )}
       </Formik>

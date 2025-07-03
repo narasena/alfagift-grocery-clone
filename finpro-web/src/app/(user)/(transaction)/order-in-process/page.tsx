@@ -1,11 +1,13 @@
 "use client";
 import * as React from "react";
+import { Suspense } from "react";
 
 import OrderCard from "@/features/order/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
 import OrderDetailsModal from "@/features/order/components/OrderDetailsModal";
+import {  IOrderCards } from "@/types/orders/orders.type";
 
-export default function ProcessingOrderPage() {
+function ProcessingOrderContent() {
   const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails, orderDetails } =
     useOrder("PROCESSING");
 
@@ -24,10 +26,10 @@ export default function ProcessingOrderPage() {
     <div className="space-y-4">
       {paginatedOrders && paginatedOrders.length > 0 ? (
         <>
-          {paginatedOrders.map((order: any) => (
+          {paginatedOrders.map((order: IOrderCards) => (
             <OrderCard
-              key={order.id}
-              orderId={order.id}
+              key={order.orderId}
+              orderId={order.orderId}
               createdAt={order.createdAt}
               latestStatus={order.latestStatus}
               firstName={order.firstName}
@@ -63,11 +65,21 @@ export default function ProcessingOrderPage() {
               Next
             </button>
           </div>
-          <OrderDetailsModal isOpen={isModalOpen} onClose={closeModal} orderDetails={orderDetails} />
+          {orderDetails && (
+            <OrderDetailsModal isOpen={isModalOpen} onClose={closeModal} orderDetails={orderDetails} />
+          )}
         </>
       ) : (
         <p>Tidak ada pesanan.</p>
       )}
     </div>
+  );
+}
+
+export default function ProcessingOrderPage() {
+  return (
+    <Suspense fallback={<div className="flex justify-center items-center h-screen"><span className="loading loading-spinner loading-lg"></span></div>}>
+      <ProcessingOrderContent />
+    </Suspense>
   );
 }

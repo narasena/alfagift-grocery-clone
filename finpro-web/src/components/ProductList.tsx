@@ -119,7 +119,7 @@ export default function DaftarProduk() {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
         {produk.map((produk) => (
           <div key={produk.id} className="group bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-            <Link href={`/product/${produk.id}`} className="block">
+            <Link href={`/p/${produk.slug}`} className="block">
               <div className="relative h-48 sm:h-56 mb-3 rounded-lg overflow-hidden bg-gray-100">
                 <Image
                   src={produk.productImage[0]?.imageUrl || '/placeholder-produk.png'}

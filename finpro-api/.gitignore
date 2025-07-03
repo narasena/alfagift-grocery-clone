@@ -1,5 +1,7 @@
 node_modules
 dist
+api
+-p
 .env
 .env.*
 src/generated

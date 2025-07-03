@@ -19,8 +19,8 @@ export default function usePaymentProof() {
     try {
       const response = await getPendingPayments();
       setPendingUsers(response.data); // assuming `data` has `{ data: [...] }`
-    } catch (error: any) {
-      console.log("Error loading");
+    } catch (error) {
+      console.log("Error loading",error);
     } finally {
       setLoading(false);
     }

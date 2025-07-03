@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import authStore from "../../../../zustand/authStore";
 import { useEffect } from "react";
 import { AxiosError } from "axios";
+import Link from "next/link";
+import { FaArrowLeft } from "react-icons/fa";
 
 const MapPicker = dynamic(() => import("../../../../components/MapPicker"), { ssr: false });
 
@@ -40,7 +42,8 @@ const initialValues: FormValues = {
   email: "",
 };
 
-const inputClass = "form-input w-full border border-black placeholder-gray-300 text-sm px-3 py-2 rounded-md";
+const inputClass =
+  "form-input w-full border border-black placeholder-gray-300 text-sm px-3 py-2 rounded-md";
 
 export default function CreateStorePage() {
   const router = useRouter();
@@ -52,9 +55,9 @@ export default function CreateStorePage() {
       router.push("/dashboard");
     }
   }, [role, router]);
+
   const handleSubmit = async (values: FormValues) => {
     try {
-      // Format nomor telepon: hapus semua karakter non-digit
       const formattedPhone = values.phoneNumber.replace(/\D/g, "");
 
       const payload = {
@@ -68,34 +71,35 @@ export default function CreateStorePage() {
         postalCode: values.postalCode || null,
       };
 
-      console.log("Data dari API Geocode:", {
-        lat: payload.latitude,
-        lon: payload.longitude,
-        typeLat: typeof payload.latitude,
-        typeLon: typeof payload.longitude,
-      });
-
-      console.log("Data yang dikirim:", payload); // Untuk debugging
-
       const res = await instance.post("/store", payload);
-
-      console.log("Response:", res.data);
+      console.log(res.data);
       toast.success("Store berhasil dibuat");
-
-      // Router setelah isi form setelah berhasil
       router.push("/store/store-list");
     } catch (error) {
       const errResponse = error as AxiosError<{ message: string }>;
-      console.error("Error detail:", error || errResponse.message);
-      toast.error(errResponse.response?.data?.message || "Gagal membuat store. Silakan coba lagi.");
+      toast.error(errResponse.response?.data?.message || "Gagal membuat store.");
     }
   };
 
   return (
-    <div className="max-w-xl h-auto text-black mx-auto p-6 bg-white border rounded-lg mt-6">
+    <div className="max-w-3xl mx-auto p-4 sm:p-6 mt-6 text-black bg-white border rounded-lg shadow-sm">
+      {/* Tombol Back */}
+      <div className="mb-4">
+        <Link
+          href="/store/store-list"
+          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:underline"
+        >
+          <FaArrowLeft /> Kembali ke Daftar Store
+        </Link>
+      </div>
+
       <h2 className="text-xl font-semibold mb-4">Tambah Store Baru</h2>
 
-      <Formik initialValues={initialValues} validationSchema={storeValidationSchema} onSubmit={handleSubmit}>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={storeValidationSchema}
+        onSubmit={handleSubmit}
+      >
         {({ setFieldValue, values, isSubmitting }) => (
           <Form className="space-y-4">
             <div>
@@ -110,37 +114,41 @@ export default function CreateStorePage() {
                 name="phoneNumber"
                 className={inputClass}
                 placeholder="Contoh: 081234567890 atau +6281234567890"
-                // Format input otomatis
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const value = e.target.value;
-                  // Biarkan user menulis format bebas, tapi kita akan bersihkan saat submit
-                  setFieldValue("phoneNumber", value);
-                }}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setFieldValue("phoneNumber", e.target.value)
+                }
               />
               <ErrorMessage name="phoneNumber" component="div" className="text-red-500 text-sm" />
-              <p className="text-xs text-gray-500 mt-1">Format: 081234567890 atau +6281234567890</p>
+              <p className="text-xs text-gray-500 mt-1">
+                Format: 081234567890 atau +6281234567890
+              </p>
             </div>
 
-            <Field name="email" className={inputClass} placeholder="Email (opsional)" />
+            <div>
+              <label className="block text-sm font-medium">Email (Opsional)</label>
+              <Field name="email" className={inputClass} placeholder="Email" />
+              <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
+            </div>
+
             <div>
               <label className="block text-sm font-medium">Alamat Lengkap</label>
               <Field name="address" className={inputClass} placeholder="Alamat Lengkap" />
               <ErrorMessage name="address" component="div" className="text-red-500 text-sm" />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field name="subDistrict" className={inputClass} placeholder="Kelurahan/Desa" />
               <Field name="district" className={inputClass} placeholder="Kecamatan" />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field name="city" className={inputClass} placeholder="Kota/Kabupaten" />
               <Field name="province" className={inputClass} placeholder="Provinsi" />
             </div>
 
             <Field name="postalCode" className={inputClass} placeholder="Kode Pos" />
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field
                 name="latitude"
                 value={values.latitude}
@@ -168,12 +176,12 @@ export default function CreateStorePage() {
               />
             </div>
 
-            <div className="h-64 w-full z-0 relative">
-              <label className="block text-sm font-medium">Pilih Lokasi di Peta</label>
+            <div className="h-64 w-full relative z-0">
+              <label className="block text-sm font-medium mb-2">Pilih Lokasi di Peta</label>
               <MapPicker setFieldValue={setFieldValue} />
             </div>
 
-            <div className="mt-auto">
+            <div className="mt-4">
               <button
                 type="submit"
                 disabled={isSubmitting}
