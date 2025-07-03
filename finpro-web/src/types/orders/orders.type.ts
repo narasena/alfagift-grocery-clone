@@ -66,9 +66,8 @@ export enum EOrderStatus {
 export interface OrderDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  orderDetails: IOrderDetailsResponse; // ideally type this properly!
+  orderDetails: IOrderDetailsResponse | null; // ideally type this properly!
 }
-
 
 export interface IOrderDetailsResponse {
   orderId: string;

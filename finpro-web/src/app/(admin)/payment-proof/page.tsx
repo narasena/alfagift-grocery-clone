@@ -3,9 +3,25 @@
 import * as React from "react";
 import usePaymentProof from "@/features/admin/payment-proof/hooks/usePaymentProof";
 import { IPendingPayment } from "@/types/payment/payment.type";
+import PaymentProofModal from "@/features/admin/payment-proof/components/PaymentProofModal";
 
 export default function PendingPaymentsPage() {
-  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, loading } = usePaymentProof();
+  const {
+    paginatedOrders,
+    handleNext,
+    handlePrevious,
+    totalPages,
+    currentPage,
+    loading,
+    // handleGetPaymentProof,
+    handleDetailClick,
+    paymentImage,
+    handleAcceptPayment,
+    handleRejectPayment,
+    actionLoading,
+    isModalOpen,
+    closeModal,
+  } = usePaymentProof();
 
   if (loading) {
     return <p className="p-4 text-gray-600">Loading pending payments...</p>;
@@ -38,16 +54,34 @@ export default function PendingPaymentsPage() {
 
               <hr className="border-t border-gray-200 my-4" />
 
-              <div className="text-right">
+              <div className="flex flex-wrap justify-end items-center gap-2">
                 <button
                   className="bg-white text-red-600 border border-red-600 hover:bg-red-50 font-semibold px-4 py-2 rounded-lg"
-                  // onClick={() => handleDetailClick(user)}
+                  onClick={() => handleDetailClick(user.paymentId)}
                 >
                   Lihat Bukti Pembayaran
+                </button>
+
+                <button
+                  onClick={() => handleAcceptPayment(user.paymentId)}
+                  disabled={actionLoading === user.paymentId}
+                  className="bg-green-600 text-white hover:bg-green-700 px-4 py-2 rounded-lg disabled:opacity-50"
+                >
+                  {actionLoading === user.paymentId ? "Processing..." : "Accept"}
+                </button>
+
+                <button
+                  onClick={() => handleRejectPayment(user.paymentId)}
+                  disabled={actionLoading === user.paymentId}
+                  className="bg-red-600 text-white hover:bg-red-700 px-4 py-2 rounded-lg disabled:opacity-50"
+                >
+                  {actionLoading === user.paymentId ? "Processing..." : "Reject"}
                 </button>
               </div>
             </div>
           ))}
+
+          <PaymentProofModal isOpen={isModalOpen} onClose={closeModal} paymentProofs={paymentImage} />
         </>
       ) : (
         <p className="p-4 text-gray-600">No pending payments found.</p>
@@ -58,8 +92,8 @@ export default function PendingPaymentsPage() {
           onClick={handlePrevious}
           disabled={currentPage === 1}
           className="px-4 py-2 border rounded transition 
-                 disabled:opacity-50 disabled:cursor-not-allowed
-                 hover:bg-gray-100"
+                     disabled:opacity-50 disabled:cursor-not-allowed
+                     hover:bg-gray-100"
         >
           Previous
         </button>
@@ -72,8 +106,8 @@ export default function PendingPaymentsPage() {
           onClick={handleNext}
           disabled={currentPage === totalPages}
           className="px-4 py-2 border rounded transition
-                 disabled:opacity-50 disabled:cursor-not-allowed
-                 hover:bg-gray-100"
+                     disabled:opacity-50 disabled:cursor-not-allowed
+                     hover:bg-gray-100"
         >
           Next
         </button>
