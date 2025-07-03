@@ -147,12 +147,12 @@ export const updateAddressById = async (req: Request, res: Response, next: NextF
   } = req.body;
 
   try {
-    const existingAddress = await prisma.userAddress.findUnique({ where: { id: addressId } });
+    const existingAddress = await prisma.address.findUnique({ where: { id: addressId } });
     if (!existingAddress) {
       res.status(404).json({ message: "Alamat tidak ditemukan." });
     }
 
-    const updatedAddress = await prisma.userAddress.update({
+    const updatedAddress = await prisma.address.update({
       where: { id: addressId },
       data: {
         address,

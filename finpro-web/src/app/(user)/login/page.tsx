@@ -9,7 +9,6 @@ import authStore from "../../../zustand/authStore";
 import { useRouter } from "next/navigation";
 import apiInstance from "@/utils/api/apiInstance";
 import Link from "next/link";
-import { AxiosError } from "axios";
 
 interface iHandleAuthLogin {
   email: string;
@@ -37,11 +36,11 @@ export default function LoginPage() {
       });
 
       router.push("/");
-    } catch (error) {
-      const errResponse = error as AxiosError<{ message: string }>;
-      if (error) {
-        const status = errResponse.response?.status;
-   const message = errResponse.response?.data?.message || "Terjadi kesalahan";
+    } catch (error: any) {
+      if (error.response) {
+        const status = error.response.status;
+        const message = error.response.data?.message || "Terjadi kesalahan";
+
         if (status === 404) {
           toast.error("Email Anda salah atau belum terdaftar");
         } else if (status === 401) {

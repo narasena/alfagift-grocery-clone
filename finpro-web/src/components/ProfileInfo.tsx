@@ -32,7 +32,7 @@ interface ApiResponse {
   data: UserProfile;
 }
 
-export default function ProfileInfo({ userId, userRole }: ProfileInfoProps) {
+export default function ProfileInfo({ userEmail, userId, userRole }: ProfileInfoProps) {
   const { email, setEmail } = useAuthStore();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);

@@ -54,7 +54,6 @@ export default function EditAddressPage() {
         const res = await instance.get(`/address/${id}`);
         setAddressData(res.data);
       } catch (err) {
-        console.log(err);
         toast.error("Gagal mengambil data alamat.");
         router.push("/select-address");
       }
@@ -82,12 +81,15 @@ export default function EditAddressPage() {
           longitude: addressData.longitude ?? "",
           isMainAddress: addressData.isMainAddress,
         }}
-        validationSchema={AddressSchema}
         onSubmit={async (values) => {
           try {
             await instance.put(`/address/${id}`, values);
             toast.success("Alamat berhasil diperbarui!");
-            router.push("/address-select");
+
+            // Delay sejenak agar toast sempat muncul
+            setTimeout(() => {
+              router.push("/address-select");
+            }, 1000); // 1 detik cukup
           } catch {
             toast.error("Gagal memperbarui alamat.");
           }
@@ -105,7 +107,9 @@ export default function EditAddressPage() {
               <div>
                 <label className="block font-semibold">Kelurahan/Desa</label>
                 <Field name="subDistrict" className="w-full border px-3 py-2 rounded-md" />
-                {touched.subDistrict && errors.subDistrict && <p className="text-red-500 text-sm">{errors.subDistrict}</p>}
+                {touched.subDistrict && errors.subDistrict && (
+                  <p className="text-red-500 text-sm">{errors.subDistrict}</p>
+                )}
               </div>
               <div>
                 <label className="block font-semibold">Kecamatan</label>
@@ -160,9 +164,7 @@ export default function EditAddressPage() {
             </div>
 
             <div className="pt-2">
-              <label className="text-sm font-semibold text-gray-700 block mb-1">
-                Pilih Lokasi di Peta (Opsional)
-              </label>
+              <label className="text-sm font-semibold text-gray-700 block mb-1">Pilih Lokasi di Peta (Opsional)</label>
               <MapPicker setFieldValue={setFieldValue} />
             </div>
 
