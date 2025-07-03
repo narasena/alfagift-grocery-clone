@@ -31,7 +31,7 @@ export default function OrderDonePage() {
               lastName={order.lastName}
               numberOfProducts={order.numberOfProducts}
               finalTotalAmount={order.finalTotalAmount}
-              onDetailClick={handleGetOrderDetails}
+              onDetailClick={handleDetailClick}
             />
           ))}
 
