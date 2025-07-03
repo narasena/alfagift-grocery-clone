@@ -26,6 +26,10 @@ function AdminReportPageContent() {
     handleStocsReportTypeChange,
     searchTerm,
     setSearchTerm,
+    salesReport,
+    salesTableTitles,
+    renderSalesCell,
+    salesPagination,
   } = useAdminReport();
 
   console.log("Current filters:", filters);
@@ -61,24 +65,19 @@ function AdminReportPageContent() {
             ))}
           </select>
         </div>
-        {/* movement type */}
+        {/* payment status for sales */}
         {activeTab === "sales" && (
           <div>
-            <label className="block text-sm font-medium text-gray-700">Stock Movement Type</label>
+            <label className="block text-sm font-medium text-gray-700">Payment Status</label>
             <select
-              onChange={(e) => {
-                updateFilters({ type: e.target.value });
-                console.log(e.target.value);
-              }}
-              value={filters.storeId}
+              onChange={(e) => updateFilters({ paymentStatus: e.target.value })}
+              value={filters.paymentStatus}
               className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             >
-              <option value="">Select Movement Type</option>
-              {Object.keys(EStockMovementType).map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
+              <option value="">All</option>
+              <option value="SUCCESS">Success</option>
+              <option value="PENDING">Pending</option>
+              <option value="FAILED">Failed</option>
             </select>
           </div>
         )}
@@ -117,7 +116,16 @@ function AdminReportPageContent() {
           </div>
         ))}
       </div>
-      {activeTab === "sales" && <div className="bg-red-200 p-4">sales</div>}
+      {activeTab === "sales" && salesReport && (
+        <div className="bg-blue-100 p-4">
+          <div>{salesReport.length} sales records</div>
+          <AdminTable
+            columns={salesTableTitles}
+            data={salesReport as any[]}
+            renderCell={renderSalesCell}
+          />
+        </div>
+      )}
 
       <div></div>
       {activeTab === "stock" && stocksReport && (
