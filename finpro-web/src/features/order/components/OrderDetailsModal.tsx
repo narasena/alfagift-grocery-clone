@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {  IOrderItemsDetailsResponse, OrderDetailsModalProps } from "@/types/orders/orders.type";
+import { IOrderItemsDetailsResponse, OrderDetailsModalProps } from "@/types/orders/orders.type";
 
 export default function OrderDetailsModal({ isOpen, onClose, orderDetails }: OrderDetailsModalProps) {
   const [isItemsOpen, setIsItemsOpen] = React.useState(false);

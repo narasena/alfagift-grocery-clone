@@ -1,13 +1,25 @@
 "use client";
+import * as React from "react";
 
 import { Suspense } from "react";
 import OrderCard from "@/features/order/components/OrderCard";
 import useOrder from "@/features/order/hooks/useOrder";
 import { IOrderCards } from "@/types/orders/orders.type";
+import OrderDetailsModal from "@/features/order/components/OrderDetailsModal";
 
 function OrderSentContent() {
-  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage } = useOrder("DELIVERING");
+  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails, orderDetails } =
+    useOrder("DELIVERING");
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
+  const handleDetailClick = async (orderId: string) => {
+    await handleGetOrderDetails(orderId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div className="space-y-4">
       {paginatedOrders && paginatedOrders.length > 0 ? (
@@ -22,6 +34,7 @@ function OrderSentContent() {
               lastName={order.lastName}
               numberOfProducts={order.numberOfProducts}
               finalTotalAmount={order.finalTotalAmount}
+              onDetailClick={handleDetailClick}
             />
           ))}
 
@@ -49,6 +62,7 @@ function OrderSentContent() {
             >
               Next
             </button>
+            <OrderDetailsModal isOpen={isModalOpen} onClose={closeModal} orderDetails={orderDetails} />
           </div>
         </>
       ) : (
@@ -60,7 +74,13 @@ function OrderSentContent() {
 
 export default function OrderSentPage() {
   return (
-    <Suspense fallback={<div className="flex justify-center items-center h-screen"><span className="loading loading-spinner loading-lg"></span></div>}>
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center h-screen">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      }
+    >
       <OrderSentContent />
     </Suspense>
   );

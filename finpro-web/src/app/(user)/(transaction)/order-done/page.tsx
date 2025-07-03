@@ -1,12 +1,26 @@
 "use client";
+import * as React from "react";
 
 import { Suspense } from "react";
 import OrderCard from "@/features/order/components/OrderCard";
+import OrderDetailsModal from "@/features/order/components/OrderDetailsModal";
 import useOrder from "@/features/order/hooks/useOrder";
 import { IOrderCards } from "@/types/orders/orders.type";
 
 function OrderDoneContent() {
-  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage } = useOrder("CONFIRMED");
+  const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails, orderDetails } =
+    useOrder("CONFIRMED");
+
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const handleDetailClick = async (orderId: string) => {
+    await handleGetOrderDetails(orderId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="space-y-4">
@@ -22,6 +36,7 @@ function OrderDoneContent() {
               lastName={order.lastName}
               numberOfProducts={order.numberOfProducts}
               finalTotalAmount={order.finalTotalAmount}
+              onDetailClick={handleDetailClick}
             />
           ))}
 
@@ -49,6 +64,7 @@ function OrderDoneContent() {
             >
               Next
             </button>
+            <OrderDetailsModal isOpen={isModalOpen} onClose={closeModal} orderDetails={orderDetails} />
           </div>
         </>
       ) : (
@@ -60,7 +76,13 @@ function OrderDoneContent() {
 
 export default function OrderDonePage() {
   return (
-    <Suspense fallback={<div className="flex justify-center items-center h-screen"><span className="loading loading-spinner loading-lg"></span></div>}>
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center h-screen">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      }
+    >
       <OrderDoneContent />
     </Suspense>
   );
