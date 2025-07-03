@@ -71,21 +71,21 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
   // Redirect setelah handle session selesai
   useEffect(() => {
-    if (isHandleSessionLoginDone && token) {
+    if (isHandleSessionLoginDone) {
       const isPublicPath = ["/", "/login", "/register", "/admin/login"].includes(pathName);
-      const isAdminPath = [
-        "/admin",
-        "/dashboard",
-        "/discounts",
-        "/products",
-        "/reports",
-        "/store"
-      ].includes(pathName);
+      const isAdminPath = pathName.startsWith("/admin") || 
+                         pathName.startsWith("/dashboard") ||
+                         pathName.startsWith("/discounts") ||
+                         pathName.startsWith("/products") ||
+                         pathName.startsWith("/reports") ||
+                         pathName.startsWith("/store") ||
+                         pathName.startsWith("/admins") ||
+                         pathName.startsWith("/category") ||
+                         pathName.startsWith("/inventories") ||
+                         pathName.startsWith("/payment-proof");
 
       const isAdmin = authStore.getState().role === "Admin" || authStore.getState().role === "SuperAdmin";
-      // console.log("isAdmin", isAdmin);
       
-
       if (token && !isAdmin && isAdminPath) {
         router.push("/");
       } else if (!token && !isPublicPath) {
