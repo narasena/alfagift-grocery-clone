@@ -538,20 +538,22 @@ export const useAdminProductStocksPerStore = () => {
   const [massEdit, setMassEdit] = React.useState<boolean>(false);
 
   const handleUpdateStocks = async () => {
+    if (toBeUpdatedStocks.length === 0) {
+      toast.error("No stocks selected for update");
+      return;
+    }
+    
     try {
       const response = await apiInstance.put(`/inventories/store/update-stocks/${storeId}`, { toBeUpdatedStocks });
-      if (response.status === 200) {
-        toast.success("Stocks updated successfully");
-        setToBeUpdatedStocks([]);
-        setCheckedRows([]);
-        setMassEdit(false);
-        await handleGetProductStocksPerStore();
-        toast.success(response.data.message);
-      }
-      
-    } catch (error) {
+      toast.success(response.data.message || "Stocks updated successfully");
+      setToBeUpdatedStocks([]);
+      setCheckedRows([]);
+      setMassEdit(false);
+      await handleGetProductStocksPerStore();
+    } catch (error: any) {
       console.error("Error updating stock:", error);
-      toast.error("Error updating stock");
+      const errorMessage = error.response?.data?.message || "Error updating stock";
+      toast.error(errorMessage);
     }
   }
 

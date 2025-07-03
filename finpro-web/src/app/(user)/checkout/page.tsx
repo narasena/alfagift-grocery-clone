@@ -196,41 +196,41 @@ function CheckoutContent() {
             <div>
               <h1 className="text-xl font-semibold text-gray-700 mb-3">Vouchers Available</h1>
               {vouchers && vouchers.length > 0 ? (
-                vouchers.map((voucher: IVoucher, index: number) => (
-                  <div
-                    className="grid grid-cols-[15%_1fr_15%] justify-between py-0.5 gap-1.5 rounded-md bg-emerald-50 text-gray-600 shadow-md hover:bg-emerald-100 cursor-pointer hover:shadow-md active:ring-2 active:ring-emerald-400"
-                    key={index}
-                    onClick={() => handleApplyVoucher(voucher)}
-                  >
-                    <div className="flex items-center justify-end w-max h-full">
-                      <HiMiniReceiptPercent className="text-5xl text-emerald-800" />
-                    </div>
-                    <div className="flex flex-col ">
-                      <p className="font-bold tracking-tight py-0.5 text-base italic text-lime-800">{`Diskon: ${voucher.discountValue}%`}</p>
-                      <span className="font-normal text-xs">{voucher.name}</span>
-                      <div className="w-full text-xs "></div>
-                      <p className="text-[10px] font-medium">{`Berlaku s/d: ${new Date(
-                        voucher.expiredDate
-                      ).toLocaleDateString("id-ID", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}`}</p>
-                    </div>
-                    {appliedVoucher?.id === voucher.id && (
-                      <div className="flex items-center  justify-center w-max h-full">
-                        <TbSquareCheckFilled className="text-4xl text-emerald-800" />
-                      </div>
-                    )}
-                  </div>
-                ))
-              ) : (
-                <div className="text-gray-500 flex flex-col justify-center items-center gap-2">
-                  <TbTicketOff className="text-7xl text-gray-500" />
-                    <span>{`You don't have any voucher yet`}</span>
-                </div>
-              )}
-            </div>
+  vouchers.map((voucher: IVoucher, index: number) => (
+    <div
+      className="grid grid-cols-[auto_1fr_auto] gap-4 p-3 rounded-lg bg-white border border-emerald-200 text-gray-700 shadow-sm hover:shadow-md transition-all cursor-pointer mb-3"
+      key={index}
+      onClick={() => handleApplyVoucher(voucher)}
+    >
+      <div className="flex items-center justify-center">
+        <HiMiniReceiptPercent className="text-3xl text-emerald-600" />
+      </div>
+      <div className="flex flex-col space-y-1">
+        <p className="font-semibold text-sm text-emerald-700">
+          {`${voucher.discountValue}% OFF`}
+        </p>
+        <span className="font-medium text-sm text-gray-900">{voucher.name}</span>
+        <p className="text-xs text-gray-500">
+          {`Valid until ${new Date(voucher.expiredDate).toLocaleDateString("id-ID", {
+            day: "numeric",
+            month: "long", 
+            year: "numeric"
+          })}`}
+        </p>
+      </div>
+      {appliedVoucher?.id === voucher.id && (
+        <div className="flex items-center justify-center">
+          <TbSquareCheckFilled className="text-2xl text-emerald-600" />
+        </div>
+      )}
+    </div>
+  ))
+) : (
+  <div className="text-gray-500 flex flex-col justify-center items-center gap-2">
+    <TbTicketOff className="text-7xl text-gray-500" />
+    <span>{`You don't have any voucher yet`}</span>
+  </div>
+)}            </div>
             {/* Line */}
             <div className="w-full h-[2px] bg-gray-200 my-5" />
             {/* Subtotal, Discount, Shipping, Total */}

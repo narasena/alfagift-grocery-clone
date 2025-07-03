@@ -138,6 +138,9 @@ export class ProductCategoryController {
   async findProductCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const { slug, storeId } = req.params;
+      const { page = '1', limit = '10' } = req.query;
+      const skip = (Number(page) - 1) * Number(limit);
+      const take = Number(limit);
 
       const category = await prisma.productCategory.findUnique({
         where: {
@@ -277,11 +280,174 @@ export class ProductCategoryController {
       }
 
       const result = category || subCategory;
+      
+      // Get paginated products and total count
+      let products: any[] = [];
+      let totalProducts = 0;
+      
+      if (category) {
+        // For category, get products from all subcategories with pagination
+        const allProducts = await prisma.product.findMany({
+          where: {
+            productSubCategory: {
+              productCategoryId: category ? await prisma.productCategory.findUnique({
+                where: { slug },
+                select: { id: true }
+              }).then(cat => cat?.id) : undefined
+            },
+            productStock: {
+              some: { storeId }
+            }
+          },
+          skip,
+          take,
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            price: true,
+            description: true,
+            productImage: {
+              take: 1,
+              where: { isMainImage: true },
+              select: {
+                imageUrl: true,
+              },
+            },
+            productStock: {
+              where: {
+                storeId,
+              },
+              select: {
+                stock: true,
+              },
+            },
+            productDiscountHistories: {
+              where: {
+                discount: {
+                  startDate: {
+                    lte: new Date(),
+                  },
+                  endDate: {
+                    gte: new Date(),
+                  },
+                  storeDiscountHistories: {
+                    some: {
+                      storeId,
+                    },
+                  },
+                },
+              },
+              select: {
+                discountValue: true,
+                discount: {
+                  select: {
+                    discountType: true
+                  }
+                }
+              },
+            },
+          }
+        });
+        
+        products = allProducts;
+        totalProducts = await prisma.product.count({
+          where: {
+            productSubCategory: {
+              productCategoryId: await prisma.productCategory.findUnique({
+                where: { slug },
+                select: { id: true }
+              }).then(cat => cat?.id)
+            },
+            productStock: {
+              some: { storeId }
+            }
+          }
+        });
+      } else if (subCategory) {
+        // For subcategory, get products directly with pagination
+        products = await prisma.product.findMany({
+          where: {
+            productSubCategory: {
+              slug
+            },
+            productStock: {
+              some: { storeId }
+            }
+          },
+          skip,
+          take,
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+            price: true,
+            description: true,
+            productImage: {
+              take: 1,
+              where: { isMainImage: true },
+              select: {
+                imageUrl: true,
+              },
+            },
+            productStock: {
+              where: {
+                storeId,
+              },
+              select: {
+                stock: true,
+              },
+            },
+            productDiscountHistories: {
+              where: {
+                discount: {
+                  startDate: {
+                    lte: new Date(),
+                  },
+                  endDate: {
+                    gte: new Date(),
+                  },
+                  storeDiscountHistories: {
+                    some: {
+                      storeId,
+                    },
+                  },
+                },
+              },
+              select: {
+                discountValue: true,
+                discount: {
+                  select: {
+                    discountType: true
+                  }
+                }
+              },
+            },
+          }
+        });
+        
+        totalProducts = await prisma.product.count({
+          where: {
+            productSubCategory: {
+              slug
+            },
+            productStock: {
+              some: { storeId }
+            }
+          }
+        });
+      }
+      
+      const totalPages = Math.ceil(totalProducts / Number(limit));
 
       res.status(200).json({
         success: true,
         message: "Get data successfull",
         category: result,
+        products,
+        totalProducts,
+        totalPages,
+        currentPage: Number(page)
       });
     } catch (error) {
       next(error);

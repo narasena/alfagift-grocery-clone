@@ -311,6 +311,70 @@ export class ProductController {
     }
   }
 
+  async getAdminProducts(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { search = "", categoryId = "", subCategoryId = "", page = "1", limit = "10" } = req.query;
+      const skip = (Number(page) - 1) * Number(limit);
+      const take = Number(limit);
+
+      const whereClause: any = {
+        deletedAt: null,
+      };
+
+      if (search) {
+        whereClause.OR = [
+          { name: { contains: search as string, mode: "insensitive" } },
+          { sku: { contains: search as string, mode: "insensitive" } },
+          { barcode: { contains: search as string, mode: "insensitive" } },
+        ];
+      }
+
+      if (subCategoryId) {
+        whereClause.productSubCategoryId = Number(subCategoryId);
+      } else if (categoryId) {
+        whereClause.productSubCategory = {
+          productCategoryId: Number(categoryId),
+        };
+      }
+
+      const [products, totalCount] = await Promise.all([
+        prisma.product.findMany({
+          where: whereClause,
+          include: {
+            productImage: {
+              where: { deletedAt: null },
+            },
+            productSubCategory: {
+              include: {
+                productCategory: true,
+              },
+            },
+            productBrand: { where: { deletedAt: null } },
+          },
+          orderBy: {
+            updatedAt: "desc",
+          },
+          skip,
+          take,
+        }),
+        prisma.product.count({ where: whereClause }),
+      ]);
+
+      const totalPages = Math.ceil(totalCount / Number(limit));
+
+      res.status(200).json({
+        success: true,
+        message: "Admin products fetched successfully",
+        products,
+        totalCount,
+        totalPages,
+        currentPage: Number(page),
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getProductById(req: Request, res: Response, next: NextFunction) {
     try {
       const { slug, storeId } = req.params;

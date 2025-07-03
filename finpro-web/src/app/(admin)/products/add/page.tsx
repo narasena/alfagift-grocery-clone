@@ -23,46 +23,46 @@ export default function AddProductPage() {
   } = useCreateProduct();
 
   return (
-    <div className="bg-red-400">
-      <div className="lg:bg-white lg:max-w-[1200px] lg:mx-auto lg:px-10 lg:py-4 px-4">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <AdminPageTitle title="Add Product" subTitle="Fill the form below to add a new product" />
-        <div className="lg: grid lg:grid-cols-[60%_1fr] w-full gap-6">
-          <div className="lg:order-2 lg:!px-0 max-w-full flex flex-col max-lg:justify-center items-center c-border">
-            <div className="page-title border-b border-gray-300 pb-4 mb-4">
-              <span className="px-6">Product Images</span>
-            </div>
-            {imageShowing && "secure_url" in imageShowing && (
-              <div className="size-72 border border-gray-400 rounded-md my-3">
-                <CldImage
-                  width={288}
-                  height={288}
-                  src={imageShowing.secure_url}
-                  alt="Selected Product Image"
-                  className="w-full h-full object-cover"
-                />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="order-2 lg:order-1">
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-6 border-b border-gray-200 pb-3">
+                Product Images
+              </h3>
+              {imageShowing && "secure_url" in imageShowing && (
+                <div className="w-full max-w-sm mx-auto aspect-square border border-gray-300 rounded-lg overflow-hidden mb-4">
+                  <CldImage
+                    width={400}
+                    height={400}
+                    src={imageShowing.secure_url}
+                    alt="Selected Product Image"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <div className="flex justify-center mb-6">
+                {uploadedImages.length > 0 && imageShowing && imageShowing.isMainImage === false && (
+                  <button
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition-colors"
+                    onClick={handleSetAsMainImage}
+                  >
+                    Set As Main Image
+                  </button>
+                )}
+                {uploadedImages.length > 0 && imageShowing && imageShowing.isMainImage === true && (
+                  <button className="px-4 py-2 bg-green-600 text-white font-medium rounded-md cursor-default">
+                    Main Image
+                  </button>
+                )}
               </div>
-            )}
-            <div className="flex justify-center">
-              {uploadedImages.length > 0 && imageShowing && imageShowing.isMainImage === false && (
-                <button
-                  className="my-4 px-4 py-2 bg-red-800 text-white font-semibold text-xl rounded-md"
-                  onClick={handleSetAsMainImage}
-                >
-                  Set As Main Image
-                </button>
-              )}
-              {uploadedImages.length > 0 && imageShowing && imageShowing.isMainImage === true && (
-                <button className="my-4 px-4 py-2 bg-gray-700 text-white font-semibold text-xl rounded-md">
-                  Main Image
-                </button>
-              )}
-            </div>
-            <div className="px-4 flex justify-center gap-2">
-              <div className="max-w-full flex justify-normal flex-wrap gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {uploadedImages.map((image, index) => (
                   <div key={index} className="relative">
                     <div
-                      className="max-lg:size-18 lg:size-28 border border-gray-400 rounded-md relative !overflow-hidden"
+                      className="aspect-square border border-gray-300 rounded-lg overflow-hidden cursor-pointer hover:border-blue-500 transition-colors"
                       onClick={() => handleImageClick(image)}
                     >
                       <CldImage
@@ -72,54 +72,49 @@ export default function AddProductPage() {
                         className="object-cover"
                       />
                       {index === 0 && (
-                        <div className="absolute top-0 left-0 bg-red-600 text-white text-xs px-1">Main</div>
+                        <div className="absolute top-1 left-1 bg-green-600 text-white text-xs px-2 py-1 rounded">Main</div>
                       )}
                     </div>
-                    <div className="grid grid-cols-2 gap-1 mt-1">
-                      <div className="col-start-1 flex-1">
-                        {index > 0 && (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleSwapImage(index, index - 1);
-                            }}
-                            className="bg-gray-700 text-gray-200 w-full flex items-center justify-center text-2xl rounded-sm"
-                          >
-                            <TbArrowBigLeftLinesFilled />
-                          </button>
-                        )}
-                      </div>
-                      <div className="col-start-2 flex-1">
-                        {index < uploadedImages.length - 1 && (
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleSwapImage(index, index + 1);
-                            }}
-                            className="bg-gray-200 text-gray-700 w-full flex items-center justify-center text-2xl rounded-sm"
-                          >
-                            <TbArrowBigRightLinesFilled />
-                          </button>
-                        )}
-                      </div>
+                    <div className="flex gap-1 mt-2">
+                      {index > 0 && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSwapImage(index, index - 1);
+                          }}
+                          className="flex-1 bg-gray-600 hover:bg-gray-700 text-white p-1 rounded text-sm transition-colors"
+                        >
+                          <TbArrowBigLeftLinesFilled className="mx-auto" />
+                        </button>
+                      )}
+                      {index < uploadedImages.length - 1 && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSwapImage(index, index + 1);
+                          }}
+                          className="flex-1 bg-gray-600 hover:bg-gray-700 text-white p-1 rounded text-sm transition-colors"
+                        >
+                          <TbArrowBigRightLinesFilled className="mx-auto" />
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}
-                {
-                  <ProductImageUploadWidget
-                    onSuccess={handleImageUpload}
-                    maxFiles={5}
-                    buttonText="Upload Images"
-                    type="thumbnails"
-                    uploadedImagesCount={uploadedImages.length}
-                  />
-                }
+                <ProductImageUploadWidget
+                  onSuccess={handleImageUpload}
+                  maxFiles={5}
+                  buttonText="Upload Images"
+                  type="thumbnails"
+                  uploadedImagesCount={uploadedImages.length}
+                />
               </div>
             </div>
           </div>
-          <div className="lg:order-1">
+          <div className="order-1 lg:order-2">
+            <div className="bg-white rounded-lg shadow-md p-6">
             <Formik
               initialValues={
                 {
@@ -155,10 +150,10 @@ export default function AddProductPage() {
               {() => (
                 <Form>
                   <ProductInputFields />
-                  <div className="px-3 w-full">
+                  <div className="mt-6">
                     <button
                       type="submit"
-                      className="w-full mt-4 px-4 py-2 bg-red-800 text-white font-semibold text-2xl rounded-md "
+                      className="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg rounded-md transition-colors"
                     >
                       Add Product
                     </button>
@@ -166,6 +161,7 @@ export default function AddProductPage() {
                 </Form>
               )}
             </Formik>
+            </div>
           </div>
         </div>
       </div>
