@@ -12,7 +12,7 @@ import { TbSquareCheckFilled, TbTicketOff } from "react-icons/tb";
 import { IVoucher } from "@/types/vouchers/voucher.type";
 import { HiMiniReceiptPercent } from "react-icons/hi2";
 
-function CheckoutContent() {
+function CheckoutContent({ onNavigateToPayment }: { onNavigateToPayment: (orderId: string) => void }) {
   const {
     cartItems,
     loading,
@@ -29,14 +29,8 @@ function CheckoutContent() {
     appliedVoucher,
     handleApplyVoucher,
   } = useCartItems();
-  // console.log("Vouchers:", vouchers);
-  console.log("Discount in Price:", discountInPrice);
-  console.log("Voucher Amount Off:", voucherAmountOff);
-  console.log("Voucher Shipping Off:", voucherShippingOff);
-  const { handleCreateOrder, isSummaryOpen, setIsSummaryOpen } = useOrder();
 
-  const router = useRouter();
-  // to navigate to payment page after order creation
+  const { handleCreateOrder, isSummaryOpen, setIsSummaryOpen } = useOrder();
 
   if (loading)
     return (
@@ -267,7 +261,9 @@ function CheckoutContent() {
             <button
               onClick={async () => {
                 const orderId = await handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "");
-                router.push(`/payment/${orderId}`);
+                if (orderId) {
+                  onNavigateToPayment(orderId);
+                }
               }}
               className="w-full mt-6 bg-red-700 text-white py-2 rounded-lg hover:bg-red-800 transition"
             >
@@ -334,8 +330,13 @@ function CheckoutContent() {
                 </div>
                 <button
                   onClick={async () => {
-                    const orderId = await handleCreateOrder(mainAddress?.id || "", cartItems[0]?.storeId || "");
-                    router.push(`/payment/${orderId}`);
+                    if (!mainAddress) {
+                      return;
+                    }
+                    const orderId = await handleCreateOrder(mainAddress.id, cartItems[0]?.storeId);
+                    if (orderId) {
+                      onNavigateToPayment(orderId);
+                    }
                   }}
                   className="bg-red-700 text-white text-lg p-2 rounded-lg hover:bg-red-800 transition"
                 >
@@ -351,6 +352,12 @@ function CheckoutContent() {
 }
 
 export default function CheckoutPage() {
+  const router = useRouter();
+
+  const handleNavigateToPayment = (orderId: string) => {
+    router.push(`/payment/${orderId}`);
+  };
+
   return (
     <Suspense
       fallback={
@@ -359,7 +366,7 @@ export default function CheckoutPage() {
         </div>
       }
     >
-      <CheckoutContent />
+      <CheckoutContent onNavigateToPayment={handleNavigateToPayment} />
     </Suspense>
   );
 }

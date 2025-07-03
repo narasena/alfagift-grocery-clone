@@ -24,9 +24,9 @@ export default function useOrder(statusForPage?: string) {
       if (token) {
         // setLoading(true);
         const response = await createOrder(token, shippingAddressId, storeId, voucherId);
-        setOrder(response.data);
+        setOrder(response.order);
         toast.success(`Barang berhasil dipesan!`);
-        return response.data.id;
+        return response.order.id;
       }
     } catch (error) {
       console.error("Failed to create order:", error);

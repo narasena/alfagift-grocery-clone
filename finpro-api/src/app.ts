@@ -19,6 +19,7 @@ import shippingRouter from "./routers/shipping.router";
 import addressRouter from "./routers/address.router";
 import userRouter from "./routers/user.router";
 import voucherRouter from "./routers/voucher.router";
+import { AppError } from "./utils/app.error";
 
 interface ICustomError extends Error {
   isExpose?: boolean;
@@ -56,13 +57,21 @@ export default class App {
     });
 
     // Error Handler
-    this.app.use((err: ICustomError, req: Request, res: Response, next: NextFunction) => {
+    this.app.use((err: AppError | ICustomError | Error, req: Request, res: Response, next: NextFunction) => {
       if (req.path.includes("/api/")) {
-        console.error("Error : ", err);
+        console.error("Error:", err.message);
+        console.error("Stack:", err.stack);
 
-        // Check if error is exposed (safe to show to client)
-        if (err.isExpose) {
-          res.status(err.status || 400).json({
+        // Check if error is AppError (operational error)
+        if (err instanceof AppError && err.isOperational) {
+          res.status(err.statusCode).json({
+            success: false,
+            message: err.message,
+          });
+        }
+        // Check if error has isExpose property (your custom errors)
+        else if ('isExpose' in err && (err as ICustomError).isExpose) {
+          res.status((err as ICustomError).status || 400).json({
             success: false,
             message: err.message,
           });
