@@ -178,6 +178,7 @@ export default function useCartItems() {
     }
     return 0
   }
+
     , [appliedVoucher]);
   
   const shippingCostOrder = React.useMemo(() =>
