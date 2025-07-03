@@ -5,31 +5,55 @@ import { EStockMovementType, IProductStock, IProductStockHistory, IProductStockH
 
 export const getAllStocks = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const stocks = await prisma.productStock.findMany({
-      where: {
+    const { page = 1, limit = 10, search } = req.query;
+    const pageNum = parseInt(page as string);
+    const limitNum = parseInt(limit as string);
+    const skip = (pageNum - 1) * limitNum;
+
+    const where: Prisma.ProductStockWhereInput = {
+      deletedAt: null,
+      product: {
         deletedAt: null,
-        product: {
-          deletedAt: null,
-        },
-        store: { deletedAt: null },
+        ...(search && {
+          name: {
+            contains: search as string,
+            mode: 'insensitive'
+          }
+        })
       },
-      include: {
-        product: {
-          include: {
-            productImage: {
-              where: { deletedAt: null },
-              orderBy: [{ isMainImage: "desc" }, { updatedAt: "desc" }],
+      store: { deletedAt: null },
+    };
+
+    const [stocks, total] = await Promise.all([
+      prisma.productStock.findMany({
+        where,
+        include: {
+          product: {
+            include: {
+              productImage: {
+                where: { deletedAt: null },
+                orderBy: [{ isMainImage: "desc" }, { updatedAt: "desc" }],
+              },
             },
           },
+          store: true,
         },
-        store: true,
-      },
-    });
-    console.log(stocks.length);
+        orderBy: {
+          updatedAt: 'desc'
+        },
+        skip,
+        take: limitNum,
+      }),
+      prisma.productStock.count({ where })
+    ]);
+
     res.status(200).json({
       success: true,
       message: "Stocks fetched successfully",
       stocks,
+      total,
+      page: pageNum,
+      totalPages: Math.ceil(total / limitNum)
     });
   } catch (error) {
     next(error);
