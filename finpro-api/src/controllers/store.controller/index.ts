@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { prisma } from "../../prisma";
 
-
 export const getAllStores = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Verifikasi token admin (contoh)
@@ -22,8 +21,8 @@ export const getAllStores = async (req: Request, res: Response, next: NextFuncti
         province: true,
       },
       orderBy: { createdAt: "desc" },
-      where: { 
-        deletedAt: null 
+      where: {
+        deletedAt: null,
       },
     });
 
@@ -92,25 +91,38 @@ export const createStore = async (req: Request, res: Response, next: NextFunctio
       email,
     } = req.body;
 
-    const newStore = await prisma.store.create({
-      data: {
-        name,
-        address,
-        subDistrict,
-        district,
-        city,
-        province,
-        postalCode,
-        latitude: String(latitude),
-        longitude: String(longitude),
-        phoneNumber,
-        email,
-      },
+    const newStore = await prisma.$transaction(async (tx) => {
+      const store = await tx.store.create({
+        data: {
+          name,
+          address,
+          subDistrict,
+          district,
+          city,
+          province,
+          postalCode,
+          latitude: String(latitude),
+          longitude: String(longitude),
+          phoneNumber,
+          email,
+        },
+      });
+
+      const products = await tx.product.findMany({ select: { id: true } });
+
+      const newProductStocks = await tx.productStock.createMany({
+        data: products.map((product) => ({
+          productId: product.id,
+          stock: 0,
+          storeId: store.id,
+        })),
+      });
+      return { ...store, productStocks: newProductStocks };
     });
 
     res.status(201).json({
       message: "Store berhasil dibuat",
-      data: newStore,
+      newStore,
     });
   } catch (error) {
     next(error);
@@ -178,13 +190,13 @@ export const deleteStore = async (req: Request, res: Response, next: NextFunctio
     const deletedStore = await prisma.store.update({
       where: { id },
       data: {
-        deletedAt: new Date()  // Mengisi timestamp saat ini
-      }
+        deletedAt: new Date(), // Mengisi timestamp saat ini
+      },
     });
 
-    res.status(200).json({ 
+    res.status(200).json({
       message: "Store berhasil dihapus",
-      data: deletedStore
+      data: deletedStore,
     });
   } catch (error) {
     console.error("Error saat menghapus store:", error);
