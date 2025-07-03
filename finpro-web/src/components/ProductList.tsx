@@ -188,7 +188,7 @@ export default function DaftarProduk() {
                     <span className="font-bold text-red-600">Pengiriman Instan</span>
                   </div>
                 </div>
-              </div>
+              
               <div>
                 <p className="text-xs text-gray-600 font-medium mb-1">
                   {produk.productSubCategory?.name || 'Umum'}
@@ -201,6 +201,7 @@ export default function DaftarProduk() {
                 </p>
               </div>
             </Link>
+            </div>
           </div>
         ))}
       </div>
