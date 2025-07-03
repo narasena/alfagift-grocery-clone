@@ -5,6 +5,7 @@ import AdminProductTableCellDataImage from "@/features/admin/components/AdminPro
 import AdminProductTableCellDataLink from "@/features/admin/components/AdminProductTableCellDataLink";
 import { toast } from "react-toastify";
 import apiInstance from "@/utils/api/apiInstance";
+import { AxiosError } from "axios";
 
 export const useAdminProductStocksPerStore = () => {
   const { storeStocks,storeId, storeName, handleGetProductStocksPerStore } = useGetProductStocksPerStore();
@@ -550,9 +551,10 @@ export const useAdminProductStocksPerStore = () => {
       setCheckedRows([]);
       setMassEdit(false);
       await handleGetProductStocksPerStore();
-    } catch (error: any) {
+    } catch (error) {
+      const axiosError = error as AxiosError<{ message: string }>;
       console.error("Error updating stock:", error);
-      const errorMessage = error.response?.data?.message || "Error updating stock";
+      const errorMessage = axiosError.response?.data?.message || "Error updating stock";
       toast.error(errorMessage);
     }
   }

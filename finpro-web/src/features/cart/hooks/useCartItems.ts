@@ -45,7 +45,9 @@ export default function useCartItems() {
         setLoading(false);
       }
     } catch (error) {
-      console.error("Error displaying cart items:", error);
+      const errResponse = error as AxiosError<{ message: string }>;
+      const errMessage = errResponse?.response?.data?.message
+      console.error("Error displaying cart items:", errMessage);
     } finally {
       setLoading(false);
     }

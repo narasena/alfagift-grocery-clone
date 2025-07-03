@@ -10,8 +10,9 @@ import useCart from "@/features/(user)/p/hooks/useCart";
 import { IProductDetailsCategoryResponse } from "@/types/products/product.category.type";
 import { EDiscountType } from "@/types/discounts/discount.type";
 export default function CategorySlugPage() {
-  const { category, breadcrumbLinks, products, storeId, totalProducts, currentPage, totalPages, handlePageChange } = useCategory();
-  const {  handleAddToCart,} = useCart();
+  const { category, breadcrumbLinks, products, storeId, totalProducts, currentPage, totalPages, handlePageChange } =
+    useCategory();
+  const { handleAddToCart } = useCart();
   console.log("Category Products:", products);
 
   return (
@@ -47,7 +48,10 @@ export default function CategorySlugPage() {
       {/* cards */}
       <div className="md:flex md:flex-wrap w-full grid grid-cols-2 gap-2">
         {products.map((product, index) => (
-          <div key={index} className="sm:max-w-[16.667%] sm:min-w-[160px] lg:max-w-[190px] md:max-h-[400px] md:px-[15px]">
+          <div
+            key={index}
+            className="sm:max-w-[16.667%] sm:min-w-[160px] lg:max-w-[190px] md:max-h-[400px] md:px-[15px]"
+          >
             <div className="block rounded-md shadow-md mb-6">
               <Link href={`/p/${product.slug}`} className="flex flex-col ">
                 <div className="overflow-hidden centered">
@@ -57,7 +61,7 @@ export default function CategorySlugPage() {
                 <div className="p-2">
                   <div className="h-5 flex items-center">
                     {product.productDiscountHistories.length > 0 &&
-                      (product.productDiscountHistories[0].discount.discountType === EDiscountType.BUY1_GET1 ? (
+                      (product.productDiscountHistories[0]?.discount.discountType === EDiscountType.BUY1_GET1 ? (
                         <span className="text-white bg-lime-500 py-0.5 px-1 rounded-sm font-bold text-[10px] h-max">
                           Beli 1 Gratis 1
                         </span>
@@ -74,10 +78,10 @@ export default function CategorySlugPage() {
                   <div>
                     <span className="font-bold text-base text-red-600">
                       {product.productDiscountHistories.length > 0 &&
-                      product.productDiscountHistories[0].discount.discountType !== EDiscountType.BUY1_GET1
-                        ? (product.productDiscountHistories[0].discount.discountType === EDiscountType.FIXED_AMOUNT
-                            ? product.price - product.productDiscountHistories[0].discountValue
-                            : product.price * (1 - product.productDiscountHistories[0].discountValue / 100)
+                      product.productDiscountHistories[0]?.discount.discountType !== EDiscountType.BUY1_GET1
+                        ? (product.productDiscountHistories[0]?.discount.discountType === EDiscountType.FIXED_AMOUNT
+                            ? product.price - product.productDiscountHistories[0]?.discountValue
+                            : product.price * (1 - product.productDiscountHistories[0]?.discountValue / 100)
                           ).toLocaleString("id-ID", {
                             style: "currency",
                             currency: "IDR",
@@ -115,7 +119,7 @@ export default function CategorySlugPage() {
           </div>
         ))}
       </div>
-      
+
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-center mt-8">
@@ -127,7 +131,7 @@ export default function CategorySlugPage() {
             >
               Previous
             </button>
-            
+
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <button
                 key={page}
@@ -135,14 +139,14 @@ export default function CategorySlugPage() {
                 disabled={currentPage === page}
                 className={`px-3 py-2 text-sm border rounded-md cursor-pointer ${
                   currentPage === page
-                    ? 'bg-red-600 text-white border-red-600'
-                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                    ? "bg-red-600 text-white border-red-600"
+                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
                 }`}
               >
                 {page}
               </button>
             ))}
-            
+
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
