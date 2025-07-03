@@ -195,12 +195,12 @@ export default function ProductSlugPage() {
             </h1>
             {product &&
             product.productDiscountHistories.length > 0 &&
-            product.productDiscountHistories[0].discount.discountType === EDiscountType.PERCENTAGE ? (
+            product?.productDiscountHistories[0]?.discount.discountType === EDiscountType.PERCENTAGE ? (
               <span className="py-1 px-2 bg-amber-600 text-white rounded-md text-sm font-semibold">
                 {`${product.productDiscountHistories[0].discountValue}%`}
               </span>
             ) : (
-              product?.productDiscountHistories[0].discount.discountType === EDiscountType.FIXED_AMOUNT && (
+              product?.productDiscountHistories[0]?.discount.discountType === EDiscountType.FIXED_AMOUNT && (
                 <span className="py-1 px-2 bg-amber-600 text-white rounded-md text-xs italic font-semibold">{`- Rp ${product.productDiscountHistories[0].discountValue}`}</span>
               )
             )}
@@ -209,7 +209,7 @@ export default function ProductSlugPage() {
           <div className="h-5 flex items-center px-3">
             {product &&
               product.productDiscountHistories.length > 0 &&
-              (product.productDiscountHistories[0].discount.discountType === EDiscountType.BUY1_GET1 ? (
+              (product?.productDiscountHistories[0]?.discount.discountType === EDiscountType.BUY1_GET1 ? (
                 <span className="text-white bg-lime-500 py-0.5 px-1 rounded-sm font-bold text-sm h-max">
                   Beli 1 Gratis 1
                 </span>

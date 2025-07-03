@@ -6,6 +6,7 @@ import HeroCarousel from "../components/HeroCarousel"
 import Navbar from "../components/Navbar"
 import ProductList from "../components/ProductList"
 import StoreSelector from "../components/StoreSelector";
+import AppsInfoComponent from "./(user)/(slug page)/(product)/p/[slug]/components/AppsInformation";
 
 export default function HomePage() {
   return (
@@ -19,6 +20,7 @@ export default function HomePage() {
           
           {/* Product List */}
           <ProductList />
+          <AppsInfoComponent />
         </div>
       </main>
       

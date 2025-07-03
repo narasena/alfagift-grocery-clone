@@ -111,8 +111,8 @@ export default function DaftarProduk() {
     <div className="mt-12">
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-2xl font-bold text-gray-800">Produk Unggulan</h2>
-        <Link href="/products" className="text-black-600 hover:text-red-700 text-sm font-medium">
-          Lihat Semua
+        <Link href="/products" className="text-blue-600 underline decoration-blue-600 hover:text-red-700 hover:underline hover:decoration-red-700 text-sm font-medium">
+          Lihat Semua 
         </Link>
       </div>
       
