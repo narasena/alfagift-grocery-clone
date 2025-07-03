@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ICartItem } from "@/types/carts/cartItem.type";
-import {  IProductDetails } from "@/types/products/product.type";
+import { IProductDetails } from "@/types/products/product.type";
 import { toast } from "react-toastify";
 // import authStore from "@/zustand/store";
 import useAuthStore from "@/zustand/authStore";
@@ -28,9 +28,9 @@ export default function useCart() {
     //         ? product.discount.discountedPrice
     //         : product.price
     //       : product.productDiscountHistories.length > 0
-    //       ? product.productDiscountHistories[0].discountValue > 100
-    //         ? product.price - product.productDiscountHistories[0].discountValue
-    //         : product.price * (1 - product.productDiscountHistories[0].discountValue / 100)
+    //       ? product.productDiscountHistories[0]?.discountValue > 100
+    //         ? product.price - product.productDiscountHistories[0]?.discountValue
+    //         : product.price * (1 - product.productDiscountHistories[0]?.discountValue / 100)
     //       : product.price,
     //   quantity: quantity,
     //   image: product.productImage?.[0]?.imageUrl ?? "",
@@ -38,7 +38,7 @@ export default function useCart() {
     try {
       if (token) {
         await addProductToCart(productId, quantity, storeId, token);
-        const updatedCartItems = await handleGetCartItems(token,storeId);
+        const updatedCartItems = await handleGetCartItems(token, storeId);
         console.log("Updated cart items:", updatedCartItems.data.cartItems);
         // setCart(updatedCartItems.data.cart.cartItems);
         // await handleGetCartItems(token);

@@ -168,7 +168,7 @@ export default function CartPage() {
                           <p className="text-black font-semibold">{item.product.name}</p>
                           <div className="h-5 flex items-center px-">
                             {item.product.productDiscountHistories.length > 0 &&
-                              (item.product.productDiscountHistories[0].discount.discountType ===
+                              (item.product.productDiscountHistories[0]?.discount.discountType ===
                               EDiscountType.BUY1_GET1 ? (
                                 <span className="text-white bg-lime-500 py-0.5 px-1 rounded-md font-bold text-sm h-max">
                                   Beli 1 Gratis 1
@@ -186,23 +186,23 @@ export default function CartPage() {
                           <div className="flex items-center gap-2">
                             {
                                         item.product.productDiscountHistories.length > 0 &&
-                                        item.product.productDiscountHistories[0].discount.discountType === EDiscountType.PERCENTAGE ? (
+                                        item.product.productDiscountHistories[0]?.discount.discountType === EDiscountType.PERCENTAGE ? (
                                           <span className="py-0.5 px-1.5 bg-amber-600 text-white rounded-md text-xs font-semibold">
-                                            {`${item.product.productDiscountHistories[0].discountValue}%`}
+                                            {`${item.product.productDiscountHistories[0]?.discountValue}%`}
                                           </span>
                                         ) : (
-                                          item.product?.productDiscountHistories[0].discount.discountType === EDiscountType.FIXED_AMOUNT && (
-                                            <span className="py-0.5 px-1.5 bg-orange-500 text-white rounded-md text-xs italic font-semibold">{`- Rp ${item.product.productDiscountHistories[0].discountValue}`}</span>
+                                          item.product?.productDiscountHistories[0]?.discount.discountType === EDiscountType.FIXED_AMOUNT && (
+                                            <span className="py-0.5 px-1.5 bg-orange-500 text-white rounded-md text-xs italic font-semibold">{`- Rp ${item.product.productDiscountHistories[0]?.discountValue}`}</span>
                                           )
                                         )}
                           <p className="text-gray-700 text-base mb-2">
                             {item.product?.productDiscountHistories.length > 0 &&
-                            item.product.productDiscountHistories[0].discount.discountType !== EDiscountType.BUY1_GET1
-                              ? (item.product.productDiscountHistories[0].discount.discountType ===
+                            item.product.productDiscountHistories[0]?.discount.discountType !== EDiscountType.BUY1_GET1
+                              ? (item.product.productDiscountHistories[0]?.discount.discountType ===
                                 EDiscountType.FIXED_AMOUNT
-                                  ? item.product.price - item.product.productDiscountHistories[0].discountValue
+                                  ? item.product.price - item.product.productDiscountHistories[0]?.discountValue
                                   : item.product.price *
-                                    (1 - item.product.productDiscountHistories[0].discountValue / 100)
+                                    (1 - item.product.productDiscountHistories[0]?.discountValue / 100)
                                 ).toLocaleString("id-ID", {
                                   style: "currency",
                                   currency: "IDR",
