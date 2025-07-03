@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaShoppingCart, FaSearch, FaBars, FaTimes } from "react-icons/fa";
+import { FaShoppingCart, FaBars, FaTimes } from "react-icons/fa";
 import SelectCategory from "./SelectCategory";
 import ProfileDropdown from "./ProfileDropdown";
+import SearchBarDropdownProducts from "./filters/SearchBarDropdownProducts";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,20 +18,15 @@ export default function Navbar() {
           {/* Logo and brand */}
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmWWSU4u5wGIVkwL2LxKb6c_p0X8BAued88g&s" alt="Grocery Logo" width={120} height={40} className="h-8 w-auto" />
+              <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmWWSU4u5wGIVkwL2LxKb6c_p0X8BAued88g&s" alt="Grocery Logo" width={120} height={40} className="h-8 w-auto" unoptimized />
             </Link>
           </div>
 
           {/* Search bar - hidden on mobile */}
           <div className="hidden md:flex items-center flex-1 mx-8">
-            <div className="w-full relative">
-              <input
-                type="text"
-                placeholder="Search for products..."
-                className="w-150 pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500"
-              />
-              <FaSearch className="absolute left-3 top-3 text-gray-400" />
-            </div>
+            <Suspense fallback={<div className="w-full h-10 bg-gray-100 rounded-lg animate-pulse" />}>
+              <SearchBarDropdownProducts onProductSelect={(product) => console.log('Selected:', product)} />
+            </Suspense>
           </div>
 
           {/* Navigation links - hidden on mobile */}
@@ -66,13 +62,10 @@ export default function Navbar() {
       {isMenuOpen && (
         <div className="md:hidden bg-white shadow-lg">
           <div className="px-4 pt-2 pb-3 space-y-1">
-            <div className="flex items-center mb-3">
-              <input
-                type="text"
-                placeholder="Search for products..."
-                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-red-500"
-              />
-              <FaSearch className="absolute left-7 top-[4.5rem] text-gray-400" />
+            <div className="mb-3">
+              <Suspense fallback={<div className="w-full h-10 bg-gray-100 rounded-lg animate-pulse" />}>
+                <SearchBarDropdownProducts onProductSelect={(product) => console.log('Selected:', product)} />
+              </Suspense>
             </div>
             <div></div>
             <SelectCategory />
