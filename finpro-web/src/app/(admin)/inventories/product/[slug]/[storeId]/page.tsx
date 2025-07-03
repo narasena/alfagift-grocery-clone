@@ -37,22 +37,23 @@ export default function AdminInventoryByProductInStorePage() {
     
     setIsUpdating(true);
     try {
-      await apiInstance.put(`/inventories/product/update-stock/${productStockDetail?.product.slug}/${productStockDetail?.storeId}`, {
+      const response = await apiInstance.put(`/inventories/product/update-stock/${productStockDetail?.product.slug}/${productStockDetail?.storeId}`, {
         quantity: values.quantity,
         type: values.type,
         reference: values.reference,
         notes: values.notes
       });
-      toast.success("Stock updated successfully");
+      toast.success(response.data.message || "Stock updated successfully");
       // Reset form
       setQuantity("");
       setReference("");
       setNotes("");
       // Refresh page data
       window.location.reload();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating stock:", error);
-      toast.error("Error updating stock");
+      const errorMessage = error.response?.data?.message || "Error updating stock";
+      toast.error(errorMessage);
     } finally {
       setIsUpdating(false);
     }

@@ -11,6 +11,9 @@ export default function AdminInventoryOverviewPage() {
     getStockCellValue,
     searchTerm,
     setSearchTerm,
+    selectedStore,
+    setSelectedStore,
+    stores,
     currentPage,
     setCurrentPage,
     totalPages,
@@ -36,6 +39,20 @@ export default function AdminInventoryOverviewPage() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
             />
+          </div>
+          <div className="w-full sm:w-64">
+            <select
+              value={selectedStore}
+              onChange={(e) => setSelectedStore(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+            >
+              <option value="">All Stores</option>
+              {stores.map((store) => (
+                <option key={store.id} value={store.id}>
+                  {store.name}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>

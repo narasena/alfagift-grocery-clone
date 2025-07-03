@@ -5,7 +5,7 @@ import { EStockMovementType, IProductStock, IProductStockHistory, IProductStockH
 
 export const getAllStocks = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { page = 1, limit = 10, search } = req.query;
+    const { page = 1, limit = 10, search, storeId } = req.query;
     const pageNum = parseInt(page as string);
     const limitNum = parseInt(limit as string);
     const skip = (pageNum - 1) * limitNum;
@@ -22,6 +22,7 @@ export const getAllStocks = async (req: Request, res: Response, next: NextFuncti
         })
       },
       store: { deletedAt: null },
+      ...(storeId && { storeId: storeId as string })
     };
 
     const [stocks, total] = await Promise.all([
@@ -278,14 +279,18 @@ export const updateProductStockDetail = async (req: Request, res: Response, next
           newStockQuantity += Number(quantity);
           break;
         case "STORE_OUT":
-          newStockQuantity -= Number(quantity);
+          newStockQuantity = Math.max(0, newStockQuantity - Number(quantity));
           break;
         case "SALE":
-          newStockQuantity -= Number(quantity);
+          newStockQuantity = Math.max(0, newStockQuantity - Number(quantity));
           break;
         case "ADJUSTMENT":
           newStockQuantity += Number(quantity);
           break;
+      }
+
+      if (newStockQuantity < 0) {
+        throw new Error("Insufficient stock for this operation");
       }
 
       const updatedStock = await tx.productStock.update({
@@ -360,14 +365,18 @@ export const updateProductStocksByStore = async (req: Request, res: Response, ne
               newStockQuantity += Number(stock.quantity);
               break;
             case "STORE_OUT":
-              newStockQuantity -= Number(stock.quantity);
+              newStockQuantity = Math.max(0, newStockQuantity - Number(stock.quantity));
               break;
             case "SALE":
-              newStockQuantity -= Number(stock.quantity);
+              newStockQuantity = Math.max(0, newStockQuantity - Number(stock.quantity));
               break;
             case "ADJUSTMENT":
               newStockQuantity += Number(stock.quantity);
               break;
+          }
+
+          if (newStockQuantity < 0) {
+            throw new Error(`Insufficient stock for product ${stock.productId}`);
           }
 
           return tx.productStock.update({
