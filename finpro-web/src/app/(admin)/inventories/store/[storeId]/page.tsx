@@ -130,7 +130,7 @@ export default function AdminInventoryByStorePage() {
           <div className="flex items-center justify-center h-64">
             <div className="text-center">
               <div className="text-gray-500 text-lg mb-2">No products found</div>
-              <div className="text-gray-400">This store doesn't have any products yet.</div>
+                <div className="text-gray-400">{`This store doesn't have any products yet.`}</div>
             </div>
           </div>
         )}

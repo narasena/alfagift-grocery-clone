@@ -50,12 +50,12 @@ export default function AdminBottonNavBar() {
                     <div
                         key={index}
                         className={`w-1/5 h-full flex flex-col items-center justify-center ${
-                            pathName.includes(item.href) || pathName === item.href ? "bg-red-500" : ""
+                            !!pathName.includes(item?.href as string) || pathName === item?.href as string ? "bg-red-500" : ""
                         }`}
                     >
-                        <Link href={item.href} className="text-white text-sm font-medium flex flex-col items-center justify-center w-full h-full">
-                            <div className="text-2xl flex items-center justify-center">{item.icon}</div>
-                            <div className="text-center mt-1">{item.name}</div>
+                        <Link href={item?.href as string} className="text-white text-sm font-medium flex flex-col items-center justify-center w-full h-full">
+                            <div className="text-2xl flex items-center justify-center">{item?.icon}</div>
+                            <div className="text-center mt-1">{item?.name}</div>
                         </Link>
                     </div>
                 ))}

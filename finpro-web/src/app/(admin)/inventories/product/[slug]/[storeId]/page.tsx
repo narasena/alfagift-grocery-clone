@@ -10,6 +10,7 @@ import {
 import { CldImage } from "next-cloudinary";
 import { toast } from "react-toastify";
 import apiInstance from "@/utils/api/apiInstance";
+import { AxiosError } from "axios";
 
 export default function AdminInventoryByProductInStorePage() {
   const { productStockDetail, productStockDetailColumnnTitles, renderCell, stockHisoryData } =
@@ -50,9 +51,10 @@ export default function AdminInventoryByProductInStorePage() {
       setNotes("");
       // Refresh page data
       window.location.reload();
-    } catch (error: any) {
+    } catch (error) {
+      const errResponse = error as AxiosError<{ message: string }>
       console.error("Error updating stock:", error);
-      const errorMessage = error.response?.data?.message || "Error updating stock";
+      const errorMessage = errResponse.response?.data?.message || "Error updating stock";
       toast.error(errorMessage);
     } finally {
       setIsUpdating(false);
