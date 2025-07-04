@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const carouselItems = [
@@ -45,12 +46,15 @@ export default function HeroCarousel() {
           id={`slide${index + 1}`}
           className="carousel-item relative w-full"
         >
-          <img
+          <Image
             src={item.image}
             alt={item.title}
+            width={1920}
+            height={1080}
+            priority
             className="w-full h-[300px] md:h-[400px] lg:h-[500px] object-cover"
           />
-          <div className="absolute inset-0 bg-black bg-opacity-30 flex flex-col justify-center px-6 md:px-12">
+          <div className="absolute inset-0 bg-black/30 flex flex-col justify-center px-6 md:px-12">
             <h2 className="text-white text-2xl md:text-4xl font-bold mb-2">
               {item.title}
             </h2>

@@ -110,9 +110,13 @@ export default function CategorySlugPage() {
                 <button
                   type="button"
                   onClick={() => handleAddToCart(1, product?.id, storeId!, product as IProductDetailsCategoryResponse)}
-                  className="py-2 w-full bg-red-600 rounded-md font-medium text-white hover:bg-red-700 cursor-pointer"
+                  className={`py-2 w-full rounded-md font-medium text-white cursor-pointer ${
+                    product.productStock[0].stock !== 0
+                      ? "bg-red-600 hover:bg-red-700"
+                      : "bg-gray-400 pointer-events-none"
+                  }`}
                 >
-                  Beli
+                  {product.productStock[0].stock !== 0 ? "Beli" : "Stok habis"}
                 </button>
               </div>
             </div>

@@ -1,6 +1,7 @@
 import { useAllProducts } from "@/features/admin/products/hooks/useAllProducts";
 import { IProductDetails } from "@/types/products/product.type";
 import { CldImage } from "next-cloudinary";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 
@@ -41,33 +42,31 @@ export default function SearchBarDropdownProducts({ onProductSelect }: SearchBar
       </div>
 
       {isOpen && debouncedSearchTerm && filteredProducts.length > 0 && (
-        <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-lg z-50 mt-1">
+        <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-xl z-50 mt-1 max-h-80 overflow-y-auto">
           {filteredProducts.map((product) => (
-            <div
+            <Link
+              href={`/p/${product.slug}`}
               key={product.id}
               onClick={() => {
                 onProductSelect?.(product);
                 setSearchTerm("");
                 setIsOpen(false);
               }}
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b last:border-b-0"
+              className="block px-4 py-3 hover:bg-gray-200 transition-colors duration-150 border-b border-gray-100 last:border-b-0"
             >
-              <div className="flex items-center gap-4">
-                <div>
-                  {products ? (
-                    <CldImage
-                      width={48}
-                      height={48}
-                      src={product?.productImage.find((image) => image.isMainImage)?.imageUrl ?? "/"}
-                      alt={product.name}
-                    />
-                  ) : (
-                    <div className="w-12 h-12 bg-gray-200 animate-pulse rounded-md"></div>
-                  )}
+              <div className="flex items-center gap-3">
+                <div className="flex-shrink-0">
+                  <CldImage
+                    width={40}
+                    height={40}
+                    src={product?.productImage.find((image) => image.isMainImage)?.imageUrl ?? "/"}
+                    alt={product.name}
+                    className="rounded-md object-cover"
+                  />
                 </div>
-                <div>
-                  <div className="font-medium">{product.name}</div>
-                  <div className="text-sm font-medium text-red-600">
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-gray-900 truncate">{product.name}</div>
+                  <div className="text-sm font-semibold text-red-600">
                     {product.price.toLocaleString("id-ID", {
                       style: "currency",
                       currency: "IDR",
@@ -76,7 +75,7 @@ export default function SearchBarDropdownProducts({ onProductSelect }: SearchBar
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}
