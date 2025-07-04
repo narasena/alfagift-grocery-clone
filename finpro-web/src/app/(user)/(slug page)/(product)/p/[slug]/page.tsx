@@ -15,7 +15,7 @@ import { useProductBreadcrumbs } from "@/features/admin/products/hooks/useProduc
 
 import { HiOutlineShoppingCart } from "react-icons/hi";
 
-import {  IProductDetails } from "@/types/products/product.type";
+import { IProductDetails } from "@/types/products/product.type";
 
 import useCart from "@/features/(user)/p/hooks/useCart";
 import usePickStoreId from "@/hooks/stores/usePickStoreId";
@@ -26,7 +26,7 @@ import { EDiscountType } from "@/types/discounts/discount.type";
 // cari productId dr params slug
 export default function ProductSlugPage() {
   const { product, imageShowing, handleImageClick } = useProductDetails();
-  console.log(product)
+  console.log(product);
   const { quantity, setQuantity, handleQuantityChange } = useProductQuantity();
   const { breadcrumbLinks } = useProductBreadcrumbs();
   const { storeId } = usePickStoreId(); // ambil storeId dari hook
@@ -251,50 +251,60 @@ export default function ProductSlugPage() {
           <div className="lg:flex lg:flex-col lg:px-6 lg:py-6 lg:gap-2 lg:rounded-lg lg:bg-gray-50 lg:shadow-md lg:size-max w-full">
             {/* Product Add to Cart */}
             <div className="flex max-lg:justify-between max-lg:items-center gap-4 lg:flex-col max-lg:fixed max-lg:bottom-0 max-lg:px-4 max-lg:py-2 max-lg:w-[500px] max-lg:shadow-[0_-.1rem_1rem_rgba(0,0,0,.15)] max-lg:bg-white">
-              <div className="flex max-lg:flex-col max-lg:gap-2 items-center justify-between">
-                <h3 className="font-normal text-gray-400 text-sm">Jumlah Pembelian</h3>
-                <div className="flex items-center gap-1">
-                  <div
-                    className={`p-1 border border-gray-300 cursor-pointer rounded-lg active:ring-2 active:ring-gray-300 active:bg-gray-400 group ${
-                      quantity === 1 && "pointer-events-none bg-gray-300"
-                    }`}
-                    onClick={() => handleQuantityChange("minus")}
-                  >
-                    <HiOutlineMinusSm
-                      className={`text-blue-700 hover:text-gray-500 group-active:text-gray-500 ${
-                        quantity === 1 && "text-gray-500"
+              <div className="flex sm:flex-col max-sm:gap-2 items-center justify-between">
+                <div className="flex items-center gap-2 mb-2 text-sm text-gray-400 w-full">
+                  <span className="">
+                    {`Stok di toko: `}
+                    <b>{product?.productStock[0].stock}</b>
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <h3 className="sm:block font-normal text-gray-400 text-sm">Jumlah Pembelian</h3>
+                  <div className="flex items-center gap-1">
+                    <div
+                      className={`p-1 border border-gray-300 cursor-pointer rounded-lg active:ring-2 active:ring-gray-300 active:bg-gray-400 group ${
+                        quantity === 1 && "pointer-events-none bg-gray-300"
                       }`}
-                    />
-                  </div>
-                  <div className="w-12 border-b border-gray-400">
-                    <input
-                      type="number"
-                      className="w-full text-center outline-none"
-                      value={quantity}
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value);
-                        if (!isNaN(value) && value >= 1) {
-                          setQuantity(value);
-                        }
-                      }}
-                      min={1}
-                    />
-                  </div>
-                  <div
-                    className="p-1 border border-gray-300 cursor-pointer rounded-lg active:ring-2 active:ring-gray-300 active:bg-gray-400 group "
-                    onClick={() => handleQuantityChange("plus")}
-                  >
-                    <HiOutlinePlusSm className="text-blue-700 hover:text-gray-600 group-active:text-gray-500" />
+                      onClick={() => handleQuantityChange("minus")}
+                    >
+                      <HiOutlineMinusSm
+                        className={`text-blue-700 hover:text-gray-500 group-active:text-gray-500 ${
+                          quantity === 1 && "text-gray-500"
+                        }`}
+                      />
+                    </div>
+                    <div className="w-12 border-b border-gray-400">
+                      <input
+                        type="number"
+                        className="w-full text-center outline-none pointer-events-none"
+                        value={product?.productStock[0].stock===0 ? 0: quantity}
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value);
+                          if (!isNaN(value) && value >= 1) {
+                            setQuantity(value);
+                          }
+                        }}
+                        min={1}
+                      />
+                    </div>
+                    <div
+                      className="p-1 border border-gray-300 cursor-pointer rounded-lg active:ring-2 active:ring-gray-300 active:bg-gray-400 group "
+                      onClick={() => handleQuantityChange("plus")}
+                    >
+                      <HiOutlinePlusSm className="text-blue-700 hover:text-gray-600 group-active:text-gray-500" />
+                    </div>
                   </div>
                 </div>
               </div>
               <div className="flex-1">
                 {/* store nya belum */}
                 <button
-                  onClick={() => handleAddToCart(quantity, product?.id??"", storeId!, product as IProductDetails)}
-                  className="w-full text-white font-medium text-lg py-2 rounded-md flex items-center justify-center bg-red-700 cursor-pointer active:ring-4 active:ring-blue-300"
+                  onClick={() => handleAddToCart(quantity, product?.id ?? "", storeId!, product as IProductDetails)}
+                  className={`w-full text-white font-medium text-lg py-2 rounded-md flex items-center justify-center cursor-pointer active:ring-4 active:ring-blue-300 ${
+                    product?.productStock[0].stock === 0 ? "pointer-events-none bg-gray-400" : "bg-red-700"
+                  }`}
                 >
-                  {`+ Keranjang`}
+                  {`${product?.productStock[0].stock === 0 ? "Stok Habis" : "+ Keranjang"}`}
                 </button>
               </div>
             </div>

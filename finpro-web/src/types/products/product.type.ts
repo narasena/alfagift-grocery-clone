@@ -1,5 +1,5 @@
 import { EDiscountType } from "../discounts/discount.type";
-import { EStockMovementType } from "../inventories/product.stock.type";
+import { EStockMovementType, IProductStock } from "../inventories/product.stock.type";
 import { IStore } from "../stores/store.type";
 import { IProductBrand } from "./product.brand.type";
 import { IProductSubCategory } from "./product.category.type";
@@ -48,10 +48,7 @@ export interface IProductDetails extends IProduct {
   productImage: IProductImage[];
   productSubCategory: IProductSubCategory & { productCategory: IProductSubCategory };
   productBrand: IProductBrand;
-  productStock: {
-    storeId: string;
-    stock: number;
-  };
+  productStock: IProductStock[];
   productDiscountHistories: IProductDiscountHistory[];
 }
 
