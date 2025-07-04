@@ -35,7 +35,7 @@ export default function AdminLoginPage() {
         role: response.data.data.role,
       });
 
-      router.push("/admin/dashboard");
+      router.push("/dashboard");
     } catch (error) {
       console.error(error);
       toast.error("Login gagal, cek email/password.");

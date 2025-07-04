@@ -138,10 +138,10 @@ export default function SelectAddressPage() {
               >
                 <div onClick={() => handleSelectAddress(addr.id)} className="cursor-pointer pr-12">
                   <p className="text-sm font-semibold">{addr.address}</p>
-                  <p className="text-xs text-gray-600">{addr.subDistrict}, {addr.city}</p>
-                  {addr.isMainAddress && (
-                    <span className="text-xs text-green-600 font-semibold">Alamat Utama</span>
-                  )}
+                  <p className="text-xs text-gray-600">
+                    {addr.subDistrict}, {addr.city}
+                  </p>
+                  {addr.isMainAddress && <span className="text-xs text-green-600 font-semibold">Alamat Utama</span>}
                 </div>
                 <div className="absolute bottom-2 right-2 flex space-x-2">
                   {!addr.isMainAddress && (
@@ -178,7 +178,7 @@ export default function SelectAddressPage() {
 
       {/* Tombol kembali */}
       <div className="mt-4 text-center">
-        <button onClick={() => router.back()} className="text-sm text-blue-500 hover:underline">
+        <button onClick={() => router.push("/address-select")} className="text-sm text-blue-500 hover:underline">
           ← Kembali
         </button>
       </div>

@@ -4,7 +4,7 @@ interface Store {
   id: string;
   name: string;
   city: string;
-  distance: number;
+  distance?: number;
 }
 
 interface StoreState {

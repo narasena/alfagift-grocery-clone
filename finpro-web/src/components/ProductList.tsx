@@ -188,7 +188,19 @@ export default function DaftarProduk() {
                     <span className="font-bold text-red-600">Pengiriman Instan</span>
                   </div>
                 </div>
-              </Link>
+              
+              <div>
+                <p className="text-xs text-gray-600 font-medium mb-1">
+                  {produk.productSubCategory?.name || 'Umum'}
+                </p>
+                <h3 className="font-medium text-gray-800 text-sm sm:text-base mb-1 truncate">
+                  {produk.name}
+                </h3>
+                <p className="font-bold text-red-600">
+                  Rp{produk.price.toLocaleString('id-ID')}
+                </p>
+              </div>
+            </Link>
             </div>
           </div>
         ))}

@@ -72,7 +72,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   // Redirect setelah handle session selesai
   useEffect(() => {
     if (isHandleSessionLoginDone) {
-      const isPublicPath = ["/", "/login", "/register", "/admin/login"].includes(pathName);
+      const isPublicPath = ["/", "/login", "/register", "/register-verify-email", "/admin/login"].includes(pathName);
       const isAdminPath = pathName.startsWith("/admin") || 
                          pathName.startsWith("/dashboard") ||
                          pathName.startsWith("/discounts") ||

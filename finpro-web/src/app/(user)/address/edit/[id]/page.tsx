@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import instance from "@/utils/axiosinstance";
 import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
+// import * as Yup from "yup";
 import dynamic from "next/dynamic";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,16 +23,16 @@ interface Address {
   isMainAddress: boolean;
 }
 
-const AddressSchema = Yup.object().shape({
-  address: Yup.string().required("Wajib diisi"),
-  subDistrict: Yup.string().required("Wajib diisi"),
-  district: Yup.string().required("Wajib diisi"),
-  city: Yup.string().required("Wajib diisi"),
-  province: Yup.string().required("Wajib diisi"),
-  postalCode: Yup.string().required("Wajib diisi"),
-  latitude: Yup.string().nullable(),
-  longitude: Yup.string().nullable(),
-});
+// const AddressSchema = Yup.object().shape({
+//   address: Yup.string().required("Wajib diisi"),
+//   subDistrict: Yup.string().required("Wajib diisi"),
+//   district: Yup.string().required("Wajib diisi"),
+//   city: Yup.string().required("Wajib diisi"),
+//   province: Yup.string().required("Wajib diisi"),
+//   postalCode: Yup.string().required("Wajib diisi"),
+//   latitude: Yup.string().nullable(),
+//   longitude: Yup.string().nullable(),
+// });
 
 export default function EditAddressPage() {
   const { id } = useParams();
@@ -54,7 +54,7 @@ export default function EditAddressPage() {
         const res = await instance.get(`/address/${id}`);
         setAddressData(res.data);
       } catch (err) {
-        console.log(err);
+        console.error(err);
         toast.error("Gagal mengambil data alamat.");
         router.push("/select-address");
       }
@@ -82,12 +82,15 @@ export default function EditAddressPage() {
           longitude: addressData.longitude ?? "",
           isMainAddress: addressData.isMainAddress,
         }}
-        validationSchema={AddressSchema}
         onSubmit={async (values) => {
           try {
             await instance.put(`/address/${id}`, values);
             toast.success("Alamat berhasil diperbarui!");
-            router.push("/address-select");
+
+            // Delay sejenak agar toast sempat muncul
+            setTimeout(() => {
+              router.push("/address-select");
+            }, 1000); // 1 detik cukup
           } catch {
             toast.error("Gagal memperbarui alamat.");
           }
@@ -105,7 +108,9 @@ export default function EditAddressPage() {
               <div>
                 <label className="block font-semibold">Kelurahan/Desa</label>
                 <Field name="subDistrict" className="w-full border px-3 py-2 rounded-md" />
-                {touched.subDistrict && errors.subDistrict && <p className="text-red-500 text-sm">{errors.subDistrict}</p>}
+                {touched.subDistrict && errors.subDistrict && (
+                  <p className="text-red-500 text-sm">{errors.subDistrict}</p>
+                )}
               </div>
               <div>
                 <label className="block font-semibold">Kecamatan</label>
@@ -160,9 +165,7 @@ export default function EditAddressPage() {
             </div>
 
             <div className="pt-2">
-              <label className="text-sm font-semibold text-gray-700 block mb-1">
-                Pilih Lokasi di Peta (Opsional)
-              </label>
+              <label className="text-sm font-semibold text-gray-700 block mb-1">Pilih Lokasi di Peta (Opsional)</label>
               <MapPicker setFieldValue={setFieldValue} />
             </div>
 
