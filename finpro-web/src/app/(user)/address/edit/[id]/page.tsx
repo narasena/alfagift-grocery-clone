@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import instance from "@/utils/axiosinstance";
 import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
+// import * as Yup from "yup";
 import dynamic from "next/dynamic";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,16 +23,16 @@ interface Address {
   isMainAddress: boolean;
 }
 
-const AddressSchema = Yup.object().shape({
-  address: Yup.string().required("Wajib diisi"),
-  subDistrict: Yup.string().required("Wajib diisi"),
-  district: Yup.string().required("Wajib diisi"),
-  city: Yup.string().required("Wajib diisi"),
-  province: Yup.string().required("Wajib diisi"),
-  postalCode: Yup.string().required("Wajib diisi"),
-  latitude: Yup.string().nullable(),
-  longitude: Yup.string().nullable(),
-});
+// const AddressSchema = Yup.object().shape({
+//   address: Yup.string().required("Wajib diisi"),
+//   subDistrict: Yup.string().required("Wajib diisi"),
+//   district: Yup.string().required("Wajib diisi"),
+//   city: Yup.string().required("Wajib diisi"),
+//   province: Yup.string().required("Wajib diisi"),
+//   postalCode: Yup.string().required("Wajib diisi"),
+//   latitude: Yup.string().nullable(),
+//   longitude: Yup.string().nullable(),
+// });
 
 export default function EditAddressPage() {
   const { id } = useParams();
@@ -54,6 +54,7 @@ export default function EditAddressPage() {
         const res = await instance.get(`/address/${id}`);
         setAddressData(res.data);
       } catch (err) {
+        console.error(err);
         toast.error("Gagal mengambil data alamat.");
         router.push("/select-address");
       }

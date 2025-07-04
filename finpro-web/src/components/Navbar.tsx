@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { FaShoppingCart, FaUser, FaSearch, FaBars, FaTimes } from "react-icons/fa";
+import { FaShoppingCart, FaSearch, FaBars, FaTimes } from "react-icons/fa";
 import SelectCategory from "./SelectCategory";
 import ProfileDropdown from "./ProfileDropdown";
 

@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import instance from "@/utils/axiosinstance";
 
-export default function ConfirmResetPasswordPage() {
+function ConfirmResetPasswordForm() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
   const [newPassword, setNewPassword] = useState("");
@@ -52,5 +52,13 @@ export default function ConfirmResetPasswordPage() {
         </button>
       </form>
     </div>
+  );
+}
+
+export default function ConfirmResetPasswordPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ConfirmResetPasswordForm />
+    </Suspense>
   );
 }
