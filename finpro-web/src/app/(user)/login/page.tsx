@@ -39,9 +39,10 @@ export default function LoginPage() {
       router.push("/");
     } catch (error) {
       const errResponse = error as AxiosError<{ message: string }>;
-      if (error) {
+      if (errResponse) {
         const status = errResponse.response?.status;
-   const message = errResponse.response?.data?.message || "Terjadi kesalahan";
+        const message = errResponse.response?.data?.message || "Terjadi kesalahan";
+
         if (status === 404) {
           toast.error("Email Anda salah atau belum terdaftar");
         } else if (status === 401) {

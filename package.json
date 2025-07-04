@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "commitlint": "commitlint --edit",
-    "prepare": "husky install"
+    "prepare": "husky install",
+     "build": "next build"
   },
   "keywords": [],
   "author": "",
