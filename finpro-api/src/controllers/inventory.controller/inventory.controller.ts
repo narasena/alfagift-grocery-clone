@@ -550,3 +550,36 @@ export const getStocksReport = async (req: Request, res: Response, next: NextFun
     next(error);
   }
 };
+export const checkStock = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { productId, storeId, quantity } = req.body;
+
+    const productStock = await prisma.productStock.findUnique({
+      where: {
+        productId_storeId: {
+          productId,
+          storeId,
+        },
+        deletedAt: null,
+      },
+    });
+
+    if (!productStock) {
+      return res.status(404).json({
+        success: false,
+        message: "Product stock not found",
+      });
+    }
+
+    const isAvailable = productStock.stock >= quantity;
+
+    res.status(200).json({
+      success: true,
+      isAvailable,
+      currentStock: productStock.stock,
+      requestedQuantity: quantity,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

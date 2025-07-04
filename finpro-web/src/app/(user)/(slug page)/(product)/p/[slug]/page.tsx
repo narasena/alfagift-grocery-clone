@@ -27,10 +27,10 @@ import { EDiscountType } from "@/types/discounts/discount.type";
 export default function ProductSlugPage() {
   const { product, imageShowing, handleImageClick } = useProductDetails();
   console.log(product);
-  const { quantity, setQuantity, handleQuantityChange } = useProductQuantity();
   const { breadcrumbLinks } = useProductBreadcrumbs();
   const { storeId } = usePickStoreId(); // ambil storeId dari hook
-
+  const { quantity, setQuantity, handleQuantityChange } = useProductQuantity(product?.id ?? undefined, storeId ?? undefined);
+  
   // const {productId} = slug;
 
   const { cart, handleAddToCart, openModal } = useCart(); // to add items to cart
