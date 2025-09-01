@@ -1,18 +1,12 @@
+import ProductCategoryService from "@/services/product/product.category.service";
 import { prisma } from "../../prisma";
 import { Request, Response, NextFunction } from "express";
 
 export class ProductCategoryController {
-  async getProductSubCategories(req: Request, res: Response, next: NextFunction) {
+  private productCategoryService = new ProductCategoryService();
+  public async getProductSubCategories(req: Request, res: Response, next: NextFunction) {
     try {
-      const productSubCategories = await prisma.productSubCategory.findMany();
-      if (productSubCategories.length === 0) {
-        throw {
-          isExpose: true,
-          success: false,
-          status: 404,
-          message: "Data not found",
-        };
-      }
+      const productSubCategories = await this.productCategoryService.getAllProductSubCategories();
       res.status(200).json({
         success: true,
         message: "Get data successfull",
@@ -23,17 +17,9 @@ export class ProductCategoryController {
     }
   }
 
-  async getProductCategories(req: Request, res: Response, next: NextFunction) {
+  public async getProductCategories(req: Request, res: Response, next: NextFunction) {
     try {
-      const productCategories = await prisma.productCategory.findMany();
-      if (productCategories.length === 0) {
-        throw {
-          isExpose: true,
-          success: false,
-          status: 404,
-          message: "Data not found",
-        };
-      }
+      const productCategories = await this.productCategoryService.getAllProductCategories();
       res.status(200).json({
         success: true,
         message: "Get data successfull",
@@ -44,39 +30,10 @@ export class ProductCategoryController {
     }
   }
 
-  async createProductCategory(req: Request, res: Response, next: NextFunction) {
+  public async createProductCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const { name } = req.body;
-      if (!name || name === "") {
-        throw {
-          isExpose: true,
-          success: false,
-          status: 400,
-          message: "Category name is required",
-        };
-      }
-
-      const existingCategoryNames = await prisma.productCategory.findMany({
-        select: { name: true },
-      });
-
-      if (existingCategoryNames.some((category) => category.name === name)) {
-        throw {
-          isExpose: true,
-          success: false,
-          status: 400,
-          message: "Category name already exists",
-        };
-      }
-
-      const newSlug = name.toLowerCase().replace(/\s+/g, "-");
-
-      const newProductCategory = await prisma.productCategory.create({
-        data: {
-          name,
-          slug: newSlug,
-        },
-      });
+      const newProductCategory = await this.productCategoryService.createProductCategory(name);
 
       res.status(200).json({
         success: true,
@@ -91,39 +48,7 @@ export class ProductCategoryController {
   async createProductSubCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const { name, productCategoryId } = req.body;
-      console.log(name, productCategoryId);
-      if (!name || name === "" || !productCategoryId || productCategoryId === "") {
-        throw {
-          isExpose: true,
-          success: false,
-          status: 400,
-          message: "All fields are required",
-        };
-      }
-      const existingSubCategoryNames = await prisma.productSubCategory.findMany({
-        where: {
-          productCategoryId,
-        },
-        select: { name: true },
-      });
-      if (existingSubCategoryNames.some((category) => category.name === name)) {
-        throw {
-          isExpose: true,
-          success: false,
-          status: 400,
-          message: "Sub Category name already exist in the category",
-        };
-      }
-
-      const newSlug = name.toLowerCase().replace(/\s+/g, "-");
-
-      const newProductSubCategory = await prisma.productSubCategory.create({
-        data: {
-          name,
-          slug: newSlug,
-          productCategoryId,
-        },
-      });
+      const newProductSubCategory = await this.productCategoryService.createProductSubCategory(name, productCategoryId);
 
       res.status(200).json({
         success: true,
@@ -138,316 +63,22 @@ export class ProductCategoryController {
   async findProductCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const { slug, storeId } = req.params;
-      const { page = '1', limit = '10' } = req.query;
-      const skip = (Number(page) - 1) * Number(limit);
-      const take = Number(limit);
+      const { page = "1", limit = "10" } = req.query;
 
-      const category = await prisma.productCategory.findUnique({
-        where: {
-          slug,
-        },
-        select: {
-          name: true,
-          slug: true,
-          productSubCategory: {
-            select: {
-              name: true,
-              slug: true,
-              product: {
-                select: {
-                  id: true,
-                  name: true,
-                  slug: true,
-                  price: true,
-                  description: true,
-                  productImage: {
-                    take: 1,
-                    where: { isMainImage: true },
-                    select: {
-                      imageUrl: true,
-                    },
-                  },
-                  productStock: {
-                    where: {
-                      storeId,
-                    },
-                    select: {
-                      stock: true,
-                    },
-                  },
-                  productDiscountHistories: {
-                    where: {
-                      discount: {
-                        startDate: {
-                          lte: new Date(),
-                        },
-                        endDate: {
-                          gte: new Date(),
-                        },
-                        storeDiscountHistories: {
-                          some: {
-                            storeId,
-                          },
-                        },
-                      },
-                    },
-                    select: {
-                      discountValue: true,
-                      discount: {
-                        select: {
-                          discountType:true
-                        }
-                      }
-                    },
-                  }, 
-                },
-              },
-            },
-          },
-        },
-      });
-
-      const subCategory = await prisma.productSubCategory.findUnique({
-        where: {
-          slug,
-        },
-        select: {
-          name: true,
-          slug: true,
-          productCategory: {
-            select: {
-              name: true,
-              slug: true,
-            },
-          },
-          product: {
-            select: {
-              id: true, 
-              name: true,
-              slug: true,
-              price: true,
-              description: true,
-              productImage: {
-                take: 1,
-                where: { isMainImage: true },
-                select: {
-                  imageUrl: true,
-                },
-              },
-              productStock: {
-                where: {
-                  storeId,
-                },
-                select: {
-                  stock: true,
-                },
-              },
-              productDiscountHistories: {
-                where: {
-                  discount: {
-                    startDate: {
-                      lte: new Date(),
-                    },
-                    endDate: {
-                      gte: new Date(),
-                    },
-                    storeDiscountHistories: {
-                      some: {
-                        storeId,
-                      },
-                    },
-                  },
-                },
-                select: {
-                  discountValue: true,
-                  discount: {
-                    select:{discountType: true}
-                  }
-                },
-              },
-            },
-          },
-        },
-      });
-
-      if (!category && !subCategory) {
-        throw {
-          isExpose: true,
-          success: false,
-          status: 404,
-          message: "Data not found",
-        };
-      }
-
-      const result = category || subCategory;
-      
-      // Get paginated products and total count
-      let products: any[] = [];
-      let totalProducts = 0;
-      
-      if (category) {
-        // For category, get products from all subcategories with pagination
-        const allProducts = await prisma.product.findMany({
-          where: {
-            productSubCategory: {
-              productCategoryId: category ? await prisma.productCategory.findUnique({
-                where: { slug },
-                select: { id: true }
-              }).then(cat => cat?.id) : undefined
-            },
-            productStock: {
-              some: { storeId }
-            }
-          },
-          skip,
-          take,
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-            price: true,
-            description: true,
-            productImage: {
-              take: 1,
-              where: { isMainImage: true },
-              select: {
-                imageUrl: true,
-              },
-            },
-            productStock: {
-              where: {
-                storeId,
-              },
-              select: {
-                stock: true,
-              },
-            },
-            productDiscountHistories: {
-              where: {
-                discount: {
-                  startDate: {
-                    lte: new Date(),
-                  },
-                  endDate: {
-                    gte: new Date(),
-                  },
-                  storeDiscountHistories: {
-                    some: {
-                      storeId,
-                    },
-                  },
-                },
-              },
-              select: {
-                discountValue: true,
-                discount: {
-                  select: {
-                    discountType: true
-                  }
-                }
-              },
-            },
-          }
-        });
-        
-        products = allProducts;
-        totalProducts = await prisma.product.count({
-          where: {
-            productSubCategory: {
-              productCategoryId: await prisma.productCategory.findUnique({
-                where: { slug },
-                select: { id: true }
-              }).then(cat => cat?.id)
-            },
-            productStock: {
-              some: { storeId }
-            }
-          }
-        });
-      } else if (subCategory) {
-        // For subcategory, get products directly with pagination
-        products = await prisma.product.findMany({
-          where: {
-            productSubCategory: {
-              slug
-            },
-            productStock: {
-              some: { storeId }
-            }
-          },
-          skip,
-          take,
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-            price: true,
-            description: true,
-            productImage: {
-              take: 1,
-              where: { isMainImage: true },
-              select: {
-                imageUrl: true,
-              },
-            },
-            productStock: {
-              where: {
-                storeId,
-              },
-              select: {
-                stock: true,
-              },
-            },
-            productDiscountHistories: {
-              where: {
-                discount: {
-                  startDate: {
-                    lte: new Date(),
-                  },
-                  endDate: {
-                    gte: new Date(),
-                  },
-                  storeDiscountHistories: {
-                    some: {
-                      storeId,
-                    },
-                  },
-                },
-              },
-              select: {
-                discountValue: true,
-                discount: {
-                  select: {
-                    discountType: true
-                  }
-                }
-              },
-            },
-          }
-        });
-        
-        totalProducts = await prisma.product.count({
-          where: {
-            productSubCategory: {
-              slug
-            },
-            productStock: {
-              some: { storeId }
-            }
-          }
-        });
-      }
-      
-      const totalPages = Math.ceil(totalProducts / Number(limit));
+      const { category, products, totalProducts, totalPages, currentPage } =
+        await this.productCategoryService.findProductCategory(
+          { slug, storeId },
+          { page: String(page), limit: String(limit) },
+        );
 
       res.status(200).json({
         success: true,
         message: "Get data successfull",
-        category: result,
+        category,
         products,
         totalProducts,
         totalPages,
-        currentPage: Number(page)
+        currentPage,
       });
     } catch (error) {
       next(error);
