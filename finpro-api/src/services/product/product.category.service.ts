@@ -1,4 +1,3 @@
-import { Prisma } from "@/generated/prisma";
 import { prisma } from "../../prisma";
 import nameToSlug from "@/utils/nameToSlug";
 
@@ -86,7 +85,7 @@ export default class ProductCategoryService {
           isExpose: true,
           success: false,
           status: 400,
-          message: "Sub Category name already exist in the category",
+          message: "Sub Category name already exists",
         };
       }
 

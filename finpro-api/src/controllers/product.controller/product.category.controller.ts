@@ -34,9 +34,9 @@ export class ProductCategoryController {
       const { name } = req.body;
       const newProductCategory = await this.productCategoryService.createProductCategory(name);
 
-      res.status(200).json({
+      res.status(201).json({
         success: true,
-        message: "Create product category is successfull",
+        message: "Create product category is successful",
         newProductCategory,
       });
     } catch (error) {
@@ -49,9 +49,9 @@ export class ProductCategoryController {
       const { name, productCategoryId } = req.body;
       const newProductSubCategory = await this.productCategoryService.createProductSubCategory(name, productCategoryId);
 
-      res.status(200).json({
+      res.status(201).json({
         success: true,
-        message: "Create product sub category is successfull",
+        message: "Create product sub category is successful",
         newProductSubCategory,
       });
     } catch (error) {
@@ -72,7 +72,7 @@ export class ProductCategoryController {
 
       res.status(200).json({
         success: true,
-        message: "Get data successfull",
+        message: "Get data successfully",
         category,
         products,
         totalProducts,
