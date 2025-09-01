@@ -14,7 +14,7 @@
     "build": "prisma generate &&tsc && mkdir -p api && cp -r dist/src/* api/",
     "vercel-bulid": "prisma generate && tsc",
     "start": "node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "migrate:dev": "set PGOPTIONS='--statement_timeout=30000' && dotenv -e .env.development -- npx prisma migrate dev",
     "prisma:studio": "dotenv -e .env.development -- npx prisma studio",
     "prisma:generate": "dotenv -e .env.development -- npx prisma generate",
@@ -31,6 +31,8 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.7.0",
+    "@types/jest": "^30.0.0",
+    "@types/supertest": "^6.0.3",
     "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.6.1",
@@ -39,9 +41,11 @@
     "express": "^5.1.0",
     "express-validator": "^7.2.1",
     "handlebars": "^4.7.8",
+    "jest": "^30.1.2",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.0",
-    "nodemailer": "^7.0.4"
+    "nodemailer": "^7.0.4",
+    "supertest": "^7.1.4"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -57,10 +61,12 @@
     "cz-conventional-changelog": "^3.3.0",
     "dotenv-cli": "^8.0.0",
     "eslint": "^9.25.1",
+    "jest-mock-extended": "^4.0.0",
     "lint-staged": "^15.5.1",
     "nodemon": "^3.1.10",
     "prettier": "^3.5.3",
     "prisma": "^6.7.0",
+    "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },

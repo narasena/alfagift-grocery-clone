@@ -3,7 +3,7 @@ import { ICloudinaryResult, IProductImage } from "../../types/product.type";
 import { NextFunction, Request, Response } from "express";
 import { v2 as cloudinary } from "cloudinary";
 import { Prisma } from "@prisma/client";
-import { EditProductImageService } from "../../services/product.service/product.image.service";
+import { EditProductImageService } from "../../services/product/product.image.service";
 
 export class ProductController {
   async createProduct(req: Request, res: Response, next: NextFunction) {

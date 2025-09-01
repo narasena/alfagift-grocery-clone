@@ -12,11 +12,11 @@ export class ProductCategoryRouter {
   }
 
   private initializeRoutes(): void {
-    this.router.get("/", this.productCategoryController.getProductCategories);
-    this.router.get("/subcategories", this.productCategoryController.getProductSubCategories);
-    this.router.post("/create", this.productCategoryController.createProductCategory);
-    this.router.post("/subcategories/create", this.productCategoryController.createProductSubCategory);
-    this.router.get('/find/:slug/:storeId', this.productCategoryController.findProductCategory);
+    this.router.get("/", this.productCategoryController.getProductCategories.bind(this.productCategoryController));
+    this.router.get("/subcategories", this.productCategoryController.getProductSubCategories.bind(this.productCategoryController));
+    this.router.post("/create", this.productCategoryController.createProductCategory.bind(this.productCategoryController));
+    this.router.post("/subcategories/create", this.productCategoryController.createProductSubCategory.bind(this.productCategoryController));
+    this.router.get('/find/:slug/:storeId', this.productCategoryController.findProductCategory.bind(this.productCategoryController));
   }
 
   getRouter(): Router {

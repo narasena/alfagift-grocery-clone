@@ -1,5 +1,4 @@
 import ProductCategoryService from "@/services/product/product.category.service";
-import { prisma } from "../../prisma";
 import { Request, Response, NextFunction } from "express";
 
 export class ProductCategoryController {
