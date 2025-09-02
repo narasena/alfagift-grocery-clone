@@ -18,7 +18,7 @@ For the user UI/UX you can click the link above. But here are some features' sna
 
 ### Admin-Product
 
-[![Create Product to Product Lists](https://res.cloudinary.com/dhqgojfo2/video/upload/v1756808314/create_product_demo_a98c8n.mp4)](https://res.cloudinary.com/dhqgojfo2/video/upload/v1756808314/create_product_demo_a98c8n.mp4)
+![Create Product to Product Lists](https://res.cloudinary.com/dhqgojfo2/image/upload/v1756809214/create_product_demo_zqdzlj.gif)
 
 
 ## Key Features
