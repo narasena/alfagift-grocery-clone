@@ -1,7 +1,6 @@
 import { prisma } from "../../prisma";
 import { ICloudinaryResult, IProductImage } from "../../types/product.type";
 import { NextFunction, Request, Response } from "express";
-import { v2 as cloudinary } from "cloudinary";
 import { Prisma } from "@prisma/client";
 import { EditProductImageService } from "../../services/product/product.image.service";
 

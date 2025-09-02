@@ -26,7 +26,6 @@ import { EDiscountType } from "@/types/discounts/discount.type";
 // cari productId dr params slug
 export default function ProductSlugPage() {
   const { product, imageShowing, handleImageClick } = useProductDetails();
-  console.log(product);
   const { breadcrumbLinks } = useProductBreadcrumbs();
   const { storeId } = usePickStoreId(); // ambil storeId dari hook
   const { quantity, setQuantity, handleQuantityChange } = useProductQuantity(product?.id ?? undefined, storeId ?? undefined);
@@ -262,6 +261,7 @@ export default function ProductSlugPage() {
                   <h3 className="sm:block font-normal text-gray-400 text-sm">Jumlah Pembelian</h3>
                   <div className="flex items-center gap-1">
                     <div
+                      data-testid="minus-button"
                       className={`p-1 border border-gray-300 cursor-pointer rounded-lg active:ring-2 active:ring-gray-300 active:bg-gray-400 group ${
                         quantity === 1 && "pointer-events-none bg-gray-300"
                       }`}
@@ -288,6 +288,7 @@ export default function ProductSlugPage() {
                       />
                     </div>
                     <div
+                      data-testid="plus-button"
                       className="p-1 border border-gray-300 cursor-pointer rounded-lg active:ring-2 active:ring-gray-300 active:bg-gray-400 group "
                       onClick={() => handleQuantityChange("plus")}
                     >
