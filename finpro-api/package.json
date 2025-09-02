@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "nodemon",
     "build": "prisma generate && tsc && tsc-alias -p tsconfig.json && mkdir -p api && cp -r dist/src/* api/",
-    "vercel-bulid": "prisma generate && tsc && tsc-alias -p tsconfig.json",
+    "vercel-build": "prisma generate && tsc && tsc-alias -p tsconfig.json",
     "start": "node -r tsconfig-paths/register dist/src/index.js",
     "test": "jest",
     "migrate:dev": "set PGOPTIONS='--statement_timeout=30000' && dotenv -e .env.development -- npx prisma migrate dev",
