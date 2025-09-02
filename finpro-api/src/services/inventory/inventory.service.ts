@@ -1,14 +1,14 @@
-import { Prisma } from "@/generated/prisma/client";
-import { prisma } from "@/prisma";
-import { EStockMovementType, IProductStock, IProductStockHistory, IProductStockHistoryForm } from "@/types/product.stock.type";
+import { Prisma } from "../../generated/prisma/client";
+import { prisma } from "../../prisma";
+import {
+  EStockMovementType,
+  IProductStock,
+  IProductStockHistory,
+  IProductStockHistoryForm,
+} from "../../types/product.stock.type";
 
 export default class InventoryService {
-  async getAllStocks(query: {
-    page?: string;
-    limit?: string;
-    search?: string;
-    storeId?: string;
-  }) {
+  async getAllStocks(query: { page?: string; limit?: string; search?: string; storeId?: string }) {
     const { page = 1, limit = 10, search, storeId } = query;
     const pageNum = parseInt(page as string);
     const limitNum = parseInt(limit as string);
@@ -21,12 +21,12 @@ export default class InventoryService {
         ...(search && {
           name: {
             contains: search as string,
-            mode: 'insensitive'
-          }
-        })
+            mode: "insensitive",
+          },
+        }),
       },
       store: { deletedAt: null },
-      ...(storeId && { storeId: storeId as string })
+      ...(storeId && { storeId: storeId as string }),
     };
 
     const [stocks, total] = await Promise.all([
@@ -44,19 +44,19 @@ export default class InventoryService {
           store: true,
         },
         orderBy: {
-          updatedAt: 'desc'
+          updatedAt: "desc",
         },
         skip,
         take: limitNum,
       }),
-      prisma.productStock.count({ where })
+      prisma.productStock.count({ where }),
     ]);
 
     return {
       stocks,
       total,
       page: pageNum,
-      totalPages: Math.ceil(total / limitNum)
+      totalPages: Math.ceil(total / limitNum),
     };
   }
 
@@ -205,12 +205,16 @@ export default class InventoryService {
     return productStockDetail;
   }
 
-  async updateProductStockDetail(slug: string, storeId: string, payload: {
-    quantity: number;
-    type: EStockMovementType;
-    reference: string;
-    notes: string;
-  }) {
+  async updateProductStockDetail(
+    slug: string,
+    storeId: string,
+    payload: {
+      quantity: number;
+      type: EStockMovementType;
+      reference: string;
+      notes: string;
+    },
+  ) {
     const { quantity, type, reference, notes } = payload;
     const product = await prisma.product.findUnique({
       where: { slug },
@@ -388,7 +392,7 @@ export default class InventoryService {
   }) {
     const { reportType, month, storeId, type, page, limit, sortOrder, search } = query;
 
-    if (reportType === 'total') {
+    if (reportType === "total") {
       const where: Prisma.ProductStockWhereInput = { deletedAt: null };
 
       if (month) {
@@ -405,43 +409,43 @@ export default class InventoryService {
       }
 
       if (type) {
-        where.stockHistory = {}
+        where.stockHistory = {};
       }
 
       if (search) {
         where.product = {
           name: {
             contains: String(search),
-            mode: 'insensitive'
-          }
-        }
+            mode: "insensitive",
+          },
+        };
       }
       const stocksReportLength = await prisma.productStock.count({
-        where
-      })
+        where,
+      });
 
       const stocksReport = await prisma.productStock.findMany({
         where,
         include: {
           product: { select: { name: true } },
-          store: { select: { name: true } }
+          store: { select: { name: true } },
         },
 
         orderBy: {
-          createdAt: sortOrder === 'asc' ? 'asc' : 'desc',
+          createdAt: sortOrder === "asc" ? "asc" : "desc",
         },
         skip: (Number(page) - 1) * Number(limit),
         take: Number(limit),
-      })
+      });
       const stocksReportQuantity = await prisma.productStockHistory.groupBy({
-        by: ['productId', 'storeId', 'type'],
+        by: ["productId", "storeId", "type"],
         where: { storeId: storeId as string },
         _sum: {
           quantity: true,
         },
         orderBy: {
-          productId: 'asc'
-        }
+          productId: "asc",
+        },
       });
 
       const transformedStocksReport = stocksReport.map((stock) => {
@@ -460,9 +464,9 @@ export default class InventoryService {
 
       return {
         stocksReport: transformedStocksReport,
-        stocksReportLength
+        stocksReportLength,
       };
-    } else if (reportType === 'monthly') {
+    } else if (reportType === "monthly") {
       const where: Prisma.ProductStockHistoryWhereInput = { deletedAt: null };
 
       if (month) {
@@ -483,19 +487,19 @@ export default class InventoryService {
           where.productStock.product = {
             name: {
               contains: String(search),
-              mode: 'insensitive'
-            }
-          }
+              mode: "insensitive",
+            },
+          };
         }
       }
 
       if (type) {
-        where.type = type as EStockMovementType
+        where.type = type as EStockMovementType;
       }
 
       const stocksReportLength = await prisma.productStockHistory.count({
-        where
-      })
+        where,
+      });
 
       const stocksReport = await prisma.productStockHistory.findMany({
         where,
@@ -503,21 +507,20 @@ export default class InventoryService {
           productStock: {
             select: {
               product: { select: { name: true } },
-              store: { select: { name: true } }
-            }
-          }
+              store: { select: { name: true } },
+            },
+          },
         },
         orderBy: {
-          createdAt: sortOrder === 'asc' ? 'asc' : 'desc',
+          createdAt: sortOrder === "asc" ? "asc" : "desc",
         },
         // skip: (Number(page) - 1) * Number(limit),
         // take: Number(limit),
       });
       return {
         stocksReport,
-        stocksReportLength
+        stocksReportLength,
       };
-
     }
     return {}; // Should not reach here, but to satisfy return type
   }

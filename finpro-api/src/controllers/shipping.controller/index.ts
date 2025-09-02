@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { calculateCost } from "@/utils/raja.ongkir";
+import { calculateCost } from "../../utils/raja.ongkir";
 import axios from "axios";
-
 
 export const getShippingCost = async (req: Request, res: Response) => {
   const { origin, destination, weight, courier } = req.body;

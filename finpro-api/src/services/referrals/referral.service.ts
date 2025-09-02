@@ -1,13 +1,13 @@
-import { prisma } from "@/prisma"
+import { prisma } from "../../prisma";
 
 export default class ReferralService {
   public async findUserReferral(referralCode: string) {
     try {
       const user = await prisma.user.findUnique({
         where: {
-          referralCode
-        }
-      })
+          referralCode,
+        },
+      });
       if (!user) {
         throw {
           isExpose: true,
@@ -16,9 +16,9 @@ export default class ReferralService {
           message: "User with this referral code not found",
         };
       }
-      return user
+      return user;
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 }

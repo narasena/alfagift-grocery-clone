@@ -1,4 +1,4 @@
-import { IProduct } from "@/types/product.type";
+import { IProduct } from "../types/product.type";
 
 export interface IProductStockHistoryForm {
   productId: string;
@@ -9,22 +9,20 @@ export interface IProductStockHistoryForm {
 }
 
 export interface IProductStockHistory extends IProductStockHistoryForm {
-    storeId: string
+  storeId: string;
 }
 
 export enum EStockMovementType {
-    STORE_IN = "STORE_IN",
-    STORE_OUT = "STORE_OUT",
-    SALE = "SALE",
-    ADJUSTMENT = "ADJUSTMENT",
+  STORE_IN = "STORE_IN",
+  STORE_OUT = "STORE_OUT",
+  SALE = "SALE",
+  ADJUSTMENT = "ADJUSTMENT",
 }
 
 export interface IProductStock {
-    productId: string
-    storeId: string
-    stock: number
-    createdAt: Date
-    updatedAt: Date
+  productId: string;
+  storeId: string;
+  stock: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
-
-

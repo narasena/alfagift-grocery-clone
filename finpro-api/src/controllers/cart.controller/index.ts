@@ -1,6 +1,6 @@
-import { EDiscountType } from "@/types/discount.type";
-import { prisma } from "@/prisma";
-import { AppError } from "@/utils/app.error";
+import { EDiscountType } from "../../types/discount.type";
+import { prisma } from "../../prisma";
+import { AppError } from "../../utils/app.error";
 import { Request, Response, NextFunction } from "express";
 
 export const createCartItems = async (req: Request, res: Response, next: NextFunction) => {

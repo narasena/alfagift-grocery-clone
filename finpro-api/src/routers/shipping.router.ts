@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getCityIdByName, getShippingCost } from "@/controllers/shipping.controller";
+import { getCityIdByName, getShippingCost } from "../controllers/shipping.controller";
 
 const shippingRouter = Router();
 

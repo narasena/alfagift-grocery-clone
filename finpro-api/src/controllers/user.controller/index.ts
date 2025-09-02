@@ -1,13 +1,13 @@
-import { Request, Response, NextFunction } from 'express';
-import { prisma } from "@/prisma";
-import { transporter } from '../../utils/transporter.mailer';
+import { Request, Response, NextFunction } from "express";
+import { prisma } from "../../prisma";
+import { transporter } from "../../utils/transporter.mailer";
 
 export const getUserProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email } = req.query;
 
     // Validasi email
-    if (!email || typeof email !== 'string') {
+    if (!email || typeof email !== "string") {
       throw {
         isExpose: true,
         status: 400,
@@ -21,7 +21,7 @@ export const getUserProfile = async (req: Request, res: Response, next: NextFunc
       include: {
         userAddress: {
           where: { isMainAddress: true },
-          take: 1
+          take: 1,
         },
       },
     });
@@ -35,26 +35,26 @@ export const getUserProfile = async (req: Request, res: Response, next: NextFunc
     }
 
     // Format data response
-const userProfile = {
-  id: user.id,
-  email: user.email,
-  firstName: user.firstName,
-  lastName: user.lastName,
-  phoneNumber: user.phoneNumber,
-  gender: user.gender,
-  dateOfBirth: user.dateOfBirth,
-  emailVerified: user.isEmailVerified,
-  photoUrl: user.avatarImgUrl,
-  referralCode: user.referralCode,
-  address: user.userAddress[0]?.address,
-  subDistrict: user.userAddress[0]?.subDistrict,
-  district: user.userAddress[0]?.district,
-  city: user.userAddress[0]?.city,
-  province: user.userAddress[0]?.province,
-  postalCode: user.userAddress[0]?.postalCode,
-  latitude: user.userAddress[0]?.latitude,
-  longitude: user.userAddress[0]?.longitude,
-};
+    const userProfile = {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phoneNumber: user.phoneNumber,
+      gender: user.gender,
+      dateOfBirth: user.dateOfBirth,
+      emailVerified: user.isEmailVerified,
+      photoUrl: user.avatarImgUrl,
+      referralCode: user.referralCode,
+      address: user.userAddress[0]?.address,
+      subDistrict: user.userAddress[0]?.subDistrict,
+      district: user.userAddress[0]?.district,
+      city: user.userAddress[0]?.city,
+      province: user.userAddress[0]?.province,
+      postalCode: user.userAddress[0]?.postalCode,
+      latitude: user.userAddress[0]?.latitude,
+      longitude: user.userAddress[0]?.longitude,
+    };
 
     res.status(200).json({
       success: true,
@@ -69,14 +69,7 @@ const userProfile = {
 export const updateUserProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email } = req.params;
-    const {
-      firstName,
-      lastName,
-      phoneNumber,
-      gender,
-      dateOfBirth,
-      photoUrl
-    } = req.body;
+    const { firstName, lastName, phoneNumber, gender, dateOfBirth, photoUrl } = req.body;
 
     if (!email) {
       throw {
@@ -122,8 +115,8 @@ export const uploadProfilePicture = async (req: Request, res: Response, next: Ne
     }
 
     // Validasi ekstensi file
-    const validExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
-    const fileExtension = photoUrl.substring(photoUrl.lastIndexOf('.')).toLowerCase();
+    const validExtensions = [".jpg", ".jpeg", ".png", ".gif"];
+    const fileExtension = photoUrl.substring(photoUrl.lastIndexOf(".")).toLowerCase();
 
     if (!validExtensions.includes(fileExtension)) {
       throw {

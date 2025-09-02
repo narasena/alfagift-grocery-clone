@@ -5,8 +5,8 @@ import {
   createCartItems,
   deleteAllCartItems,
   updateCartItemQuantity,
-} from "@/controllers/cart.controller";
-import { jwtDecode } from "@/middlewares/jwt.decode";
+} from "../controllers/cart.controller";
+import { jwtDecode } from "../middlewares/jwt.decode";
 
 const cartRouter = Router();
 

@@ -1,8 +1,8 @@
-import { prisma } from "@/prisma";
-import nameToSlug from "@/utils/nameToSlug";
-import { ICloudinaryResult, IProductImage } from "@/types/product.type";
+import { prisma } from "../../prisma";
+import nameToSlug from "../../utils/nameToSlug";
+import { ICloudinaryResult, IProductImage } from "../../types/product.type";
 import { Prisma } from "@prisma/client";
-import { EditProductImageService } from "@/services/product/product.image.service";
+import { EditProductImageService } from "../../services/product/product.image.service";
 
 export default class ProductService {
   async createProduct(payload: {
@@ -17,7 +17,8 @@ export default class ProductService {
     dimensions: string;
     images: ICloudinaryResult[];
   }) {
-    const { name, price, productSubCategoryId, brandId, description, sku, barcode, weight, dimensions, images } = payload;
+    const { name, price, productSubCategoryId, brandId, description, sku, barcode, weight, dimensions, images } =
+      payload;
 
     const slug = nameToSlug(name);
 
@@ -80,20 +81,23 @@ export default class ProductService {
     return newProduct;
   }
 
-  async updateProduct(slug: string, payload: {
-    name: string;
-    price: number;
-    newSlug: string;
-    productSubCategoryId: string;
-    brandId: string;
-    description: string;
-    sku: string;
-    barcode: string;
-    weight: number;
-    dimensions: string;
-    editedExistingImages: IProductImage[];
-    newUploads: ICloudinaryResult[];
-  }) {
+  async updateProduct(
+    slug: string,
+    payload: {
+      name: string;
+      price: number;
+      newSlug: string;
+      productSubCategoryId: string;
+      brandId: string;
+      description: string;
+      sku: string;
+      barcode: string;
+      weight: number;
+      dimensions: string;
+      editedExistingImages: IProductImage[];
+      newUploads: ICloudinaryResult[];
+    },
+  ) {
     const {
       name,
       price,
@@ -188,11 +192,7 @@ export default class ProductService {
         },
       });
 
-      const productImageService = new EditProductImageService(
-        existingProductImages,
-        editedExistingImages,
-        newUploads,
-      );
+      const productImageService = new EditProductImageService(existingProductImages, editedExistingImages, newUploads);
 
       const toDelete = productImageService.getImagesToDelete();
       if (toDelete.length > 0) {

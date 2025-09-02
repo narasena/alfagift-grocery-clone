@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import InventoryService from "@/services/inventory/inventory.service";
+import InventoryService from "../../services/inventory/inventory.service";
 
 const inventoryService = new InventoryService();
 

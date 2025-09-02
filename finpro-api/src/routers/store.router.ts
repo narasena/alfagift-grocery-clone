@@ -7,8 +7,8 @@ import {
   updateStoreById,
   assignStoreAdmin,
   getNearestStoreByAddress,
-} from "@/controllers/store.controller";
-import { fetchAllStores } from "@/controllers/store.controller/store.controller";
+} from "../controllers/store.controller";
+import { fetchAllStores } from "../controllers/store.controller/store.controller";
 
 const storeRouter = Router();
 

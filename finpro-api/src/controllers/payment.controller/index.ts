@@ -1,5 +1,5 @@
-import { prisma } from "@/prisma";
-import { AppError } from "@/utils/app.error";
+import { prisma } from "../../prisma";
+import { AppError } from "../../utils/app.error";
 import { Request, Response, NextFunction } from "express";
 
 export const createPayment = async (req: Request, res: Response, next: NextFunction) => {
@@ -265,8 +265,16 @@ export const acceptOrRejectPayment = async (req: Request, res: Response, next: N
 
 export const getSalesReport = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { month, storeId, paymentStatus = "SUCCESS", reportType = "total", page = "1", limit = "10", search = "" } = req.query;
-    
+    const {
+      month,
+      storeId,
+      paymentStatus = "SUCCESS",
+      reportType = "total",
+      page = "1",
+      limit = "10",
+      search = "",
+    } = req.query;
+
     const skip = (Number(page) - 1) * Number(limit);
     const take = Number(limit);
 
@@ -296,7 +304,11 @@ export const getSalesReport = async (req: Request, res: Response, next: NextFunc
     if (search) {
       whereClause.OR = [
         { store: { name: { contains: search as string, mode: "insensitive" } } },
-        { orderItems: { some: { productStock: { product: { name: { contains: search as string, mode: "insensitive" } } } } } },
+        {
+          orderItems: {
+            some: { productStock: { product: { name: { contains: search as string, mode: "insensitive" } } } },
+          },
+        },
       ];
     }
 
@@ -319,7 +331,7 @@ export const getSalesReport = async (req: Request, res: Response, next: NextFunc
             where: { id: sale.storeId },
             select: { name: true },
           });
-          
+
           return {
             id: `${sale.storeId}-${month || "all"}`,
             month: month ? new Date(2024, Number(month) - 1).toLocaleString("default", { month: "long" }) : "All",
@@ -328,7 +340,7 @@ export const getSalesReport = async (req: Request, res: Response, next: NextFunc
             totalOrders: sale._count.id,
             storeName: store?.name,
           };
-        })
+        }),
       );
 
       res.status(200).json({

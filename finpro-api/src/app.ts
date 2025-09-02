@@ -1,25 +1,25 @@
 import express, { json, urlencoded, Express, Request, Response, NextFunction, Router } from "express";
 import cors from "cors";
 import { PORT } from "./config";
-import { ProductCategoryRouter } from "@/routers/product.category.router";
-import { ProductRouter } from "@/routers/product.router";
-import cartRouter from "@/routers/cart.router";
-import orderRouter from "@/routers/order.router";
-import authRouter from "@/routers/auth.router";
-import getMapRouter from "@/routers/getMap.router";
-import storeRouter from "@/routers/store.router";
-import inventoryRouter from "@/routers/inventory.router";
-import discountRouter from "@/routers/discount.router";
-import cloudinaryRouter from "@/routers/cloudinary.router";
-import adminRouter from "@/routers/admin.router";
-import referralRouter from "@/routers/referral.router";
-import allStoresRouter from "@/routers/all.stores.router";
-import paymentRouter from "@/routers/payment.router";
-import shippingRouter from "@/routers/shipping.router";
-import addressRouter from "@/routers/address.router";
-import userRouter from "@/routers/user.router";
-import voucherRouter from "@/routers/voucher.router";
-import { AppError } from "@/utils/app.error";
+import { ProductCategoryRouter } from "./routers/product.category.router";
+import { ProductRouter } from "./routers/product.router";
+import cartRouter from "./routers/cart.router";
+import orderRouter from "./routers/order.router";
+import authRouter from "./routers/auth.router";
+import getMapRouter from "./routers/getMap.router";
+import storeRouter from "./routers/store.router";
+import inventoryRouter from "./routers/inventory.router";
+import discountRouter from "./routers/discount.router";
+import cloudinaryRouter from "./routers/cloudinary.router";
+import adminRouter from "./routers/admin.router";
+import referralRouter from "./routers/referral.router";
+import allStoresRouter from "./routers/all.stores.router";
+import paymentRouter from "./routers/payment.router";
+import shippingRouter from "./routers/shipping.router";
+import addressRouter from "./routers/address.router";
+import userRouter from "./routers/user.router";
+import voucherRouter from "./routers/voucher.router";
+import { AppError } from "./utils/app.error";
 
 interface ICustomError extends Error {
   isExpose?: boolean;
@@ -70,7 +70,7 @@ export default class App {
           });
         }
         // Check if error has isExpose property (your custom errors)
-        else if ('isExpose' in err && (err as ICustomError).isExpose) {
+        else if ("isExpose" in err && (err as ICustomError).isExpose) {
           res.status((err as ICustomError).status || 400).json({
             success: false,
             message: err.message,
@@ -94,12 +94,12 @@ export default class App {
 
     // Root route for Vercel
     this.app.get("/", (req: Request, res: Response) => {
-      res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+      res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
       res.send(`<h1>Hello Bro, This is FINPRO-JCWD3202 API! ${new Date().toISOString()}</h1>`);
     });
 
     this.app.get("/api", (req: Request, res: Response) => {
-      res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+      res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
       res.send(`<h1>Hello Bro, This is FINPRO-JCWD3202 API! ${new Date().toISOString()}</h1>`);
     });
 
@@ -128,7 +128,7 @@ export default class App {
   public start(): void {
     if (process.env.NODE_ENV !== "production") {
       this.app.listen(PORT, () => {
-        console.log(`  ⚙️  Starting FINPRO API at http://localhost:${PORT}`)
+        console.log(`  ⚙️  Starting FINPRO API at http://localhost:${PORT}`);
         console.log(`  ⚙️  Server running ${new Date().toISOString()}`);
       });
     }
