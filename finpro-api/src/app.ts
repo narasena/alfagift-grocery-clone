@@ -1,6 +1,6 @@
 import express, { json, urlencoded, Express, Request, Response, NextFunction, Router } from "express";
 import cors from "cors";
-import { PORT } from "@/config";
+import { PORT } from "./config";
 import { ProductCategoryRouter } from "@/routers/product.category.router";
 import { ProductRouter } from "@/routers/product.router";
 import cartRouter from "@/routers/cart.router";
