@@ -18,10 +18,10 @@ export class ProductRouter {
       uploader(["image/jpeg", "image/png", "image/jpg", "image/webp"]).fields([{ name: "images", maxCount: 3 }]),
       this.productController.createProduct,
     );
-    this.router.get("/all", this.productController.getProducts);
-    this.router.get("/admin/list", this.productController.getAdminProducts);
-    this.router.get("/:slug/:storeId", this.productController.getProductBySlug);
-    this.router.put("/edit/:slug", this.productController.updateProduct);
+    this.router.get("/all", this.productController.getProducts).bind(this.productController);
+    this.router.get("/admin/list", this.productController.getAdminProducts).bind(this.productController);
+    this.router.get("/:slug/:storeId", this.productController.getProductBySlug).bind(this.productController);
+    this.router.put("/edit/:slug", this.productController.updateProduct).bind(this.productController);
   }
 
   getRouter(): Router {

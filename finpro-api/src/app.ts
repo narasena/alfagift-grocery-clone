@@ -92,12 +92,6 @@ export default class App {
     const productCategoryRouter = new ProductCategoryRouter();
     const productRouter = new ProductRouter();
 
-    // Root route for Vercel
-    this.app.get("/", (req: Request, res: Response) => {
-      res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
-      res.send(`<h1>Hello Bro, This is FINPRO-JCWD3202 API! ${new Date().toISOString()}</h1>`);
-    });
-
     this.app.get("/api", (req: Request, res: Response) => {
       res.set("Cache-Control", "no-store, no-cache, must-revalidate, private");
       res.send(`<h1>Hello Bro, This is FINPRO-JCWD3202 API! ${new Date().toISOString()}</h1>`);
