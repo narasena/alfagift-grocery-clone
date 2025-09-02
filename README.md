@@ -7,35 +7,19 @@ A full-stack e-commerce application that clones the functionality of the Alfagif
 
 ## Live Demo
 
-[Link to your deployed application](https://your-live-demo-link.com)
+[Alfagift-Clone](https://alfagift-grocery-clone.vercel.app/)
 
 ## Screenshots
 
-*This section will showcase the application's user interface.*
-
-<!-- Add your project screenshots here. For example: -->
-<!-- 
-![Home Page](path/to/screenshot-home.png)
-_The home page showing featured products._
--->
-<!-- 
-![Product Page](path/to/screenshot-product.png)
-_The product detail page._
--->
 
 ## Feature Highlights
 
-*This section is for animations demonstrating key user flows.*
+For the user UI/UX you can click the link above. But here are some features' snapshots for admin/managers.
 
-<!-- Add your feature flow animation (GIF) here. For example: -->
-<!-- 
-**User Onboarding & Login**
-![Login Flow](path/to/login-flow.gif)
--->
-<!-- 
-**Adding Item to Cart**
-![Add to Cart Flow](path/to/add-to-cart-flow.gif)
--->
+### Admin-Product
+
+[![Create Product to Product Lists](https://res.cloudinary.com/dhqgojfo2/video/upload/v1756808314/create_product_demo_a98c8n.mp4)](https://res.cloudinary.com/dhqgojfo2/video/upload/v1756808314/create_product_demo_a98c8n.mp4)
+
 
 ## Key Features
 

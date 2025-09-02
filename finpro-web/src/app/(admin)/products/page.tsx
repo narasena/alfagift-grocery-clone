@@ -43,24 +43,23 @@ export default function AdminProductPage() {
   return (
     <div className='my-4'>
       {adminProductMenus.map((menu, index) => (
-        <>
+        <div key={index}>
           <div
-            key={index}
             className='flex items-center justify-between max-w-full h-max text-white bg-red-600 px-4 py-2 mx-1 rounded-sm mb-2'>
             <div>{menu.title}</div>
             <div>
               <TiArrowSortedDown />
             </div>
           </div>
-          <div className='px-6 py-2 grid max-sm:grid-cols-2 gap-4'>
+          <div className='px-6 py-2 max-sm:grid max-sm:grid-cols-2 flex gap-4'>
             {menu.subMenus.map((subMenu, subIndex) => (
-              <Link key={subIndex} href={subMenu.href} className='flex items-center gap-4 text-red-900 bg-red-300 border-2 border-red-700 px-4 py-2 rounded-md'>
+              <Link key={subIndex} href={subMenu.href} className='flex items-center gap-4 sm:w-[250px] text-red-900 bg-red-300 border-2 border-red-700 px-4 py-2 rounded-md'>
                 <div className='text-2xl'>{subMenu.icon}</div>
                 <div>{subMenu.title}</div>
               </Link>
             ))}
           </div>
-        </>
+        </div>
       ))}
     </div>
   );
