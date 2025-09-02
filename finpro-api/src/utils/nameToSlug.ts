@@ -1,3 +1,5 @@
-export default function nameToSlug (name: string) {
-  return name.toLowerCase().replace(/\s+/g, "-");
-}
+const nameToSlug = (name: string) => {
+  return name.trim().toLowerCase().replace(/\s/g, "-");
+};
+
+export default nameToSlug;
