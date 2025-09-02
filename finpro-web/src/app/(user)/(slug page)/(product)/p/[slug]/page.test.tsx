@@ -6,6 +6,8 @@ import { useProductBreadcrumbs } from "@/features/admin/products/hooks/useProduc
 import useCart from "@/features/(user)/p/hooks/useCart";
 import usePickStoreId from "@/hooks/stores/usePickStoreId";
 import { IProductDetails } from "@/types/products/product.type";
+import { IProductStock } from "@/types/inventories/product.stock.type";
+import Image from "next/image";
 
 // Mock the custom hooks
 jest.mock("@/features/admin/products/hooks/useProductDetails");
@@ -23,19 +25,47 @@ jest.mock("next/link", () => {
   return MockLink;
 });
 jest.mock("next-cloudinary", () => ({
-  CldImage: (props: { src: string; alt: string }) => <img src={props.src} alt={props.alt} />,
+  CldImage: (props: { src: string; alt: string }) => <Image src={props.src} alt={props.alt} />,
 }));
 
 const mockProduct: IProductDetails = {
   id: "prod-123",
   name: "HI-COOK Tabung Gas Mini",
+  productSubCategoryId: 10,
   price: 25000,
   description: "A handy gas canister.",
-  productImage: [{ id: "img-1", imageUrl: "image_url_1.jpg", productId: "prod-123", isMainImage: true, createdAt: new Date(), updatedAt: new Date() }],
-  productStock: [{ stock: 10, storeId: "store-1", productId: "prod-123" }] as any,
+  productImage: [
+    {
+      id: "img-1",
+      imageUrl: "image_url_1.jpg",
+      productId: "prod-123",
+      isMainImage: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  ],
+  productStock: [{ stock: 10, storeId: "store-1", productId: "prod-123" }] as IProductStock[],
   productDiscountHistories: [],
   slug: "hi-cook-tabung-gas-mini",
-  brand: {id:1, name:"brand"}
+  productBrand: { id: "brand1", name: "Brand 1", slug: "brand-1", createdAt: new Date(), updatedAt: new Date() },
+  productSubCategory: {
+    id: 10,
+    name: "Sub Category 1",
+    slug: "sub-category-1",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    productCategoryId: 5,
+    productCategory: {
+      id: 5,
+      productCategoryId: 5,
+      name: "Category 1",
+      slug: "category-1",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  },
+  createdAt: new Date(),
+  updatedAt: new Date(),
 };
 
 describe("<ProductSlugPage />", () => {
