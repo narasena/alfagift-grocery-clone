@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "nodemon",
     "build": "prisma generate &&tsc && mkdir -p api && cp -r dist/src/* api/",
-    "vercel-bulid": "prisma generate && tsc",
+    "vercel-bulid": "prisma generate && tsc && tsc-alias",
     "start": "node -r tsconfig-paths/register dist/index.js",
     "test": "jest",
     "migrate:dev": "set PGOPTIONS='--statement_timeout=30000' && dotenv -e .env.development -- npx prisma migrate dev",
@@ -68,6 +68,7 @@
     "prisma": "^6.7.0",
     "ts-jest": "^29.4.1",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3"
   },
