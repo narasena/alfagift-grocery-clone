@@ -1,3 +1,4 @@
+import nameToSlug from "../../utils/nameToSlug";
 import { prisma } from "../../prisma";
 import { ICloudinaryResult, IProductImage } from "../../types/product.type";
 import { NextFunction, Request, Response } from "express";
@@ -11,7 +12,7 @@ export class ProductController {
         req.body;
       console.log(req.body);
 
-      const slug = name.toLowerCase().replace(/\s+/g, "-");
+      const slug = nameToSlug(name);
 
       if (!name || !productSubCategoryId || !price || images.length === 0) {
         throw {
