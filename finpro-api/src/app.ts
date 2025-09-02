@@ -98,25 +98,25 @@ export default class App {
     });
 
     //tambahin router di sini
-    this.app.use("/api/product", productRouter.getRouter());
-    this.app.use("/api/product-category", productCategoryRouter.getRouter());
-    this.app.use("/api/user", authRouter);
-    this.app.use("/api/geocode", getMapRouter);
-    this.app.use("/api/cart", cartRouter);
-    this.app.use("/api/order", orderRouter);
-    this.app.use("/api/payment", paymentRouter);
-    this.app.use("/api/store", storeRouter);
-    this.app.use("/api/stores", allStoresRouter);
-    this.app.use("/api/inventories", inventoryRouter);
-    this.app.use("/api/discounts", discountRouter);
-    this.app.use("/api/cloudinary", cloudinaryRouter);
-    this.app.use("/api/admins", adminRouter);
-    this.app.use("/api/referrals", referralRouter);
-    this.app.use("/api/admin", adminRouter);
-    this.app.use("/api/shipping", shippingRouter);
-    this.app.use("/api/address", addressRouter);
-    this.app.use("/api/user", userRouter);
-    this.app.use("/api/vouchers", voucherRouter);
+    // this.app.use("/api/product", productRouter.getRouter());
+    // this.app.use("/api/product-category", productCategoryRouter.getRouter());
+    // this.app.use("/api/user", authRouter);
+    // this.app.use("/api/geocode", getMapRouter);
+    // this.app.use("/api/cart", cartRouter);
+    // this.app.use("/api/order", orderRouter);
+    // this.app.use("/api/payment", paymentRouter);
+    // this.app.use("/api/store", storeRouter);
+    // this.app.use("/api/stores", allStoresRouter);
+    // this.app.use("/api/inventories", inventoryRouter);
+    // this.app.use("/api/discounts", discountRouter);
+    // this.app.use("/api/cloudinary", cloudinaryRouter);
+    // this.app.use("/api/admins", adminRouter);
+    // this.app.use("/api/referrals", referralRouter);
+    // this.app.use("/api/admin", adminRouter);
+    // this.app.use("/api/shipping", shippingRouter);
+    // this.app.use("/api/address", addressRouter);
+    // this.app.use("/api/user", userRouter);
+    // this.app.use("/api/vouchers", voucherRouter);
   }
 
   public start(): void {
