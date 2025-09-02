@@ -2,10 +2,10 @@
 import * as React from "react";
 
 import { Suspense } from "react";
-import OrderCard from "@/features/order/components/OrderCard";
-import useOrder from "@/features/order/hooks/useOrder";
+import OrderCard from "@/features/user/order/components/OrderCard";
+import useOrder from "@/features/user/order/hooks/useOrder";
 import { IOrderCards } from "@/types/orders/orders.type";
-import OrderDetailsModal from "@/features/order/components/OrderDetailsModal";
+import OrderDetailsModal from "@/features/user/order/components/OrderDetailsModal";
 
 function OrderSentContent() {
   const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails, orderDetails } =

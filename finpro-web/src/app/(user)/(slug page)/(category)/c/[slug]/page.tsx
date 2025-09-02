@@ -1,12 +1,12 @@
 "use client";
-import { useCategory } from "@/features/(user)/c/hooks/useCategory";
+import { useCategory } from "@/features/user/c/hooks/useCategory";
 import * as React from "react";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 import Link from "next/link";
 import { CldImage } from "next-cloudinary";
 import { IoStorefront } from "react-icons/io5";
 import { RiTimerFlashFill } from "react-icons/ri";
-import useCart from "@/features/(user)/p/hooks/useCart";
+import useCart from "@/features/user/p/hooks/useCart";
 import { IProductDetailsCategoryResponse } from "@/types/products/product.category.type";
 import { EDiscountType } from "@/types/discounts/discount.type";
 export default function CategorySlugPage() {

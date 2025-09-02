@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 // import authStore from "@/zustand/store";
 import useAuthStore from "@/zustand/authStore";
 import { addProductToCart } from "../api/handleAddProductToCart";
-import { handleGetCartItems } from "@/features/cart/api/handleGetCartItems";
+import { handleGetCartItems } from "@/features/user/cart/api/handleGetCartItems";
 import { IProductDetailsCategoryResponse } from "@/types/products/product.category.type";
 
 export default function useCart() {

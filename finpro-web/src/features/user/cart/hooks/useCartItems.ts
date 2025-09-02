@@ -10,19 +10,19 @@ import { IAddress } from "@/types/address/address.type";
 import { AxiosError } from "axios";
 import usePickStoreId from "@/hooks/stores/usePickStoreId";
 import { ICartItemResponse } from "@/types/carts/cartItem.type";
-import useUserVoucher from "@/features/checkout/hooks/useUserVoucher";
+import useUserVoucher from "@/features/user/checkout/hooks/useUserVoucher";
 import { EDiscountValueType, EVoucherType, IVoucher } from "@/types/vouchers/voucher.type";
 
 export default function useCartItems() {
   const token = useAuthStore((state) => state.token);
   const [cartItems, setCartItems] = React.useState<ICartItemResponse[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
-  const { storeId } = usePickStoreId()
+  const { storeId } = usePickStoreId();
   const shippingCost = React.useRef<number>(21000); //cuma dummy aja yee
   const [isSummaryOpen, setIsSummaryOpen] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
   const [itemToDelete, setItemToDelete] = React.useState<string | null>(null);
-  const [mainAddress, setMainAddress] = React.useState<IAddress|null>(null);
+  const [mainAddress, setMainAddress] = React.useState<IAddress | null>(null);
   const [user, setUser] = React.useState<IUser | null>(null);
   const { vouchers } = useUserVoucher();
   const [appliedVoucher, setAppliedVoucher] = React.useState<IVoucher | null>(null);
@@ -30,7 +30,6 @@ export default function useCartItems() {
 
   const handleDisplayCartItems = async () => {
     try {
-
       if (token && storeId) {
         setLoading(true);
         const cartItems = await handleGetCartItems(token, storeId);
@@ -46,7 +45,7 @@ export default function useCartItems() {
       }
     } catch (error) {
       const errResponse = error as AxiosError<{ message: string }>;
-      const errMessage = errResponse?.response?.data?.message
+      const errMessage = errResponse?.response?.data?.message;
       console.error("Error displaying cart items:", errMessage);
     } finally {
       setLoading(false);
@@ -113,7 +112,7 @@ export default function useCartItems() {
         // console.error("Failed to update quantity:", error);
         // // You might want to show an error toast here
         // toast.error("Gagal memperbarui jumlah barang.");
-        const message = errorResponse?.response?.data?.message
+        const message = errorResponse?.response?.data?.message;
 
         // if (message.includes("out of stock")) {
         //   toast.error("Produk habis, stok tidak mencukupi!");
@@ -152,52 +151,56 @@ export default function useCartItems() {
     }
   };
 
-  const subTotal = React.useMemo(() => 
-    cartItems?.reduce((total, item) => {
-      return total + item.subTotal
-    }, 0) ?? 0, [cartItems]);
-    
-  const discountInPrice = React.useMemo(() => 
-    cartItems?.reduce((total, item) => {
-      return total + item.discountInPrice
-    }, 0) ?? 0, [cartItems]);
-  
-  const voucherAmountOff = React.useMemo(() =>
-  {
-    if (appliedVoucher) {
-      
-      return appliedVoucher?.voucherType !== EVoucherType.FREE_SHIPPING ?
-        appliedVoucher?.discountValueType === EDiscountValueType.PERCENTAGE ? (subTotal - discountInPrice) * ((appliedVoucher?.discountValue ??0)/ 100) :
-          (subTotal - discountInPrice - (appliedVoucher?.discountValue ?? 0)) : 0
-    }
-    return 0
-  }
-    , [appliedVoucher]);
-  
-  const voucherShippingOff = React.useMemo(() => {
-    if (appliedVoucher) {
-      return appliedVoucher?.voucherType === EVoucherType.FREE_SHIPPING ? (shippingCost.current - (appliedVoucher?.discountValue ?? 0)) : 0
-    }
-    return 0
-  }
-
-    , [appliedVoucher]);
-  
-  const shippingCostOrder = React.useMemo(() =>
-    appliedVoucher?.voucherType === EVoucherType.FREE_SHIPPING ? shippingCost.current -voucherShippingOff : shippingCost.current
-    , [appliedVoucher]);
-  
-    const finalPrice = React.useMemo(
-      () => subTotal - discountInPrice ,
-      [subTotal, discountInPrice]
-    );
-    
-  const finalPriceOrder = React.useMemo(
-    () => subTotal - discountInPrice - voucherAmountOff + (shippingCost.current - voucherShippingOff),
-    [subTotal, discountInPrice, appliedVoucher, voucherAmountOff, shippingCostOrder, appliedVoucher,]
+  const subTotal = React.useMemo(
+    () =>
+      cartItems?.reduce((total, item) => {
+        return total + item.subTotal;
+      }, 0) ?? 0,
+    [cartItems]
   );
 
-  
+  const discountInPrice = React.useMemo(
+    () =>
+      cartItems?.reduce((total, item) => {
+        return total + item.discountInPrice;
+      }, 0) ?? 0,
+    [cartItems]
+  );
+
+  const voucherAmountOff = React.useMemo(() => {
+    if (appliedVoucher) {
+      return appliedVoucher?.voucherType !== EVoucherType.FREE_SHIPPING
+        ? appliedVoucher?.discountValueType === EDiscountValueType.PERCENTAGE
+          ? (subTotal - discountInPrice) * ((appliedVoucher?.discountValue ?? 0) / 100)
+          : subTotal - discountInPrice - (appliedVoucher?.discountValue ?? 0)
+        : 0;
+    }
+    return 0;
+  }, [appliedVoucher]);
+
+  const voucherShippingOff = React.useMemo(() => {
+    if (appliedVoucher) {
+      return appliedVoucher?.voucherType === EVoucherType.FREE_SHIPPING
+        ? shippingCost.current - (appliedVoucher?.discountValue ?? 0)
+        : 0;
+    }
+    return 0;
+  }, [appliedVoucher]);
+
+  const shippingCostOrder = React.useMemo(
+    () =>
+      appliedVoucher?.voucherType === EVoucherType.FREE_SHIPPING
+        ? shippingCost.current - voucherShippingOff
+        : shippingCost.current,
+    [appliedVoucher]
+  );
+
+  const finalPrice = React.useMemo(() => subTotal - discountInPrice, [subTotal, discountInPrice]);
+
+  const finalPriceOrder = React.useMemo(
+    () => subTotal - discountInPrice - voucherAmountOff + (shippingCost.current - voucherShippingOff),
+    [subTotal, discountInPrice, appliedVoucher, voucherAmountOff, shippingCostOrder, appliedVoucher]
+  );
 
   const today = new Date().toLocaleDateString("id-ID", {
     weekday: "long",

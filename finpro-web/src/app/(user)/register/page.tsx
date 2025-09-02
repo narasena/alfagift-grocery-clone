@@ -10,7 +10,7 @@ import apiInstance from "@/utils/api/apiInstance";
 import { useRouter } from "next/navigation";
 import { LuCheck } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
-import { useReferrals } from "@/features/register/hooks/useReferrals";
+import { useReferrals } from "@/features/user/register/hooks/useReferrals";
 import { MdOutlineQuestionMark } from "react-icons/md";
 import { AxiosError } from "axios";
 

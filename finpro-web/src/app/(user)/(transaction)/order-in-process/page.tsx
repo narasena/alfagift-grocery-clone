@@ -2,10 +2,10 @@
 import * as React from "react";
 import { Suspense } from "react";
 
-import OrderCard from "@/features/order/components/OrderCard";
-import useOrder from "@/features/order/hooks/useOrder";
-import OrderDetailsModal from "@/features/order/components/OrderDetailsModal";
-import {  IOrderCards } from "@/types/orders/orders.type";
+import OrderCard from "@/features/user/order/components/OrderCard";
+import useOrder from "@/features/user/order/hooks/useOrder";
+import OrderDetailsModal from "@/features/user/order/components/OrderDetailsModal";
+import { IOrderCards } from "@/types/orders/orders.type";
 
 function ProcessingOrderContent() {
   const { paginatedOrders, handleNext, handlePrevious, totalPages, currentPage, handleGetOrderDetails, orderDetails } =
@@ -65,9 +65,7 @@ function ProcessingOrderContent() {
               Next
             </button>
           </div>
-          {orderDetails && (
-            <OrderDetailsModal isOpen={isModalOpen} onClose={closeModal} orderDetails={orderDetails} />
-          )}
+          {orderDetails && <OrderDetailsModal isOpen={isModalOpen} onClose={closeModal} orderDetails={orderDetails} />}
         </>
       ) : (
         <p>Tidak ada pesanan.</p>
@@ -78,7 +76,13 @@ function ProcessingOrderContent() {
 
 export default function ProcessingOrderPage() {
   return (
-    <Suspense fallback={<div className="flex justify-center items-center h-screen"><span className="loading loading-spinner loading-lg"></span></div>}>
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center h-screen">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      }
+    >
       <ProcessingOrderContent />
     </Suspense>
   );

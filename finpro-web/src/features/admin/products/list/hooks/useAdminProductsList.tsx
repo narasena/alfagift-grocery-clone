@@ -5,7 +5,7 @@ import AdminProductTableCellDataLink from "@/features/admin/components/AdminProd
 import apiInstance from "@/utils/api/apiInstance";
 import { toast } from "react-toastify";
 import * as React from "react";
-import { useProductCategories } from "@/features/(user)/p/hooks/useProductCategories";
+import { useProductCategories } from "@/features/user/p/hooks/useProductCategories";
 
 export const useAdminProductList = () => {
   const [products, setProducts] = React.useState<IProductDetails[]>([]);
@@ -83,7 +83,9 @@ export const useAdminProductList = () => {
       case "category":
         return product.productSubCategory.productCategory.name || "—";
       case "price":
-        return product.price.toLocaleString("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }) || "—";
+        return (
+          product.price.toLocaleString("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }) || "—"
+        );
       case "subCategory":
         return product.productSubCategory.name || "—";
       case "action":
@@ -93,10 +95,10 @@ export const useAdminProductList = () => {
     }
   };
 
-  return { 
-    products, 
-    productsListTitle, 
-    productsListColumnTitles, 
+  return {
+    products,
+    productsListTitle,
+    productsListColumnTitles,
     getProductCellValue,
     totalCount,
     totalPages,
@@ -105,6 +107,6 @@ export const useAdminProductList = () => {
     updateFilters,
     handlePageChange,
     productCategories,
-    productSubCategories
+    productSubCategories,
   };
 };

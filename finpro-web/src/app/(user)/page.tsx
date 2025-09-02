@@ -1,34 +1,28 @@
-
 "use client";
 
-import Footer from "@/components/Footer"
-import HeroCarousel from "../components/HeroCarousel"
-import Navbar from "../components/Navbar"
-import ProductList from "../components/ProductList"
-import StoreSelector from "../components/StoreSelector";
-import AppsInfoComponent from "./(user)/(slug page)/(product)/p/[slug]/components/AppsInformation";
+import HeroCarousel from "../../components/HeroCarousel";
+import ProductList from "../../components/ProductList";
+import StoreSelector from "../../components/StoreSelector";
 
 export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar />
       <StoreSelector />
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           {/* Hero Carousel */}
           <HeroCarousel />
-          
+
           {/* Product List */}
           <ProductList />
-          <AppsInfoComponent />
+          
         </div>
       </main>
-      
-      <Footer />
-    </div>
-  )
-}
 
+      
+    </div>
+  );
+}
 
 // "use client";
 

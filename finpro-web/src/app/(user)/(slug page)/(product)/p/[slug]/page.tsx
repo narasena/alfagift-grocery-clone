@@ -17,7 +17,7 @@ import { HiOutlineShoppingCart } from "react-icons/hi";
 
 import { IProductDetails } from "@/types/products/product.type";
 
-import useCart from "@/features/(user)/p/hooks/useCart";
+import useCart from "@/features/user/p/hooks/useCart";
 import usePickStoreId from "@/hooks/stores/usePickStoreId";
 import { ICartItem } from "@/types/carts/cartItem.type";
 import { IProductImage } from "@/types/products/product.image.type";
@@ -28,8 +28,11 @@ export default function ProductSlugPage() {
   const { product, imageShowing, handleImageClick } = useProductDetails();
   const { breadcrumbLinks } = useProductBreadcrumbs();
   const { storeId } = usePickStoreId(); // ambil storeId dari hook
-  const { quantity, setQuantity, handleQuantityChange } = useProductQuantity(product?.id ?? undefined, storeId ?? undefined);
-  
+  const { quantity, setQuantity, handleQuantityChange } = useProductQuantity(
+    product?.id ?? undefined,
+    storeId ?? undefined
+  );
+
   // const {productId} = slug;
 
   const { cart, handleAddToCart, openModal } = useCart(); // to add items to cart
@@ -277,7 +280,7 @@ export default function ProductSlugPage() {
                       <input
                         type="number"
                         className="w-full text-center outline-none pointer-events-none"
-                        value={product?.productStock[0].stock===0 ? 0: quantity}
+                        value={product?.productStock[0].stock === 0 ? 0 : quantity}
                         onChange={(e) => {
                           const value = parseInt(e.target.value);
                           if (!isNaN(value) && value >= 1) {

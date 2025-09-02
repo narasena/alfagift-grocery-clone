@@ -1,12 +1,12 @@
 import * as React from "react";
 import useAuthStore from "@/zustand/authStore";
 // import { toast } from "react-toastify";
-import { getPriceBreakdown } from "../../checkout/api/handleGetOrderPriceBreakdown";
+import { getPriceBreakdown } from "../api/handleGetOrderPriceBreakdown";
 import { IOrderDetails } from "@/types/orders/orders.type";
 
 export default function useCheckout() {
   const token = useAuthStore((state) => state.token);
-  const [priceBreakdown, setPriceBreakdown] = React.useState<IOrderDetails|null>(null);
+  const [priceBreakdown, setPriceBreakdown] = React.useState<IOrderDetails | null>(null);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [selectedType, setSelectedType] = React.useState<"BANK_TRANSFER" | "PAYMENT_GATEWAY" | null>(null);
 

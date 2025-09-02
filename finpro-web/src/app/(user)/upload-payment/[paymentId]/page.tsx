@@ -1,7 +1,7 @@
 "use client";
 
-import PaymentImageUploadWidget from "@/features/upload-payment/components/PaymentImageUploadWidget";
-import usePaymentImage from "@/features/upload-payment/hooks/usePaymentImage";
+import PaymentImageUploadWidget from "@/features/user/upload-payment/components/PaymentImageUploadWidget";
+import usePaymentImage from "@/features/user/upload-payment/hooks/usePaymentImage";
 import { CldImage } from "next-cloudinary";
 
 export default function UploadPaymentPage() {

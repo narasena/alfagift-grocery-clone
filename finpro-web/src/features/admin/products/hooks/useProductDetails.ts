@@ -2,7 +2,7 @@ import { IProductDetails } from "@/types/products/product.type";
 import { useParams } from "next/navigation";
 import * as React from "react";
 import { useProductImageShowing } from "./useProductImageShowing";
-import { getProductDetails } from "@/features/user/slug pages/product/getProductDetails";
+import { getProductDetails } from "@/utils/products/getProductDetails";
 import storeLocationStore from "@/zustand/storeLocation.store";
 
 export const useProductDetails = () => {
@@ -28,7 +28,7 @@ export const useProductDetails = () => {
   };
 
   React.useEffect(() => {
-    if (storeId ) {
+    if (storeId) {
       handleGetProductDetails();
     }
   }, [refreshTrigger, storeId]);

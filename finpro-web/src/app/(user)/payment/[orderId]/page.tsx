@@ -1,7 +1,7 @@
 "use client";
 
-import useCheckout from "@/features/checkout/hooks/useCheckout";
-import usePayment from "@/features/payment/hooks/usePayment";
+import useCheckout from "@/features/user/checkout/hooks/useCheckout";
+import usePayment from "@/features/user/payment/hooks/usePayment";
 import { EPaymentType } from "@/types/payment/payment.type";
 import { useRouter } from "next/navigation";
 

@@ -3,7 +3,7 @@ import ProductSlugPage from "./page";
 import { useProductDetails } from "@/features/admin/products/hooks/useProductDetails";
 import { useProductQuantity } from "@/features/admin/products/hooks/useProductQuantity";
 import { useProductBreadcrumbs } from "@/features/admin/products/hooks/useProductBreadcrumbs";
-import useCart from "@/features/(user)/p/hooks/useCart";
+import useCart from "@/features/user/p/hooks/useCart";
 import usePickStoreId from "@/hooks/stores/usePickStoreId";
 import { IProductDetails } from "@/types/products/product.type";
 import { IProductStock } from "@/types/inventories/product.stock.type";
@@ -91,7 +91,10 @@ describe("<ProductSlugPage />", () => {
     });
 
     (useProductBreadcrumbs as jest.Mock).mockReturnValue({
-      breadcrumbLinks: [{ href: "/", label: "Home" }, { href: "/products", label: "Products" }],
+      breadcrumbLinks: [
+        { href: "/", label: "Home" },
+        { href: "/products", label: "Products" },
+      ],
     });
 
     (useCart as jest.Mock).mockReturnValue({
@@ -109,7 +112,7 @@ describe("<ProductSlugPage />", () => {
     render(<ProductSlugPage />);
 
     // Check if product name, price, and stock are displayed
-    expect(screen.getByRole('heading', { name: /HI-COOK Tabung Gas Mini/i, level: 1 })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /HI-COOK Tabung Gas Mini/i, level: 1 })).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*25.000/)).toBeInTheDocument();
     expect(screen.getByText(/Stok di toko:/)).toHaveTextContent("Stok di toko: 10");
   });
@@ -117,8 +120,8 @@ describe("<ProductSlugPage />", () => {
   it("should call handleQuantityChange when plus/minus buttons are clicked", () => {
     render(<ProductSlugPage />);
 
-    const plusButton = screen.getByTestId('plus-button');
-    const minusButton = screen.getByTestId('minus-button');
+    const plusButton = screen.getByTestId("plus-button");
+    const minusButton = screen.getByTestId("minus-button");
 
     fireEvent.click(plusButton);
     expect(mockHandleQuantityChange).toHaveBeenCalledWith("plus");
@@ -149,6 +152,6 @@ describe("<ProductSlugPage />", () => {
 
     const addToCartButton = screen.getByRole("button", { name: "Stok Habis" });
     expect(addToCartButton).toBeInTheDocument();
-    expect(addToCartButton).toHaveClass('pointer-events-none', 'bg-gray-400');
+    expect(addToCartButton).toHaveClass("pointer-events-none", "bg-gray-400");
   });
 });

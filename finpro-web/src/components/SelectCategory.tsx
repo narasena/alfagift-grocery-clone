@@ -1,8 +1,7 @@
-import { useProductCategories } from "@/features/(user)/p/hooks/useProductCategories";
+import { useProductCategories } from "@/features/user/p/hooks/useProductCategories";
 import Link from "next/link";
 import * as React from "react";
 import { BiCategory } from "react-icons/bi";
-
 
 export default function SelectCategory() {
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
@@ -16,8 +15,8 @@ export default function SelectCategory() {
       setIsDesktop(window.innerWidth >= 768);
     };
     checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    return () => window.removeEventListener('resize', checkScreenSize);
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
   const handleMouseEnter = () => {
@@ -32,24 +31,24 @@ export default function SelectCategory() {
   };
 
   const handleSelectCategoryClick = () => {
-    setIsDropdownOpen(!isDropdownOpen)
-  }
+    setIsDropdownOpen(!isDropdownOpen);
+  };
 
   const handleCategoryClick = (categoryId: number) => {
     if (!isDesktop) {
       setSelectedCategory(categoryId);
     }
-  }
+  };
 
   const handleBackClick = () => {
     setSelectedCategory(null);
-  }
+  };
 
   return (
     <div
       {...(isDesktop && {
         onMouseEnter: handleMouseEnter,
-        onMouseLeave: handleMouseLeave
+        onMouseLeave: handleMouseLeave,
       })}
       onBlur={() => setIsDropdownOpen(false)}
     >
@@ -70,7 +69,7 @@ export default function SelectCategory() {
         } bg-white divide-y divide-gray-100 rounded-lg md:w-44 sm:absolute md:top-16 shadow-md md:hover:block`}
         {...(isDesktop && {
           onMouseEnter: handleMouseEnter,
-          onMouseLeave: handleMouseLeave
+          onMouseLeave: handleMouseLeave,
         })}
       >
         <ul className="py-2 text-sm text-gray-700 shadow-md" aria-labelledby="multiLevelDropdownButton">
@@ -78,7 +77,7 @@ export default function SelectCategory() {
             // Mobile subcategory view
             <>
               <li>
-                <button 
+                <button
                   onClick={handleBackClick}
                   className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-blue-600"
                 >
@@ -98,7 +97,7 @@ export default function SelectCategory() {
           ) : (
             // Desktop hover view or mobile category view
             productCategories.map((category, catIndex) => (
-              <li key={catIndex} className={`relative ${isDesktop ? 'group' : ''}`}>
+              <li key={catIndex} className={`relative ${isDesktop ? "group" : ""}`}>
                 {isDesktop ? (
                   <Link href={`/c/${category.slug}`} className="block px-4 py-2 hover:bg-gray-100">
                     {category.name}
@@ -113,7 +112,11 @@ export default function SelectCategory() {
                 )}
 
                 {/* Desktop subcategory hover */}
-                <ul className={`absolute left-[-180px] mr-2 top-0 w-44 bg-white divide-y divide-gray-100 rounded-lg shadow-md py-2 text-sm text-gray-700 hidden ${isDesktop ? 'group-hover:block' : ''}`}>
+                <ul
+                  className={`absolute left-[-180px] mr-2 top-0 w-44 bg-white divide-y divide-gray-100 rounded-lg shadow-md py-2 text-sm text-gray-700 hidden ${
+                    isDesktop ? "group-hover:block" : ""
+                  }`}
+                >
                   {productSubCategories
                     .filter((subCategory) => subCategory.productCategoryId === category.id)
                     .map((subCategory, subIndex) => (

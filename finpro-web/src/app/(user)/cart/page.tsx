@@ -2,7 +2,7 @@
 import { IoTrashOutline } from "react-icons/io5";
 import { BsStopwatch } from "react-icons/bs";
 import { FaLocationDot } from "react-icons/fa6";
-import useCartItems from "@/features/cart/hooks/useCartItems";
+import useCartItems from "@/features/user/cart/hooks/useCartItems";
 import * as React from "react";
 import Link from "next/link";
 import { HiOutlineMinusSm, HiOutlinePlusSm } from "react-icons/hi";

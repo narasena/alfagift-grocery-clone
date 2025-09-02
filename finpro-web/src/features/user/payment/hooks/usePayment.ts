@@ -3,7 +3,7 @@ import { EPaymentType } from "@/types/payment/payment.type";
 import { createPaymentRequest } from "../api/handleCreatePayment";
 import useAuthStore from "@/zustand/authStore";
 import { useParams } from "next/navigation";
-import { getOrderById } from "@/features/order/api/handleGetOrderById";
+import { getOrderById } from "@/features/user/order/api/handleGetOrderById";
 
 export default function usePayment() {
   const [loading, setLoading] = React.useState(false);
