@@ -1,8 +1,8 @@
-import { prisma } from "../../prisma";
-import nameToSlug from "../../utils/nameToSlug";
-import { ICloudinaryResult, IProductImage } from "../../types/product.type";
+import { prisma } from "@/prisma";
+import nameToSlug from "@/utils/nameToSlug";
+import { ICloudinaryResult, IProductImage } from "@/types/product.type";
 import { Prisma } from "@prisma/client";
-import { EditProductImageService } from "./product.image.service";
+import { EditProductImageService } from "@/services/product/product.image.service";
 
 export default class ProductService {
   async createProduct(payload: {

@@ -1,6 +1,6 @@
 // controllers/userAddressController.ts
 import { Request, Response, NextFunction } from "express";
-import { prisma } from "../../prisma";
+import { prisma } from "@/prisma";
 
 export const getUserAddresses = async (req: Request, res: Response) => {
   const userId = req.params.userId;

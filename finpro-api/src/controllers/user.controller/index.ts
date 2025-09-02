@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { prisma } from "../../prisma";
+import { prisma } from "@/prisma";
 import { transporter } from '../../utils/transporter.mailer';
 
 export const getUserProfile = async (req: Request, res: Response, next: NextFunction) => {

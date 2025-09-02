@@ -1,4 +1,4 @@
-import { DiscountValueType, Prisma, VoucherType } from "../../generated/prisma";
+import { DiscountValueType, Prisma, VoucherType } from "@/generated/prisma";
 import { prisma } from "@/prisma";
 import { NextFunction, Request, Response } from "express";
 

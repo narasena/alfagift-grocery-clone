@@ -1,4 +1,4 @@
-import { fetchAllStores } from "../controllers/store.controller/store.controller";
+import { fetchAllStores } from "@/controllers/store.controller/store.controller";
 
 const allStoresRouter = require('express').Router();
 

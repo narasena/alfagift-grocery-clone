@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { prisma } from "../../prisma";
-import { jwtSignAdmin } from "../../utils/jwt.sign";
-import { hashPassword } from "../../utils/hash.password";
-import { comparePassword } from "../../utils/compare.password";
+import { prisma } from "@/prisma";
+import { jwtSignAdmin } from "@/utils/jwt.sign";
+import { hashPassword } from "@/utils/hash.password";
+import { comparePassword } from "@/utils/compare.password";
 
 
 export enum AdminRole {

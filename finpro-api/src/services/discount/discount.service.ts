@@ -1,6 +1,6 @@
-import { prisma } from "../../prisma";
-import { IPriceCutSelectedProduct, TDiscountType } from "../../types/discount.type";
-import { Prisma } from "../../generated/prisma/client";
+import { prisma } from "@/prisma";
+import { IPriceCutSelectedProduct, TDiscountType } from "@/types/discount.type";
+import { Prisma } from "@/generated/prisma/client";
 
 export async function createDiscountService({
     name,

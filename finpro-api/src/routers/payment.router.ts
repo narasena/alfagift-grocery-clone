@@ -5,8 +5,8 @@ import {
   getPaymentImageUrl,
   getPendingPayments,
   getSalesReport,
-} from "../controllers/payment.controller";
-import { jwtDecode } from "../middlewares/jwt.decode";
+} from "@/controllers/payment.controller";
+import { jwtDecode } from "@/middlewares/jwt.decode";
 import { Router } from "express";
 
 const paymentRouter = Router();

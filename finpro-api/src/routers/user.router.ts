@@ -1,6 +1,6 @@
 
-import { getAllUsers } from "../controllers/user.controller/user.controller";
-import { changeEmail, getUserProfile, updateUserProfile, verifyEmail } from "../controllers/user.controller";
+import { getAllUsers } from "@/controllers/user.controller/user.controller";
+import { changeEmail, getUserProfile, updateUserProfile, verifyEmail } from "@/controllers/user.controller";
 import { Router } from "express";
 const userRouter = Router();
 

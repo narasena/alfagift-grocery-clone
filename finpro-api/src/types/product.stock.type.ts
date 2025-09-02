@@ -1,4 +1,4 @@
-import { IProduct } from "./product.type";
+import { IProduct } from "@/types/product.type";
 
 export interface IProductStockHistoryForm {
   productId: string;

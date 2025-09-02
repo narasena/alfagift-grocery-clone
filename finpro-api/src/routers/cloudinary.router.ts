@@ -1,4 +1,4 @@
-import { handleSignedupload } from "../controllers/cloudinary.controller";
+import { handleSignedupload } from "@/controllers/cloudinary.controller";
 
 const cloudinaryRouter = require("express").Router();
 

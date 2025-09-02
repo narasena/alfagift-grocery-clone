@@ -1,7 +1,7 @@
-import { prisma } from "../../prisma";
-import { AppError } from "../../utils/app.error";
+import { prisma } from "@/prisma";
+import { AppError } from "@/utils/app.error";
 import { Request, Response, NextFunction } from "express";
-import { $Enums } from "../../generated/prisma";
+import { $Enums } from "@/generated/prisma";
 
 export const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {

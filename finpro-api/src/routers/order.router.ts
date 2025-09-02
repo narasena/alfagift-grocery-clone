@@ -5,8 +5,8 @@ import {
   getOrderDetails,
   getOrderHistoryByStatus,
   getOrderPriceBreakdown,
-} from "../controllers/order.controller";
-import { jwtDecode } from "../middlewares/jwt.decode";
+} from "@/controllers/order.controller";
+import { jwtDecode } from "@/middlewares/jwt.decode";
 
 const orderRouter = Router();
 

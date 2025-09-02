@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { prisma } from "../../prisma";
-import { hashPassword } from "../../utils/hash.password";
-import { comparePassword } from "../../utils/compare.password";
-import { jwtSign, jwtSignAdmin } from "../../utils/jwt.sign";
-import generateCodeTenChars from "../../utils/code.generator/codeGeneratorTenChars";
+import { prisma } from "@/prisma";
+import { hashPassword } from "@/utils/hash.password";
+import { comparePassword } from "@/utils/compare.password";
+import { jwtSign, jwtSignAdmin } from "@/utils/jwt.sign";
+import generateCodeTenChars from "@/utils/code.generator/codeGeneratorTenChars";
 import { Prisma } from "@prisma/client";
-import { DiscountValueType, VoucherType } from "../../generated/prisma";
-import { transporter } from "../../utils/transporter.mailer";
+import { DiscountValueType, VoucherType } from "@/generated/prisma";
+import { transporter } from "@/utils/transporter.mailer";
 
 // Step 1: Register only with email
 export const registerWithEmailOnly = async (req: Request, res: Response, next: NextFunction) => {

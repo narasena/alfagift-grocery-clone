@@ -10,8 +10,8 @@ import {
   getAddressById,
   updateAddressById,
   
-} from "../controllers/address.controller";
-import { jwtDecode } from "../middlewares/jwt.decode";
+} from "@/controllers/address.controller";
+import { jwtDecode } from "@/middlewares/jwt.decode";
 
 const addressRouter = express.Router();
 

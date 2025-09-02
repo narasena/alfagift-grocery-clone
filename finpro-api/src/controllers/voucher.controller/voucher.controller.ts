@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { getUserVouchersService } from "../../services/voucher/voucher.service";
+import { getUserVouchersService } from "@/services/voucher/voucher.service";
 
 export async function getUserVouchers(req: Request, res: Response, next: NextFunction) {
     try {

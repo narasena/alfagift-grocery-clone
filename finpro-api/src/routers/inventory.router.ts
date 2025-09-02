@@ -1,4 +1,4 @@
-import * as inventoryController from "../controllers/inventory.controller/inventory.controller";
+import * as inventoryController from "@/controllers/inventory.controller/inventory.controller";
 
 const inventoryRouter = require("express").Router();
 

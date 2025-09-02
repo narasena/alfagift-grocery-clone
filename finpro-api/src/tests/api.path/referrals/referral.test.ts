@@ -1,5 +1,5 @@
 import describeEndPoint from "@/utils/tests/describeEndPoint";
-import App from "../../../app";
+import App from "@/app";
 import { Express } from "express";
 import request from "supertest";
 import { Gender } from "@/generated/prisma";

@@ -1,6 +1,6 @@
-import { Prisma } from "../../generated/prisma/client";
-import { prisma } from "../../prisma";
-import { EStockMovementType, IProductStock, IProductStockHistory, IProductStockHistoryForm } from "../../types/product.stock.type";
+import { Prisma } from "@/generated/prisma/client";
+import { prisma } from "@/prisma";
+import { EStockMovementType, IProductStock, IProductStockHistory, IProductStockHistoryForm } from "@/types/product.stock.type";
 
 export default class InventoryService {
   async getAllStocks(query: {

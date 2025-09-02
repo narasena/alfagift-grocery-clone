@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { createDiscountService, getDiscountsService } from "../../services/discount/discount.service";
+import { createDiscountService, getDiscountsService } from "@/services/discount/discount.service";
 
 export async function createDiscount(req: Request, res: Response, next: NextFunction) {
     try {

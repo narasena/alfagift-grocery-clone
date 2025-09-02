@@ -1,5 +1,5 @@
-import { uploader } from "../middlewares/uploader.multer";
-import { ProductController } from "../controllers/product.controller/product.controller";
+import { uploader } from "@/middlewares/uploader.multer";
+import { ProductController } from "@/controllers/product.controller/product.controller";
 import { Router } from "express";
 
 export class ProductRouter {

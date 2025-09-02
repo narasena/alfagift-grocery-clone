@@ -1,6 +1,6 @@
-import { createDiscount } from "../controllers/discount.controller/discount.controller";
+import { createDiscount } from "@/controllers/discount.controller/discount.controller";
 import { Router } from "express";
-import * as discountController from "../controllers/discount.controller/discount.controller";
+import * as discountController from "@/controllers/discount.controller/discount.controller";
 
 const discountRouter = Router()
 

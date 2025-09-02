@@ -1,5 +1,5 @@
-import { DiscountValueType, Prisma, VoucherType } from "../generated/prisma";
-import { prisma } from "../prisma";
+import { DiscountValueType, Prisma, VoucherType } from "@/generated/prisma";
+import { prisma } from "@/prisma";
 
 async function createReferralSeed() {
   const referrerUserId = "0b833ac1-ce89-436e-bc90-69f8c2509d11";

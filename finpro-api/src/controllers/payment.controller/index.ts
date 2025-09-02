@@ -1,5 +1,5 @@
-import { prisma } from "../../prisma";
-import { AppError } from "../../utils/app.error";
+import { prisma } from "@/prisma";
+import { AppError } from "@/utils/app.error";
 import { Request, Response, NextFunction } from "express";
 
 export const createPayment = async (req: Request, res: Response, next: NextFunction) => {
