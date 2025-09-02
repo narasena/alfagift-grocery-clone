@@ -1,5 +1,5 @@
-import { prisma } from "@/prisma";
-import nameToSlug from "@/utils/nameToSlug";
+import { prisma } from "../../prisma";
+import nameToSlug from "../../utils/nameToSlug";
 
 export default class ProductCategoryService {
   private async findData(model: any) {

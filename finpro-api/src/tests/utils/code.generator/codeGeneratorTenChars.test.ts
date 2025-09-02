@@ -1,4 +1,4 @@
-import generateCodeTenChars from "@/utils/code.generator/codeGeneratorTenChars";
+import generateCodeTenChars from "../../../utils/code.generator/codeGeneratorTenChars";
 
 describe('generateCodeTenChars', () => {
   it('should generate a 10-character string', () => {

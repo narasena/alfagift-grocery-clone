@@ -1,8 +1,8 @@
 import request from "supertest";
-import App from "@/app";
+import App from "../../../app";
 import { Express } from "express";
-import { prismaMock } from "@/tests/setup";
-import describeEndPoint from "@/utils/tests/describeEndPoint";
+import { prismaMock } from "../../setup";
+import describeEndPoint from "../../../utils/tests/describeEndPoint";
 
 const API_PATHS = {
   GET_PRODUCT_CATEGORIES: "/api/product-category",

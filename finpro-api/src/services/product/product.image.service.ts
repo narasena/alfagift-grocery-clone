@@ -1,4 +1,4 @@
-import { ICloudinaryResult, IProductImage } from "@/types/product.type";
+import { ICloudinaryResult, IProductImage } from "../../types/product.type";
 
 export class EditProductImageService {
   private existingImages: IProductImage[];

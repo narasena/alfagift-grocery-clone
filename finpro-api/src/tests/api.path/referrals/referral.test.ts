@@ -1,9 +1,9 @@
-import describeEndPoint from "@/utils/tests/describeEndPoint";
-import App from "@/app";
+import describeEndPoint from "../../../utils/tests/describeEndPoint";
+import App from "../../../app";
 import { Express } from "express";
 import request from "supertest";
-import { Gender } from "@/generated/prisma";
-import { prismaMock } from "@/tests/setup";
+import { Gender } from "../../../generated/prisma";
+import { prismaMock } from "../../setup";
 
 const API_PATHS = {
   FIND_REFERRAL: "/api/referrals/find/:referralCode",

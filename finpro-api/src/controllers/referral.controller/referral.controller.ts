@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import ReferralService from "@/services/referrals/referral.service";
+import ReferralService from "../../services/referrals/referral.service";
 
 export async function findReferral(req: Request, res: Response, next: NextFunction) {
   try {

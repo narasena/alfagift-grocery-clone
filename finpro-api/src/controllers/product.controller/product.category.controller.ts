@@ -1,4 +1,4 @@
-import ProductCategoryService from "@/services/product/product.category.service";
+import ProductCategoryService from "../../services/product/product.category.service";
 import { Request, Response, NextFunction } from "express";
 
 export class ProductCategoryController {
