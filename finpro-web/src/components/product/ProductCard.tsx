@@ -10,20 +10,18 @@ import {
 } from "@/components/ui/card";
 import { Button } from "../ui/button";
 
-export interface IAppProps {}
-
-export default function ProductCard(props: IAppProps) {
+export default function ProductCard() {
   return (
     <Card className="max-w-[16.67%] !py-3"> 
       <CardHeader>
         <div className="size-[144px] bg-blue-300">Image</div>
-        <CardTitle>Card Title</CardTitle>
+        <CardTitle className="font-normal">Card Title</CardTitle>
         <CardDescription>Card Description</CardDescription>
         <CardAction>Card Action</CardAction>
       </CardHeader>
-      {/* <CardContent>
-        <p>Card Content</p>
-      </CardContent> */}
+      <CardContent>
+        <p className="text-red-600 font-bold">Rp 10.000  </p>
+      </CardContent>
       <CardFooter className="border-t border-gray-200 !px-2 !pt-2">
         <Button className="bg-red-600 w-full">Beli</Button>
       </CardFooter>
