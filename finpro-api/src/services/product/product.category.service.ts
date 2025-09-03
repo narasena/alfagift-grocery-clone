@@ -109,7 +109,7 @@ export default class ProductCategoryService {
       const page = Number(query.page || "1");
       const limit = Number(query.limit || "10");
       const { slug, storeId } = params;
-      const skip = Number(page) * Number(limit);
+      const skip = (Number(page)-1) * Number(limit);
       const take = Number(limit);
       const category = await prisma.productCategory.findUnique({
         where: {
