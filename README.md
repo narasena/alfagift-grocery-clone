@@ -19,6 +19,10 @@ For the user UI/UX you can click the link above. But here are some features' sna
 ### Admin-Product
 
 ![Create Product to Product Lists](https://res.cloudinary.com/dhqgojfo2/image/upload/v1756809214/create_product_demo_zqdzlj.gif)
+![Admin Product List](https://res.cloudinary.com/dhqgojfo2/image/upload/v1756981526/admin_product_catalog_pbwomo.png)
+![Admin Store Stocks](https://res.cloudinary.com/dhqgojfo2/image/upload/v1756981525/admin_store_stock_go4z1b.png)
+![Admin Promotion](https://res.cloudinary.com/dhqgojfo2/image/upload/v1756981525/admin_promo_ss_owepil.png)
+![Admin Reports](https://res.cloudinary.com/dhqgojfo2/image/upload/v1756981525/admin_reports_uqhruw.png)
 
 
 ## Key Features
@@ -102,6 +106,7 @@ finpro-web/
 ├── src/
 │   ├── app/                 # App router pages and layouts
 │   ├── components/          # Reusable React components
+│   ├── cypress/             # Test E2E User Experience
 │   ├── hooks/               # Custom React hooks
 │   ├── lib/                 # Library code and utilities
 │   ├── services/            # API service functions
