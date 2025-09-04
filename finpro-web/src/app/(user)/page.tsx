@@ -1,6 +1,6 @@
 "use client";
 import HeroCarousel from "../../components/HeroCarousel";
-import ProductList from "../../components/ProductList";
+import ProductList from "../../components/product/ProductList";
 import StoreSelector from "../../components/StoreSelector";
 
 export default function HomePage() {
@@ -14,11 +14,8 @@ export default function HomePage() {
 
           {/* Product List */}
           <ProductList />
-          
         </div>
       </main>
-
-      
     </div>
   );
 }

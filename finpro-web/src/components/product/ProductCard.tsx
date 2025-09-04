@@ -17,7 +17,7 @@ interface IProductCardProps {
 
 export default function ProductCard(props: IProductCardProps) {
   return (
-    <div className="w-full !min-w-[160px] min-md:w-[190px] h-[400px] min-sm:px-[15px]">
+    <div className="product-item w-full !min-w-[160px] min-md:w-[190px] h-[400px] min-sm:px-[15px]">
       <Card className="px-0 py-0 flex flex-col gap-0 !mb-6 rounded-[8px] shadow-[0_.125rem_.25rem_rgba(0, 0, 0, .075)]">
         <CardHeader className="p-0 gap-0">
           <Link href={`/p/${props.slug}`} className="flex flex-col p-0 gap-0">

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import ProductCard from "./product/ProductCard";
+import ProductCard from "./ProductCard";
 import useDisplayedProducts from "@/features/user/home/hooks/useDisplayedProducts";
 
 export default function DaftarProduk() {
@@ -16,9 +16,12 @@ export default function DaftarProduk() {
         </Link>
       </div>
 
-      <div className="flex w-full flex-wrap max-[524px]:grid grid-cols-2 min-[524px]:grid-cols-3 max-sm:gap-x-2">
+      <div
+        className="product-list flex w-full flex-wrap self-center max-[524px]:grid grid-cols-2 min-[524px]:grid-cols-3 max-sm:gap-x-2"
+      >
         {displayedProducts.map((product, index) => (
           <ProductCard
+          
             key={index}
             name={product.name}
             slug={product.slug}
