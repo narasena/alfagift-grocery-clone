@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
 
 const carouselItems = [
   {
@@ -26,18 +25,7 @@ const carouselItems = [
 ];
 
 export default function HeroCarousel() {
-  // Auto-scroll (opsional, bisa dihapus kalau ingin manual saja)
-  const [current, setCurrent] = useState(0);
-  console.log(current);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % carouselItems.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
+ 
   return (
     <div className="carousel w-full rounded-lg overflow-hidden">
       {carouselItems.map((item, index) => (

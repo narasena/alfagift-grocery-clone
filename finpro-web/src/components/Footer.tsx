@@ -1,7 +1,7 @@
 'use client'
 
 import { FaFacebookF, FaTwitter, FaInstagram } from 'react-icons/fa'
-import Image from 'next/image'
+import { BanknoteArrowDown, CreditCard, Landmark, Truck } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -36,13 +36,13 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold mb-3">Metode Pembayaran</h4>
             <div className="flex gap-2 mb-4">
-              <Image src="/icons/cod.png" alt="COD" width={40} height={24} />
-              <Image src="/icons/bca.png" alt="BCA" width={40} height={24} />
-              <Image src="/icons/mandiri.png" alt="Mandiri" width={40} height={24} />
-              <Image src="/icons/visa.png" alt="Visa" width={40} height={24} />
+              <BanknoteArrowDown size={24} />
+              <Landmark size={24} />
+
+              <CreditCard size={24} />
             </div>
             <h4 className="font-semibold mb-3">Layanan Pengiriman</h4>
-            <Image src="/icons/alfamart-courier.png" alt="Delivery" width={40} height={40} />
+            <Truck size={24} />
           </div>
 
           {/* Ikuti Kami */}
@@ -61,16 +61,14 @@ export default function Footer() {
             <p className="mb-1">📧 alfacare@sat.co.id</p>
             <p className="mb-4">📞 1500-959</p>
             <div className="flex gap-2">
-              <Image src="/icons/googleplay.png" alt="Google Play" width={120} height={40} />
-              <Image src="/icons/appstore.png" alt="App Store" width={120} height={40} />
+              <div>Google Play</div>
+              <div>App Store</div>
             </div>
           </div>
         </div>
 
-        <div className="text-center text-xs text-gray-500 mt-10">
-          © 2022, PT. Sumber Alfaria Trijaya
-        </div>
+        <div className="text-center text-xs text-gray-500 mt-10">© 2022, PT. Sumber Alfaria Trijaya</div>
       </div>
     </footer>
-  )
+  );
 }

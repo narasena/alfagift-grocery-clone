@@ -22,6 +22,7 @@ export class ProductRouter {
     this.router.get("/admin/list", this.productController.getAdminProducts.bind(this.productController));
     this.router.get("/details/:slug/:storeId", this.productController.getProductBySlug.bind(this.productController));
     this.router.put("/edit/:slug", this.productController.updateProduct.bind(this.productController));
+    this.router.get("/displayed/:storeId", this.productController.getProductsDisplayed.bind(this.productController));
   }
 
   getRouter(): Router {

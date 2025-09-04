@@ -530,4 +530,83 @@ export default class ProductService {
     }
     return product;
   }
+
+  async getProductsDisplayed(storeId: string) {
+    try {
+      if(!storeId) {
+        throw {
+          isExpose: true,
+          status: 404,
+          success: false,
+          message: "Store not found",
+        };
+      }
+      const products = await prisma.product.findMany({
+        where: {
+          deletedAt: null,
+        },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          price: true,
+          productSubCategory: {
+            select: {
+              name: true,
+              slug: true,
+              productCategory: {
+                select: {
+                  name: true,
+                  slug: true,
+                },
+              },
+            },
+          },
+          productImage: {
+            take: 1,
+            where: { isMainImage: true },
+            select: {
+              imageUrl: true,
+            },
+          },
+          productStock: {
+            where: {
+              storeId,
+            },
+            select: {
+              stock: true,
+            },
+          },
+          productDiscountHistories: {
+            where: {
+              discount: {
+                startDate: {
+                  lte: new Date(),
+                },
+                endDate: {
+                  gte: new Date(),
+                },
+                storeDiscountHistories: {
+                  some: {
+                    storeId,
+                  },
+                },
+              },
+            },
+            select: {
+              discountValue: true,
+              discount: {
+                select: {
+                  discountType: true,
+                },
+              },
+            },
+          },
+        },
+      });
+      return products;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
