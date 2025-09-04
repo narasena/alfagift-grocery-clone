@@ -20,7 +20,7 @@ export class ProductRouter {
     );
     this.router.get("/all", this.productController.getProducts.bind(this.productController));
     this.router.get("/admin/list", this.productController.getAdminProducts.bind(this.productController));
-    this.router.get("/:slug/:storeId", this.productController.getProductBySlug.bind(this.productController));
+    this.router.get("/details/:slug/:storeId", this.productController.getProductBySlug.bind(this.productController));
     this.router.put("/edit/:slug", this.productController.updateProduct.bind(this.productController));
   }
 
